@@ -9,45 +9,39 @@ mod_name_internal = f'{dev_name}_US_9ID_(Mot)'
 mod = ndf.Mod(f'{mod_path} (input)', mod_path)
 mod.check_if_src_is_newer()
 
-# a list of unit descriptors to copy. Will be prepended with 'Descriptor_Unit_' and appended with '_US'
-included_vanilla_units: dict[list[str]] = {
-    'LOG': [
-        'UH60A_Supply',
-        'CH47_Super_Chinook',
-        'M577',
-        'UH60A_CO',
-        'OH58C_CMD',
-    ]
-}
-[
-    # CH-47C SUPPLY
-    # DISMOUNT. TROOPERS
-    'Rifles_Cavalry',
-    # FIRE TEAM (AT-4)
-    'Rifles_half_AT4',
-    'Rifles_half_Dragon',
-    'Rifles_half_CMD',
-    'Airborne_CMD',
-    'Airborne_Dragon',
-    'ATteam_TOW2',
-    'Mortier_107mm',
-    'OH58C_Scout',
-    'LRRP',
-    'Howz_M102_105mm',
-    'Howz_M198_155mm',
-    'EH60A_EW',
-    'M981_FISTV',
-    'Airborne_Scout',
-    'OH58D_Combat_Scout'
-]
-# prepend with '~/Descriptor_Deck_Pack_'
-included_vanilla_packs: list[str] = {
-    'OH58C_CMD_US_1',
-    'UH60A_Supply_US_1',
-    'CH47_Super_Chinook_US_0',
-
-}
 # make new units
+""" LOG """
+# M998 HUMVEE SUPPLY
+# M1075 PLS
+# (copy HEMTT, but with higher base XP)
+# ✪ M998 HUMVEE SGT.
+# ✪ M1025 HUMVEE AGL
+# ✪ M1010 TC3V
+""" INF """
+# MOT. MP PATROL
+# (just copy AB MP PATROL)
+# for MOT. infantry: copy MECH. version, but reduce men to 8 and replace M240B with SAW and LAW with AT-4
+# ✪ MOT. RIFLES LDR.
+# MOT. RIFLES (AT-4)
+# MOT. RIFLES (DRAGON)
+# ✪ MOT. ENGINEERS LDR.
+# MOT. ENGINEERS
+# M998 HUMVEE SQC
+# just copy M1038 HUMVEE
+# M998 HUMVEE M2HB
+# copy the AB version, but no forward deploy and normal vision
+# M998 HUMVEE AGL
+# copy the AB version, but no forward deploy and normal vision
+""" ART """
+# M198 155mm [CLU]
+# M198 COPPERHEAD
+# M58 MICLIC
+# M270 MLRS [CLU/HE]
+# XM119 IMCS 105mm
+# XM1100 120mm
+
+
+
 
 # make new packs
 
