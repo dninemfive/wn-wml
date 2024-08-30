@@ -39,9 +39,56 @@ mod.check_if_src_is_newer()
 # M270 MLRS [CLU/HE]
 # XM119 IMCS 105mm
 # XM1100 120mm
+""" TNK """
+# XM4 AGS
+# RDF/LT
+# M966 HUMVEE TOW
+# M1025 HUMVEE TOW
+# M998 HUMVEE GLH-L
+# M1025 HUMVEE AGL
+""" REC """
+# 👓 M998 HUMVEE M2HB
+# copy 👓 M1025 HUMVEE M2HB
+# 👓 FAV
+# 👓 FAV AGL
+# 👓 FAV TOW
+# 👓 OPERATIONAL SUPPORT
+# [👓] FOLT
+# 👓 FWD SUPPORT [EW]
+# [👓] MERCURY GREEN RPV
+# [👓] MOT. SCOUTS
+# copy SCOUTS, but replace M240 with SAW
+# [👓] SCAT
+# [[👓]] JOH-58D KIOWA
+# [[👓]] M561 GAMA GOAT FAAR
+""" AA """
+# JOH-58C KIOWA
+# M167A1 VADS 20mm
+# copy AB version, remove forward deploy and add the air-transportable trait
+# M998 AVENGER
+# copy AB version, remove forward deploy
+# M998 SETTER
+# MIM-72A T-CHAPARRAL
+# STINGER (TDAR)
+# EXCALIBUR VWC
+""" HEL """
+# AH-1S COBRA
+""" AIR """
+# A-6E INTRUDER [HE]
+# A-6E INTRUDER [CLU]
+# A-6E INTRUDER [LGB]
+# A-6E INTRUDER SWIP
+# EA-6B PROWLER [SEAD]
+# EA-6B PROWLER [EW]
+# A-7E CORSAIR II [HE]
+# A-7E CORSAIR II [SEAD]
+# F-14B TOMCAT [AA]
+# F-14B TOMCAT [LGB]
+# F/A-18C [AA]
+# F/A-18D [FAC]
 
-
-
+# add new units to ShowRoomEquivalence.ndf
+# add new units to AllUnitsTactic.ndf
 
 # make new packs
 
@@ -91,6 +138,7 @@ with mod.edit(r'$GameData\Generated\Gameplay\Decks\Divisions.ndf') as source:
     # deck_division_descriptor['DivisionName'] = hash('9th Infantry Division (Mot.)')
     # deck_division_descriptor['DescriptionHintTitleToken'] = hash(mod_name)
     # replace PackList
+    deck_division_descriptor['PackList'] = pack_list
     # replace CostMatrix
     # set unit texture (i believe this is possible but idk how to reference the asset)
     # insert ddd into Divisions.ndf
