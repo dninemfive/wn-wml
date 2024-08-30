@@ -17,3 +17,8 @@ async def export_csv(src_path: str, dst_path: str):
     `dst_path`: a `str` pointing to a folder where the CSVs will be placed
     """
     return {"message": "not implemented"}
+
+@app.post("/")
+async def generate_mod():
+    return {"message": "not implemented"}
+
