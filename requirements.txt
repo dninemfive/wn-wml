@@ -1,2 +1,1 @@
-fastapi==0.111.0
 ndf-parse==0.2.0
