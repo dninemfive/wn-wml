@@ -1,5 +1,6 @@
 import ndf_parse as ndf
-from typing import Union
+from typing import Self, Union
+from dataclasses import dataclass
 
 mod_name = '9th Infantry Division (Motorized)'
 mod_path = f'{r'C:/Program Files (x86)/Steam/steamapps/common\WARNO/Mods/'}{mod_name}'
@@ -8,6 +9,31 @@ mod_name_internal = f'{dev_name}_US_9ID_(Mot)'
 
 mod = ndf.Mod(f'{mod_path} (input)', mod_path)
 mod.check_if_src_is_newer()
+
+@dataclass
+class DivisionChangeList(object):
+    CfgName: str | None
+    DivisionName: str | None
+    DivisionPowerClassification: str | None
+    DivisionNationalite: str | None
+    DivisionTags: list[str] | None
+    DescriptionHintTitleToken: str | None
+    PackList: dict[str, int] | None
+    MaxActivationPoints: int | None
+    CostMatrix: dict[str, list[int]] | None
+    EmblemTexture: str | None
+    PortraitTexture: str | None
+    TypeTexture: str | None
+    CountryId: str | None
+
+def make_division(mod: ndf.Mod, division_name: str, copy_of: str, changes: DivisionChangeList):
+    # add to Divisions.ndf
+    with mod.edit(r"GameData\Generated\Gameplay\Decks\Divisions.ndf") as divisions_ndf:
+        original = divisions_ndf.by_name(copy_of)
+    # add to DivisionList.ndf
+    # add to DeckSerializer.ndf
+    # add to DivisionRules.ndf
+    pass
 
 def make_unit(unit_name: str, copy_of: str, **unit_traits):
     # add unit to UniteDescriptors.ndf
@@ -146,7 +172,7 @@ with mod.edit(r'$GameData\Generated\Gameplay\Decks\Divisions.ndf') as source:
     # deck_division_descriptor['DivisionName'] = hash('9th Infantry Division (Mot.)')
     # deck_division_descriptor['DescriptionHintTitleToken'] = hash(mod_name)
     # replace PackList
-    deck_division_descriptor['PackList'] = pack_list
+    # deck_division_descriptor['PackList'] = pack_list
     # replace CostMatrix
     # set unit texture (i believe this is possible but idk how to reference the asset)
     # insert ddd into Divisions.ndf
