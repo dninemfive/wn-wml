@@ -9,6 +9,12 @@ mod_name_internal = f'{dev_name}_US_9ID_(Mot)'
 mod = ndf.Mod(f'{mod_path} (input)', mod_path)
 mod.check_if_src_is_newer()
 
+def make_unit(unit_name: str, copy_of: str, **unit_traits):
+    # add unit to UniteDescriptors.ndf
+    # add unit to ShowRoomEquivalence.ndf
+    # add unit to DivisionPack.ndf
+    pass
+
 # make new units
 """ LOG """
 # M998 HUMVEE SUPPLY
@@ -36,7 +42,9 @@ mod.check_if_src_is_newer()
 # M198 155mm [CLU]
 # M198 COPPERHEAD
 # M58 MICLIC
-# M270 MLRS [CLU/HE]
+# XM142 HIMARS [HE]
+# XM142 HIMARS [CLU]
+# XM142 ATACMS
 # XM119 IMCS 105mm
 # XM1100 120mm
 """ TNK """
