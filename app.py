@@ -1,6 +1,9 @@
 import ndf_parse as ndf
-from typing import Self, Union
+from ndf_parse.model import List, ListRow, Map
+from ndf_parse.model.abc import CellValue
+from typing import Any, Self, Union
 from dataclasses import dataclass
+from uuid import uuid4
 
 mod_name = '9th Infantry Division (Motorized)'
 mod_path = f'{r'C:/Program Files (x86)/Steam/steamapps/common\WARNO/Mods/'}{mod_name}'
@@ -26,12 +29,37 @@ class DivisionChangeList(object):
     TypeTexture: str | None
     CountryId: str | None
 
-def make_division(mod: ndf.Mod, division_name: str, copy_of: str, changes: DivisionChangeList):
+def generate_guid():
+    result: str = f'GUID:{{{str(uuid4())}}}'
+
+def make_division(mod: ndf.Mod, division_name: str, copy_of: str, **changes: CellValue | None):
+    print(f"adding {division_name}")
+    ddd_name = f'Descriptor_Deck_Division_{division_name}_multi'
     # add to Divisions.ndf
+    print("\nDivisions.ndf...", end = None)
     with mod.edit(r"GameData\Generated\Gameplay\Decks\Divisions.ndf") as divisions_ndf:
-        original = divisions_ndf.by_name(copy_of)
-    # add to DivisionList.ndf
-    # add to DeckSerializer.ndf
+        copy: ListRow = divisions_ndf.by_name(copy_of).copy()
+        copy = copy.edit(namespace = ddd_name,
+                         CfgName = f'{division_name}_multi',
+                         DescriptorId = generate_guid(),
+                        *changes)
+        divisions_ndf.add(copy)
+    print("Done!")
+
+    print("\nDivisionList.ndf...", end = None)    
+    with mod.edit(r"GameData\Generated\Gameplay\Decks\DivisionList.ndf") as division_list_ndf:
+        division_list: ListRow = division_list_ndf.by_name("DivisionList")
+        division_list_internal: List = division_list['DivisionList']
+        division_list_internal.add(f"~/{ddd_name}")
+    print("Done!")
+    
+    print("\nDeckSerializer.ndf...", end = None)    
+    with mod.edit(r"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf") as deck_serializer_ndf:
+        deck_serializer: ListRow = division_list_ndf.by_name("DeckSerializer")
+        division_ids: Map = deck_serializer['DivisionIds']
+        division_ids.add(ddd_name, 1390)
+    print("Done!")
+
     # add to DivisionRules.ndf
     pass
 
@@ -39,6 +67,7 @@ def make_unit(unit_name: str, copy_of: str, **unit_traits):
     # add unit to UniteDescriptors.ndf
     # add unit to ShowRoomEquivalence.ndf
     # add unit to DivisionPack.ndf
+    # add unit to DeckSerializer.ndf
     pass
 
 # make new units
