@@ -30,7 +30,16 @@ class DivisionChangeList(object):
     CountryId: str | None
 
 def generate_guid() -> str:
+    """ Generates a GUID in the format NDF expects. TODO: cache this for specific objects to avoid regenerating on build """
     return f'GUID:{{{str(uuid4())}}}'
+
+def edit_member(obj: Object, name: str, value: CellValue | None):
+    index = obj.by_member(name).index
+    obj[index].value = value
+
+def edit_members(obj: Object, **kwargs: CellValue | None):
+    for k, v in kwargs.items():
+        edit_member(obj, k, v)
 
 def make_division(mod: ndf.Mod, division_name: str, copy_of: str, **changes: CellValue | None):
     print(f"adding {division_name}")
@@ -45,12 +54,11 @@ def make_division(mod: ndf.Mod, division_name: str, copy_of: str, **changes: Cel
         #                  CfgName = f'{division_name}_multi',
         #                  DescriptorId = generate_guid(),
         #                 *changes)
-        innercopy: Object = copy.value
         print('\n\n\n')
-        guid = innercopy.by_member("DescriptorId")
-        innercopy[guid.index].value = generate_guid()
-        print(str(guid))
-        print(str(innercopy))
+        edit_members(copy.value, 
+                     DescriptorId = generate_guid(),
+                     CfgName = f'{division_name}_multi')
+        print(str(copy.value))
         divisions_ndf.add(copy)
     print("Done!")
 
