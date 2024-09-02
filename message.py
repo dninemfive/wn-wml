@@ -6,15 +6,13 @@ def _fmt(start: int, end: int) -> str:
 
 class Message(object):
     """ Wrapper for the {msg}...Done! pattern in a readable way """
-    def __init__(self: Self, msg: str, indent: int = 0, padding: int = 0):
+    def __init__(self: Self, msg: str, indent: int = 0, padding: int = 0, child_padding: int = 0):
         self.msg = msg
         self.indent = indent
         self.has_nested = False
         self.start_time = time_ns()
-        minlen = len(msg) + 3
-        if padding < minlen:
-            padding = minlen
-        self.padding = padding
+        self.padding = max(padding, len(msg) + 3)
+        self.immediate_child_padding = child_padding + 3
     
     def __enter__(self: Self):
         print(('  ' * self.indent) + self.msg.ljust(self.padding, "."), end="", flush=True)
@@ -32,4 +30,4 @@ class Message(object):
         if not self.has_nested:
             print()
             self.has_nested = True
-        return Message(msg, self.indent + 1, padding)
+        return Message(msg, self.indent + 1, max(self.immediate_child_padding, padding))
