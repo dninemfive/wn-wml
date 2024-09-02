@@ -7,6 +7,7 @@ from uuid import uuid4
 from typing import Self
 from metadata import DivisionMetadata
 from message import Message
+from UnitCreationContext import UnitCreationContext
 
 class DivisionCreationContext(object):
     def __init__(self: Self, mod: ndf.Mod, division: DivisionMetadata, guid_cache_path: str):
@@ -67,56 +68,7 @@ class DivisionCreationContext(object):
             with self.edit(msg, r"GameData\Generated\Gameplay\Decks\DivisionRules.ndf") as division_rules_ndf:
                 division_rules: Map[MapRow] = division_rules_ndf.by_name("DivisionRules").value.by_member("DivisionRules").value
                 copy: Object = division_rules.by_key(f"~/{copy_of}").value.copy()
-                division_rules.add(k=f'~/{ddd_name}', v=copy)
+                division_rules.add(k=f'~/{ddd_name}', v=copy)                
 
-    def copy_and_prepare_unit(self: Self, unit_name: str, copy_of: str) -> Object:
-        class_name_for_debug = f'Unit_{self.division.dev_short_name}_{unit_name}_{self.division.country}'
-        descriptor_name = f'Descriptor_{class_name_for_debug}'
-        with Message(f"Copying {copy_of} as {unit_name}") as msg:
-            with self.mod.edit(r'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf', False) as unite_descriptor_ndf:
-                copy: ListRow = unite_descriptor_ndf.by_name(f'Descriptor_Unit_{copy_of}').copy()
-                edit_members(copy.value, DescriptorId = self.generate_guid(descriptor_name), ClassNameForDebug = f"'{class_name_for_debug}'")
-                copy.namespace = descriptor_name
-
-    def add_unit(self: Self, unit_name: str, unit: Object, showroom_equivalent: str):
-        base_unit_name = f'{self.division.dev_short_name}_{unit_name}_{self.division.country}'
-        unit_descriptor_namespace = f'Descriptor_Unit_{base_unit_name}'
-        with Message(f'Adding {unit}') as msg:
-            with self.edit(r'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf') as unite_descriptor_ndf:
-                unite_descriptor_ndf.add(ListRow(unit, namespace=unit_descriptor_namespace))
-            unit_descriptor_path = f'$/GFX/Unit/{unit_descriptor_namespace}'
-            # add unit to ShowRoomEquivalence.ndf
-            with self.edit(r'GameData\Generated\Gameplay\Gfx\ShowRoomEquivalence.ndf') as showroom_equivalence_ndf:
-                unit_to_showroom_equivalent: Map[MapRow] = showroom_equivalence_ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
-                unit_to_showroom_equivalent.add(k=unit_descriptor_path, v=f"$/GFX/Unit/Descriptor_ShowRoomUnit_{showroom_equivalent}")
-            # add unit to DivisionPacks.ndf
-            with self.edit(r'r"GameData\Generated\Gameplay\Decks\DivisionPacks.ndf') as division_packs_ndf:
-                deck_pack_descriptor = Object('DeckPackDescriptor')
-                deck_pack_descriptor.add(MemberRow(unit_descriptor_path, 'Unit'))
-                division_packs_ndf.add(ListRow(deck_pack_descriptor, namespace=f'Descriptor_Deck_Pack_{base_unit_name}'))
-            # add unit to DeckSerializer.ndf
-            with self.edit(r"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf") as deck_serializer_ndf:
-                deck_serializer: ListRow = deck_serializer_ndf.by_name("DeckSerializer")
-                unit_ids: Map = deck_serializer.value.by_member('UnitIds').value
-                unit_ids.add(k=unit_descriptor_path, v=str(self.current_unit_id))
-            # add unit to AllUnitsTactic.ndf
-            with self.edit(r"GameData\Generated\Gameplay\Gfx\AllUnitsTactic.ndf") as all_units_tactic_ndf:
-                all_units_tactic: List = all_units_tactic_ndf.by_name("AllUnitsTactic").value
-                all_units_tactic.add(unit_descriptor_path)
-
-            self.current_unit_id += 1
-        
-
-    def make_unit(self: Self, unit_name: str, copy_of: str, showroom_unit: str, **unit_traits):
-        class_name_for_debug = f'Unit_{self.division.dev_short_name}_{unit_name}_{self.division.country}'
-        descriptor_name = f'Descriptor_{class_name_for_debug}'
-        descriptor_path = f'$/GFX/Unit/{descriptor_name}'
-        # add unit to UniteDescriptors.ndf
-        with self.mod.edit(r'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf') as unite_descriptor_ndf:
-            copy: ListRow = unite_descriptor_ndf.by_name(copy_of).copy()
-            edit_members(copy.value, 
-                        DescriptorId = self.generate_guid(descriptor_name),
-                        ClassNameForDebug = f"'{class_name_for_debug}'",
-                        **unit_traits)
-            copy.namespace = descriptor_name
-            unite_descriptor_ndf.add(copy)
+    def edit_unit(self: Self, unit_name: str, copy_of: str, showroom_equivalent: str | None = None) -> UnitCreationContext:
+        return UnitCreationContext(self, unit_name, copy_of, showroom_equivalent)

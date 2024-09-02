@@ -21,3 +21,6 @@ class DivisionMetadata(object):
     short_name: str
     country: str
     id: int
+    
+    def base_name(self, unit_name: str) -> str:
+        return f'Unit_{self.dev_short_name}_{unit_name}_{self.country}'

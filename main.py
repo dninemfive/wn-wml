@@ -71,8 +71,8 @@ with DivisionCreationContext(mod, div_metadata, guid_cache_path) as context:
     #       TUnitUIModuleDescriptor/NameToken replaced with that of M1038 Humvee (for now)
     #       TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
     #       unit rule xp should also be higher
-    m1075_pls = context.copy_and_prepare_unit('M1075_PLS', 'HEMTT_US')
-    context.add_unit('M1075 PLS', m1075_pls, 'HEMTT_US')
+    with context.edit_unit('M1075_PLS', 'HEMTT_US') as m1075_pls:
+        pass
     # ✪ M998 HUMVEE SGT.
     # ✪ M1025 HUMVEE AGL
     # ✪ M1010 TC3V
