@@ -1,5 +1,5 @@
 import ndf_parse as ndf
-from ndf_parse.model import List, ListRow, Map
+from ndf_parse.model import List, ListRow, Map, Object
 from ndf_parse.model.abc import CellValue
 from typing import Any, Self, Union
 from dataclasses import dataclass
@@ -29,20 +29,28 @@ class DivisionChangeList(object):
     TypeTexture: str | None
     CountryId: str | None
 
-def generate_guid():
-    result: str = f'GUID:{{{str(uuid4())}}}'
+def generate_guid() -> str:
+    return f'GUID:{{{str(uuid4())}}}'
 
 def make_division(mod: ndf.Mod, division_name: str, copy_of: str, **changes: CellValue | None):
     print(f"adding {division_name}")
+    print(f'changes: {str(changes)}')
     ddd_name = f'Descriptor_Deck_Division_{division_name}_multi'
     # add to Divisions.ndf
-    print("\nDivisions.ndf...", end = None)
+    print("\nDivisions.ndf...")
     with mod.edit(r"GameData\Generated\Gameplay\Decks\Divisions.ndf") as divisions_ndf:
         copy: ListRow = divisions_ndf.by_name(copy_of).copy()
-        copy = copy.edit(namespace = ddd_name,
-                         CfgName = f'{division_name}_multi',
-                         DescriptorId = generate_guid(),
-                        *changes)
+        print(str(copy))
+        # copy = copy.edit(namespace = ddd_name,
+        #                  CfgName = f'{division_name}_multi',
+        #                  DescriptorId = generate_guid(),
+        #                 *changes)
+        innercopy: Object = copy.value
+        print('\n\n\n')
+        guid = innercopy.by_member("DescriptorId")
+        innercopy[guid.index].value = generate_guid()
+        print(str(guid))
+        print(str(innercopy))
         divisions_ndf.add(copy)
     print("Done!")
 
@@ -55,13 +63,17 @@ def make_division(mod: ndf.Mod, division_name: str, copy_of: str, **changes: Cel
     
     print("\nDeckSerializer.ndf...", end = None)    
     with mod.edit(r"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf") as deck_serializer_ndf:
-        deck_serializer: ListRow = division_list_ndf.by_name("DeckSerializer")
+        deck_serializer: ListRow = deck_serializer_ndf.by_name("DeckSerializer")
         division_ids: Map = deck_serializer['DivisionIds']
         division_ids.add(ddd_name, 1390)
     print("Done!")
 
-    # add to DivisionRules.ndf
-    pass
+    print("\nDivisionRules.ndf...", end = None)    
+    with mod.edit(r"GameData\Generated\Gameplay\Decks\DivisionRules.ndf") as division_rules_ndf:
+        division_rules: ListRow = division_rules_ndf.by_name("DivisionRules")
+        division_rules_internal: Map = division_rules['DivisionRules']
+        # find 82nd's value and insert a copy
+    print("Done!")
 
 def make_unit(unit_name: str, copy_of: str, **unit_traits):
     # add unit to UniteDescriptors.ndf
@@ -190,23 +202,10 @@ pack_list: dict[str, int] = {
     # add new units here...
 }
 
-# make new division
-with mod.edit(r'$GameData\Generated\Gameplay\Decks\Divisions.ndf') as source:
-    # copy 82nd airborne
-    deck_division_descriptor: dict[Union[str, list[str], dict[str, int]]] = {}
-    # generate new GUID
-    # assign new values
-    deck_division_descriptor['CfgName'] = '{mod_name_internal}_multi'
-    # assign new division name (not currently possible afaik)
-    # deck_division_descriptor['DivisionName'] = hash('9th Infantry Division (Mot.)')
-    # deck_division_descriptor['DescriptionHintTitleToken'] = hash(mod_name)
-    # replace PackList
-    # deck_division_descriptor['PackList'] = pack_list
-    # replace CostMatrix
-    # set unit texture (i believe this is possible but idk how to reference the asset)
-    # insert ddd into Divisions.ndf
-    pass
-
-# insert division rules in DivisionRules.ndf
-# add division to DeckSerializer.ndf
+make_division(mod,
+              mod_name_internal,
+              copy_of = "Descriptor_Deck_Division_US_82nd_Airborne_multi", 
+              DivisionName = "'RSEACNWCQI'",
+              DescriptionHintTitleToken = "'ECGMWQOEZA'",
+              EmblemTexture = '"Texture_Division_Emblem_WP_Unternehmen_Stoss"')
 # add a default deck to Decks.ndf (not required)
