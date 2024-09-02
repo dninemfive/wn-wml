@@ -15,7 +15,7 @@ class UnitCreationContext(object):
             self.showroom_equivalent = copy_of
 
     def __enter__(self: Self):
-        self.object = self.copy_and_prepare_unit()
+        self.object: Object = self.copy_and_prepare_unit()
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
@@ -37,7 +37,7 @@ class UnitCreationContext(object):
     def descriptor_path(self: Self):
         return f'$/GFX/Unit/{self.descriptor_name}'
     
-    def copy_and_prepare_unit(self: Self) -> Self:
+    def copy_and_prepare_unit(self: Self) -> Object:
         with Message(f"Copying {self.copy_of} as {self.internal_name}") as _:
             with self.context.mod.edit(r'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf', False) as unite_descriptor_ndf:
                 copy: Object = unite_descriptor_ndf.by_name(f'Descriptor_Unit_{self.copy_of}').value.copy()
@@ -45,6 +45,7 @@ class UnitCreationContext(object):
                                           DescriptorId = self.context.generate_guid(self.descriptor_name),
                                           ClassNameForDebug = f"'{self.class_name_for_debug}'")
                 copy.namespace = self.descriptor_name
+                return copy
 
     def add(self: Self):
         with Message(f'Adding {self.internal_name}') as msg:

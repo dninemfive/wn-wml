@@ -1,7 +1,8 @@
 import ndf_parse as ndf
+from ndf_parse.model import Object
 from DivisionCreationContext import DivisionCreationContext
 from metadata import DivisionMetadata, ModMetadata
-from ndf_utils import dict_to_map
+from ndf_utils import edit_members, dict_to_map, get_unit_module, replace_unit_modules
 
 mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', r'C:/Program Files (x86)/Steam/steamapps/common/WARNO/Mods/', "0.0.0")
 div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)
@@ -72,7 +73,17 @@ with DivisionCreationContext(mod, div_metadata, guid_cache_path) as context:
     #       TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
     #       unit rule xp should also be higher
     with context.edit_unit('M1075_PLS', 'HEMTT_US') as m1075_pls:
-        pass
+        with mod.edit(r'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf', False) as unite_descriptor_ndf:
+            base_ui_module = get_unit_module(unite_descriptor_ndf, 'HEMTT_US', 'TUnitUIModuleDescriptor')
+            index = base_ui_module.index
+            name_token: str = get_unit_module(unite_descriptor_ndf,
+                                              'M1038_Humvee_US',
+                                              'TUnitUIModuleDescriptor').value\
+                                                .by_member('NameToken').value
+            new_ui_module: Object = base_ui_module.value.copy()
+            edit_members(new_ui_module, NameToken=name_token)
+            replace_unit_modules(m1075_pls.object, TUnitUIModuleDescriptor=new_ui_module)
+            
     # ✪ M998 HUMVEE SGT.
     # ✪ M1025 HUMVEE AGL
     # ✪ M1010 TC3V
