@@ -1,8 +1,6 @@
 import ndf_parse as ndf
-from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
-from ndf_parse.model.abc import CellValue
-from uuid import uuid4
-from typing import TypeVar, Generic
+from io_utils import read, write
+from warno_db_utils import make_division, make_unit
 
 mod_name = '9th Infantry Division (Motorized)'
 mod_path = f'{r'C:/Program Files (x86)/Steam/steamapps/common/WARNO/Mods/'}{mod_name}'
@@ -15,87 +13,7 @@ mod.check_if_src_is_newer()
 guid_cache: dict[str, str] = {}
 guid_cache_path: str = "guid_cache.txt"
 
-def try_read(path: str) -> str | None:
-    try:
-        with open(path) as f:
-            print(f.read())
-    except:
-        with open(path, "w"):
-            return None
 
-def read(path: str, default: object | None = None) -> object | None:
-    val = try_read(path)
-    if(val is not None):
-        return eval(val)
-    return default
-    
-def write(obj: object, path: str):
-    with open(path, "w") as f:
-        f.write(repr(obj))
-
-def generate_guid(guid_key: str | None) -> str:
-    """ Generates a GUID in the format NDF expects. TODO: cache this for specific objects to avoid regenerating on build """
-    if guid_key in guid_cache:
-        return guid_cache[guid_key]
-    result: str = f'GUID:{{{str(uuid4())}}}'
-    guid_cache[guid_key] = result
-    return result
-
-def edit_member(obj: Object, name: str, value: CellValue | None):
-    index = obj.by_member(name).index
-    obj[index].value = value
-
-def edit_members(obj: Object, **kwargs: CellValue | None):
-    for k, v in kwargs.items():
-        edit_member(obj, k, v)
-
-def make_division(mod: ndf.Mod, division_name: str, copy_of: str, **changes: CellValue | None):
-    print(f"adding {division_name}")
-    print(f'changes: {str(changes)}')
-    ddd_name = f'Descriptor_Deck_Division_{division_name}_multi'
-    # add to Divisions.ndf
-    print("Divisions.ndf...", end = "")
-    with mod.edit(r"GameData\Generated\Gameplay\Decks\Divisions.ndf") as divisions_ndf:
-        copy: ListRow = divisions_ndf.by_name(copy_of).copy()
-        edit_members(copy.value, 
-                     DescriptorId = generate_guid(ddd_name),
-                     CfgName = f"'{division_name}_multi'",
-                     **changes)
-        copy.namespace = ddd_name
-        divisions_ndf.add(copy)
-        # print(str(copy))
-    print("Done!")
-
-    print("DivisionList.ndf...", end = "")    
-    with mod.edit(r"GameData\Generated\Gameplay\Decks\DivisionList.ndf") as division_list_ndf:
-        division_list: ListRow = division_list_ndf.by_name("DivisionList")
-        division_list_internal: ListRow = division_list.value.by_member("DivisionList")
-        division_list_internal.value.add(f"~/{ddd_name}")
-    print("Done!")
-    
-    print("DeckSerializer.ndf...", end = "")    
-    with mod.edit(r"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf") as deck_serializer_ndf:
-        deck_serializer: ListRow = deck_serializer_ndf.by_name("DeckSerializer")
-        division_ids: MemberRow = deck_serializer.value.by_member('DivisionIds')
-        # print(str(division_ids.value))
-        division_ids.value.add(k=ddd_name, v='1390')
-        # print(str(division_ids))
-    print("Done!")
-
-    print("DivisionRules.ndf...", end = "")    
-    with mod.edit(r"GameData\Generated\Gameplay\Decks\DivisionRules.ndf") as division_rules_ndf:
-        division_rules: Map[MapRow] = division_rules_ndf.by_name("DivisionRules").value.by_member("DivisionRules").value
-        copy: Object = division_rules.by_key(f"~/{copy_of}").value.copy()
-        division_rules.add(k=f'~/{ddd_name}', v=copy)
-        # print(str(division_rules.by_key(f'~/{ddd_name}')))
-    print("Done!")
-
-def make_unit(unit_name: str, copy_of: str, **unit_traits):
-    # add unit to UniteDescriptors.ndf
-    # add unit to ShowRoomEquivalence.ndf
-    # add unit to DivisionPack.ndf
-    # add unit to DeckSerializer.ndf
-    pass
 
 # make new units
 """ LOG """
@@ -177,8 +95,6 @@ def make_unit(unit_name: str, copy_of: str, **unit_traits):
 # F/A-18C [AA]
 # F/A-18D [FAC]
 
-# add new units to ShowRoomEquivalence.ndf
-# add new units to AllUnitsTactic.ndf
 
 # make new packs
 
