@@ -54,8 +54,23 @@ with DivisionCreationContext(mod, div_metadata, guid_cache_path) as context:
     # make new units
     """ LOG """
     # M998 HUMVEE SUPPLY
+    #   copy of: M35 Supply
+    #   but with:
+    #       "UNITE_M35_supply_US" replaced in TTagsModuleDescriptor
+    #       ApparenceModel replaced with that of M998 Humvee
+    #       GenericMovement replaced with that of M998 Humvee
+    #       LandMovement replaced with that of M998 Humvee (if different)
+    #       TSupplyModuleDescriptor replaced with that of Rover 101FC Supply
+    #       TProductionModuleDescriptor/ProductionResourcesNeeded changed to appropriate value
+    #           (replaced with that of Rover 101FC Supply?)
+    #       TUnitUIModuleDescriptor/NameToken replaced with that of M998 Humvee (for now)
+    #       TUnitUIModuleDescriptor/UpgradeFromUnit cleared
     # M1075 PLS
-    # (copy HEMTT, but with higher base XP)
+    # copy of: HEMTT
+    # but with:
+    #       TUnitUIModuleDescriptor/NameToken replaced with that of M1038 Humvee (for now)
+    #       TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
+    #       unit rule xp should also be higher
     # ✪ M998 HUMVEE SGT.
     # ✪ M1025 HUMVEE AGL
     # ✪ M1010 TC3V
