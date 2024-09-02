@@ -1,33 +1,15 @@
 import ndf_parse as ndf
 from ndf_parse.model import List, ListRow, Map, Object
 from ndf_parse.model.abc import CellValue
-from typing import Any, Self, Union
-from dataclasses import dataclass
 from uuid import uuid4
 
 mod_name = '9th Infantry Division (Motorized)'
 mod_path = f'{r'C:/Program Files (x86)/Steam/steamapps/common\WARNO/Mods/'}{mod_name}'
 dev_name = 'd9'
-mod_name_internal = f'{dev_name}_US_9ID_(Mot)'
+mod_name_internal = f'{dev_name}_US_9ID'
 
 mod = ndf.Mod(f'{mod_path} (input)', mod_path)
 mod.check_if_src_is_newer()
-
-@dataclass
-class DivisionChangeList(object):
-    CfgName: str | None
-    DivisionName: str | None
-    DivisionPowerClassification: str | None
-    DivisionNationalite: str | None
-    DivisionTags: list[str] | None
-    DescriptionHintTitleToken: str | None
-    PackList: dict[str, int] | None
-    MaxActivationPoints: int | None
-    CostMatrix: dict[str, list[int]] | None
-    EmblemTexture: str | None
-    PortraitTexture: str | None
-    TypeTexture: str | None
-    CountryId: str | None
 
 def generate_guid() -> str:
     """ Generates a GUID in the format NDF expects. TODO: cache this for specific objects to avoid regenerating on build """
@@ -57,9 +39,11 @@ def make_division(mod: ndf.Mod, division_name: str, copy_of: str, **changes: Cel
         print('\n\n\n')
         edit_members(copy.value, 
                      DescriptorId = generate_guid(),
-                     CfgName = f'{division_name}_multi')
-        print(str(copy.value))
+                     CfgName = f'{division_name}_multi',
+                     **changes)
+        copy.namespace = ddd_name
         divisions_ndf.add(copy)
+        print(str(copy))
     print("Done!")
 
     print("\nDivisionList.ndf...", end = None)    
