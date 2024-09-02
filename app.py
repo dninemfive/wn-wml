@@ -1,5 +1,5 @@
 import ndf_parse as ndf
-from ndf_parse.model import List, ListRow, Map, Object
+from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 from uuid import uuid4
 
@@ -49,24 +49,25 @@ def make_division(mod: ndf.Mod, division_name: str, copy_of: str, **changes: Cel
     print("DivisionList.ndf...", end = "")    
     with mod.edit(r"GameData\Generated\Gameplay\Decks\DivisionList.ndf") as division_list_ndf:
         division_list: ListRow = division_list_ndf.by_name("DivisionList")
-        # print(str(division_list))
         division_list_internal: ListRow = division_list.value.by_member("DivisionList")
         division_list_internal.value.add(f"~/{ddd_name}")
-        print(str(division_list))
     print("Done!")
     
     print("DeckSerializer.ndf...", end = "")    
     with mod.edit(r"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf") as deck_serializer_ndf:
         deck_serializer: ListRow = deck_serializer_ndf.by_name("DeckSerializer")
-        division_ids: Map = deck_serializer['DivisionIds']
-        division_ids.add(ddd_name, 1390)
+        division_ids: MemberRow = deck_serializer.value.by_member('DivisionIds')
+        # print(str(division_ids.value))
+        division_ids.value.add(k=ddd_name, v='1390')
+        # print(str(division_ids))
     print("Done!")
 
-    print("\nDivisionRules.ndf...", end = None)    
+    print("DivisionRules.ndf...", end = "")    
     with mod.edit(r"GameData\Generated\Gameplay\Decks\DivisionRules.ndf") as division_rules_ndf:
-        division_rules: ListRow = division_rules_ndf.by_name("DivisionRules")
-        division_rules_internal: Map = division_rules['DivisionRules']
-        # find 82nd's value and insert a copy
+        division_rules: Map[MapRow] = division_rules_ndf.by_name("DivisionRules").value.by_member("DivisionRules").value
+        copy: Object = division_rules.by_key(f"~/{copy_of}").value.copy()
+        division_rules.add(k=f'~/{ddd_name}', v=copy)
+        # print(str(division_rules.by_key(f'~/{ddd_name}')))
     print("Done!")
 
 def make_unit(unit_name: str, copy_of: str, **unit_traits):
