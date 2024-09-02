@@ -57,14 +57,12 @@ class DivisionCreationContext(object):
                 divisions_ndf.add(copy)
                 
             with self.edit(msg, r"GameData\Generated\Gameplay\Decks\DivisionList.ndf") as division_list_ndf:
-                division_list: ListRow = division_list_ndf.by_name("DivisionList")
-                division_list_internal: ListRow = division_list.value.by_member("DivisionList")
-                division_list_internal.value.add(f"~/{ddd_name}")
+                division_list: List = division_list_ndf.by_name("DivisionList").value.by_member("DivisionList").value
+                division_list.add(f"~/{ddd_name}")
             
             with self.edit(msg, r"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf") as deck_serializer_ndf:
-                deck_serializer: ListRow = deck_serializer_ndf.by_name("DeckSerializer")
-                division_ids: MemberRow = deck_serializer.value.by_member('DivisionIds')
-                division_ids.value.add(k=ddd_name, v=str(self.division.id))
+                division_ids: Map = deck_serializer_ndf.by_name("DeckSerializer").value.by_member('DivisionIds').value
+                division_ids.add(k=ddd_name, v=str(self.division.id))
                 
             with self.edit(msg, r"GameData\Generated\Gameplay\Decks\DivisionRules.ndf") as division_rules_ndf:
                 division_rules: Map[MapRow] = division_rules_ndf.by_name("DivisionRules").value.by_member("DivisionRules").value
