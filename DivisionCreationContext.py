@@ -72,9 +72,9 @@ class DivisionCreationContext(object):
     def copy_and_prepare_unit(self: Self, unit_name: str, copy_of: str) -> Object:
         class_name_for_debug = f'Unit_{self.division.dev_short_name}_{unit_name}_{self.division.country}'
         descriptor_name = f'Descriptor_{class_name_for_debug}'
-        with Message(f"Copying {copy_of}") as msg:
+        with Message(f"Copying {copy_of} as {unit_name}") as msg:
             with self.mod.edit(r'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf', False) as unite_descriptor_ndf:
-                copy: ListRow = unite_descriptor_ndf.by_name(copy_of).copy()
+                copy: ListRow = unite_descriptor_ndf.by_name(f'Descriptor_Unit_{copy_of}').copy()
                 edit_members(copy.value, DescriptorId = self.generate_guid(descriptor_name), ClassNameForDebug = f"'{class_name_for_debug}'")
                 copy.namespace = descriptor_name
 
