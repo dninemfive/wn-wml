@@ -4,7 +4,7 @@ from ndf_parse.model.abc import CellValue
 from uuid import uuid4
 
 mod_name = '9th Infantry Division (Motorized)'
-mod_path = f'{r'C:/Program Files (x86)/Steam/steamapps/common\WARNO/Mods/'}{mod_name}'
+mod_path = f'{r'C:/Program Files (x86)/Steam/steamapps/common/WARNO/Mods/'}{mod_name}'
 dev_name = 'd9'
 mod_name_internal = f'{dev_name}_US_9ID'
 
@@ -28,7 +28,7 @@ def make_division(mod: ndf.Mod, division_name: str, copy_of: str, **changes: Cel
     print(f'changes: {str(changes)}')
     ddd_name = f'Descriptor_Deck_Division_{division_name}_multi'
     # add to Divisions.ndf
-    print("\nDivisions.ndf...", end = "")
+    print("Divisions.ndf...", end = "")
     with mod.edit(r"GameData\Generated\Gameplay\Decks\Divisions.ndf") as divisions_ndf:
         copy: ListRow = divisions_ndf.by_name(copy_of).copy()
         # print(str(copy))
@@ -39,7 +39,7 @@ def make_division(mod: ndf.Mod, division_name: str, copy_of: str, **changes: Cel
         # print('\n\n\n')
         edit_members(copy.value, 
                      DescriptorId = generate_guid(),
-                     CfgName = f'{division_name}_multi',
+                     CfgName = f"'{division_name}_multi'",
                      **changes)
         copy.namespace = ddd_name
         divisions_ndf.add(copy)
