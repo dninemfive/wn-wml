@@ -1,7 +1,6 @@
 import ndf_parse as ndf
 from ndf_parse.model import ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from guid import generate_guid
 from ndf_utils import edit_members
 from io_utils import load, write
 from uuid import uuid4
@@ -42,7 +41,7 @@ class ModCreationContext(object):
         with mod.edit(r"GameData\Generated\Gameplay\Decks\Divisions.ndf") as divisions_ndf:
             copy: ListRow = divisions_ndf.by_name(copy_of).copy()
             edit_members(copy.value, 
-                        DescriptorId = generate_guid(ddd_name),
+                        DescriptorId = self.generate_guid(ddd_name),
                         CfgName = f"'{division_name}_multi'",
                         **changes)
             copy.namespace = ddd_name

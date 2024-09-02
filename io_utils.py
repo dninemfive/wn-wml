@@ -1,7 +1,7 @@
 def try_read(path: str) -> str | None:
     try:
         with open(path) as f:
-            print(f.read())
+            return f.read()
     except:
         with open(path, "w"):
             return None
