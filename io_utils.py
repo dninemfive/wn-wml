@@ -6,7 +6,7 @@ def try_read(path: str) -> str | None:
         with open(path, "w"):
             return None
 
-def read(path: str, default: object | None = None) -> object | None:
+def load(path: str, default: object | None = None) -> object | None:
     val = try_read(path)
     if(val is not None):
         return eval(val)

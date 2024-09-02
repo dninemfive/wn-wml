@@ -1,6 +1,5 @@
 import ndf_parse as ndf
-from io_utils import read, write
-from warno_db_utils import make_division, make_unit
+from ModCreationContext import ModCreationContext
 
 mod_name = '9th Infantry Division (Motorized)'
 mod_path = f'{r'C:/Program Files (x86)/Steam/steamapps/common/WARNO/Mods/'}{mod_name}'
@@ -133,13 +132,10 @@ pack_list: dict[str, int] = {
     # add new units here...
 }
 
-guid_cache = read(guid_cache_path, {})
-make_division(mod,
-              mod_name_internal,
-              copy_of = "Descriptor_Deck_Division_US_82nd_Airborne_multi", 
-              DivisionName = "'ECGMWQOEZA'",
-              DescriptionHintTitleToken = "'ECGMWQOEZA'",
-              EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"')
-print(repr(guid_cache))
-write(guid_cache, guid_cache_path)
+with ModCreationContext(guid_cache_path) as context:
+    context.make_division(mod,
+                          mod_name_internal,
+                          copy_of = "Descriptor_Deck_Division_US_82nd_Airborne_multi",
+                          DescriptionHintTitleToken = "'ECGMWQOEZA'",
+                          EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"')
 # add a default deck to Decks.ndf (not required)
