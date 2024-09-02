@@ -28,32 +28,34 @@ def make_division(mod: ndf.Mod, division_name: str, copy_of: str, **changes: Cel
     print(f'changes: {str(changes)}')
     ddd_name = f'Descriptor_Deck_Division_{division_name}_multi'
     # add to Divisions.ndf
-    print("\nDivisions.ndf...")
+    print("\nDivisions.ndf...", end = "")
     with mod.edit(r"GameData\Generated\Gameplay\Decks\Divisions.ndf") as divisions_ndf:
         copy: ListRow = divisions_ndf.by_name(copy_of).copy()
-        print(str(copy))
+        # print(str(copy))
         # copy = copy.edit(namespace = ddd_name,
         #                  CfgName = f'{division_name}_multi',
         #                  DescriptorId = generate_guid(),
         #                 *changes)
-        print('\n\n\n')
+        # print('\n\n\n')
         edit_members(copy.value, 
                      DescriptorId = generate_guid(),
                      CfgName = f'{division_name}_multi',
                      **changes)
         copy.namespace = ddd_name
         divisions_ndf.add(copy)
-        print(str(copy))
+        # print(str(copy))
     print("Done!")
 
-    print("\nDivisionList.ndf...", end = None)    
+    print("DivisionList.ndf...", end = "")    
     with mod.edit(r"GameData\Generated\Gameplay\Decks\DivisionList.ndf") as division_list_ndf:
         division_list: ListRow = division_list_ndf.by_name("DivisionList")
-        division_list_internal: List = division_list['DivisionList']
-        division_list_internal.add(f"~/{ddd_name}")
+        # print(str(division_list))
+        division_list_internal: ListRow = division_list.value.by_member("DivisionList")
+        division_list_internal.value.add(f"~/{ddd_name}")
+        print(str(division_list))
     print("Done!")
     
-    print("\nDeckSerializer.ndf...", end = None)    
+    print("DeckSerializer.ndf...", end = "")    
     with mod.edit(r"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf") as deck_serializer_ndf:
         deck_serializer: ListRow = deck_serializer_ndf.by_name("DeckSerializer")
         division_ids: Map = deck_serializer['DivisionIds']
