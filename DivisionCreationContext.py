@@ -37,17 +37,17 @@ class DivisionCreationContext(object):
         self.guid_cache[guid_key] = result
         return result
     
-    def mod_msg(self: Self, path: str) -> ndf.Mod:
-        with Message(f'\tEditing {path}') as _:
+    def edit(self: Self, msg: Message, path: str) -> ndf.Mod:
+        with msg.nest(f'\tEditing {path}') as _:
             return self.mod.edit(path)
 
     def make_division(self: Self,
                       copy_of: str,
                     **changes: CellValue | None) -> None:
-        with Message(f"Making division {self.division.short_name}", None) as _:
+        with Message(f"Making division {self.division.short_name}") as msg:
             ddd_name = f'Descriptor_Deck_Division_{self.division_name_internal}_multi'
             
-            with self.mod_msg(r"GameData\Generated\Gameplay\Decks\Divisions.ndf") as divisions_ndf:
+            with self.edit(msg, r"GameData\Generated\Gameplay\Decks\Divisions.ndf") as divisions_ndf:
                 copy: ListRow = divisions_ndf.by_name(copy_of).copy()
                 edit_members(copy.value, 
                             DescriptorId = self.generate_guid(ddd_name),
@@ -56,17 +56,17 @@ class DivisionCreationContext(object):
                 copy.namespace = ddd_name
                 divisions_ndf.add(copy)
                 
-            with self.mod.edit(r"GameData\Generated\Gameplay\Decks\DivisionList.ndf") as division_list_ndf:
+            with self.edit(msg, r"GameData\Generated\Gameplay\Decks\DivisionList.ndf") as division_list_ndf:
                 division_list: ListRow = division_list_ndf.by_name("DivisionList")
                 division_list_internal: ListRow = division_list.value.by_member("DivisionList")
                 division_list_internal.value.add(f"~/{ddd_name}")
             
-            with self.mod.edit(r"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf") as deck_serializer_ndf:
+            with self.edit(msg, r"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf") as deck_serializer_ndf:
                 deck_serializer: ListRow = deck_serializer_ndf.by_name("DeckSerializer")
                 division_ids: MemberRow = deck_serializer.value.by_member('DivisionIds')
                 division_ids.value.add(k=ddd_name, v=str(self.division.id))
                 
-            with self.mod.edit(r"GameData\Generated\Gameplay\Decks\DivisionRules.ndf") as division_rules_ndf:
+            with self.edit(msg, r"GameData\Generated\Gameplay\Decks\DivisionRules.ndf") as division_rules_ndf:
                 division_rules: Map[MapRow] = division_rules_ndf.by_name("DivisionRules").value.by_member("DivisionRules").value
                 copy: Object = division_rules.by_key(f"~/{copy_of}").value.copy()
                 division_rules.add(k=f'~/{ddd_name}', v=copy)
