@@ -1,7 +1,5 @@
-from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, Object
 from ndf_parse.model.abc import CellValue
-from message import Message
 
 def edit_member(obj: Object, name: str, value: CellValue | None):
     index = obj.by_member(name).index
@@ -39,15 +37,3 @@ def replace_unit_module(unit: Object, module_type: str, module: Object):
 def replace_unit_modules(unit: Object, **kwargs: Object):
     for k, v in kwargs.items():
         replace_unit_module(unit, k, v)
-
-def apply_edits(mod: Mod, msg: Message, base_path: str, **edits: callable[List]):
-    full_path_edits: list[tuple[str, callable[List]]] = [(f'{base_path}\{k}.ndf', v) for k, v in edits.items()]
-    max_length: int = max([len(x[0]) for x in full_path_edits])
-    for full_path, edit_fn in full_path_edits:
-        with edit_msg(mod, msg, full_path, max_length) as context:
-            edit_fn(context)
-
-
-def edit_msg(mod: Mod, msg: Message, path: str, padding: int = 0) -> Mod:
-    with msg.nest(f'Editing {path}', padding) as _:
-        return mod.edit(path)

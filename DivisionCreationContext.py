@@ -1,7 +1,7 @@
 import ndf_parse as ndf
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from ndf_utils import edit_members, apply_edits
+from ndf_utils import edit_members
 from io_utils import load, write
 from uuid import uuid4
 from typing import Self
@@ -46,22 +46,17 @@ class DivisionCreationContext(object):
                       copy_of: str,
                     **changes: CellValue | None) -> None:
         longest_path_width = 67
-
-        def add_to_divisions(ndf: List):
-            copy: ListRow = ndf.by_name(copy_of).copy()
-            edit_members(copy.value, 
-                         DescriptorId = self.generate_guid(ddd_name),
-                         CfgName = f"'{self.division_name_internal}_multi'",
-                       **changes)
-            copy.namespace = ddd_name
-            ndf.add(copy)
-
         with Message(f"Making division {self.division.short_name}") as msg:
-            apply_edits(self.mod, msg, r'GameData\Generated\Gameplay\Decks',
-                        Divisions=add_to_divisions)
             ddd_name = f'Descriptor_Deck_Division_{self.division_name_internal}_multi'
             
             with self.edit(msg, r"GameData\Generated\Gameplay\Decks\Divisions.ndf", longest_path_width) as divisions_ndf:
+                copy: ListRow = divisions_ndf.by_name(copy_of).copy()
+                edit_members(copy.value, 
+                            DescriptorId = self.generate_guid(ddd_name),
+                            CfgName = f"'{self.division_name_internal}_multi'",
+                            **changes)
+                copy.namespace = ddd_name
+                divisions_ndf.add(copy)
                 
             with self.edit(msg, r"GameData\Generated\Gameplay\Decks\DivisionList.ndf", longest_path_width) as division_list_ndf:
                 division_list: List = division_list_ndf.by_name("DivisionList").value.by_member("DivisionList").value
