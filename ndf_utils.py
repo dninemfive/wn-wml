@@ -1,5 +1,7 @@
+from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, Object
 from ndf_parse.model.abc import CellValue
+from message import Message
 
 def edit_member(obj: Object, name: str, value: CellValue | None):
     index = obj.by_member(name).index
@@ -37,3 +39,7 @@ def replace_unit_module(unit: Object, module_type: str, module: Object):
 def replace_unit_modules(unit: Object, **kwargs: Object):
     for k, v in kwargs.items():
         replace_unit_module(unit, k, v)
+
+def edit_or_read_msg(mod: Mod, msg: Message, path: str, padding: int = 0, save: bool = True) -> Mod:
+    with msg.nest(f'{'Editing' if save else 'Reading'} {path}', padding) as _:
+        return mod.edit(path, save)
