@@ -1,12 +1,16 @@
 import ndf_parse as ndf
-from ModCreationContext import DivisionCreationContext
+from DivisionCreationContext import DivisionCreationContext
+from metadata import DivisionMetadata, ModMetadata
+
+mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', r'C:/Program Files (x86)/Steam/steamapps/common/WARNO/Mods/', "0.0.0")
+div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)
 
 mod_name = '9th Infantry Division (Motorized)'
 mod_path = f'{r'C:/Program Files (x86)/Steam/steamapps/common/WARNO/Mods/'}{mod_name}'
 dev_name = 'd9'
 mod_name_internal = f'{dev_name}_US_9ID'
 
-mod = ndf.Mod(f'{mod_path} (input)', mod_path)
+mod = ndf.Mod(mod_metadata.source_path, mod_metadata.output_path)
 mod.check_if_src_is_newer()
 
 guid_cache: dict[str, str] = {}
