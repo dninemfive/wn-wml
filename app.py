@@ -2,6 +2,7 @@ import ndf_parse as ndf
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 from uuid import uuid4
+from typing import TypeVar, Generic
 
 mod_name = '9th Infantry Division (Motorized)'
 mod_path = f'{r'C:/Program Files (x86)/Steam/steamapps/common/WARNO/Mods/'}{mod_name}'
@@ -11,9 +12,34 @@ mod_name_internal = f'{dev_name}_US_9ID'
 mod = ndf.Mod(f'{mod_path} (input)', mod_path)
 mod.check_if_src_is_newer()
 
-def generate_guid() -> str:
+guid_cache: dict[str, str] = {}
+guid_cache_path: str = "guid_cache.txt"
+
+def try_read(path: str) -> str | None:
+    try:
+        with open(path) as f:
+            print(f.read())
+    except:
+        with open(path, "w"):
+            return None
+
+def read(path: str, default: object | None = None) -> object | None:
+    val = try_read(path)
+    if(val is not None):
+        return eval(val)
+    return default
+    
+def write(obj: object, path: str):
+    with open(path, "w") as f:
+        f.write(repr(obj))
+
+def generate_guid(guid_key: str | None) -> str:
     """ Generates a GUID in the format NDF expects. TODO: cache this for specific objects to avoid regenerating on build """
-    return f'GUID:{{{str(uuid4())}}}'
+    if guid_key in guid_cache:
+        return guid_cache[guid_key]
+    result: str = f'GUID:{{{str(uuid4())}}}'
+    guid_cache[guid_key] = result
+    return result
 
 def edit_member(obj: Object, name: str, value: CellValue | None):
     index = obj.by_member(name).index
@@ -31,14 +57,8 @@ def make_division(mod: ndf.Mod, division_name: str, copy_of: str, **changes: Cel
     print("Divisions.ndf...", end = "")
     with mod.edit(r"GameData\Generated\Gameplay\Decks\Divisions.ndf") as divisions_ndf:
         copy: ListRow = divisions_ndf.by_name(copy_of).copy()
-        # print(str(copy))
-        # copy = copy.edit(namespace = ddd_name,
-        #                  CfgName = f'{division_name}_multi',
-        #                  DescriptorId = generate_guid(),
-        #                 *changes)
-        # print('\n\n\n')
         edit_members(copy.value, 
-                     DescriptorId = generate_guid(),
+                     DescriptorId = generate_guid(ddd_name),
                      CfgName = f"'{division_name}_multi'",
                      **changes)
         copy.namespace = ddd_name
@@ -197,10 +217,13 @@ pack_list: dict[str, int] = {
     # add new units here...
 }
 
+guid_cache = read(guid_cache_path, {})
 make_division(mod,
               mod_name_internal,
               copy_of = "Descriptor_Deck_Division_US_82nd_Airborne_multi", 
-              DivisionName = "'RSEACNWCQI'",
+              DivisionName = "'ECGMWQOEZA'",
               DescriptionHintTitleToken = "'ECGMWQOEZA'",
-              EmblemTexture = '"Texture_Division_Emblem_WP_Unternehmen_Stoss"')
+              EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"')
+print(repr(guid_cache))
+write(guid_cache, guid_cache_path)
 # add a default deck to Decks.ndf (not required)
