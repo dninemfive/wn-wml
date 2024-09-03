@@ -30,7 +30,7 @@ def replace_by_type(list: List, type: str, value: CellValue):
 def get_unit_module(unit_list: List, unit_name: str, module_type: str) -> ListRow | None:
     unit_object: Object = unit_list.by_namespace(f'Descriptor_Unit_{unit_name}').value
     modules: List = unit_object.by_member('ModulesDescriptors').value
-    print(str(modules))
+    # print(str(modules))
     return modules.find_by_cond(lambda x: object_has_type(x.value, module_type))
 
 def replace_unit_module(unit: Object, module_type: str, module: Object):
