@@ -1,6 +1,7 @@
 import ndf_parse as ndf
 from ndf_parse.model import ListRow, Object
-from DivisionCreationContext import DivisionCreationContext
+from ContextManagers.DivisionCreationContext import DivisionCreationContext
+from ContextManagers.ModCreationContext import ModCreationContext
 from metadata import DivisionMetadata, ModMetadata
 from ndf_utils import edit_members, dict_to_map, get_unit_module, replace_unit_modules
 from message import Message
@@ -48,9 +49,9 @@ pack_list: dict[str, int] = {
     # add new units here...
 }
 
-with Message("Building mod") as root_msg:
-    with DivisionCreationContext(mod, div_metadata, guid_cache_path) as context:
-        context.make_division(copy_of = "Descriptor_Deck_Division_US_82nd_Airborne_multi",
+with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
+    with DivisionCreationContext(mod_context, div_metadata) as div_context:
+        div_context.make_division(copy_of = "Descriptor_Deck_Division_US_82nd_Airborne_multi",
                             DescriptionHintTitleToken = "'ECGMWQOEZA'",
                             EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
                             PackList = dict_to_map(pack_list))
@@ -75,7 +76,7 @@ with Message("Building mod") as root_msg:
         #       TUnitUIModuleDescriptor/NameToken replaced with that of M1038 Humvee (for now)
         #       TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
         #       unit rule xp should also be higher
-        with context.edit_unit('M1075_PLS', 'HEMTT_US') as m1075_pls:
+        with div_context.edit_unit('M1075_PLS', 'HEMTT_US') as m1075_pls:
             with mod.edit(r'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf', False) as unite_descriptor_ndf:
                 base_ui_module = get_unit_module(unite_descriptor_ndf, 'HEMTT_US', 'TUnitUIModuleDescriptor')
                 index = base_ui_module.index

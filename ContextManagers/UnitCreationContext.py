@@ -1,10 +1,11 @@
 from typing import Self
-import DivisionCreationContext
+import ContextManagers.DivisionCreationContext as DivisionCreationContext
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 import ndf_parse as ndf
 from message import Message
 from ndf_utils import edit_members, edit_or_read_msg
 from str_utils import max_len
+from MultipleUnitCreationContext import MultipleUnitCreationContext
 
 PADDING = max_len(rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf',
                   rf'GameData\Generated\Gameplay\Gfx\ShowRoomEquivalence.ndf',
@@ -13,7 +14,7 @@ PADDING = max_len(rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf',
                   rf'GameData\Generated\Gameplay\Gfx\AllUnitsTactic.ndf') + len("Editing ")
 
 class UnitCreationContext(object):
-    def __init__(self: Self, context: DivisionCreationContext, unit_name: str, copy_of: str, showroom_equivalent: str | None = None):
+    def __init__(self: Self, context: MultipleUnitCreationContext, unit_name: str, copy_of: str, showroom_equivalent: str | None = None):
         self.context = context
         self.internal_name = context.division.base_name(unit_name)
         self.copy_of = copy_of

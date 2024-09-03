@@ -4,6 +4,7 @@ from ndf_parse.model import List
 from typing import Self, Generator
 from dataclasses import dataclass
 from message import Message
+from UnitCreationContext import UnitCreationContext
 
 @dataclass
 class UnitNdf(object):
@@ -14,10 +15,11 @@ class UnitNdf(object):
     all_units_tactic: List
 
 class MultipleUnitCreationContext(object):
-    """ Creates a context for editing all the relevant unit files so they don't have to get closed and reopened over and over 
+    """ 
+    Creates a context for editing all the relevant unit files so they don't have to get closed and reopened over and over 
         See https://ulibos.github.io/ndf-parse/v0.2.0/docs.html#edits
     """
-    def __init__(self: Self, mod: Mod):
+    def __init__(self: Self, context: ModCreationContext):
         self.mod = mod
 
     def __enter__(self: Self):
@@ -37,3 +39,6 @@ class MultipleUnitCreationContext(object):
     def load_files(self: Self, base_path: str, *paths: str) -> Generator[List]:
         for path in paths:
             yield self.mod.edit(f'{base_path}\{path}.ndf').current_tree
+
+    def edit_unit(self: Self, unit_name: str, copy_of: str, showroom_equivalent: str | None = None) -> UnitCreationContext:
+        return UnitCreationContext(self, unit_name, copy_of, showroom_equivalent)
