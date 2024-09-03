@@ -34,7 +34,7 @@ class DivisionCreationContext(object):
 
     @property
     def division_name_internal(self):
-        return f'{self.division.dev_short_name}_{self.division.short_name}_{self.division.country}'
+        return f'{self.division.dev_short_name}_{self.division.country}_{self.division.short_name}'
 
     def generate_guid(self: Self, guid_key: str | None) -> str:
         """ Generates a GUID in the format NDF expects """
