@@ -53,6 +53,7 @@ with DivisionCreationContext(mod, div_metadata, guid_cache_path) as context:
                           EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
                           PackList = dict_to_map(pack_list))
     # make new units
+    
     """ LOG """
     # M998 HUMVEE SUPPLY
     #   copy of: M35 Supply
