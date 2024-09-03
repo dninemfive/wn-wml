@@ -26,8 +26,8 @@ class Message(object):
             report = "Done!"
         print(f'{report} {_fmt(self.start_time, time_ns())}')
 
-    def nest(self: Self, msg: str, padding: int = 0) -> Self:
+    def nest(self: Self, msg: str, padding: int = 0, child_padding: int = 0) -> Self:
         if not self.has_nested:
             print()
             self.has_nested = True
-        return Message(msg, self.indent + 1, max(self.immediate_child_padding, padding))
+        return Message(msg, self.indent + 1, max(self.immediate_child_padding, padding), child_padding)

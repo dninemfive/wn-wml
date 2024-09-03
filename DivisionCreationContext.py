@@ -16,8 +16,9 @@ PADDING = max_len(rf"GameData\Generated\Gameplay\Decks\Divisions.ndf",
                   rf"GameData\Generated\Gameplay\Decks\DivisionRules.ndf") + len("Editing ")
 
 class DivisionCreationContext(object):
-    def __init__(self: Self, mod: ndf.Mod, division: DivisionMetadata, guid_cache_path: str):
+    def __init__(self: Self, mod: ndf.Mod, msg: Message, division: DivisionMetadata, guid_cache_path: str):
         self.mod = mod
+        self.msg = msg
         self.division = division
         self.guid_cache_path = guid_cache_path
         self.guid_cache: dict[str, str] = load(guid_cache_path, {})
@@ -53,8 +54,8 @@ class DivisionCreationContext(object):
     def make_division(self: Self,
                       copy_of: str,
                     **changes: CellValue | None) -> None:
-        with Message(f"Making division {self.division.short_name}",
-                     child_padding=PADDING) as msg:
+        with self.msg.nest(f"Making division {self.division.short_name}",
+                            child_padding=PADDING) as msg:
             ddd_name = f'Descriptor_Deck_Division_{self.division_name_internal}_multi'
             
             with self.edit(msg, rf"GameData\Generated\Gameplay\Decks\Divisions.ndf") as divisions_ndf:
