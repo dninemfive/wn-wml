@@ -30,17 +30,22 @@ def replace_by_type(list: List, type: str, value: CellValue):
 def get_unit_module(unit_list: List, unit_name: str, module_type: str) -> ListRow | None:
     unit_object: Object = unit_list.by_namespace(f'Descriptor_Unit_{unit_name}').value
     modules: List = unit_object.by_member('ModulesDescriptors').value
-    # print(str(modules))
     return modules.find_by_cond(lambda x: object_has_type(x.value, module_type))
 
-def replace_unit_module(unit: Object, module_type: str, module: Object):
+def replace_unit_module(unit: Object, module_type: str, module: ListRow | Object):
     modules: List = unit.by_member('ModulesDescriptors').value
-    replace_by_type(modules, module_type, module)
+    replace_by_type(modules, module_type, ensure_listrow(module))
 
-def replace_unit_modules(unit: Object, **kwargs: Object):
+def replace_unit_modules(unit: Object, **kwargs: ListRow | Object):
     for k, v in kwargs.items():
         replace_unit_module(unit, k, v)
 
 def edit_or_read_msg(mod: Mod, msg: Message, path: str, padding: int = 0, save: bool = True) -> Mod:
     with msg.nest(f'{'Editing' if save else 'Reading'} {path}', padding) as _:
         return mod.edit(path, save)
+    
+def ensure_listrow(val: CellValue | ListRow) -> ListRow:
+    if isinstance(val, ListRow):
+        return val
+    else:
+        return ListRow(value=val)

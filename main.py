@@ -82,7 +82,7 @@ with DivisionCreationContext(mod, div_metadata, guid_cache_path) as context:
                                                 .by_member('NameToken').value
             new_ui_module: Object = base_ui_module.value.copy()
             edit_members(new_ui_module, NameToken=name_token)
-            replace_unit_modules(m1075_pls.object, TUnitUIModuleDescriptor=ListRow(new_ui_module))
+            replace_unit_modules(m1075_pls.object, TUnitUIModuleDescriptor=new_ui_module)
             
     # ✪ M998 HUMVEE SGT.
     # ✪ M1025 HUMVEE AGL
