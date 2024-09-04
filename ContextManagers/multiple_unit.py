@@ -3,11 +3,11 @@ from ndf_parse import Mod
 from ndf_parse.model import List
 from typing import Self, Generator
 from dataclasses import dataclass
-from message import Message
-from UnitCreationContext import UnitCreationContext
+from ndf_file_set import NdfFileSet
+import ContextManagers
 
 @dataclass
-class UnitNdf(object):
+class UnitNdf(NdfFileSet):
     unite_descriptor: List
     showroom_equivalence: List
     division_packs: List
@@ -41,5 +41,5 @@ class MultipleUnitCreationContext(object):
         for path in paths:
             yield self.mod.edit(f'{base_path}\{path}.ndf').current_tree
 
-    def edit_unit(self: Self, unit_name: str, copy_of: str, showroom_equivalent: str | None = None) -> UnitCreationContext:
+    def create_unit(self: Self, unit_name: str, copy_of: str, showroom_equivalent: str | None = None) -> UnitCreationContext:
         return UnitCreationContext(self, unit_name, copy_of, showroom_equivalent)

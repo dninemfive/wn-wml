@@ -1,11 +1,11 @@
 from typing import Self
-import ContextManagers.DivisionCreationContext as div
+import ContextManagers.division as div
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 import ndf_parse as ndf
 from message import Message
 from ndf_utils import edit_members, edit_or_read_msg
 from str_utils import max_len
-from MultipleUnitCreationContext import MultipleUnitCreationContext
+from ContextManagers.multiple_unit import MultipleUnitCreationContext
 
 PADDING = max_len(rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf',
                   rf'GameData\Generated\Gameplay\Gfx\ShowRoomEquivalence.ndf',

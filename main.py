@@ -1,7 +1,7 @@
 import ndf_parse as ndf
 from ndf_parse.model import ListRow, Object
-from ContextManagers.DivisionCreationContext import DivisionCreationContext
-from ContextManagers.ModCreationContext import ModCreationContext
+from ContextManagers.division import DivisionCreationContext
+from ContextManagers.mod import ModCreationContext
 from metadata import DivisionMetadata, ModMetadata
 from ndf_utils import edit_members, dict_to_map, get_unit_module, replace_unit_modules
 from message import Message

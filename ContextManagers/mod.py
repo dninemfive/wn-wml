@@ -1,10 +1,9 @@
 from metadata import DivisionMetadata, ModMetadata
 from typing import Self
 from ndf_parse import Mod
-from message import Message
-from io_utils import load, write
+import Utils as utl
 import ContextManagers as ctx
-from MultipleUnitCreationContext import MultipleUnitCreationContext
+from ContextManagers.multiple_unit import MultipleUnitCreationContext
 from uuid import uuid4
 
 class ModCreationContext(object):
@@ -13,14 +12,14 @@ class ModCreationContext(object):
         self.metadata = metadata
         self.mod = Mod(metadata.source_path, metadata.output_path)
         self.guid_cache_path = guid_cache_path
-        self.guid_cache: dict[str, str] = load(guid_cache_path, {})
+        self.guid_cache: dict[str, str] = utl.io.load(guid_cache_path, {})
 
     def __enter__(self: Self):
         self.mod.check_if_src_is_newer()
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
-        write(self.guid_cache, self.guid_cache_path)
+        utl.io.write(self.guid_cache, self.guid_cache_path)
 
     def create_division(self: Self, division: DivisionMetadata) -> div.DivisionCreationContext:
         return div.DivisionCreationContext(self.mod, self.root_msg, division)
