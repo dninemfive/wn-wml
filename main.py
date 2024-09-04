@@ -49,6 +49,12 @@ pack_list: dict[str, int] = {
     # add new units here...
 }
 
+with Message("Creating mod...") as msg:
+    with msg.nest("making units...") as units_msg:
+        pass
+    with msg.nest("making division...") as div_msg:
+        pass
+
 with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
     with DivisionCreationContext(mod_context, div_metadata) as div_context:
         div_context.make_division(copy_of = "Descriptor_Deck_Division_US_82nd_Airborne_multi",

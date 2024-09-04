@@ -1,5 +1,5 @@
 from typing import Self
-import ContextManagers.DivisionCreationContext as DivisionCreationContext
+import ContextManagers.DivisionCreationContext as div
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 import ndf_parse as ndf
 from message import Message
@@ -66,8 +66,8 @@ class UnitCreationContext(object):
     def add(self: Self):
         with self.msg.nest(f'Adding {self.internal_name}', child_padding=PADDING) as local_msg:
             # todo: make sure this gets logged
-            
-            self.context.ndf.unite_descriptor.add(ListRow(self.object, namespace=self.descriptor_name))
+            with local_msg.nest('') as _:
+                self.context.ndf.unite_descriptor.add(ListRow(self.object, namespace=self.descriptor_name))
 
             with self.edit(local_msg, rf'GameData\Generated\Gameplay\Gfx\ShowRoomEquivalence.ndf') as showroom_equivalence_ndf:
                 unit_to_showroom_equivalent: Map[MapRow] = showroom_equivalence_ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
