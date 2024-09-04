@@ -4,7 +4,7 @@ from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 from typing import Self
 from metadata import DivisionMetadata
-from context_mod import ModCreationContext
+import context_mod as ctx_mod
 from utils_str import max_len
 from message import Message
 from utils_ndf import edit_members, edit_or_read_file_with_msg
@@ -15,7 +15,7 @@ PADDING = max_len(rf"GameData\Generated\Gameplay\Decks\Divisions.ndf",
                   rf"GameData\Generated\Gameplay\Decks\DivisionRules.ndf") + len("Editing ")
 
 class DivisionCreationContext(object):
-    def __init__(self: Self, context: ModCreationContext, division: DivisionMetadata):
+    def __init__(self: Self, context, division: DivisionMetadata):
         self.context = context
         self.division = division
         # todo: cache to ensure this stays constant even if user reorders unit declarations

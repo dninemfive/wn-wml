@@ -3,6 +3,7 @@ from typing import Self
 from ndf_parse import Mod
 from uuid import uuid4
 from utils_io import load, write
+import context_division as ctx
 
 class ModCreationContext(object):
     """ Context for creating a WARNO mod, handling things like guid caching (so IDs don't change between builds) and managing the ndf.Mod itself """
@@ -19,8 +20,8 @@ class ModCreationContext(object):
     def __exit__(self: Self, exc_type, exc_value, traceback):
         write(self.guid_cache, self.guid_cache_path)
 
-    def create_division(self: Self, division: DivisionMetadata): # -> ctx.DivisionCreationContext:
-        pass # return ctx.DivisionCreationContext(self.mod, self.root_msg, division)
+    def create_division(self: Self, division: DivisionMetadata) -> ctx.DivisionCreationContext:
+         return ctx.DivisionCreationContext(self.mod, division)
     
     def create_units(self: Self): # -> MultipleUnitCreationContext:
         pass
