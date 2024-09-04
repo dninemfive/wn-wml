@@ -1,9 +1,9 @@
 import ndf_parse as ndf
 from ndf_parse.model import ListRow, Object
-from ContextManagers.division import DivisionCreationContext
-from ContextManagers.mod import ModCreationContext
 from metadata import DivisionMetadata, ModMetadata
-import Utils as utl
+from context_mod import ModCreationContext
+from context_division import DivisionCreationContext
+from utils_ndf import dict_to_map
 
 mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', r'C:/Program Files (x86)/Steam/steamapps/common/WARNO/Mods/', "0.0.0")
 div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)
@@ -52,7 +52,7 @@ with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
         div_context.make_division(copy_of = "Descriptor_Deck_Division_US_82nd_Airborne_multi",
                             DescriptionHintTitleToken = "'ECGMWQOEZA'",
                             EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
-                            PackList = utl.ndf.dict_to_map(pack_list))
+                            PackList = dict_to_map(pack_list))
         # make new units
         
         """ LOG """

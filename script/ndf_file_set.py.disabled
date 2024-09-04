@@ -1,7 +1,6 @@
 from typing import Self
 from ndf_parse import Mod
 from ndf_parse.model import List
-import Utils as utl
 
 class NdfFileSet(object):
     def __init__(self: Self, mod: Mod, parent_msg: utl.Message, base_path: str = "", *paths: str):

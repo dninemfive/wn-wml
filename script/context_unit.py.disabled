@@ -1,11 +1,10 @@
 from typing import Self
-import ContextManagers.division as div
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 import ndf_parse as ndf
-import Utils as utl
-from ContextManagers.multiple_unit import MultipleUnitCreationContext
+from utils_str import max_len
+# import context_division, context_unit
 
-PADDING = utl.str.max_len(rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf',
+PADDING = max_len(rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf',
                   rf'GameData\Generated\Gameplay\Gfx\ShowRoomEquivalence.ndf',
                   rf'GameData\Generated\Gameplay\Decks\DivisionPacks.ndf',
                   rf'GameData\Generated\Gameplay\Decks\DeckSerializer.ndf',
