@@ -4,9 +4,11 @@ from ndf_parse import Mod
 from message import Message
 from io_utils import load, write
 import ContextManagers.DivisionCreationContext as DivisionCreationContext
+from MultipleUnitCreationContext import MultipleUnitCreationContext
 from uuid import uuid4
 
 class ModCreationContext(object):
+    """ Context for creating a WARNO mod, handling things like guid caching (so IDs don't change between builds) and managing the ndf.Mod itself """
     def __init__(self: Self, metadata: ModMetadata, guid_cache_path: str):
         self.metadata = metadata
         self.mod = Mod(metadata.source_path, metadata.output_path)
@@ -25,6 +27,9 @@ class ModCreationContext(object):
 
     def create_division(self: Self, division: DivisionMetadata) -> DivisionCreationContext.DivisionCreationContext:
         return DivisionCreationContext.DivisionCreationContext(self.mod, self.root_msg, division)
+    
+    def create_units(self: Self) -> MultipleUnitCreationContext:
+        pass
 
     def generate_guid(self: Self, guid_key: str | None) -> str:
         """ Generates a GUID in the format NDF expects """

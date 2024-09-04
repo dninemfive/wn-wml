@@ -19,8 +19,9 @@ class MultipleUnitCreationContext(object):
     Creates a context for editing all the relevant unit files so they don't have to get closed and reopened over and over 
         See https://ulibos.github.io/ndf-parse/v0.2.0/docs.html#edits
     """
-    def __init__(self: Self, context: ModCreationContext):
+    def __init__(self: Self, context: ModCreationContext, initial_unit_id: int):
         self.mod = mod
+        self.current_unit_id = initial_unit_id
 
     def __enter__(self: Self):
         self.ndf = UnitNdf(*self.load_files(rf'GameData\Generated\Gameplay',
