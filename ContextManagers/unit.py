@@ -2,19 +2,17 @@ from typing import Self
 import ContextManagers.division as div
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 import ndf_parse as ndf
-from message import Message
-from ndf_utils import edit_members, edit_or_read_msg
-from str_utils import max_len
+import Utils as utl
 from ContextManagers.multiple_unit import MultipleUnitCreationContext
 
-PADDING = max_len(rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf',
+PADDING = utl.str.max_len(rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf',
                   rf'GameData\Generated\Gameplay\Gfx\ShowRoomEquivalence.ndf',
                   rf'GameData\Generated\Gameplay\Decks\DivisionPacks.ndf',
                   rf'GameData\Generated\Gameplay\Decks\DeckSerializer.ndf',
                   rf'GameData\Generated\Gameplay\Gfx\AllUnitsTactic.ndf') + len("Editing ")
 
 class UnitCreationContext(object):
-    def __init__(self: Self, context: MultipleUnitCreationContext, msg: Message, unit_name: str, copy_of: str, showroom_equivalent: str | None = None):
+    def __init__(self: Self, context: MultipleUnitCreationContext, msg: utl.Message, unit_name: str, copy_of: str, showroom_equivalent: str | None = None):
         self.context = context
         self.msg = msg
         self.internal_name = context.division.base_name(unit_name)
@@ -31,11 +29,11 @@ class UnitCreationContext(object):
     def __exit__(self: Self, exc_type, exc_value, traceback):
         self.add()
 
-    def edit(self: Self, msg: Message, path: str, padding: int = 0) -> ndf.Mod:
-        return edit_or_read_msg(self.mod, msg, path, padding, True)
+    def edit(self: Self, msg: utl.Message, path: str, padding: int = 0) -> ndf.Mod:
+        return utl.ndf.edit_or_read_msg(self.mod, msg, path, padding, True)
     
-    def read(self: Self, msg: Message, path: str, padding: int = 0) -> ndf.Mod:
-        return edit_or_read_msg(self.mod, msg, path, padding, False)
+    def read(self: Self, msg: utl.Message, path: str, padding: int = 0) -> ndf.Mod:
+        return utl.edit_or_read_msg(self.mod, msg, path, padding, False)
 
     @property
     def mod(self: Self) -> ndf.Mod:
@@ -54,10 +52,10 @@ class UnitCreationContext(object):
         return f'$/GFX/Unit/{self.descriptor_name}'
     
     def copy_and_prepare_unit(self: Self) -> Object:
-        with Message(f"Copying {self.copy_of} as {self.internal_name}") as msg:
+        with utl.Message(f"Copying {self.copy_of} as {self.internal_name}") as msg:
             unite_descriptor_ndf = self.context.ndf.unite_descriptor
             copy: Object = unite_descriptor_ndf.by_name(f'Descriptor_Unit_{self.copy_of}').value.copy()
-            edit_members(copy,
+            utl.ndf.edit_members(copy,
                             DescriptorId = self.context.generate_guid(self.descriptor_name),
                             ClassNameForDebug = f"'{self.class_name_for_debug}'")
             copy.namespace = self.descriptor_name

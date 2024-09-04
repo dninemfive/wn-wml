@@ -2,15 +2,13 @@ import ndf_parse as ndf
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from ndf_utils import edit_members, edit_or_read_msg
 from typing import Self
 from metadata import DivisionMetadata
-from message import Message
-from ContextManagers.UnitCreationContext import UnitCreationContext
-from str_utils import max_len
-from ContextManagers.ModCreationContext import ModCreationContext 
+from ContextManagers.unit import UnitCreationContext
+from ContextManagers.mod import ModCreationContext 
+import Utils as utl
 
-PADDING = max_len(rf"GameData\Generated\Gameplay\Decks\Divisions.ndf",
+PADDING = utl.str.max_len(rf"GameData\Generated\Gameplay\Decks\Divisions.ndf",
                   rf"GameData\Generated\Gameplay\Decks\DivisionList.ndf",
                   rf"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf",
                   rf"GameData\Generated\Gameplay\Decks\DivisionRules.ndf") + len("Editing ")
@@ -35,18 +33,18 @@ class DivisionCreationContext(object):
         return self.context.mod
     
     @property
-    def msg(self: Self) -> Message:
+    def msg(self: Self) -> utl.Message:
         return self.context.root_msg
 
     @property
     def division_name_internal(self):
         return f'{self.division.dev_short_name}_{self.division.country}_{self.division.short_name}'
 
-    def edit(self: Self, msg: Message, path: str, padding: int = 0) -> ndf.Mod:
-        return edit_or_read_msg(self.mod, msg, path, padding, True)
+    def edit(self: Self, msg: utl.Message, path: str, padding: int = 0) -> ndf.Mod:
+        return utl.ndf.edit_or_read_msg(self.mod, msg, path, padding, True)
     
-    def read(self: Self, msg: Message, path: str, padding: int = 0) -> ndf.Mod:
-        return edit_or_read_msg(self.mod, msg, path, padding, False)
+    def read(self: Self, msg: utl.Message, path: str, padding: int = 0) -> ndf.Mod:
+        return utl.ndf.edit_or_read_msg(self.mod, msg, path, padding, False)
 
     def make_division(self: Self,
                       copy_of: str,
@@ -57,7 +55,7 @@ class DivisionCreationContext(object):
             
             with self.edit(msg, rf"GameData\Generated\Gameplay\Decks\Divisions.ndf") as divisions_ndf:
                 copy: ListRow = divisions_ndf.by_name(copy_of).copy()
-                edit_members(copy.value, 
+                utl.ndf.edit_members(copy.value, 
                             DescriptorId = self.context.generate_guid(ddd_name),
                             CfgName = f"'{self.division_name_internal}_multi'",
                             **changes)

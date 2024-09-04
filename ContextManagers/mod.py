@@ -21,8 +21,8 @@ class ModCreationContext(object):
     def __exit__(self: Self, exc_type, exc_value, traceback):
         utl.io.write(self.guid_cache, self.guid_cache_path)
 
-    def create_division(self: Self, division: DivisionMetadata) -> div.DivisionCreationContext:
-        return div.DivisionCreationContext(self.mod, self.root_msg, division)
+    def create_division(self: Self, division: DivisionMetadata) -> ctx.DivisionCreationContext:
+        return ctx.DivisionCreationContext(self.mod, self.root_msg, division)
     
     def create_units(self: Self) -> MultipleUnitCreationContext:
         pass

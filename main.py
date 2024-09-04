@@ -3,8 +3,7 @@ from ndf_parse.model import ListRow, Object
 from ContextManagers.division import DivisionCreationContext
 from ContextManagers.mod import ModCreationContext
 from metadata import DivisionMetadata, ModMetadata
-from ndf_utils import edit_members, dict_to_map, get_unit_module, replace_unit_modules
-from message import Message
+import Utils as utl
 
 mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', r'C:/Program Files (x86)/Steam/steamapps/common/WARNO/Mods/', "0.0.0")
 div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)
@@ -48,19 +47,12 @@ pack_list: dict[str, int] = {
     '~/Descriptor_Deck_Pack_UH60A_Supply_US': 1,
     # add new units here...
 }
-
-with Message("Creating mod...") as msg:
-    with msg.nest("making units...") as units_msg:
-        pass
-    with msg.nest("making division...") as div_msg:
-        pass
-
 with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
     with DivisionCreationContext(mod_context, div_metadata) as div_context:
         div_context.make_division(copy_of = "Descriptor_Deck_Division_US_82nd_Airborne_multi",
                             DescriptionHintTitleToken = "'ECGMWQOEZA'",
                             EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
-                            PackList = dict_to_map(pack_list))
+                            PackList = utl.ndf.dict_to_map(pack_list))
         # make new units
         
         """ LOG """
@@ -82,6 +74,7 @@ with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
         #       TUnitUIModuleDescriptor/NameToken replaced with that of M1038 Humvee (for now)
         #       TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
         #       unit rule xp should also be higher
+        """
         with div_context.edit_unit('M1075_PLS', 'HEMTT_US') as m1075_pls:
             with mod.edit(r'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf', False) as unite_descriptor_ndf:
                 base_ui_module = get_unit_module(unite_descriptor_ndf, 'HEMTT_US', 'TUnitUIModuleDescriptor')
@@ -93,6 +86,7 @@ with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
                 new_ui_module: Object = base_ui_module.value.copy()
                 edit_members(new_ui_module, NameToken=name_token)
                 replace_unit_modules(m1075_pls.object, TUnitUIModuleDescriptor=new_ui_module)
+        """
                 
         # ✪ M998 HUMVEE SGT.
         # ✪ M1025 HUMVEE AGL

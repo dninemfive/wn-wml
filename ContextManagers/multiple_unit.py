@@ -4,7 +4,7 @@ from ndf_parse.model import List
 from typing import Self, Generator
 from dataclasses import dataclass
 from ndf_file_set import NdfFileSet
-import ContextManagers
+import ContextManagers as ctx
 
 @dataclass
 class UnitNdf(NdfFileSet):
@@ -19,8 +19,7 @@ class MultipleUnitCreationContext(object):
     Creates a context for editing all the relevant unit files so they don't have to get closed and reopened over and over 
         See https://ulibos.github.io/ndf-parse/v0.2.0/docs.html#edits
     """
-    def __init__(self: Self, context: ModCreationContext, initial_unit_id: int):
-        self.mod = mod
+    def __init__(self: Self, context: ctx.ModCreationContext, initial_unit_id: int):
         self.current_unit_id = initial_unit_id
 
     def __enter__(self: Self):
@@ -41,5 +40,5 @@ class MultipleUnitCreationContext(object):
         for path in paths:
             yield self.mod.edit(f'{base_path}\{path}.ndf').current_tree
 
-    def create_unit(self: Self, unit_name: str, copy_of: str, showroom_equivalent: str | None = None) -> UnitCreationContext:
-        return UnitCreationContext(self, unit_name, copy_of, showroom_equivalent)
+    def create_unit(self: Self, unit_name: str, copy_of: str, showroom_equivalent: str | None = None) -> ctx.UnitCreationContext:
+        return ctx.UnitCreationContext(self, unit_name, copy_of, showroom_equivalent)
