@@ -1,7 +1,7 @@
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, Object
 from ndf_parse.model.abc import CellValue
-from message import Message
+from Utils.message import Message
 from typing import Generator
 
 def edit_member(obj: Object, name: str, value: CellValue | None):
@@ -51,6 +51,6 @@ def ensure_listrow(val: CellValue | ListRow) -> ListRow:
     else:
         return ListRow(value=val)
     
-def root_paths(base_path: str, *paths: str) -> Generator[str]:
+def root_paths(base_path: str, *paths: str) -> Generator:
     for p in paths:
-        yield f'{base_path}\{p}.ndf'
+        yield f'{base_path}\\{p}.ndf'

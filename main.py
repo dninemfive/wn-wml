@@ -74,20 +74,6 @@ with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
         #       TUnitUIModuleDescriptor/NameToken replaced with that of M1038 Humvee (for now)
         #       TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
         #       unit rule xp should also be higher
-        """
-        with div_context.edit_unit('M1075_PLS', 'HEMTT_US') as m1075_pls:
-            with mod.edit(r'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf', False) as unite_descriptor_ndf:
-                base_ui_module = get_unit_module(unite_descriptor_ndf, 'HEMTT_US', 'TUnitUIModuleDescriptor')
-                index = base_ui_module.index
-                name_token: str = get_unit_module(unite_descriptor_ndf,
-                                                'M1038_Humvee_US',
-                                                'TUnitUIModuleDescriptor').value\
-                                                    .by_member('NameToken').value
-                new_ui_module: Object = base_ui_module.value.copy()
-                edit_members(new_ui_module, NameToken=name_token)
-                replace_unit_modules(m1075_pls.object, TUnitUIModuleDescriptor=new_ui_module)
-        """
-                
         # ✪ M998 HUMVEE SGT.
         # ✪ M1025 HUMVEE AGL
         # ✪ M1010 TC3V
