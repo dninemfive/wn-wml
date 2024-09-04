@@ -50,7 +50,7 @@ class DivisionCreationContext(object):
     def make_division(self: Self,
                       copy_of: str,
                     **changes: CellValue | None) -> None:
-        with self.context.root_msg.nest(f"Making division {self.division.short_name}",
+        with Message(f"Making division {self.division.short_name}",
                                         child_padding=PADDING) as msg:
             ddd_name = f'Descriptor_Deck_Division_{self.division_name_internal}_multi'
             
