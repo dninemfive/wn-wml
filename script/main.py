@@ -3,6 +3,8 @@ from message import Message
 from misc.import_warno_scripts import import_script
 from ndf_parse import Mod
 from ndf_parse.model import ListRow, Object
+# https://stackoverflow.com/a/5469427
+from subprocess import Popen
 from utils.ndf import dict_to_map
 from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
@@ -12,7 +14,9 @@ import os
 import shutil
 import sys
 
-wn_metadata = WarnoMetadata(rf"C:\Program Files (x86)\Steam\steamapps\common\WARNO")
+WARNO_DIRECTORY = rf"C:\Program Files (x86)\Steam\steamapps\common\WARNO"
+
+wn_metadata = WarnoMetadata(WARNO_DIRECTORY)
 mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn_metadata, "0.0.0")
 div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)
 
@@ -36,7 +40,20 @@ def reset_source():
             sys.modules["utils"] = my_utils
             os.chdir(owd)
 
-reset_source()
+def reset_source_sane():
+    with Message("Resetting source (sane version)") as msg:
+        with msg.nest("Deleting existing files") as _:
+            shutil.rmtree(mod_metadata.source_path, ignore_errors=True)
+        with msg.nest("Running CreateNewMod.bat()") as _:
+            print(f'{wn_metadata.mods_path}\\CreateNewMod.bat')
+            Popen(f'CreateNewMod.bat', cwd=wn_metadata.mods_path).wait()
+
+def generate_mod():
+    process = Popen("GenerateMod.bat", cwd=mod_metadata.source_path).wait()
+    
+
+# reset_source()
+reset_source_sane()
 mod = Mod(mod_metadata.source_path, mod_metadata.output_path)
 mod.check_if_src_is_newer()
 
