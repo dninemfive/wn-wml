@@ -28,32 +28,28 @@ class DivisionCreator(object):
 
     @ndf_path(rf"GameData\Generated\Gameplay\Decks\Divisions.ndf")
     def edit_divisions_ndf(self: Self, ndf: List, msg: Message):
-        with msg.nest("edit_divisions_ndf()") as _:
-            copy: ListRow = ndf.by_name(self.copy_of).copy()
-            edit_members(copy.value, 
-                        DescriptorId = self.guid,
-                        CfgName = f"'{self.division.cfg_name}_multi'",
-                        **self.changes)
-            copy.namespace = self.division.descriptor_name
-            ndf.add(copy)
+        copy: ListRow = ndf.by_name(self.copy_of).copy()
+        edit_members(copy.value, 
+                    DescriptorId = self.guid,
+                    CfgName = f"'{self.division.cfg_name}_multi'",
+                    **self.changes)
+        copy.namespace = self.division.descriptor_name
+        ndf.add(copy)
     
     @ndf_path(rf"GameData\Generated\Gameplay\Decks\DivisionList.ndf")
     def edit_division_list_ndf(self: Self, ndf: List, msg: Message):
-        with msg.nest("edit_division_list_ndf()") as _:
-            division_list: List = ndf.by_name("DivisionList").value.by_member("DivisionList").value
-            division_list.add(self.division.descriptor_path)
+        division_list: List = ndf.by_name("DivisionList").value.by_member("DivisionList").value
+        division_list.add(self.division.descriptor_path)
 
     @ndf_path(rf"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf")
     def edit_deck_serializer_ndf(self: Self, ndf: List, msg: Message):
-        with msg.nest("edit_deck_serializer_ndf()") as _:
-            division_ids: Map = ndf.by_name("DeckSerializer").value.by_member('DivisionIds').value
-            division_ids.add(k=self.division.descriptor_name, v=str(self.division.id))
+        division_ids: Map = ndf.by_name("DeckSerializer").value.by_member('DivisionIds').value
+        division_ids.add(k=self.division.descriptor_name, v=str(self.division.id))
 
     @ndf_path(rf"GameData\Generated\Gameplay\Decks\DivisionRules.ndf")
     def edit_division_rules_ndf(self: Self, ndf: List, msg: Message):   
-        with msg.nest("edit_division_rules_ndf()") as _:     
-            division_rules: Map[MapRow] = ndf.by_name("DivisionRules").value.by_member("DivisionRules").value
-            copy: Object = division_rules.by_key(f"~/{self.copy_of}").value.copy()
-            division_rules.add(k=self.division.descriptor_path, v=copy)
+        division_rules: Map[MapRow] = ndf.by_name("DivisionRules").value.by_member("DivisionRules").value
+        copy: Object = division_rules.by_key(f"~/{self.copy_of}").value.copy()
+        division_rules.add(k=self.division.descriptor_path, v=copy)
 
     

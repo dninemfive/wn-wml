@@ -31,7 +31,11 @@ class ModCreationContext(object):
         """
         Closes this context at the end of a `with` block, writing out the cache.
         """
-        write(self.guid_cache, self.guid_cache_path)
+        with Message("writing guid cache") as _:
+            write(self.guid_cache, self.guid_cache_path)
+        with Message("writing out edits") as _:
+            for edit in self.mod.edits:
+                self.mod.write_edit(edit)
 
     def create_division(self: Self, division: DivisionMetadata, copy_of: str, root_msg: Message | None, **changes: CellValue | None) -> None:
         with try_nest(root_msg, 
