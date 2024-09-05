@@ -1,14 +1,14 @@
-import ndf_parse as ndf
+from context.mod_creation_context import ModCreationContext
+from ndf_parse import Mod
 from ndf_parse.model import ListRow, Object
-from script.metadata.mod import DivisionMetadata, ModMetadata
-from context_mod import ModCreationContext
-from context_division import DivisionCreationContext
-from utils_ndf import dict_to_map
+from utils.ndf import dict_to_map
+from metadata.division import DivisionMetadata
+from metadata.mod import ModMetadata
 
 mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', r'C:/Program Files (x86)/Steam/steamapps/common/WARNO/Mods/', "0.0.0")
 div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)
 
-mod = ndf.Mod(mod_metadata.source_path, mod_metadata.output_path)
+mod = Mod(mod_metadata.source_path, mod_metadata.output_path)
 mod.check_if_src_is_newer()
 
 guid_cache_path: str = "guid_cache.txt"
@@ -48,11 +48,11 @@ pack_list: dict[str, int] = {
     # add new units here...
 }
 with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
-    with DivisionCreationContext(mod_context, div_metadata) as div_context:
-        div_context.make_division(copy_of = "Descriptor_Deck_Division_US_82nd_Airborne_multi",
-                            DescriptionHintTitleToken = "'ECGMWQOEZA'",
-                            EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
-                            PackList = dict_to_map(pack_list))
+        mod_context.create_division(div_metadata,
+                                    copy_of = "Descriptor_Deck_Division_US_82nd_Airborne_multi",
+                                    DescriptionHintTitleToken = "'ECGMWQOEZA'",                             # 8th Infantry Division (Mech.)
+                                    EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
+                                    PackList = dict_to_map(pack_list))
         # make new units
         
         """ LOG """
