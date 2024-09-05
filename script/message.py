@@ -24,7 +24,7 @@ class Message(object):
             report = f"Failed: {exc_type}"
         else:
             report = "Done!"
-        print(f'{self.indent_str}{report} {_fmt(self.start_time, time_ns())}')
+        print(f'{self.indent_str if self.has_nested else ""}{report} {_fmt(self.start_time, time_ns())}')
     
     @property
     def indent_str(self: Self) -> str:

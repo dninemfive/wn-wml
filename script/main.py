@@ -17,6 +17,7 @@ mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn
 div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)
 
 def reset_source():
+    """ This is fucking unhinged and i need to fix it asap but it works for now """
     with Message("Resetting source") as msg:
         owd = os.getcwd()
         # silly but whatever
