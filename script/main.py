@@ -7,6 +7,7 @@ from utils.ndf import dict_to_map
 from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
+import os
 # https://stackoverflow.com/a/1557364
 import shutil
 import sys
@@ -16,10 +17,14 @@ mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn
 div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)
 
 def reset_source():
+    # silly but whatever
+    owd = os.getcwd()
+    os.chdir(wn_metadata.mods_path)
     with Message(f"Deleting source files at {mod_metadata.source_path}") as _:
         shutil.rmtree(mod_metadata.source_path, ignore_errors=True)
         import_script(wn_metadata, "CreateNewMod")
         getattr(sys.modules["CreateNewMod"], "CreateNewMod")(mod_metadata.source_path)
+    os.chdir(owd)
 
 reset_source()
 mod = Mod(mod_metadata.source_path, mod_metadata.output_path)
