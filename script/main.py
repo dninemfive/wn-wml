@@ -42,8 +42,9 @@ def reset_source():
 
 def run_bat(msg: Message | None, folder: str, name: str, *args):
     path = os.path.join(folder, f'{name}.bat')
-    path_and_args = [path, *args]
-    with try_nest(msg, f"Running command `{path_and_args}` in `{folder}`", force_nested=True) as _:
+    # https://stackoverflow.com/a/11729668
+    path_and_args = [path, *args, '<nul']
+    with try_nest(msg, f"Running command `{" ".join(path_and_args)}` in `{folder}`", force_nested=True) as _:
         Popen(path_and_args, cwd=folder).wait()
 
 def reset_source_sane():
