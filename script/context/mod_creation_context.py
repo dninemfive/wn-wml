@@ -1,9 +1,15 @@
-from metadata import DivisionMetadata, ModMetadata
+from script.metadata.mod import DivisionMetadata, ModMetadata
 from typing import Self
-from ndf_parse import Mod
 from uuid import uuid4
 from utils_io import load, write
-import context_division as ctx
+from ndf_parse import Mod
+from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
+from ndf_parse.model.abc import CellValue
+from message import Message
+from script.metadata.mod import DivisionMetadata
+from typing import Self
+from utils_ndf import edit_members, edit_or_read_file_with_msg
+from utils_str import max_len
 
 class ModCreationContext(object):
     """ Context for creating a WARNO mod, handling things like guid caching (so IDs don't change between builds) and managing the ndf.Mod itself """
@@ -20,8 +26,8 @@ class ModCreationContext(object):
     def __exit__(self: Self, exc_type, exc_value, traceback):
         write(self.guid_cache, self.guid_cache_path)
 
-    def create_division(self: Self, division: DivisionMetadata) -> ctx.DivisionCreationContext:
-         return ctx.DivisionCreationContext(self.mod, division)
+    def create_division(self: Self, division: DivisionMetadata, copy_of: str, **changes: CellValue | None) -> None:
+        division.make(self.mod, copy_of, changes)
     
     def create_units(self: Self): # -> MultipleUnitCreationContext:
         pass

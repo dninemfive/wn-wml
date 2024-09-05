@@ -31,3 +31,9 @@ class Message(object):
             print()
             self.has_nested = True
         return Message(msg, self.indent + 1, max(self.immediate_child_padding, padding), child_padding)
+    
+def try_nest(parent: Message | None, msg: str, padding: int = 0, child_padding: int = 0) -> Message:
+    if parent is None:
+        return Message(msg, padding=padding, child_padding=child_padding)
+    else:
+        return parent.nest(msg, padding, child_padding)
