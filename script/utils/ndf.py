@@ -1,7 +1,9 @@
+# https://realpython.com/primer-on-python-decorators/#fancy-decorators
+from functools import wraps
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, Object
 from ndf_parse.model.abc import CellValue
-from typing import Generator
+from typing import Any, Generator
 from message import Message, try_nest
 
 def edit_member(obj: Object, name: str, value: CellValue | None):
@@ -41,8 +43,11 @@ def replace_unit_modules(unit: Object, **kwargs: ListRow | Object):
     for k, v in kwargs.items():
         replace_unit_module(unit, k, v)
 
+def editing_or_reading(save: bool):
+    return 'Editing' if save else 'Reading'
+
 def edit_or_read_file_with_msg(mod: Mod, msg: Message, path: str, padding: int = 0, save: bool = True) -> Mod:
-    with msg.nest(f'{'Editing' if save else 'Reading'} {path}', padding) as _:
+    with msg.nest(f'{editing_or_reading(save)} {path}', padding) as _:
         return mod.edit(path, save)
     
 def ensure_listrow(val: CellValue | ListRow) -> ListRow:
@@ -61,10 +66,11 @@ def ndf_path(path: str, save: bool = True):
 
     @ndf_path("Divisions.ndf")
     """
-    def dec_path(f: callable[List, Message]):
-        def wrap_f(mod: Mod, msg: Message | None):
-            with try_nest(msg, f"Editing {path}") as new_msg:
+    def decorate(f: callable[List, Message]):
+        # @wraps doesn't understand self (afaict) so using it here is counterproductive
+        def wrap(self: Any, mod: Mod, msg: Message | None, *args: Any, **kwargs: Any):
+            with try_nest(msg, f"{editing_or_reading(save)} {path}") as new_msg:
                 with mod.edit(path, save) as data:
-                    return f(data, new_msg)
-        return wrap_f
-    return dec_path
+                    return f(self, data, new_msg, *args, **kwargs)
+        return wrap
+    return decorate

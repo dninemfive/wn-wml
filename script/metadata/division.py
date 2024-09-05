@@ -22,9 +22,13 @@ class DivisionMetadata(object):
     country: str
     id: int
     
-    def base_unit_name(self, unit_name: str) -> str:
+    def base_unit_name(self: Self, unit_name: str) -> str:
         return f'Unit_{self.dev_short_name}_{unit_name}_{self.country}'    
     
     @property
-    def division_name_internal(self):
+    def division_name_internal(self: Self):
         return f'{self.dev_short_name}_{self.country}_{self.short_name}'
+    
+    @property
+    def deck_discriptor_name(self: Self):
+        return f'Descriptor_Deck_Division_{self.division_name_internal}_multi'

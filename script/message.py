@@ -15,7 +15,7 @@ class Message(object):
         self.immediate_child_padding = child_padding + 3
     
     def __enter__(self: Self):
-        print(('  ' * self.indent) + self.msg.ljust(self.padding, "."), end="", flush=True)
+        print(self.indent_str + self.msg.ljust(self.padding, "."), end="", flush=True)
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
@@ -24,7 +24,11 @@ class Message(object):
             report = f"Failed: {exc_type}"
         else:
             report = "Done!"
-        print(f'{report} {_fmt(self.start_time, time_ns())}')
+        print(f'{self.indent_str}{report} {_fmt(self.start_time, time_ns())}')
+    
+    @property
+    def indent_str(self: Self) -> str:
+        return '  ' * self.indent
 
     def nest(self: Self, msg: str, padding: int = 0, child_padding: int = 0) -> Self:
         if not self.has_nested:

@@ -7,9 +7,9 @@ def ndf_path(path: str, save: bool = True):
     @ndf_path("Divisions.ndf")
     """
     def dec_path(f):
-        def wrap_f(self, s, msg):
+        def wrap_f(self, s, msg, *args, **kwargs):
             with try_nest(msg, f"{path}") as new_msg:
-                return f(self, s, new_msg)
+                return f(self, s, new_msg, *args, **kwargs)
         return wrap_f
     return dec_path
 
@@ -18,9 +18,9 @@ class test_class(object):
         self.asdfawsfe = asdfawsfe
 
     @ndf_path("hi")
-    def test_thingy(self, s, msg):
-        with msg.nest(s) as _:
+    def test_thingy(self, s, msg: Message, another_str: str):
+        with msg.nest(f'{s} {another_str}') as _:
             pass
 
 with Message("initial message") as msg:
-    test_class("fiejwioj").test_thingy("itouw", msg)
+    test_class("fiejwioj").test_thingy("itouw", msg, "fwoutwioet")
