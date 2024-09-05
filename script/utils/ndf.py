@@ -2,7 +2,7 @@ from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, Object
 from ndf_parse.model.abc import CellValue
 from typing import Generator
-from message import Message
+from message import Message, try_nest
 
 def edit_member(obj: Object, name: str, value: CellValue | None):
     index = obj.by_member(name).index
@@ -54,3 +54,17 @@ def ensure_listrow(val: CellValue | ListRow) -> ListRow:
 def root_paths(base_path: str, *paths: str) -> Generator:
     for p in paths:
         yield f'{base_path}\\{p}.ndf'
+
+def ndf_path(path: str, save: bool = True):
+    """
+    Decorator which allows defining NDF edits to a particular file:
+
+    @ndf_path("Divisions.ndf")
+    """
+    def dec_path(f: callable[List, Message]):
+        def wrap_f(mod: Mod, msg: Message | None):
+            with try_nest(msg, f"Editing {path}") as new_msg:
+                with mod.edit(path, save) as data:
+                    return f(data, new_msg)
+        return wrap_f
+    return dec_path

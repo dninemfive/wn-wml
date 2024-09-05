@@ -1,6 +1,8 @@
 from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
 from ndf_parse import Mod
+from message import Message
+from ndf_parse.model import List, ListRow
 from ndf_parse.model.abc import CellValue
 from typing import Self
 from utils.io import load, write
@@ -31,8 +33,14 @@ class ModCreationContext(object):
         write(self.guid_cache, self.guid_cache_path)
 
     @ndf_path(rf"GameData\Generated\Gameplay\Decks\Divisions.ndf")
-    def edit_divisions_ndf(ndf: List):
-        pass
+    def edit_divisions_ndf(ndf: List, msg: Message):
+        copy: ListRow = divisions_ndf.by_name(copy_of).copy()
+        edit_members(copy.value, 
+                    DescriptorId = self.generate_guid(ddd_name),
+                    CfgName = f"'{self.division_name_internal}_multi'",
+                    **changes)
+        copy.namespace = ddd_name
+        divisions_ndf.add(copy)
 
     def create_division(self: Self, division: DivisionMetadata, copy_of: str, **changes: CellValue | None) -> None:
         with Message(f"Making division {self.division.short_name}",

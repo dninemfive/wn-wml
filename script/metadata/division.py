@@ -6,7 +6,6 @@ from ndf_parse.model import List, ListRow, Map, MapRow, Object
 from ndf_parse.model.abc import CellValue
 from utils.ndf import edit_members
 from utils.misc import max_len
-from context.ndf_file_set import NdfFileSet
 
 DIVISION_PADDING = max_len(rf"GameData\Generated\Gameplay\Decks\Divisions.ndf",
                            rf"GameData\Generated\Gameplay\Decks\DivisionList.ndf",
@@ -28,4 +27,4 @@ class DivisionMetadata(object):
     
     @property
     def division_name_internal(self):
-        return f'{self.division.dev_short_name}_{self.division.country}_{self.division.short_name}'
+        return f'{self.dev_short_name}_{self.country}_{self.short_name}'
