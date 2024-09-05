@@ -3,62 +3,19 @@ from message import Message, try_nest
 from misc.import_warno_scripts import import_script
 from ndf_parse import Mod
 from ndf_parse.model import ListRow, Object
-# https://stackoverflow.com/a/5469427
-from subprocess import Popen
+from utils.bat import generate_mod, reset_source
 from utils.ndf import dict_to_map
 from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
-import os
-# https://stackoverflow.com/a/1557364
-import shutil
-import sys
 
 WARNO_DIRECTORY = rf"C:\Program Files (x86)\Steam\steamapps\common\WARNO"
 
 wn_metadata = WarnoMetadata(WARNO_DIRECTORY)
 mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn_metadata, "0.0.0")
-div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)
+div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)    
 
-def reset_source():
-    """ This is fucking unhinged and i need to fix it asap but it works for now """
-    with Message("Resetting source") as msg:
-        owd = os.getcwd()
-        # silly but whatever
-        with msg.nest(f"Changing cwd from {owd} to {wn_metadata.mods_path}") as _:
-            os.chdir(wn_metadata.mods_path)
-        # oh god this is stupid why am i doing this
-        with msg.nest(f"Temporarily replacing my `utils` module with Eugen's utils") as _:
-            my_utils = sys.modules["utils"]
-            import_script(wn_metadata, "utils")
-        with msg.nest(f"Deleting source files at {mod_metadata.source_path}") as _:
-            shutil.rmtree(mod_metadata.source_path, ignore_errors=True)
-        with msg.nest(f"Running CreateNewMod()") as _:
-            import_script(wn_metadata, "CreateNewMod")
-            getattr(sys.modules["CreateNewMod"], "CreateNewMod")(mod_metadata.relative_source_path)
-        with msg.nest("undoing my insane changes") as _:
-            sys.modules["utils"] = my_utils
-            os.chdir(owd)
-
-def run_bat(msg: Message | None, folder: str, name: str, *args):
-    path = os.path.join(folder, f'{name}.bat')
-    # https://stackoverflow.com/a/11729668
-    path_and_args = [path, *args, '<nul']
-    with try_nest(msg, f"Running command `{" ".join(path_and_args)}` in `{folder}`", force_nested=True) as _:
-        Popen(path_and_args, cwd=folder).wait()
-
-def reset_source_sane():
-    with Message("Resetting source (sane version)") as msg:
-        with msg.nest("Deleting existing files") as _:
-            shutil.rmtree(mod_metadata.source_path, ignore_errors=True)
-        run_bat(msg, wn_metadata.mods_path, "CreateNewMod", mod_metadata.relative_source_path)
-
-def generate_mod():
-    run_bat(None, mod_metadata.output_path, "GenerateMod")
-    
-
-# reset_source()
-reset_source_sane()
+reset_source(mod_metadata, wn_metadata)
 mod = Mod(mod_metadata.source_path, mod_metadata.output_path)
 mod.check_if_src_is_newer()
 
@@ -102,6 +59,7 @@ with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
         mod_context.create_division(div_metadata,
                                     "Descriptor_Deck_Division_US_82nd_Airborne_multi",
                                     None,
+                                    DivisionName="'ECGMWQOEZA'",                                            # 8th Infantry Division (Mech.)
                                     DescriptionHintTitleToken = "'ECGMWQOEZA'",                             # 8th Infantry Division (Mech.)
                                     EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
                                     PackList = dict_to_map(pack_list))
@@ -203,4 +161,4 @@ with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
 
         # add a default deck to Decks.ndf (not required)
 
-generate_mod()
+generate_mod(mod_metadata)
