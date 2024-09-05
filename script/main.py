@@ -1,13 +1,27 @@
 from context.mod_creation_context import ModCreationContext
+from message import Message
+from misc.import_warno_scripts import import_script
 from ndf_parse import Mod
 from ndf_parse.model import ListRow, Object
 from utils.ndf import dict_to_map
 from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
+from metadata.warno import WarnoMetadata
+# https://stackoverflow.com/a/1557364
+import shutil
+import sys
 
-mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', r'C:/Program Files (x86)/Steam/steamapps/common/WARNO/Mods/', "0.0.0")
+wn_metadata = WarnoMetadata(rf"C:\Program Files (x86)\Steam\steamapps\common\WARNO")
+mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn_metadata, "0.0.0")
 div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)
 
+def reset_source():
+    with Message(f"Deleting source files at {mod_metadata.source_path}") as _:
+        shutil.rmtree(mod_metadata.source_path, ignore_errors=True)
+        import_script(wn_metadata, "CreateNewMod")
+        getattr(sys.modules["CreateNewMod"], "CreateNewMod")(mod_metadata.source_path)
+
+reset_source()
 mod = Mod(mod_metadata.source_path, mod_metadata.output_path)
 mod.check_if_src_is_newer()
 
