@@ -45,8 +45,7 @@ def reset_source_sane():
         with msg.nest("Deleting existing files") as _:
             shutil.rmtree(mod_metadata.source_path, ignore_errors=True)
         with msg.nest("Running CreateNewMod.bat()") as _:
-            print(f'{wn_metadata.mods_path}\\CreateNewMod.bat')
-            Popen(f'CreateNewMod.bat', cwd=wn_metadata.mods_path).wait()
+            Popen([f"{wn_metadata.mods_path}\\CreateNewMod.bat", mod_metadata.relative_source_path], cwd=wn_metadata.mods_path).wait()
 
 def generate_mod():
     process = Popen("GenerateMod.bat", cwd=mod_metadata.source_path).wait()
