@@ -3,7 +3,7 @@ from functools import wraps
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, Object
 from ndf_parse.model.abc import CellValue
-from typing import Any, Generator
+from typing import Any, Callable, Generator
 from message import Message, try_nest
 
 def edit_member(obj: Object, name: str, value: CellValue | None):
@@ -66,7 +66,7 @@ def ndf_path(path: str, save: bool = True):
 
     @ndf_path("Divisions.ndf")
     """
-    def decorate(f: callable[List, Message]):
+    def decorate(f: Callable[..., None]):
         # @wraps doesn't understand self (afaict) so using it here is counterproductive
         def wrap(self: Any, mod: Mod, msg: Message | None, *args: Any, **kwargs: Any):
             with try_nest(msg, f"{editing_or_reading(save)} {path}") as new_msg:

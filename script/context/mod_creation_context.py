@@ -37,7 +37,7 @@ class ModCreationContext(object):
         with try_nest(root_msg, 
                       f"Making division {division.short_name}",
                       child_padding=DIVISION_PADDING) as msg:
-            DivisionCreator(self.generate_guid(division.descriptor_name), copy_of, division, changes).apply()
+            DivisionCreator(self.generate_guid(division.descriptor_name), copy_of, division, **changes).apply(self.mod, msg)
     
     def create_units(self: Self): # -> MultipleUnitCreationContext:
         pass

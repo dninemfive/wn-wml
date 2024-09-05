@@ -49,7 +49,8 @@ pack_list: dict[str, int] = {
 }
 with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
         mod_context.create_division(div_metadata,
-                                    copy_of = "Descriptor_Deck_Division_US_82nd_Airborne_multi",
+                                    "Descriptor_Deck_Division_US_82nd_Airborne_multi",
+                                    None,
                                     DescriptionHintTitleToken = "'ECGMWQOEZA'",                             # 8th Infantry Division (Mech.)
                                     EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
                                     PackList = dict_to_map(pack_list))

@@ -1,6 +1,7 @@
 from typing import Self
 from message import Message, try_nest
 from metadata.division import DivisionMetadata
+from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, Object
 from ndf_parse.model.abc import CellValue
 from utils.ndf import edit_members, ndf_path
@@ -17,11 +18,13 @@ class DivisionCreator(object):
         # return max([len(decorator.x) for f on class where f.has_decorator(ndf_path)])
         pass
 
-    def apply(self: Self):
+    def apply(self: Self, mod: Mod, msg: Message):
         # for fn on class with ndf_path decorator,
         #   fn()
-        self.edit_divisions_ndf()
-        self.edit_division_list_ndf()
+        self.edit_divisions_ndf(mod, msg)
+        self.edit_division_list_ndf(mod, msg)
+        self.edit_division_rules_ndf(mod, msg)
+        self.edit_deck_serializer_ndf(mod, msg)
 
     @ndf_path(rf"GameData\Generated\Gameplay\Decks\Divisions.ndf")
     def edit_divisions_ndf(self: Self, ndf: List, msg: Message):
