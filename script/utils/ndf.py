@@ -54,3 +54,9 @@ def ensure_listrow(val: CellValue | ListRow) -> ListRow:
 def root_paths(base_path: str, *paths: str) -> Generator:
     for p in paths:
         yield f'{base_path}\\{p}.ndf'
+
+# https://discuss.python.org/t/is-it-possible-to-make-multiline-functions-inside-a-dictionary/27684/5
+# https://www.geeksforgeeks.org/decorators-in-python/
+# https://stackoverflow.com/a/25827070
+def ndf_path(f: callable[List], path: str):
+    

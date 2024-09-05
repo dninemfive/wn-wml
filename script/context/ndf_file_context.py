@@ -2,13 +2,14 @@ from typing import Self
 from ndf_parse import Mod
 from ndf_parse.model import List
 from message import Message, try_nest
+from script.metadata.ndf_paths import NdfPaths
 from utils.ndf import root_paths
 
 class NdfFileSet(object):
-    def __init__(self: Self, mod: Mod, parent_msg: Message | None, base_path: str = "", *paths: str):
+    def __init__(self: Self, mod: Mod, parent_msg: Message | None, files: NdfPaths):
         self.mod = mod
         self.parent_msg = parent_msg
-        self.paths = root_paths(base_path, paths)
+        self.paths = files
        
     def __enter__(self: Self) -> list[List]:
         self.msg = try_nest(self.parent_msg, "Loading ndf files", child_padding=self.msg_length)
