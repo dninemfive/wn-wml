@@ -6,11 +6,15 @@ from ndf_parse.model import List, ListRow, Map, MapRow, Object
 from ndf_parse.model.abc import CellValue
 from utils.ndf import edit_members
 from utils.misc import max_len
+from context.ndf_file_set import NdfFileSet
 
 DIVISION_PADDING = max_len(rf"GameData\Generated\Gameplay\Decks\Divisions.ndf",
                            rf"GameData\Generated\Gameplay\Decks\DivisionList.ndf",
                            rf"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf",
                            rf"GameData\Generated\Gameplay\Decks\DivisionRules.ndf") + len("Editing ")
+
+BASE_PATH = rf"GameData\Generated\Gameplay\Decks"
+FILES = ["Divisions", "DivisionList", "DeckSerializer", "DivisionRules"]
 
 @dataclass
 class DivisionMetadata(object):
@@ -39,6 +43,9 @@ class DivisionMetadata(object):
                     return mod.edit(path)
 
             ddd_name = f'Descriptor_Deck_Division_{self.division_name_internal}_multi'
+
+            with NdfFileSet(mod, msg, BASE_PATH, *FILES) as files:
+                pass
             
             with edit(rf"GameData\Generated\Gameplay\Decks\Divisions.ndf") as divisions_ndf:
                 copy: ListRow = divisions_ndf.by_name(copy_of).copy()

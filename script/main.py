@@ -1,6 +1,6 @@
 import ndf_parse as ndf
 from ndf_parse.model import ListRow, Object
-from metadata import DivisionMetadata, ModMetadata
+from script.metadata.mod import DivisionMetadata, ModMetadata
 from context_mod import ModCreationContext
 from context_division import DivisionCreationContext
 from utils_ndf import dict_to_map

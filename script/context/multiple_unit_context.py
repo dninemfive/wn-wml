@@ -3,7 +3,8 @@ from ndf_parse import Mod
 from ndf_parse.model import List
 from typing import Self, Generator
 from dataclasses import dataclass
-from ndf_file_set import NdfFileSet
+from script.context.ndf_file_set import NdfFileSet
+
 
 @dataclass
 class UnitNdf(NdfFileSet):
