@@ -1,5 +1,5 @@
 from context.mod_creation_context import ModCreationContext
-from message import Message
+from message import Message, try_nest
 from misc.import_warno_scripts import import_script
 from ndf_parse import Mod
 from ndf_parse.model import ListRow, Object
@@ -40,15 +40,20 @@ def reset_source():
             sys.modules["utils"] = my_utils
             os.chdir(owd)
 
+def run_bat(msg: Message | None, folder: str, name: str, *args):
+    path = os.path.join(folder, f'{name}.bat')
+    path_and_args = [path, *args]
+    with try_nest(msg, f"Running command `{path_and_args}` in `{folder}`", force_nested=True) as _:
+        Popen(path_and_args, cwd=folder).wait()
+
 def reset_source_sane():
     with Message("Resetting source (sane version)") as msg:
         with msg.nest("Deleting existing files") as _:
             shutil.rmtree(mod_metadata.source_path, ignore_errors=True)
-        with msg.nest("Running CreateNewMod.bat()", force_nested=True) as _:
-            Popen([f"{wn_metadata.mods_path}\\CreateNewMod.bat", mod_metadata.relative_source_path], cwd=wn_metadata.mods_path).wait()
+        run_bat(msg, wn_metadata.mods_path, "CreateNewMod", mod_metadata.relative_source_path)
 
 def generate_mod():
-    process = Popen("GenerateMod.bat", cwd=mod_metadata.source_path).wait()
+    run_bat(None, mod_metadata.output_path, "GenerateMod")
     
 
 # reset_source()
@@ -196,3 +201,5 @@ with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
         # F/A-18D [FAC]
 
         # add a default deck to Decks.ndf (not required)
+
+generate_mod()
