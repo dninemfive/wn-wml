@@ -17,6 +17,10 @@ def ndf_alias(path: str):
     return decorate
 
 class UnitNdf(NdfContext):
+    """
+    TODO: i mainly want this to be a wrapper around NdfContext so that i can access each item by name instead of indexing a dictionary. 
+    Probably want something from here? https://stackoverflow.com/questions/652276/is-it-possible-to-create-anonymous-objects-in-python
+    """
     def __init__(self: Self, mod: Mod, parent_msg: Message | None = None):
         super(mod,
               parent_msg,
