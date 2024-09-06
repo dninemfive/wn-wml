@@ -30,6 +30,13 @@ def replace_by_type(list: List, type: str, value: CellValue):
     index: int = list.find_by_cond(lambda x: object_has_type(x.value, type))
     list.replace(index, value)
 
+def get_module(unit: Object, module_type: str) -> ListRow | None:
+    result: ListRow | None = None
+    for module in unit.by_member("ModulesDescriptors").value.match_pattern(module_type):
+        result = module
+        break
+    return result
+
 def get_unit_module(unit_list: List, unit_name: str, module_type: str) -> ListRow | None:
     unit_object: Object = unit_list.by_namespace(f'Descriptor_Unit_{unit_name}').value
     modules: List = unit_object.by_member('ModulesDescriptors').value
@@ -69,9 +76,9 @@ def load_ndf_path(path: str, save: bool = True):
     def decorate(f: Callable[..., None]):
         # @wraps doesn't understand self (afaict) so using it here is counterproductive
         def wrap(self: Any, mod: Mod, msg: Message | None, *args: Any, **kwargs: Any):
-            with try_nest(msg, f"{editing_or_reading(save)} {path}") as new_msg:
+            with try_nest(msg, f"{editing_or_reading(save)} {path}") as _:
                 with mod.edit(path, save) as data:
-                    return f(self, data, new_msg, *args, **kwargs)
+                    return f(self, data, *args, **kwargs)
         return wrap
     decorate._ndf_path = path
     return decorate
@@ -85,8 +92,8 @@ def ndf_path(path: str, save: bool = True):
     def decorate(f: Callable[..., None]):
         # @wraps doesn't understand self (afaict) so using it here is counterproductive
         def wrap(self: Any, ndf: dict[str, List], msg: Message | None, *args: Any, **kwargs: Any):
-            with try_nest(msg, f"{editing_or_reading(save)} {path}") as new_msg:
-                return f(self, ndf[path], new_msg, *args, **kwargs)
+            with try_nest(msg, f"{editing_or_reading(save)} {path}") as _:
+                return f(self, ndf[path], *args, **kwargs)
         return wrap
     # lost the link but this was suggested in a StackExchange post
     decorate._ndf_path = path

@@ -7,7 +7,7 @@ from ndf_parse import Mod
 from ndf_parse.model import ListRow, Map, MapRow, MemberRow, Object
 from ndf_paths import *
 from utils.bat import generate_mod, reset_source
-from utils.ndf import dict_to_map, edit_members, get_unit_module, replace_unit_module
+from utils.ndf import dict_to_map, edit_members, get_module, replace_unit_module
 from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
@@ -16,7 +16,7 @@ from context.ndf_context import NdfContext
 WARNO_DIRECTORY = rf"C:\Program Files (x86)\Steam\steamapps\common\WARNO"
 
 wn_metadata = WarnoMetadata(WARNO_DIRECTORY)
-mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn_metadata, "0.0.0")
+mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn_metadata, "0.0.0", 'd9')
 div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)    
 
 reset_source(mod_metadata, wn_metadata)
@@ -85,11 +85,15 @@ with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
             with NdfContext(mod, msg, UNITE_DESCRIPTOR, SHOWROOM_EQUIVALENCE, DIVISION_PACKS, DECK_SERIALIZER, ALL_UNITS_TACTIC) as ndf:
                 unite_descriptor_ndf = ndf[UNITE_DESCRIPTOR]
                 
-                with UnitCreationContext(mod_context, ndf, div_metadata.id * 1000) as units_context:
+                with UnitCreationContext(mod_context, msg, ndf, div_metadata.id * 1000) as units_context:
                     # M1075 PLS
                     # copy of: HEMTT
                     with units_context.create_unit("M1075_PLS_US", "HEMTT_US") as m1075_pls:
-                        unit_ui = get_unit_module(unite_descriptor_ndf, "M1038")
+                        with m1075_pls as creator:
+                            base_ui_module: Object = creator.get_module("TUnitUIModuleDescriptor")
+                            edit_members(base_ui_module,
+                                        NameToken="'HIPYAUFBUI'",
+                                        UpgradeFromUnit=None)
                         # TUnitUIModuleDescriptor/NameToken replaced with that of M1038 Humvee (for now)
 
                         # TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY

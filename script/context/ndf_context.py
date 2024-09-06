@@ -2,7 +2,6 @@ from typing import Self
 from ndf_parse import Mod
 from ndf_parse.model import List
 from message import Message, try_nest
-from metadata.ndf_paths import NdfPaths
 from utils.ndf import root_paths
 
 class NdfContext(object):

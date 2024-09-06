@@ -23,12 +23,16 @@ class DivisionMetadata(object):
     id: int
     
     @property
+    def base_name(self: Self) -> str:
+        return f"{self.dev_short_name}_{self.country}_{self.short_name}_multi"
+
+    @property
     def cfg_name(self: Self) -> str:
-        return f"'{self.dev_short_name}_{self.country}_{self.short_name}_multi'"
+        return f"'{self.base_name}'"
     
     @property
     def descriptor_name(self: Self) -> str:
-        return f'Descriptor_Deck_Division_{self.cfg_name}_multi'
+        return f'Descriptor_Deck_Division_{self.base_name}_multi'
     
     @property
     def descriptor_path(self: Self) -> str:

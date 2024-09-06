@@ -9,7 +9,6 @@ from typing import Self
 from utils.io import load, write
 from utils.ndf import edit_members, load_ndf_path
 from uuid import uuid4
-import context.unit_creation_context as ucc
 
 class ModCreationContext(object):
     """

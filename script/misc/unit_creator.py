@@ -1,4 +1,5 @@
-from context.unit_creation_context import UnitCreationContext
+# right, python is stupid so i can't use type hints for this
+# from context.unit_creation_context import UnitCreationContext
 from context.ndf_context import NdfContext
 from message import Message
 from metadata.unit import UnitMetadata
@@ -6,15 +7,15 @@ from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_paths import UNITE_DESCRIPTOR
 from typing import Self
-from utils.ndf import edit_members, ndf_path
+from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module
 
 class UnitCreator(object):
-    def __init__(self: Self, ctx: UnitCreationContext, name: str, copy_of: str):
+    def __init__(self: Self, ctx, name: str, copy_of: str):
         self.ctx = ctx
         self.new = UnitMetadata(name)
         self.src = UnitMetadata(copy_of)
 
-    def __enter__(self: Self) -> Object:
+    def __enter__(self: Self) -> Self:
         self.root_msg = self.ctx.root_msg.nest(f"Making {self.new.name}")
         self.root_msg.__enter__()
         with self.root_msg.nest(f"Copying {self.src.descriptor_name}") as _:
@@ -26,19 +27,21 @@ class UnitCreator(object):
         self.root_msg.__exit__(exc_type, exc_value, traceback)
 
     def apply(self: Self, ndf: dict[str, List], msg: Message):
-        with msg.nest(f"Saving {self.new.name}") as _:
-            self.edit_unite_descriptor(ndf)
-            self.edit_deck_serializer(ndf)
-            self.edit_division_packs(ndf)
-            self.edit_showroom_equivalence(ndf)
-            self.edit_all_units_tactic(ndf)
+        with msg.nest(f"Saving {self.new.name}") as msg2:
+            self.edit_unite_descriptor(ndf, msg2)
+            self.edit_deck_serializer(ndf, msg2)
+            self.edit_division_packs(ndf, msg2)
+            self.edit_showroom_equivalence(ndf, msg2)
+            self.edit_all_units_tactic(ndf, msg2)
 
     def make_copy(self: Self, ndf: List) -> Object:
         copy: Object = ndf.by_name(self.src.descriptor_name).value.copy()
         edit_members(copy,
                      DescriptorId=self.ctx.generate_guid(self.new.descriptor_name),
                      ClassNameForDebug=self.new.class_name_for_debug)
-        copy.by_member("ModulesDescriptors").value.by_name("TTagsModuleDescriptor").value
+        # TODO: remove old UNITE_xxx_yy tag and replace with new one
+        # tags: List = get_module(copy, 'TTagsModuleDescriptor').by_member("TagSet").value
+        # tags.remove()
         return copy
 
     @ndf_path(rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf')
@@ -66,3 +69,6 @@ class UnitCreator(object):
     def edit_all_units_tactic(self: Self, ndf: List):
         all_units_tactic = ndf.by_name("AllUnitsTactic").value
         all_units_tactic.add(self.new.descriptor_path)
+
+    def get_module(self: Self, module_type: str) -> Object:
+        return get_module(self.unit_object, module_type)
