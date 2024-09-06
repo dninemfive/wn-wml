@@ -10,12 +10,16 @@ from utils.ndf import edit_members, ndf_path
 class UnitCreator(object):
     def __init__(self: Self, ctx: UnitCreationContext, name: str, copy_of: str):
         self.ctx = ctx
-        self.meta = UnitMetadata(f'{ctx.prefix}_{name}')
+        self.meta = UnitMetadata(name)
         self.copy_of = UnitMetadata(copy_of)
 
     def apply(self: Self, ndf: dict[str, List], msg: Message):
         with msg.nest(f"Adding {self.meta.name}") as _:
-            self.edit_unite_descriptor(ndf, msg)
+            self.edit_unite_descriptor(ndf)
+            self.edit_deck_serializer(ndf)
+            self.edit_division_packs(ndf)
+            self.edit_showroom_equivalence(ndf)
+            self.edit_all_units_tactic(ndf)
 
     @ndf_path(rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf')
     def edit_unite_descriptor(self: Self, ndf: List):

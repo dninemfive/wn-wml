@@ -1,6 +1,7 @@
 from context.mod_creation_context import ModCreationContext
 from message import Message, try_nest
 from misc.import_warno_scripts import import_script
+from misc.unit_creator import UnitCreator
 from ndf_parse import Mod
 from ndf_parse.model import ListRow, Map, MapRow, MemberRow, Object
 from utils.bat import generate_mod, reset_source
@@ -92,7 +93,9 @@ with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
         ALL_UNITS_TACTIC        = rf"GameData\Generated\Gameplay\Gfx\AllUnitsTactic.ndf"
         with Message("Creating units") as msg:
             with NdfContext(mod, msg, UNITE_DESCRIPTOR, SHOWROOM_EQUIVALENCE, DIVISION_PACKS, DECK_SERIALIZER, ALL_UNITS_TACTIC) as ndf:
-                
+                unite_descriptor_ndf = ndf[UNITE_DESCRIPTOR]
+                with mod_context.create_units(div_metadata.id * 1000) as unit_context:
+                     unit_context.create_unit("M1075_PLS_US", "HEMTT_US")
         # ✪ M998 HUMVEE SGT.
         # ✪ M1025 HUMVEE AGL
         # ✪ M1010 TC3V

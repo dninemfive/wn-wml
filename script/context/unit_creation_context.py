@@ -1,5 +1,6 @@
 from context.mod_creation_context import ModCreationContext
 from message import Message
+from misc.unit_creator import UnitCreator
 from typing import Self
 from utils.io import load, write
 
@@ -19,10 +20,9 @@ class UnitCreationContext(object):
         """
         with Message("Saving unit ID cache") as _:
             write(self.id_cache, self.id_cache_path)
-
-    @property
-    def prefix(self: Self) -> str:
-        return self.ctx.metadata.dev_short_name
+    
+    def create_unit(self: Self, name: str, copy_of: str):
+        return UnitCreator(self, f'{self.ctx.prefix}_{name}', copy_of)
     
     def register(self: Self, descriptor_name: str) -> int:
         if descriptor_name not in self.id_cache:            
