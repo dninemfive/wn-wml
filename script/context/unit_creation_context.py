@@ -1,25 +1,30 @@
 from context.mod_creation_context import ModCreationContext
 from message import Message
 from misc.unit_creator import UnitCreator
+from ndf_parse.model import List
 from typing import Self
 from utils.io import load, write
 
 class UnitCreationContext(object):
-    def __init__(self: Self, ctx: ModCreationContext, initial_id: int, id_cache_path: str = "unit_id_cache.txt"):
+    def __init__(self: Self, ctx: ModCreationContext, root_msg: Message, ndf: dict[str, List], initial_id: int, id_cache_path: str = "unit_id_cache.txt"):
         self.ctx = ctx
+        self.root_msg = root_msg
+        self.ndf = ndf
         self.current_id = initial_id
         self.id_cache_path = id_cache_path
     
     def __enter__(self: Self):
-        self.id_cache: dict[str, int] = load(self.id_cache_path, {})
+        with self.root_msg.nest("Loading unit ID cache") as _:
+            self.id_cache: dict[str, int] = load(self.id_cache_path, {})
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
         """
         Closes this context at the end of a `with` block, writing out the cache.
         """
-        with Message("Saving unit ID cache") as _:
+        with self.root_msg.nest("Saving unit ID cache") as _:
             write(self.id_cache, self.id_cache_path)
+        self.id_cache = None
     
     def create_unit(self: Self, name: str, copy_of: str):
         return UnitCreator(self, f'{self.ctx.prefix}_{name}', copy_of)

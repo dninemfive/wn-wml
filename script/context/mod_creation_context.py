@@ -47,9 +47,6 @@ class ModCreationContext(object):
                       f"Making division {division.short_name}",
                       child_padding=DIVISION_PADDING) as msg:
             DivisionCreator(self.generate_guid(division.descriptor_name), copy_of, division, **changes).apply(self.mod, msg)
-    
-    def create_units(self: Self, initial_id: int) -> ucc.UnitCreationContext:
-        return ucc.UnitCreationContext(self, initial_id)
 
     def generate_guid(self: Self, guid_key: str) -> str:
         """ Generates a GUID in the format NDF expects """
