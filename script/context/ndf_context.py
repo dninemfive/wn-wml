@@ -11,7 +11,7 @@ class NdfContext(object):
         self.parent_msg = parent_msg
         self.paths = paths
        
-    def __enter__(self: Self) -> Self:
+    def __enter__(self: Self) -> dict[str, List]:
         self.msg = try_nest(self.parent_msg, "Loading ndf files", child_padding=self.msg_length)
         self.msg.__enter__()
         return {x:self.load(x) for x in self.paths}

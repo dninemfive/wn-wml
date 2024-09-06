@@ -22,12 +22,9 @@ class DivisionMetadata(object):
     country: str
     id: int
     
-    def base_unit_name(self: Self, unit_name: str) -> str:
-        return f'Unit_{self.dev_short_name}_{unit_name}_{self.country}'    
-    
     @property
     def cfg_name(self: Self) -> str:
-        return f'{self.dev_short_name}_{self.country}_{self.short_name}'
+        return f"'{self.dev_short_name}_{self.country}_{self.short_name}_multi'"
     
     @property
     def descriptor_name(self: Self) -> str:

@@ -90,30 +90,9 @@ with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
         DIVISION_PACKS          = rf'GameData\Generated\Gameplay\Decks\DivisionPacks.ndf'
         DECK_SERIALIZER         = rf"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf"
         ALL_UNITS_TACTIC        = rf"GameData\Generated\Gameplay\Gfx\AllUnitsTactic.ndf"
-        with Message("Creating M1075 PLS") as msg:
+        with Message("Creating units") as msg:
             with NdfContext(mod, msg, UNITE_DESCRIPTOR, SHOWROOM_EQUIVALENCE, DIVISION_PACKS, DECK_SERIALIZER, ALL_UNITS_TACTIC) as ndf:
-                copy: Object
-                with msg.nest(f"Copying HEMTT") as _:
-                    copy = ndf[UNITE_DESCRIPTOR].by_name("Descriptor_Unit_HEMTT_US").value.copy()
-                    edit_members(copy,
-                                 DescriptorId=mod_context.generate_guid("Descriptor_Unit_d9_M1075_PLS_US"),
-                                 ClassNameForDebug="'Unit_d9_M1075_PLS_US'")
-                    copy.namespace = "Descriptor_Unit_d9_M1075_PLS_US"
-                    ndf[UNITE_DESCRIPTOR].add(ListRow(copy, namespace="Descriptor_Unit_d9_M1075_PLS_US", visibility="export"))
-                with msg.nest("Adding M1075 PLS to ShowRoomEquivalence") as _:
-                    unit_to_showroom_equivalent: Map = ndf[SHOWROOM_EQUIVALENCE].by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
-                    unit_to_showroom_equivalent.add(k="$/GFX/Unit/Descriptor_Unit_d9_M1075_PLS_US", v="$/GFX/Unit/Descriptor_ShowRoomUnit_HEMTT_US")
-                with msg.nest("Adding to DivisionPacks.ndf") as _:
-                    deck_pack_descriptor = Object('DeckPackDescriptor')
-                    deck_pack_descriptor.add(MemberRow("$/GFX/Unit/Descriptor_Unit_d9_M1075_PLS_US", "Unit"))
-                    ndf[DIVISION_PACKS].add(ListRow(deck_pack_descriptor, namespace="Descriptor_Deck_Pack_d9_M1075_PLS_US"))
-                with msg.nest("Adding to DeckSerializer.ndf") as _:
-                    deck_serializer: ListRow = ndf[DECK_SERIALIZER].by_name("DeckSerializer")
-                    unit_ids: Map = deck_serializer.value.by_member('UnitIds').value
-                    unit_ids.add(k="$/GFX/Unit/Descriptor_Unit_d9_M1075_PLS_US", v=str(13900))
-                with msg.nest("Adding to AllUnitsTactic.ndf") as _:                     
-                    all_units_tactic = ndf[ALL_UNITS_TACTIC].by_name("AllUnitsTactic").value
-                    all_units_tactic.add("$/GFX/Unit/Descriptor_Unit_d9_M1075_PLS_US")
+                
         # ✪ M998 HUMVEE SGT.
         # ✪ M1025 HUMVEE AGL
         # ✪ M1010 TC3V

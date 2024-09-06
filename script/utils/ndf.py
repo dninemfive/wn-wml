@@ -60,7 +60,7 @@ def root_paths(base_path: str, *paths: str) -> Generator:
     for p in paths:
         yield f'{base_path}\\{p}.ndf'
 
-def ndf_path(path: str, save: bool = True):
+def load_ndf_path(path: str, save: bool = True):
     """
     Decorator which allows defining NDF edits to a particular file:
 
@@ -73,5 +73,21 @@ def ndf_path(path: str, save: bool = True):
                 with mod.edit(path, save) as data:
                     return f(self, data, new_msg, *args, **kwargs)
         return wrap
+    decorate._ndf_path = path
     return decorate
 
+def ndf_path(path: str, save: bool = True):
+    """
+    Decorator which allows defining NDF edits to a particular file:
+
+    @ndf_path("Divisions.ndf")
+    """
+    def decorate(f: Callable[..., None]):
+        # @wraps doesn't understand self (afaict) so using it here is counterproductive
+        def wrap(self: Any, ndf: dict[str, List], msg: Message | None, *args: Any, **kwargs: Any):
+            with try_nest(msg, f"{editing_or_reading(save)} {path}") as new_msg:
+                return f(self, ndf[path], new_msg, *args, **kwargs)
+        return wrap
+    # lost the link but this was suggested in a StackExchange post
+    decorate._ndf_path = path
+    return decorate

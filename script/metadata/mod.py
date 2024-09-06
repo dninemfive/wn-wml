@@ -9,6 +9,7 @@ class ModMetadata(object):
     name: str
     warno: WarnoMetadata
     version: str
+    dev_short_name: str
 
     @property
     def relative_source_path(self: Self):

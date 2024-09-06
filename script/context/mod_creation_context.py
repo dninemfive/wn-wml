@@ -7,8 +7,9 @@ from ndf_parse.model import List, ListRow, Map, MapRow, Object
 from ndf_parse.model.abc import CellValue
 from typing import Self
 from utils.io import load, write
-from utils.ndf import edit_members, ndf_path
+from utils.ndf import edit_members, load_ndf_path
 from uuid import uuid4
+import context.unit_creation_context as ucc
 
 class ModCreationContext(object):
     """
@@ -16,7 +17,7 @@ class ModCreationContext(object):
     
     Intended to be used in a `with .. as ..` block; see __enter__() and __exit__() for details.
     """
-    def __init__(self: Self, metadata: ModMetadata, guid_cache_path: str):
+    def __init__(self: Self, metadata: ModMetadata, guid_cache_path: str = "guid_cache.txt"):
         self.metadata = metadata
         self.mod = Mod(metadata.source_path, metadata.output_path)
         self.guid_cache_path = guid_cache_path
@@ -31,11 +32,15 @@ class ModCreationContext(object):
         """
         Closes this context at the end of a `with` block, writing out the cache.
         """
-        with Message("writing guid cache") as _:
+        with Message("Saving GUID cache") as _:
             write(self.guid_cache, self.guid_cache_path)
-        with Message("writing out edits") as _:
+        with Message("Saving NDF edits") as _:
             for edit in self.mod.edits:
                 self.mod.write_edit(edit)
+
+    @property
+    def prefix(self: Self) -> str:
+        return self.metadata.dev_short_name
 
     def create_division(self: Self, division: DivisionMetadata, copy_of: str, root_msg: Message | None, **changes: CellValue | None) -> None:
         with try_nest(root_msg, 
@@ -43,10 +48,10 @@ class ModCreationContext(object):
                       child_padding=DIVISION_PADDING) as msg:
             DivisionCreator(self.generate_guid(division.descriptor_name), copy_of, division, **changes).apply(self.mod, msg)
     
-    def create_units(self: Self): # -> MultipleUnitCreationContext:
-        pass
+    def create_units(self: Self, initial_id: int) -> ucc.UnitCreationContext:
+        return ucc.UnitCreationContext(self, initial_id)
 
-    def generate_guid(self: Self, guid_key: str | None) -> str:
+    def generate_guid(self: Self, guid_key: str) -> str:
         """ Generates a GUID in the format NDF expects """
         if guid_key in self.guid_cache:
             return self.guid_cache[guid_key]
