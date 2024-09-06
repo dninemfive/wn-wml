@@ -74,3 +74,4 @@ def ndf_path(path: str, save: bool = True):
                     return f(self, data, new_msg, *args, **kwargs)
         return wrap
     return decorate
+
