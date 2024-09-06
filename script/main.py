@@ -7,7 +7,7 @@ from ndf_parse import Mod
 from ndf_parse.model import ListRow, Map, MapRow, MemberRow, Object
 from ndf_paths import *
 from utils.bat import generate_mod, reset_source
-from utils.ndf import dict_to_map, edit_members
+from utils.ndf import dict_to_map, edit_members, get_unit_module, replace_unit_module
 from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
@@ -81,18 +81,19 @@ with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
         #           (replaced with that of Rover 101FC Supply?)
         #       TUnitUIModuleDescriptor/NameToken replaced with that of M998 Humvee (for now)
         #       TUnitUIModuleDescriptor/UpgradeFromUnit cleared
-        # M1075 PLS
-        # copy of: HEMTT
-        # but with:
-        #       TUnitUIModuleDescriptor/NameToken replaced with that of M1038 Humvee (for now)
-        #       TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
-        #       unit rule xp should also be higher        
         with Message("Creating units") as msg:
             with NdfContext(mod, msg, UNITE_DESCRIPTOR, SHOWROOM_EQUIVALENCE, DIVISION_PACKS, DECK_SERIALIZER, ALL_UNITS_TACTIC) as ndf:
                 unite_descriptor_ndf = ndf[UNITE_DESCRIPTOR]
                 
                 with UnitCreationContext(mod_context, ndf, div_metadata.id * 1000) as units_context:
+                    # M1075 PLS
+                    # copy of: HEMTT
                     with units_context.create_unit("M1075_PLS_US", "HEMTT_US") as m1075_pls:
+                        unit_ui = get_unit_module(unite_descriptor_ndf, "M1038")
+                        # TUnitUIModuleDescriptor/NameToken replaced with that of M1038 Humvee (for now)
+
+                        # TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
+                        # unit rule xp should also be higher    
                         pass
         # ✪ M998 HUMVEE SGT.
         # ✪ M1025 HUMVEE AGL

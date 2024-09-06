@@ -34,10 +34,11 @@ class UnitCreator(object):
             self.edit_all_units_tactic(ndf)
 
     def make_copy(self: Self, ndf: List) -> Object:
-        copy = ndf.by_name(self.src.descriptor_name).value.copy()
+        copy: Object = ndf.by_name(self.src.descriptor_name).value.copy()
         edit_members(copy,
                      DescriptorId=self.ctx.generate_guid(self.new.descriptor_name),
                      ClassNameForDebug=self.new.class_name_for_debug)
+        copy.by_member("ModulesDescriptors").value.by_name("TTagsModuleDescriptor").value
         return copy
 
     @ndf_path(rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf')
