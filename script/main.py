@@ -1,4 +1,5 @@
 from context.mod_creation_context import ModCreationContext
+from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
 from message import Message, try_nest
 from misc.import_warno_scripts import import_script
@@ -81,15 +82,17 @@ with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
                     # M1075 PLS
                     # copy of: HEMTT
                     with units_context.create_unit("M1075_PLS_US", "HEMTT_US") as m1075_pls:
-                        base_ui_module: ListRow = m1075_pls.get_module("TUnitUIModuleDescriptor")
-                        edit_members(base_ui_module.value,
-                                    NameToken="'HIPYAUFBUI'")       # TUnitUIModuleDescriptor/NameToken replaced with that of M1038 Humvee (for now)
+                        with ModuleContext(m1075_pls.unit_object, "TUnitUIModuleDescriptor") as ui_module:
+                             
+                            edit_members(ui_module.object,
+                                         NameToken="'HIPYAUFBUI'")       # TUnitUIModuleDescriptor/NameToken replaced with that of M1038 Humvee (for now)
                                     # UpgradeFromUnit=None)           # TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
-                        # delete UpgradeFromUnit for now
-                        base_ui_module.value.remove_by_member("UpgradeFromUnit")
-                        print(str(base_ui_module.value))
+                            # delete UpgradeFromUnit for now
+                            ui_module.object.remove_by_member("UpgradeFromUnit")
+                            print(str(ui_module.object))
                         # unit rule xp should also be higher
                         pass
+                    
                     # ✪ M998 HUMVEE SGT.
                     # ✪ M1025 HUMVEE AGL
                     # ✪ M1010 TC3V
