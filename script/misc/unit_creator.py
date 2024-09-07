@@ -71,4 +71,7 @@ class UnitCreator(object):
         all_units_tactic.add(self.new.descriptor_path)
 
     def get_module(self: Self, module_type: str) -> Object:
-        return get_module(self.unit_object, module_type)
+        # print(f"Trying to get module {module_type} on {self.new.class_name_for_debug}")
+        result: Object | None = get_module(self.unit_object, module_type)
+        # print(str(result))
+        return result

@@ -9,7 +9,7 @@ from message import Message, try_nest
 def edit_member(obj: Object, name: str, value: CellValue | None):
     index = obj.by_member(name).index
     obj[index].value = value
-
+    
 def edit_members(obj: Object, **kwargs: CellValue | None):
     for k, v in kwargs.items():
         edit_member(obj, k, v)
@@ -32,7 +32,7 @@ def replace_by_type(list: List, type: str, value: CellValue):
 
 def get_module(unit: Object, module_type: str) -> ListRow | None:
     result: ListRow | None = None
-    for module in unit.by_member("ModulesDescriptors").value.match_pattern(module_type):
+    for module in unit.by_member("ModulesDescriptors").value.match_pattern(f'{module_type}()'):
         result = module
         break
     return result
