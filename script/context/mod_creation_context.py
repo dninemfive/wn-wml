@@ -6,6 +6,7 @@ from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
 from message import Message, try_nest
+from misc.cache import Cache
 from utils.ndf import root_paths
 import utils.io as io
 from uuid import uuid4
@@ -24,13 +25,16 @@ class ModCreationContext(object):
         self.mod = Mod(metadata.folder_path, metadata.folder_path)
         self.root_msg = root_msg
         self.paths = ndf_paths
+        self.guid_cache = Cache("guid")
+        self.localization_cache = Cache("localization")
        
     def __enter__(self: Self) -> Self:
         self.mod.check_if_src_is_newer()
-        self.guid_cache: dict[str, str] = io.load(self.metadata.guid_cache_path, {})
-        self.msg = try_nest(self.root_msg, "Loading ndf files", child_padding=self.msg_length)
-        self.msg.__enter__()
-        self.ndf = {x:self.load_ndf(x) for x in self.paths}
+        with try_nest(self.root_msg, "Loading ndf files") as msg:
+            self.ndf = {x:self.load_ndf(x, msg) for x in self.paths}
+        with try_nest(self.root_msg, "Loading caches") as msg:
+            self.guid_cache.load(msg)
+            self.localization_cache.load(msg)
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
@@ -38,13 +42,13 @@ class ModCreationContext(object):
             for edit in self.mod.edits:
                 with write_msg.nest(f"Writing {edit.file_path}") as _:
                     self.mod.write_edit(edit)
-        with self.msg.nest("Saving GUID cache") as _:
+        with self.msg.nest("Saving caches") as _:
             io.write(self.guid_cache, self.metadata.guid_cache_path)
         self.msg.__exit__(exc_type, exc_value, traceback)
         self.guid_cache = None
     
-    def load_ndf(self: Self, path: str) -> List:
-        with self.msg.nest(f"Loading {path}") as _:
+    def load_ndf(self: Self, path: str, msg: Message) -> List:
+        with msg.nest(f"Loading {path}") as _:
             return self.mod.edit(path).current_tree
     
     def create_division(self: Self, division: DivisionMetadata, copy_of: str, root_msg: Message | None, **changes: CellValue | None) -> None:

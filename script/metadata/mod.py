@@ -11,6 +11,7 @@ class ModMetadata(object):
     version: str
     dev_short_name: str
     guid_cache_path: str = "guid_cache.txt"
+    localization_cache_path: str = "localization_cache.txt"
     
     @property
     def folder_path(self: Self):

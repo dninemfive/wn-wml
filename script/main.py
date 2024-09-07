@@ -84,7 +84,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     with units_context.create_unit("M1075_PLS_US", "HEMTT_US") as m1075_pls:
                         with ModuleContext(m1075_pls.unit_object, "TUnitUIModuleDescriptor") as ui_module:                            
                             edit_members(ui_module.object,
-                                        NameToken="'HIPYAUFBUI'")       # TUnitUIModuleDescriptor/NameToken replaced with that of M1038 Humvee (for now)
+                                         # previously HIPYAUFBUI (M1038 Humvee)
+                                        NameToken="'d99IDdebug'")
                                     # UpgradeFromUnit=None)           # TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
                             # delete UpgradeFromUnit for now
                             ui_module.object.remove_by_member("UpgradeFromUnit")
