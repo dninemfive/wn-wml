@@ -21,8 +21,6 @@ mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn
 div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)    
 
 reset_source(mod_metadata, wn_metadata)
-mod = Mod(mod_metadata.source_path, mod_metadata.output_path)
-mod.check_if_src_is_newer()
 
 guid_cache_path: str = "guid_cache.txt"
 
@@ -169,9 +167,10 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
             mod_context.create_division(div_metadata,
                                         "Descriptor_Deck_Division_US_82nd_Airborne_multi",
                                         root_msg,
-                                        DivisionName="'ECGMWQOEZA'",                                            # 8th Infantry Division (Mech.)
-                                        DescriptionHintTitleToken = "'ECGMWQOEZA'",                             # 8th Infantry Division (Mech.)
+                                        # previously 'ECGMWQOEZA' (8th Infantry Division (Mech.))
+                                        DivisionName="'TXT_KEY_d9_9ID_short'",
+                                        DescriptionHintTitleToken = "'TXT_KEY_d9_9ID_long'",
                                         EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
                                         PackList = dict_to_map(pack_list))
             # add a default deck to Decks.ndf (not required)
-    generate_mod(mod_metadata)
+    generate_mod(mod_metadata, root_msg)

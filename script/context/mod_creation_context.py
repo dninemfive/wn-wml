@@ -21,7 +21,7 @@ class ModCreationContext(object):
     
     def __init__(self: Self, metadata: ModMetadata, root_msg: Message | None, *ndf_paths: str):
         self.metadata = metadata
-        self.mod = Mod(metadata.source_path, metadata.output_path)
+        self.mod = Mod(metadata.folder_path, metadata.folder_path)
         self.root_msg = root_msg
         self.paths = ndf_paths
        

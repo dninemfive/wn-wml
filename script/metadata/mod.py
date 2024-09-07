@@ -11,15 +11,7 @@ class ModMetadata(object):
     version: str
     dev_short_name: str
     guid_cache_path: str = "guid_cache.txt"
-
-    @property
-    def relative_source_path(self: Self):
-        return f'{self.name} (input)'
-
-    @property
-    def source_path(self: Self):
-        return os.path.join(self.warno.mods_path, self.relative_source_path)
     
     @property
-    def output_path(self: Self):
+    def folder_path(self: Self):
         return os.path.join(self.warno.mods_path, self.name)
