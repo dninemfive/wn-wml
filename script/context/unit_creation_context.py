@@ -6,10 +6,13 @@ from typing import Self
 from utils.io import load, write
 
 class UnitCreationContext(object):
-    def __init__(self: Self, ctx: ModCreationContext, root_msg: Message, ndf: dict[str, List], initial_id: int, id_cache_path: str = "unit_id_cache.txt"):
+    @property
+    def ndf(self: Self) -> dict[str, List]:
+        return self.ctx.ndf
+
+    def __init__(self: Self, ctx: ModCreationContext, root_msg: Message, initial_id: int, id_cache_path: str = "unit_id_cache.txt"):
         self.ctx = ctx
         self.root_msg = root_msg
-        self.ndf = ndf
         self.current_id = initial_id
         self.id_cache_path = id_cache_path
     

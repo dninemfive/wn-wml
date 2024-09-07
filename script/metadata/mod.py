@@ -10,6 +10,7 @@ class ModMetadata(object):
     warno: WarnoMetadata
     version: str
     dev_short_name: str
+    guid_cache_path: str = "guid_cache.txt"
 
     @property
     def relative_source_path(self: Self):
