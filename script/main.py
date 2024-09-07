@@ -13,6 +13,8 @@ from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
 from context.mod_creation_context import ModCreationContext
 import ndf_paths as paths
+import shutil
+import os
 
 WARNO_DIRECTORY = rf"C:\Program Files (x86)\Steam\steamapps\common\WARNO"
 
@@ -168,9 +170,16 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                                         "Descriptor_Deck_Division_US_82nd_Airborne_multi",
                                         root_msg,
                                         # previously 'ECGMWQOEZA' (8th Infantry Division (Mech.))
-                                        DivisionName="'TXT_KEY_d9_9ID_short'",
-                                        DescriptionHintTitleToken = "'TXT_KEY_d9_9ID_long'",
+                                        DivisionName="'d99IDshort'",
+                                        DescriptionHintTitleToken = "'d99IDlong'",
                                         EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
                                         PackList = dict_to_map(pack_list))
             # add a default deck to Decks.ndf (not required)
+    # todo: generate localization as part of script
+    with root_msg.nest("Copying localization files") as msg:
+        for s in ["COMPANIES", "INTERFACE_INGAME", "INTERFACE_OUTGAME", "PLATOONS", "UNITS"]:
+            filename = f'{s}.csv'
+            with msg.nest(filename) as _:
+                shutil.copyfile(rf"C:\Users\dninemfive\Documents\workspaces\mods\Eugen\WARNO\wn-9id\localization\{filename}",
+                                os.path.join(mod_metadata.folder_path, "GameData", "Localisation", mod_metadata.name, filename))
     generate_mod(mod_metadata, root_msg)
