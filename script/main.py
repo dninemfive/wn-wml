@@ -6,13 +6,13 @@ from misc.import_warno_scripts import import_script
 from misc.unit_creator import UnitCreator
 from ndf_parse import Mod
 from ndf_parse.model import ListRow, Map, MapRow, MemberRow, Object
-from ndf_paths import *
 from utils.bat import generate_mod, reset_source
 from utils.ndf import dict_to_map, edit_members, get_module, replace_unit_module
 from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
 from context.ndf_context import NdfContext
+import ndf_paths as paths
 
 WARNO_DIRECTORY = rf"C:\Program Files (x86)\Steam\steamapps\common\WARNO"
 
@@ -60,122 +60,120 @@ pack_list: dict[str, int] = {
     '~/Descriptor_Deck_Pack_UH60A_Supply_US': 1,
     # add new units here...
 }
-with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
-        with Message("Creating units") as msg:
-            # make new units        
-            with NdfContext(mod, msg, UNITE_DESCRIPTOR, SHOWROOM_EQUIVALENCE, DIVISION_PACKS, DECK_SERIALIZER, ALL_UNITS_TACTIC) as ndf:
-                unite_descriptor_ndf = ndf[UNITE_DESCRIPTOR]                
-                with UnitCreationContext(mod_context, msg, ndf, div_metadata.id * 1000) as units_context:
-                    """ LOG """
-                    # M998 HUMVEE SUPPLY
-                    #   copy of: M35 Supply
-                    #   but with:
-                    #       "UNITE_M35_supply_US" replaced in TTagsModuleDescriptor
-                    #       ApparenceModel replaced with that of M1038 Humvee
-                    #       GenericMovement replaced with that of M998 Humvee
-                    #       LandMovement replaced with that of M998 Humvee (if different)
-                    #       TSupplyModuleDescriptor replaced with that of Rover 101FC Supply
-                    #       TProductionModuleDescriptor/ProductionResourcesNeeded changed to appropriate value
-                    #           (replaced with that of Rover 101FC Supply?)
-                    #       TUnitUIModuleDescriptor/NameToken replaced with that of M998 Humvee (for now)
-                    #       TUnitUIModuleDescriptor/UpgradeFromUnit cleared
-                    # M1075 PLS
-                    # copy of: HEMTT
-                    with units_context.create_unit("M1075_PLS_US", "HEMTT_US") as m1075_pls:
-                        with ModuleContext(m1075_pls.unit_object, "TUnitUIModuleDescriptor") as ui_module:
-                             
-                            edit_members(ui_module.object,
-                                         NameToken="'HIPYAUFBUI'")       # TUnitUIModuleDescriptor/NameToken replaced with that of M1038 Humvee (for now)
-                                    # UpgradeFromUnit=None)           # TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
-                            # delete UpgradeFromUnit for now
-                            ui_module.object.remove_by_member("UpgradeFromUnit")
-                            print(str(ui_module.object))
-                        # unit rule xp should also be higher
-                        pass
-                        pack_list[m1075_pls.new.deck_pack_descriptor_path] = 1
-                    
-                    # ✪ M998 HUMVEE SGT.
-                    # ✪ M1025 HUMVEE AGL
-                    # ✪ M1010 TC3V
-                    """ INF """
-                    # MOT. MP PATROL
-                    # (just copy AB MP PATROL)
-                    # for MOT. infantry: copy MECH. version, but reduce men to 8 and replace M240B with SAW and LAW with AT-4
-                    # ✪ MOT. RIFLES LDR.
-                    # MOT. RIFLES (AT-4)
-                    # MOT. RIFLES (DRAGON)
-                    # ✪ MOT. ENGINEERS LDR.
-                    # MOT. ENGINEERS
-                    # M998 HUMVEE SQC
-                    # just copy M1038 HUMVEE
-                    # M998 HUMVEE M2HB
-                    # copy the AB version, but no forward deploy and normal vision
-                    # M998 HUMVEE AGL
-                    # copy the AB version, but no forward deploy and normal vision
-                    """ ART """
-                    # M198 155mm [CLU]
-                    # M198 COPPERHEAD
-                    # M58 MICLIC
-                    # XM142 HIMARS [HE]
-                    # XM142 HIMARS [CLU]
-                    # XM142 ATACMS
-                    # XM119 IMCS 105mm
-                    # XM1100 120mm
-                    """ TNK """
-                    # XM4 AGS
-                    # RDF/LT
-                    # M966 HUMVEE TOW
-                    # M1025 HUMVEE TOW
-                    # M998 HUMVEE GLH-L
-                    # M1025 HUMVEE AGL
-                    """ REC """
-                    # 👓 M998 HUMVEE M2HB
-                    # copy 👓 M1025 HUMVEE M2HB
-                    # 👓 FAV
-                    # 👓 FAV AGL
-                    # 👓 FAV TOW
-                    # 👓 OPERATIONAL SUPPORT
-                    # [👓] FOLT
-                    # 👓 FWD SUPPORT [EW]
-                    # [👓] MERCURY GREEN RPV
-                    # [👓] MOT. SCOUTS
-                    # copy SCOUTS, but replace M240 with SAW
-                    # [👓] SCAT
-                    # [[👓]] JOH-58D KIOWA
-                    # [[👓]] M561 GAMA GOAT FAAR
-                    """ AA """
-                    # JOH-58C KIOWA
-                    # M167A1 VADS 20mm
-                    # copy AB version, remove forward deploy and add the air-transportable trait
-                    # M998 AVENGER
-                    # copy AB version, remove forward deploy
-                    # M998 SETTER
-                    # MIM-72A T-CHAPARRAL
-                    # STINGER (TDAR)
-                    # EXCALIBUR VWC
-                    """ HEL """
-                    # AH-1S COBRA
-                    """ AIR """
-                    # A-6E INTRUDER [HE]
-                    # A-6E INTRUDER [CLU]
-                    # A-6E INTRUDER [LGB]
-                    # A-6E INTRUDER SWIP
-                    # EA-6B PROWLER [SEAD]
-                    # EA-6B PROWLER [EW]
-                    # A-7E CORSAIR II [HE]
-                    # A-7E CORSAIR II [SEAD]
-                    # F-14B TOMCAT [AA]
-                    # F-14B TOMCAT [LGB]
-                    # F/A-18C [AA]
-                    # F/A-18D [FAC]
-        # make division
-        mod_context.create_division(div_metadata,
-                                    "Descriptor_Deck_Division_US_82nd_Airborne_multi",
-                                    None,
-                                    DivisionName="'ECGMWQOEZA'",                                            # 8th Infantry Division (Mech.)
-                                    DescriptionHintTitleToken = "'ECGMWQOEZA'",                             # 8th Infantry Division (Mech.)
-                                    EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
-                                    PackList = dict_to_map(pack_list))
-        # add a default deck to Decks.ndf (not required)
-
-generate_mod(mod_metadata)
+with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as root_msg:
+    with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
+            with root_msg.nest("Creating units") as msg:
+                # make new units        
+                with NdfContext(mod, msg, *paths.ALL) as ndf:           
+                    with UnitCreationContext(mod_context, msg, ndf, div_metadata.id * 1000) as units_context:
+                        """ LOG """
+                        # M998 HUMVEE SUPPLY
+                        #   copy of: M35 Supply
+                        #   but with:
+                        #       "UNITE_M35_supply_US" replaced in TTagsModuleDescriptor
+                        #       ApparenceModel replaced with that of M1038 Humvee
+                        #       GenericMovement replaced with that of M998 Humvee
+                        #       LandMovement replaced with that of M998 Humvee (if different)
+                        #       TSupplyModuleDescriptor replaced with that of Rover 101FC Supply
+                        #       TProductionModuleDescriptor/ProductionResourcesNeeded changed to appropriate value
+                        #           (replaced with that of Rover 101FC Supply?)
+                        #       TUnitUIModuleDescriptor/NameToken replaced with that of M998 Humvee (for now)
+                        #       TUnitUIModuleDescriptor/UpgradeFromUnit cleared
+                        # M1075 PLS
+                        # copy of: HEMTT
+                        with units_context.create_unit("M1075_PLS_US", "HEMTT_US") as m1075_pls:
+                            with ModuleContext(m1075_pls.unit_object, "TUnitUIModuleDescriptor") as ui_module:
+                                
+                                edit_members(ui_module.object,
+                                            NameToken="'HIPYAUFBUI'")       # TUnitUIModuleDescriptor/NameToken replaced with that of M1038 Humvee (for now)
+                                        # UpgradeFromUnit=None)           # TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
+                                # delete UpgradeFromUnit for now
+                                ui_module.object.remove_by_member("UpgradeFromUnit")
+                                # print(str(ui_module.object))
+                            # unit rule xp should also be higher
+                            pass
+                            pack_list[m1075_pls.new.deck_pack_descriptor_path] = 1    
+                        # ✪ M998 HUMVEE SGT.
+                        # ✪ M1025 HUMVEE AGL
+                        # ✪ M1010 TC3V
+                        """ INF """
+                        # MOT. MP PATROL
+                        # (just copy AB MP PATROL)
+                        # for MOT. infantry: copy MECH. version, but reduce men to 8 and replace M240B with SAW and LAW with AT-4
+                        # ✪ MOT. RIFLES LDR.
+                        # MOT. RIFLES (AT-4)
+                        # MOT. RIFLES (DRAGON)
+                        # ✪ MOT. ENGINEERS LDR.
+                        # MOT. ENGINEERS
+                        # M998 HUMVEE SQC
+                        # just copy M1038 HUMVEE
+                        # M998 HUMVEE M2HB
+                        # copy the AB version, but no forward deploy and normal vision
+                        # M998 HUMVEE AGL
+                        # copy the AB version, but no forward deploy and normal vision
+                        """ ART """
+                        # M198 155mm [CLU]
+                        # M198 COPPERHEAD
+                        # M58 MICLIC
+                        # XM142 HIMARS [HE]
+                        # XM142 HIMARS [CLU]
+                        # XM142 ATACMS
+                        # XM119 IMCS 105mm
+                        # XM1100 120mm
+                        """ TNK """
+                        # XM4 AGS
+                        # RDF/LT
+                        # M966 HUMVEE TOW
+                        # M1025 HUMVEE TOW
+                        # M998 HUMVEE GLH-L
+                        # M1025 HUMVEE AGL
+                        """ REC """
+                        # 👓 M998 HUMVEE M2HB
+                        # copy 👓 M1025 HUMVEE M2HB
+                        # 👓 FAV
+                        # 👓 FAV AGL
+                        # 👓 FAV TOW
+                        # 👓 OPERATIONAL SUPPORT
+                        # [👓] FOLT
+                        # 👓 FWD SUPPORT [EW]
+                        # [👓] MERCURY GREEN RPV
+                        # [👓] MOT. SCOUTS
+                        # copy SCOUTS, but replace M240 with SAW
+                        # [👓] SCAT
+                        # [[👓]] JOH-58D KIOWA
+                        # [[👓]] M561 GAMA GOAT FAAR
+                        """ AA """
+                        # JOH-58C KIOWA
+                        # M167A1 VADS 20mm
+                        # copy AB version, remove forward deploy and add the air-transportable trait
+                        # M998 AVENGER
+                        # copy AB version, remove forward deploy
+                        # M998 SETTER
+                        # MIM-72A T-CHAPARRAL
+                        # STINGER (TDAR)
+                        # EXCALIBUR VWC
+                        """ HEL """
+                        # AH-1S COBRA
+                        """ AIR """
+                        # A-6E INTRUDER [HE]
+                        # A-6E INTRUDER [CLU]
+                        # A-6E INTRUDER [LGB]
+                        # A-6E INTRUDER SWIP
+                        # EA-6B PROWLER [SEAD]
+                        # EA-6B PROWLER [EW]
+                        # A-7E CORSAIR II [HE]
+                        # A-7E CORSAIR II [SEAD]
+                        # F-14B TOMCAT [AA]
+                        # F-14B TOMCAT [LGB]
+                        # F/A-18C [AA]
+                        # F/A-18D [FAC]
+            # make division
+            mod_context.create_division(div_metadata,
+                                        "Descriptor_Deck_Division_US_82nd_Airborne_multi",
+                                        root_msg,
+                                        DivisionName="'ECGMWQOEZA'",                                            # 8th Infantry Division (Mech.)
+                                        DescriptionHintTitleToken = "'ECGMWQOEZA'",                             # 8th Infantry Division (Mech.)
+                                        EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
+                                        PackList = dict_to_map(pack_list))
+            # add a default deck to Decks.ndf (not required)
+    generate_mod(mod_metadata)

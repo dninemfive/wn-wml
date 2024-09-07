@@ -17,13 +17,13 @@ class DivisionCreator(object):
     def msg_length(self: Self) -> int:
         return max([len(prop._ndf_path) for prop in dir(self) if hasattr(prop, "_ndf_path")])
 
-    def apply(self: Self, mod: Mod, msg: Message):
+    def apply(self: Self, ndf: dict[str, List], msg: Message):
         # for fn on class with ndf_path decorator,
         #   fn()
-        self.edit_divisions_ndf(mod, msg)
-        self.edit_division_list_ndf(mod, msg)
-        self.edit_division_rules_ndf(mod, msg)
-        self.edit_deck_serializer_ndf(mod, msg)
+        self.edit_divisions_ndf(ndf, msg)
+        self.edit_division_list_ndf(ndf, msg)
+        self.edit_division_rules_ndf(ndf, msg)
+        self.edit_deck_serializer_ndf(ndf, msg)
 
     @load_ndf_path(rf"GameData\Generated\Gameplay\Decks\Divisions.ndf")
     def edit_divisions_ndf(self: Self, ndf: List):
