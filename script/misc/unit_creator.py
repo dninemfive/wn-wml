@@ -57,13 +57,15 @@ class UnitCreator(object):
     def edit_division_packs(self: Self, ndf: List):
         deck_pack_descriptor = Object('DeckPackDescriptor')
         deck_pack_descriptor.add(MemberRow(self.new.descriptor_path, "Unit"))
-        ndf.add(ListRow(deck_pack_descriptor, namespace=f"Descriptor_Deck_Pack_{self.new.name}"))
+        ndf.add(ListRow(deck_pack_descriptor, namespace=self.new.deck_pack_descriptor_name))
 
     @ndf_path(rf"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf")
     def edit_deck_serializer(self: Self, ndf: List):
         deck_serializer: ListRow = ndf.by_name("DeckSerializer")
         unit_ids: Map = deck_serializer.value.by_member('UnitIds').value
         unit_ids.add(k=self.new.descriptor_path, v=str(self.ctx.register(self.new.descriptor_name)))
+        deck_serializer.value.by_member("UnitIds").value = unit_ids
+        print(str(deck_serializer.value.by_member("UnitIds").value))
 
     @ndf_path(rf"GameData\Generated\Gameplay\Gfx\AllUnitsTactic.ndf")
     def edit_all_units_tactic(self: Self, ndf: List):

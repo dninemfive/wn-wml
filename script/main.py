@@ -92,6 +92,7 @@ with ModCreationContext(mod_metadata, 'guid_cache.txt') as mod_context:
                             print(str(ui_module.object))
                         # unit rule xp should also be higher
                         pass
+                        pack_list[m1075_pls.new.deck_pack_descriptor_path] = 1
                     
                     # ✪ M998 HUMVEE SGT.
                     # ✪ M1025 HUMVEE AGL
