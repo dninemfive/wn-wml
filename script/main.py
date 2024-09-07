@@ -1,6 +1,7 @@
 from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
+from datetime import datetime
 from message import Message, try_nest
 from misc.import_warno_scripts import import_script
 from misc.unit_creator import UnitCreator
@@ -183,3 +184,4 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 shutil.copyfile(rf"C:\Users\dninemfive\Documents\workspaces\mods\Eugen\WARNO\wn-9id\localization\{filename}",
                                 os.path.join(mod_metadata.folder_path, "GameData", "Localisation", mod_metadata.name, filename))
     generate_mod(mod_metadata, root_msg)
+print(f"Generation finished at {datetime.now().time()}")
