@@ -5,9 +5,9 @@ from datetime import datetime
 from utils.io import write
 from message import Message, try_nest
 from misc.import_warno_scripts import import_script
-from misc.unit_creator import UnitCreator
+from misc.unit_creator import UnitCreator, UNIT_UI
 from ndf_parse import Mod
-from ndf_parse.model import ListRow, Map, MapRow, MemberRow, Object
+from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from utils.bat import generate_mod, reset_source
 from utils.ndf import dict_to_map, edit_members, get_module, replace_unit_module
 from metadata.division import DivisionMetadata
@@ -106,10 +106,11 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # MOT. MP PATROL
                     # (just copy AB MP PATROL)
                     with units_context.create_unit("Mot_MP_Patrol_US", "Airborne_MP_US") as mp_patrol:
-                         mp_patrol.edit_ui_module(
-                              NameToken=f"'{mod_context.register("Mot. MP Patrol")}'",
-                              SpecialtiesList=['infantry', '_mp', '_security']
-                         )
+                         with mp_patrol.module_context(UNIT_UI) as ui_module:
+                              specialties: List = ui_module.object.by_member("SpecialtiesList").value
+                              specialties.remove(specialties.find_by_cond(lambda x: x == "_para"))
+                              ui_module.edit_members(NameToken=f"'{mod_context.register("Mot. MP Patrol")}'",
+                                                     SpecialtiesList=specialties)
                          mp_patrol.remove_module("TDeploymentShiftModuleDescriptor")
                     # for MOT. infantry: copy MECH. version, but reduce men to 8 and replace M240B with SAW and LAW with AT-4
                     # or maybe copy fireteams lol
