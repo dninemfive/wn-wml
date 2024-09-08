@@ -31,4 +31,15 @@ class UnitMetadata(object):
     
     @property
     def tag(self: Self) -> str:
-        return f'"UNITE_{self.name}'
+        return f'"UNITE_{self.name}"'
+    
+    @staticmethod
+    def from_localized_name(localized_name: str, country: str) -> Self:
+        return UnitMetadata(f"{UnitMetadata.delocalize(localized_name)}_{country}")
+    
+    @staticmethod
+    def delocalize(localized_name: str) -> str:
+        result: str = "_".join(localized_name.split())
+        for c in [".", "(", ")", "-"]:
+            result = result.replace(c, "")
+        return result

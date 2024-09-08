@@ -14,16 +14,22 @@ from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module, r
 UNIT_UI = "TUnitUIModuleDescriptor"
 
 class UnitCreator(object):
-    def __init__(self: Self, ctx, name: str, copy_of: str):
+    def __init__(self: Self, ctx, localized_name: str, country: str, copy_of: str):
         self.ctx = ctx
-        self.new = UnitMetadata(name)
+        self.name = localized_name
+        self.new: UnitMetadata = UnitMetadata.from_localized_name(localized_name, country)
         self.src = UnitMetadata(copy_of)
 
     def __enter__(self: Self) -> Self:
-        self.root_msg = self.ctx.root_msg.nest(f"Making {self.new.name}")
+        self.root_msg = self.ctx.root_msg.nest(f"Making {self.name}")
         self.root_msg.__enter__()
         with self.root_msg.nest(f"Copying {self.src.descriptor_name}") as _:
             self.unit_object = self.make_copy(self.ctx.ndf[UNITE_DESCRIPTOR])
+        self.set_name(self.name)
+        with self.module_context("TTagsModuleDescriptor") as tags_module:
+            tag_set: List = tags_module.object.by_member("TagSet").value
+            tag_set.remove(tag_set.find_by_cond(lambda x: x == f"UNITE_{self.src.name}"))
+            tag_set.add(self.new.tag)
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
@@ -81,6 +87,9 @@ class UnitCreator(object):
     def edit_ui_module(self: Self, **changes: CellValue) -> None:
         with self.module_context(UNIT_UI) as ui_module:
             ui_module.edit_members(**changes)
+
+    def set_name(self: Self, name: str) -> None:
+        self.edit_ui_module(NameToken=self.ctx.ctx.register(name))
 
     def get_module(self: Self, module_type: str) -> Object:
         # print(f"Trying to get module {module_type} on {self.new.class_name_for_debug}")

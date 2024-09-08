@@ -69,12 +69,13 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
     with ModCreationContext(mod_metadata, root_msg, *paths.ALL) as mod_context:
             with root_msg.nest("Creating units") as msg:
                 # make new units              
+                # TODO: maybe default unit country?
                 with UnitCreationContext(mod_context, msg, div_metadata.id * 1000) as units_context:
                     # TODO: target module changes with like TModuleType:path/to/property ?
                     """ LOG """
                     # M998 HUMVEE SUPPLY
                     #   copy of: M35 Supply
-                    with units_context.create_unit("M998_Humvee_Supply_US", "M35_supply_US") as m998_humvee_supply:
+                    with units_context.create_unit("M998 HUMVEE SUPPLY", "US", "M35_supply_US") as m998_humvee_supply:
                          # "UNITE_M35_supply_US" replaced in TTagsModuleDescriptor
                          # ApparenceModel replaced with that of M1038 Humvee
                          # GenericMovement replaced with that of M998 Humvee
@@ -83,19 +84,12 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                          # TSupplyModuleDescriptor replaced with that of Rover 101FC Supply
                          # TProductionModuleDescriptor/ProductionResourcesNeeded replaced with that of Rover 101FC Supply
                          with ModuleContext(m998_humvee_supply.unit_object, "TUnitUIModuleDescriptor") as ui_module:
-                              # TUnitUIModuleDescriptor/NameToken updated
-                              edit_members(ui_module.object, NameToken=f"'{mod_context.register("M998 HUMVEE SUPPLY")}'")
                               # TUnitUIModuleDescriptor/UpgradeFromUnit cleared
                               ui_module.object.remove_by_member("UpgradeFromUnit")
                     # M1075 PLS
                     # copy of: HEMTT
-                    with units_context.create_unit("M1075_PLS_US", "HEMTT_US") as m1075_pls:
-                        with ModuleContext(m1075_pls.unit_object, "TUnitUIModuleDescriptor") as ui_module:                            
-                            edit_members(ui_module.object,
-                                        NameToken=f"'{mod_context.register("M1075 PLS")}'",
-                                        # TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
-                                        # TODO: add unit registry to units_context and get the descriptor from there
-                                        UpgradeFromUnit="Descriptor_Unit_M998_Humvee_Supply_US")
+                    with units_context.create_unit("M1075 PLS SUPPLY", "US", "HEMTT_US") as m1075_pls:
+                        m1075_pls.edit_ui_module(UpgradeFromUnit="Descriptor_Unit_M998_HUMVEE_SUPPLY_US")
                         # unit rule xp should also be higher
                         pass
                         pack_list[m1075_pls.new.deck_pack_descriptor_path] = 1    
@@ -105,18 +99,17 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     """ INF """
                     # MOT. MP PATROL
                     # (just copy AB MP PATROL)
-                    with units_context.create_unit("Mot_MP_Patrol_US", "Airborne_MP_US") as mp_patrol:
+                    with units_context.create_unit("MOT. MP PATROL", "US", "Airborne_MP_US") as mp_patrol:
                          with mp_patrol.module_context(UNIT_UI) as ui_module:
                               specialties: List = ui_module.object.by_member("SpecialtiesList").value
                               specialties.remove(specialties.find_by_cond(lambda x: x == "_para"))
-                              ui_module.edit_members(NameToken=f"'{mod_context.register("Mot. MP Patrol")}'",
-                                                     SpecialtiesList=specialties)
+                              ui_module.edit_members(SpecialtiesList=specialties)
                          mp_patrol.remove_module("TDeploymentShiftModuleDescriptor")
                     # for MOT. infantry: copy MECH. version, but reduce men to 8 and replace M240B with SAW and LAW with AT-4
                     # or maybe copy fireteams lol
                     # ✪ MOT. RIFLES LDR.
                     # MOT. RIFLES (AT-4)
-                    with units_context.create_unit("Mot_Rifles_US", "Rifles_US") as mot_rifles:
+                    with units_context.create_unit("MOT. RIFLES (AT-4)", "Rifles_half_AT4_US") as mot_rifles:
                          # change number of guys to 8
                          # TODO: figure out appropriate dangerousness, bounding box size, command point cost
                          with ModuleContext(mot_rifles.unit_object, "TBaseDamageModuleDescriptor") as base_damage_module:
@@ -157,13 +150,11 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                                         }
                                    }
                               ))
-                         # change M240 to SAW
-                         # change LAW to AT4
+                         # remove Infanterie_IFV from tags?
                          # change TTransportableModuleDescriptor
                          # change UI module
                          with ModuleContext(mot_rifles.unit_object, "TUnitUIModuleDescriptor") as ui_module:
-                              ui_module.edit_members(NameToken=f"'{mod_context.register("MOT. RIFLES")}'")
-                              # TODO: update from cmd. mot. rifles
+                              # TODO: upgrade from cmd. mot. rifles
                               ui_module.remove_member("UpgradeFromUnit")
                     # MOT. RIFLES (DRAGON)
                     # ✪ MOT. ENGINEERS LDR.
@@ -217,7 +208,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                          # update UI
                          with ModuleContext(m998_avenger.unit_object, "TUnitUIModuleDescriptor") as ui_module:                            
                             edit_members(ui_module.object,
-                                        NameToken=f"'{mod_context.register("M998 AVENGER")}'",
+                                        NameToken=mod_context.register("M998 AVENGER"),
                                         SpecialtiesList=['AA'])
                     # M998 SETTER
                     # MIM-72A T-CHAPARRAL
@@ -243,8 +234,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
             mod_context.create_division(div_metadata,
                                         "Descriptor_Deck_Division_US_82nd_Airborne_multi",
                                         root_msg,
-                                        DivisionName=f"'{mod_context.register("9TH INFANTRY DIVISION (MTZ.)")}'",
-                                        DescriptionHintTitleToken = f"'{mod_context.register("9TH INFANTRY DIVISION (MOTORIZED)")}'",
+                                        DivisionName=mod_context.register("9TH INFANTRY DIVISION (MTZ.)"),
+                                        DescriptionHintTitleToken=mod_context.register("9TH INFANTRY DIVISION (MOTORIZED)"),
                                         EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
                                         PackList = dict_to_map(pack_list))
             # add a default deck to Decks.ndf (not required)

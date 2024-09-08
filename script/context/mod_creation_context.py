@@ -85,7 +85,7 @@ class ModCreationContext(object):
             key = self.generate_key()
         # intentionally backward: we want to be able to look up strings by their values
         self.localization_cache[string] = key
-        return key
+        return f"'{key}'"
 
     def generate_key(self: Self) -> str:
         result = self.metadata.localization_prefix

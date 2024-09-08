@@ -10,10 +10,6 @@ class TDeckUniteRule(object):
     AvailableTransportList: list[str]
     NumberOfUnitInPack: int
     NumberOfUnitInPackXpMultiplier: tuple[float, float, float, float]
-
-    @staticmethod
-    def load_from_ndf(ndf: List) -> Self:
-        pass
     
 class DivisionUnits(object):
     division: DivisionMetadata
