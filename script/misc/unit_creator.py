@@ -1,13 +1,17 @@
 # right, python is stupid so i can't use type hints for this
 # from context.unit_creation_context import UnitCreationContext
 from context.mod_creation_context import ModCreationContext
+from context.module_context import ModuleContext
 from message import Message
 from metadata.unit import UnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
+from ndf_parse.model.abc import CellValue
 from ndf_paths import UNITE_DESCRIPTOR
 from typing import Self
 from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module, remove_module
+
+UNIT_UI = "TUnitUIModuleDescriptor"
 
 class UnitCreator(object):
     def __init__(self: Self, ctx, name: str, copy_of: str):
@@ -70,6 +74,13 @@ class UnitCreator(object):
     def edit_all_units_tactic(self: Self, ndf: List):
         all_units_tactic = ndf.by_name("AllUnitsTactic").value
         all_units_tactic.add(self.new.descriptor_path)
+
+    def module_context(self: Self, module_type: str) -> ModuleContext:
+        return ModuleContext(self.unit_object, module_type)
+    
+    def edit_ui_module(self: Self, **changes: CellValue) -> None:
+        with self.module_context(UNIT_UI) as ui_module:
+            ui_module.edit_members(**changes)
 
     def get_module(self: Self, module_type: str) -> Object:
         # print(f"Trying to get module {module_type} on {self.new.class_name_for_debug}")

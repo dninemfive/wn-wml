@@ -105,7 +105,14 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     """ INF """
                     # MOT. MP PATROL
                     # (just copy AB MP PATROL)
+                    with units_context.create_unit("Mot_MP_Patrol_US", "Airborne_MP_US") as mp_patrol:
+                         mp_patrol.edit_ui_module(
+                              NameToken=f"'{mod_context.register("Mot. MP Patrol")}'",
+                              SpecialtiesList=['infantry', '_mp', '_security']
+                         )
+                         mp_patrol.remove_module("TDeploymentShiftModuleDescriptor")
                     # for MOT. infantry: copy MECH. version, but reduce men to 8 and replace M240B with SAW and LAW with AT-4
+                    # or maybe copy fireteams lol
                     # ✪ MOT. RIFLES LDR.
                     # MOT. RIFLES (AT-4)
                     with units_context.create_unit("Mot_Rifles_US", "Rifles_US") as mot_rifles:
