@@ -34,8 +34,8 @@ class UnitMetadata(object):
         return f'"UNITE_{self.name}"'
     
     @staticmethod
-    def from_localized_name(localized_name: str, country: str) -> Self:
-        return UnitMetadata(f"{UnitMetadata.delocalize(localized_name)}_{country}")
+    def from_localized_name(prefix: str, localized_name: str, country: str) -> Self:
+        return UnitMetadata(f"{prefix}_{UnitMetadata.delocalize(localized_name)}_{country}")
     
     @staticmethod
     def delocalize(localized_name: str) -> str:

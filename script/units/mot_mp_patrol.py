@@ -10,7 +10,7 @@ def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
     with ctx.create_unit("MOT. MP PATROL", "US", "Airborne_MP_US") as mp_patrol:
         with mp_patrol.module_context(UNIT_UI) as ui_module:
             specialties: List = ui_module.object.by_member("SpecialtiesList").value
-            specialties.remove(specialties.find_by_cond(lambda x: x == "_para"))
+            specialties.remove(specialties.find_by_cond(lambda x: x.value == "'_para'"))
             ui_module.edit_members(SpecialtiesList=specialties)
         mp_patrol.remove_module("TDeploymentShiftModuleDescriptor")
         rule = TDeckUniteRule(

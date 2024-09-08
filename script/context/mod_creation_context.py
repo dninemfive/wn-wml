@@ -77,7 +77,7 @@ class ModCreationContext(object):
     def register(self: Self, string: str) -> str:
         """ Registers a localized string in the localization cache. Returns the __key__ generated for this string! """
         if string in self.localization_cache:
-            return self.localization_cache[string]
+            return f"'{self.localization_cache[string]}'"
         if len(self.metadata.localization_prefix) > 5:
             raise Exception("Localization prefix cannot be longer than 5 characters, as keys must be 10 or fewer characters total!")
         key = self.generate_key()

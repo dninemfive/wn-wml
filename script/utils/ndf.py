@@ -20,6 +20,12 @@ def dict_to_map(input: dict) -> Map:
         result.add(MapRow((k, str(v))))
     return result
 
+def list_to_List(input: list[str]) -> List:
+    result = List()
+    for s in input:
+        result.add(ListRow(s))
+    return result
+
 def object_has_type(object: Object, type: str) -> bool:
     try:
         return object.type == type

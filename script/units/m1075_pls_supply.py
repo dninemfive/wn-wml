@@ -6,7 +6,7 @@ def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
     # M1075 PLS
     # copy of: HEMTT
     with ctx.create_unit("M1075 PLS SUPPLY", "US", "HEMTT_US") as m1075_pls:
-        m1075_pls.edit_ui_module(UpgradeFromUnit="Descriptor_Unit_M998_HUMVEE_SUPPLY_US")
+        m1075_pls.edit_ui_module(UpgradeFromUnit="Descriptor_Unit_d9_M998_HUMVEE_SUPPLY_US")
         rule = TDeckUniteRule(
             m1075_pls.new.descriptor_path,
             AvailableWithoutTransport=True,

@@ -14,10 +14,10 @@ from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module, r
 UNIT_UI = "TUnitUIModuleDescriptor"
 
 class UnitCreator(object):
-    def __init__(self: Self, ctx, localized_name: str, country: str, copy_of: str):
+    def __init__(self: Self, ctx, prefix: str, localized_name: str, country: str, copy_of: str):
         self.ctx = ctx
         self.name = localized_name
-        self.new: UnitMetadata = UnitMetadata.from_localized_name(localized_name, country)
+        self.new: UnitMetadata = UnitMetadata.from_localized_name(prefix, localized_name, country)
         self.src = UnitMetadata(copy_of)
 
     def __enter__(self: Self) -> Self:
@@ -28,8 +28,8 @@ class UnitCreator(object):
         self.set_name(self.name)
         with self.module_context("TTagsModuleDescriptor") as tags_module:
             tag_set: List = tags_module.object.by_member("TagSet").value
-            tag_set.remove(tag_set.find_by_cond(lambda x: x == f"UNITE_{self.src.name}"))
-            tag_set.add(self.new.tag)
+            tag_set.remove(tag_set.find_by_cond(lambda x: x.value == f'"UNITE_{self.src.name}"'))
+            tag_set.add(ListRow(self.new.tag))
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
