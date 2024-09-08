@@ -28,3 +28,7 @@ class UnitMetadata(object):
     @property
     def deck_pack_descriptor_path(self: Self) -> str:
         return f"~/{self.deck_pack_descriptor_name}"
+    
+    @property
+    def tag(self: Self) -> str:
+        return f'"UNITE_{self.name}'

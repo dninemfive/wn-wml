@@ -44,6 +44,9 @@ def get_module_index(unit: Object, module_type: str) -> int | None:
         break
     return result
 
+def remove_module(unit: Object, module_type: str) -> None:
+    unit.by_member("ModulesDescriptors").value.remove(get_module_index(unit, module_type))
+
 def replace_unit_module(unit: Object, module_type: str, module: ListRow | Object):
     modules: List = unit.by_member('ModulesDescriptors').value
     replace_by_type(modules, module_type, ensure_listrow(module))

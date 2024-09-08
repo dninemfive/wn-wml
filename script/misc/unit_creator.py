@@ -7,7 +7,7 @@ from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_paths import UNITE_DESCRIPTOR
 from typing import Self
-from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module
+from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module, remove_module
 
 class UnitCreator(object):
     def __init__(self: Self, ctx, name: str, copy_of: str):
@@ -76,3 +76,6 @@ class UnitCreator(object):
         result: Object | None = get_module(self.unit_object, module_type)
         # print(str(result))
         return result
+    
+    def remove_module(self: Self, module_type: str) -> None:
+        remove_module(self.unit_object, module_type)
