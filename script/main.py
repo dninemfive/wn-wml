@@ -8,6 +8,7 @@ import units.m998_humvee_supply
 import units.mot_mp_patrol
 from utils.io import write
 from message import Message, try_nest
+from metadata.deck_unit_info import TDeckUniteRule
 from misc.import_warno_scripts import import_script
 from misc.unit_creator import UnitCreator, UNIT_UI
 from ndf_parse import Mod
@@ -70,6 +71,7 @@ pack_list: dict[str, int] = {
     '~/Descriptor_Deck_Pack_UH60A_Supply_US': 1,
     # add new units here...
 }
+unit_data: list[tuple[tuple[str, int], TDeckUniteRule]] = []
 with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as root_msg:
     with ModCreationContext(mod_metadata, root_msg, *paths.ALL) as mod_context:
             with root_msg.nest("Creating units") as msg:
@@ -78,13 +80,13 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 with UnitCreationContext(mod_context, msg, div_metadata.id * 1000) as ctx:
                     # TODO: target module changes with like TModuleType:path/to/property ?
                     """ LOG """
-                    units.m998_humvee_supply.create(ctx)
-                    units.m1075_pls_supply.create(ctx)
+                    unit_data.append(units.m998_humvee_supply.create(ctx))
+                    unit_data.append(units.m1075_pls_supply.create(ctx))
                     # ✪ M998 HUMVEE SGT.
                     # ✪ M1025 HUMVEE AGL
                     # ✪ M1010 TC3V
                     """ INF """                    
-                    units.mot_mp_patrol.create(ctx)
+                    unit_data.append(units.mot_mp_patrol.create(ctx))
                     # units.mot_rifles_ldr.create()
                     # units.mot_rifles_at4.create()
                     # MOT. RIFLES (DRAGON)
@@ -126,12 +128,13 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # copy SCOUTS, but replace M240 with SAW
                     # [👓] SCAT
                     # [[👓]] JOH-58D KIOWA
+                    # insert between OH-58D KIOWA and OH-58D KIOWA Wr.
                     # [[👓]] M561 GAMA GOAT FAAR
                     """ AA """
                     # JOH-58C KIOWA
                     # M167A1 VADS 20mm
                     # copy AB version, remove forward deploy and add the air-transportable trait
-                    units.m998_avenger.create(ctx)
+                    unit_data.append(units.m998_avenger.create(ctx))
                     # M998 SETTER
                     # MIM-72A T-CHAPARRAL
                     # STINGER (TDAR)
@@ -151,6 +154,9 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # F-14B TOMCAT [LGB]
                     # F/A-18C [AA]
                     # F/A-18D [FAC]
+            for l, _ in unit_data:
+                k, v = l
+                pack_list[k] = v 
             # make division
             # todo: insert this immediately after 8th Infantry Division
             mod_context.create_division(div_metadata,
