@@ -2,6 +2,10 @@ from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
 from datetime import datetime
+import units.m1075_pls_supply
+import units.m998_avenger
+import units.m998_humvee_supply
+import units.mot_mp_patrol
 from utils.io import write
 from message import Message, try_nest
 from misc.import_warno_scripts import import_script
@@ -15,8 +19,9 @@ from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
 from context.mod_creation_context import ModCreationContext
 import ndf_paths as paths
-import shutil
 import os
+import shutil
+import units
 
 WARNO_DIRECTORY = rf"C:\Program Files (x86)\Steam\steamapps\common\WARNO"
 
@@ -70,92 +75,18 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
             with root_msg.nest("Creating units") as msg:
                 # make new units              
                 # TODO: maybe default unit country?
-                with UnitCreationContext(mod_context, msg, div_metadata.id * 1000) as units_context:
+                with UnitCreationContext(mod_context, msg, div_metadata.id * 1000) as ctx:
                     # TODO: target module changes with like TModuleType:path/to/property ?
                     """ LOG """
-                    # M998 HUMVEE SUPPLY
-                    #   copy of: M35 Supply
-                    with units_context.create_unit("M998 HUMVEE SUPPLY", "US", "M35_supply_US") as m998_humvee_supply:
-                         # "UNITE_M35_supply_US" replaced in TTagsModuleDescriptor
-                         # ApparenceModel replaced with that of M1038 Humvee
-                         # GenericMovement replaced with that of M998 Humvee
-                         # LandMovement replaced with that of M998 Humvee
-                         # TBaseDamageModuleDescriptor replaced with that of M1038 Humvee
-                         # TSupplyModuleDescriptor replaced with that of Rover 101FC Supply
-                         # TProductionModuleDescriptor/ProductionResourcesNeeded replaced with that of Rover 101FC Supply
-                         with ModuleContext(m998_humvee_supply.unit_object, "TUnitUIModuleDescriptor") as ui_module:
-                              # TUnitUIModuleDescriptor/UpgradeFromUnit cleared
-                              ui_module.object.remove_by_member("UpgradeFromUnit")
-                    # M1075 PLS
-                    # copy of: HEMTT
-                    with units_context.create_unit("M1075 PLS SUPPLY", "US", "HEMTT_US") as m1075_pls:
-                        m1075_pls.edit_ui_module(UpgradeFromUnit="Descriptor_Unit_M998_HUMVEE_SUPPLY_US")
-                        # unit rule xp should also be higher
-                        pass
-                        pack_list[m1075_pls.new.deck_pack_descriptor_path] = 1    
+                    units.m998_humvee_supply.create(ctx)
+                    units.m1075_pls_supply.create(ctx)
                     # ✪ M998 HUMVEE SGT.
                     # ✪ M1025 HUMVEE AGL
                     # ✪ M1010 TC3V
-                    """ INF """
-                    # MOT. MP PATROL
-                    # (just copy AB MP PATROL)
-                    with units_context.create_unit("MOT. MP PATROL", "US", "Airborne_MP_US") as mp_patrol:
-                         with mp_patrol.module_context(UNIT_UI) as ui_module:
-                              specialties: List = ui_module.object.by_member("SpecialtiesList").value
-                              specialties.remove(specialties.find_by_cond(lambda x: x == "_para"))
-                              ui_module.edit_members(SpecialtiesList=specialties)
-                         mp_patrol.remove_module("TDeploymentShiftModuleDescriptor")
-                    # for MOT. infantry: copy MECH. version, but reduce men to 8 and replace M240B with SAW and LAW with AT-4
-                    # or maybe copy fireteams lol
-                    # ✪ MOT. RIFLES LDR.
-                    # MOT. RIFLES (AT-4)
-                    with units_context.create_unit("MOT. RIFLES (AT-4)", "Rifles_half_AT4_US") as mot_rifles:
-                         # change number of guys to 8
-                         # TODO: figure out appropriate dangerousness, bounding box size, command point cost
-                         with ModuleContext(mot_rifles.unit_object, "TBaseDamageModuleDescriptor") as base_damage_module:
-                              base_damage_module.edit_members(MaxPhysicalDamages=8)
-                         mot_rifles.unit_object.by_member("ModulesDescriptors").value.by_name("WeaponManager").value.by_member("NbSoldatInGroupeCombat").value = 8
-                         with ModuleContext(mot_rifles.unit_object, "TTacticalLabelModuleDescriptor") as tactical_label_module:
-                              tactical_label_module.edit_members(NbSoldiers=8)
-                         with ModuleContext(mot_rifles.unit_object, "TInfantrySquadWeaponAssignmentModuleDescriptor") as weapon_assignment_module:
-                              # TODO: simplify this since most squads follow the same general pattern
-                              weapon_assignment_module.edit_members(InitialSoldiersToTurretIndexMap=dict_to_map(
-                                   {
-                                        (
-                                             0, [1]
-                                        ),
-                                        (
-                                             1, [1]
-                                        ),
-                                        {
-                                             2, [0]
-                                        },
-                                        {
-                                             3, [0]
-                                        },
-                                        {
-                                             4, [0]
-                                        },
-                                        {
-                                             5, [0]
-                                        },
-                                        {
-                                             6, [0]
-                                        },
-                                        {
-                                             7, [0]
-                                        },
-                                        {
-                                             8, [0, 2]
-                                        }
-                                   }
-                              ))
-                         # remove Infanterie_IFV from tags?
-                         # change TTransportableModuleDescriptor
-                         # change UI module
-                         with ModuleContext(mot_rifles.unit_object, "TUnitUIModuleDescriptor") as ui_module:
-                              # TODO: upgrade from cmd. mot. rifles
-                              ui_module.remove_member("UpgradeFromUnit")
+                    """ INF """                    
+                    units.mot_mp_patrol.create(ctx)
+                    # units.mot_rifles_ldr.create()
+                    # units.mot_rifles_at4.create()
                     # MOT. RIFLES (DRAGON)
                     # ✪ MOT. ENGINEERS LDR.
                     # MOT. ENGINEERS
@@ -200,16 +131,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # JOH-58C KIOWA
                     # M167A1 VADS 20mm
                     # copy AB version, remove forward deploy and add the air-transportable trait
-                    # M998 AVENGER
-                    # copy AB M998 AVENGER
-                    with units_context.create_unit("M998_Avenger_US", "M998_Avenger_US") as m998_avenger:
-                         # remove forward deploy
-                         m998_avenger.remove_module("TDeploymentShiftModuleDescriptor")
-                         # update UI
-                         with ModuleContext(m998_avenger.unit_object, "TUnitUIModuleDescriptor") as ui_module:                            
-                            edit_members(ui_module.object,
-                                        NameToken=mod_context.register("M998 AVENGER"),
-                                        SpecialtiesList=['AA'])
+                    units.m998_avenger.create(ctx)
                     # M998 SETTER
                     # MIM-72A T-CHAPARRAL
                     # STINGER (TDAR)

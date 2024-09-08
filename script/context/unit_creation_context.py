@@ -29,7 +29,7 @@ class UnitCreationContext(object):
             write(self.id_cache, self.id_cache_path)
         self.id_cache = None
     
-    def create_unit(self: Self, name: str, copy_of: str):
+    def create_unit(self: Self, name: str, copy_of: str) -> UnitCreator:
         return UnitCreator(self, f'{self.ctx.prefix}_{name}', copy_of)
     
     def register(self: Self, descriptor_name: str) -> int:

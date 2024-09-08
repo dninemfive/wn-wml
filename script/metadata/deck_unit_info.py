@@ -7,7 +7,7 @@ from typing import Self
 class TDeckUniteRule(object):
     UnitDescriptor: str
     AvailableWithoutTransport: bool
-    AvailableTransportList: list[str]
+    AvailableTransportList: list[str] | None
     NumberOfUnitInPack: int
     NumberOfUnitInPackXpMultiplier: tuple[float, float, float, float]
     
@@ -21,7 +21,8 @@ class DivisionUnits(object):
             obj = Object('TDeckUniteRule')
             obj.add(MemberRow(unit_rule.UnitDescriptor, "UnitDescriptor"))
             obj.add(MemberRow(str(unit_rule.AvailableWithoutTransport), "AvailableWithoutTransport"))
-            obj.add(MemberRow(unit_rule.AvailableTransportList, "AvailableTransportList"))
+            if(unit_rule.AvailableTransportList is not None):
+                obj.add(MemberRow(unit_rule.AvailableTransportList, "AvailableTransportList"))
             obj.add(MemberRow(str(unit_rule.NumberOfUnitInPack), "NumberOfUnitInPack"))
             obj.add(MemberRow(list(unit_rule.NumberOfUnitInPackXpMultiplier), "NumberOfUnitInPackXpMultiplier"))
         return (self.division.descriptor_path, unit_rule_list)
