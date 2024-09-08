@@ -10,8 +10,7 @@ class ModMetadata(object):
     warno: WarnoMetadata
     version: str
     dev_short_name: str
-    guid_cache_path: str = "guid_cache.txt"
-    localization_cache_path: str = "localization_cache.txt"
+    localization_prefix: str
     
     @property
     def folder_path(self: Self):

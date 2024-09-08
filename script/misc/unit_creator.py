@@ -64,7 +64,7 @@ class UnitCreator(object):
         unit_ids: Map = ndf.by_name("DeckSerializer").value.by_member('UnitIds').value
         unit_ids.add(k=self.new.descriptor_path, v=str(self.ctx.register(self.new.descriptor_name)))
         # print(str(ndf.by_name("DeckSerializer").value.by_member("UnitIds").value))
-        print(str(ndf.by_name("DeckSerializer").value.by_member("UnitIds").value.by_key(self.new.descriptor_path)))
+        # print(str(ndf.by_name("DeckSerializer").value.by_member("UnitIds").value.by_key(self.new.descriptor_path)))
 
     @ndf_path(rf"GameData\Generated\Gameplay\Gfx\AllUnitsTactic.ndf")
     def edit_all_units_tactic(self: Self, ndf: List):

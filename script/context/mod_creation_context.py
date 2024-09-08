@@ -6,10 +6,17 @@ from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
 from message import Message, try_nest
-from misc.cache import Cache
+from misc.cache_set import CacheSet
 from utils.ndf import root_paths
-import utils.io as io
 from uuid import uuid4
+# https://stackoverflow.com/a/2823331
+import string
+import random
+import utils.io as io
+
+GUID = "guid"
+LOCALIZATION = "localization"
+CHARACTERS = [*string.ascii_letters, *[str(x) for x in range(10)]]
 
 class ModCreationContext(object):
     @property
@@ -20,32 +27,34 @@ class ModCreationContext(object):
     def msg_length(self: Self):
         return max([len(x) for x in self.paths]) + len("Editing ")
     
+    @property
+    def guid_cache(self: Self) -> dict[str, str]:
+        return self.caches[GUID]
+    
+    @property
+    def localization_cache(self: Self) -> dict[str, str]:
+        return self.caches[LOCALIZATION]
+    
     def __init__(self: Self, metadata: ModMetadata, root_msg: Message | None, *ndf_paths: str):
         self.metadata = metadata
         self.mod = Mod(metadata.folder_path, metadata.folder_path)
         self.root_msg = root_msg
         self.paths = ndf_paths
-        self.guid_cache = Cache("guid")
-        self.localization_cache = Cache("localization")
+        self.caches = CacheSet(GUID, LOCALIZATION)
        
     def __enter__(self: Self) -> Self:
         self.mod.check_if_src_is_newer()
-        with try_nest(self.root_msg, "Loading ndf files") as msg:
+        with try_nest(self.root_msg, "Loading ndf files", child_padding=self.msg_length) as msg:
             self.ndf = {x:self.load_ndf(x, msg) for x in self.paths}
-        with try_nest(self.root_msg, "Loading caches") as msg:
-            self.guid_cache.load(msg)
-            self.localization_cache.load(msg)
+        self.caches.load(self.root_msg)
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
-        with self.msg.nest("Writing edits", child_padding=self.msg_length) as write_msg:
+        with self.root_msg.nest("Writing edits", child_padding=self.msg_length) as write_msg:
             for edit in self.mod.edits:
                 with write_msg.nest(f"Writing {edit.file_path}") as _:
                     self.mod.write_edit(edit)
-        with self.msg.nest("Saving caches") as _:
-            io.write(self.guid_cache, self.metadata.guid_cache_path)
-        self.msg.__exit__(exc_type, exc_value, traceback)
-        self.guid_cache = None
+        self.caches.save(self.root_msg)
     
     def load_ndf(self: Self, path: str, msg: Message) -> List:
         with msg.nest(f"Loading {path}") as _:
@@ -63,4 +72,31 @@ class ModCreationContext(object):
             return self.guid_cache[guid_key]
         result: str = f'GUID:{{{str(uuid4())}}}'
         self.guid_cache[guid_key] = result
+        return result
+    
+    def register(self: Self, string: str) -> str:
+        """ Registers a localized string in the localization cache. Returns the __key__ generated for this string! """
+        if string in self.localization_cache:
+            return self.localization_cache[string]
+        if len(self.metadata.localization_prefix) > 5:
+            raise Exception("Localization prefix cannot be longer than 5 characters, as keys must be 10 or fewer characters total!")
+        key = self.generate_key()
+        while key in self.localization_cache.values():
+            key = self.generate_key()
+        # intentionally backward: we want to be able to look up strings by their values
+        self.localization_cache[string] = key
+        return key
+
+    def generate_key(self: Self) -> str:
+        result = self.metadata.localization_prefix
+        for _ in range(10 - len(result)):
+            print(result)
+            result += random.choice(CHARACTERS)
+        print(result)
+        return result
+
+    def generate_localization_csv(self: Self) -> str:
+        result = '"TOKEN";"REFTEXT"'
+        for k in sorted(self.localization_cache.keys()):
+            result += "\n" + f'"{self.localization_cache[k]}";"{k}"'
         return result

@@ -2,6 +2,7 @@ from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
 from datetime import datetime
+from utils.io import write
 from message import Message, try_nest
 from misc.import_warno_scripts import import_script
 from misc.unit_creator import UnitCreator
@@ -20,8 +21,10 @@ import os
 WARNO_DIRECTORY = rf"C:\Program Files (x86)\Steam\steamapps\common\WARNO"
 
 wn_metadata = WarnoMetadata(WARNO_DIRECTORY)
-mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn_metadata, "0.0.0", 'd9')
+mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn_metadata, "0.0.0", 'd9', 'd99ID')
 div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)    
+
+LOCALIZATION_PATH = os.path.join(mod_metadata.folder_path, "GameData", "Localisation", mod_metadata.name, "UNITS.csv")
 
 reset_source(mod_metadata, wn_metadata)
 
@@ -85,7 +88,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                         with ModuleContext(m1075_pls.unit_object, "TUnitUIModuleDescriptor") as ui_module:                            
                             edit_members(ui_module.object,
                                          # previously HIPYAUFBUI (M1038 Humvee)
-                                        NameToken="'d99IDdebug'")
+                                        NameToken=f"'{mod_context.register("M1075 PLS")}'")
                                     # UpgradeFromUnit=None)           # TUnitUIModuleDescriptor/UpgradeFromUnit set to M998 HUMVEE SUPPLY
                             # delete UpgradeFromUnit for now
                             ui_module.object.remove_by_member("UpgradeFromUnit")
@@ -172,17 +175,13 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                                         "Descriptor_Deck_Division_US_82nd_Airborne_multi",
                                         root_msg,
                                         # previously 'ECGMWQOEZA' (8th Infantry Division (Mech.))
-                                        DivisionName="'d99IDshort'",
-                                        DescriptionHintTitleToken = "'d99IDlong'",
+                                        DivisionName=f"'{mod_context.register("9TH INFANTRY DIVISION (MTZ.)")}'",
+                                        DescriptionHintTitleToken = f"'{mod_context.register("9TH INFANTRY DIVISION (MOTORIZED)")}'",
                                         EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
                                         PackList = dict_to_map(pack_list))
             # add a default deck to Decks.ndf (not required)
-    # todo: generate localization as part of script
-    with root_msg.nest("Copying localization files") as msg:
-        for s in ["COMPANIES", "INTERFACE_INGAME", "INTERFACE_OUTGAME", "PLATOONS", "UNITS"]:
-            filename = f'{s}.csv'
-            with msg.nest(filename) as _:
-                shutil.copyfile(rf"C:\Users\dninemfive\Documents\workspaces\mods\Eugen\WARNO\wn-9id\localization\{filename}",
-                                os.path.join(mod_metadata.folder_path, "GameData", "Localisation", mod_metadata.name, filename))
+    with root_msg.nest("Writing localization") as msg:
+        with open(LOCALIZATION_PATH, "w") as file:
+             file.write(mod_context.generate_localization_csv())
     generate_mod(mod_metadata, root_msg)
 print(f"Generation finished at {datetime.now().time()}")
