@@ -171,10 +171,10 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # F/A-18C [AA]
                     # F/A-18D [FAC]
             # make division
+            # todo: insert this immediately after 8th Infantry Division
             mod_context.create_division(div_metadata,
                                         "Descriptor_Deck_Division_US_82nd_Airborne_multi",
                                         root_msg,
-                                        # previously 'ECGMWQOEZA' (8th Infantry Division (Mech.))
                                         DivisionName=f"'{mod_context.register("9TH INFANTRY DIVISION (MTZ.)")}'",
                                         DescriptionHintTitleToken = f"'{mod_context.register("9TH INFANTRY DIVISION (MOTORIZED)")}'",
                                         EmblemTexture = '"Texture_Division_Emblem_US_35th_infantry_division"',
