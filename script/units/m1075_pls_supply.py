@@ -1,6 +1,6 @@
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
-from metadata.deck_unit_info import UnitInfo
+from metadata.division_unit_registry import UnitInfo
 
 def create(ctx: UnitCreationContext) -> UnitInfo | None:
     # M1075 PLS

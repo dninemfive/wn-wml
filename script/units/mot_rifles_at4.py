@@ -1,6 +1,6 @@
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
-from metadata.deck_unit_info import UnitInfo
+from script.metadata.division_unit_registry import UnitInfo
 from utils.ndf import dict_to_map
 
 def create(ctx: UnitCreationContext) -> UnitInfo | None:

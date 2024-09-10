@@ -1,6 +1,6 @@
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
-from metadata.deck_unit_info import UnitInfo
+from metadata.division_unit_registry import UnitInfo
 from misc.unit_creator import UNIT_UI
 from ndf_parse.model import List
 

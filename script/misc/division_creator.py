@@ -1,6 +1,6 @@
 from typing import Self
 from message import Message, try_nest
-from metadata.deck_unit_info import DivisionUnitRegistry
+from metadata.division_unit_registry import DivisionUnitRegistry
 from metadata.division import DivisionMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object

@@ -29,7 +29,7 @@ class DivisionUnitRegistry(object):
         with try_nest(self.parent_msg, f"Registering vanilla unit {unit}") as msg:
             unite_rule = TDeckUniteRule.from_ndf(self.lookup.look_up(unit.descriptor_path))
             if unite_rule is not None:
-                self.units.append(UnitInfo(unit, packs, ))
+                self.units.append(UnitInfo.from_deck_unite_rule(unite_rule))
             else:
                 with msg.nest("Failed: could not find unit in any division rule") as _:
                     pass
@@ -39,6 +39,6 @@ class DivisionUnitRegistry(object):
     
     def division_rules(self: Self) -> Object:
         return make_obj('TDeckDivisionRule',
-                        UnitRuleList=to_List(unit.rule.to_obj()
+                        UnitRuleList=to_List(*[unit.rule.to_ndf()
                                              for unit
-                                             in self.units))
+                                             in self.units]))

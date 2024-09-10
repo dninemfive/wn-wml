@@ -2,14 +2,9 @@ from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
 from datetime import datetime
-import units.m1075_pls_supply
-import units.m998_avenger
-import units.m998_humvee_sqc
-import units.m998_humvee_supply
-import units.mot_mp_patrol
 from utils.io import write
 from message import Message, try_nest
-from metadata.deck_unit_info import DivisionUnitRegistry, DivisionRuleLookup
+from metadata.division_unit_registry import DivisionUnitRegistry, DivisionRuleLookup
 from misc.unit_creator import UnitCreator, UNIT_UI
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
@@ -23,6 +18,11 @@ import ndf_paths as paths
 import os
 import shutil
 import units
+import units.m1075_pls_supply
+import units.m998_avenger
+import units.m998_humvee_sqc
+import units.m998_humvee_supply
+import units.mot_mp_patrol
 
 WARNO_DIRECTORY = rf"C:\Program Files (x86)\Steam\steamapps\common\WARNO"
 
@@ -71,22 +71,23 @@ pack_list: dict[str, int] = {
     '~/Descriptor_Deck_Pack_UH60A_Supply_US': 1,
     # add new units here...
 }
-unit_data = DivisionUnitRegistry(DivisionRuleLookup())
 with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as root_msg:
     with ModCreationContext(mod_metadata, root_msg, *paths.ALL) as mod_context:
+            division_units: DivisionUnitRegistry
             with root_msg.nest("Creating units") as msg:
+                division_units = DivisionUnitRegistry(DivisionRuleLookup(mod_context.ndf[paths.DIVISION_RULES], "US_82nd_Airborne", "US_8th_Inf", "US_11ACR"), msg)
                 # make new units              
                 # TODO: maybe default unit country?
                 with UnitCreationContext(mod_context, msg, div_metadata.id * 1000) as ctx:
                     # TODO: target module changes with like TModuleType:path/to/property ?
                     """ LOG """
-                    unit_data.append(units.m998_humvee_supply.create(ctx))
-                    unit_data.append(units.m1075_pls_supply.create(ctx))
+                    division_units.register(units.m998_humvee_supply.create(ctx))
+                    division_units.register(units.m1075_pls_supply.create(ctx))
                     # ✪ M998 HUMVEE SGT.
                     # ✪ M1025 HUMVEE AGL
                     # ✪ M1010 TC3V
                     """ INF """                    
-                    unit_data.append(units.mot_mp_patrol.create(ctx))
+                    division_units.register(units.mot_mp_patrol.create(ctx))
                     # units.mot_rifles_ldr.create()
                     # units.mot_rifles_at4.create()
                     # MOT. RIFLES (DRAGON)
@@ -134,7 +135,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # JOH-58C KIOWA
                     # M167A1 VADS 20mm
                     # copy AB version, remove forward deploy and add the air-transportable trait
-                    unit_data.append(units.m998_avenger.create(ctx))
+                    division_units.register(units.m998_avenger.create(ctx))
                     # M998 SETTER
                     # MIM-72A T-CHAPARRAL
                     # STINGER (TDAR)
@@ -154,24 +155,11 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # F-14B TOMCAT [LGB]
                     # F/A-18C [AA]
                     # F/A-18D [FAC]
-            # make division rules
-            with root_msg.nest("Making division rules") as _:
-                rules = Object('TDeckDivisionRule')
-                rule_list = List()
-                for packs, rule in unit_data:
-                    # add packs to division
-                    k, v = packs
-                    pack_list[k] = v
-                    # add rules to division rules
-                    rule_list.add(ListRow(rule.to_obj()))
-                division_rules_map: Map = mod_context.ndf[paths.DIVISION_RULES].by_name("DivisionRules").value.by_member("DivisionRules").value
-                division_rules_map.add(key=div_metadata.descriptor_path, value=rule_list)
             # make division
-            division_texture_name: str = mod_context.add_division_emblem(root_msg, "img/downscaled_patch.png", div_metadata)            
-
-            # todo: insert this immediately after 8th Infantry Division
+            division_texture_name: str = mod_context.add_division_emblem(root_msg, "img/downscaled_patch.png", div_metadata) 
             mod_context.create_division(div_metadata,
                                         "Descriptor_Deck_Division_US_82nd_Airborne_multi",
+                                        division_units,
                                         "Descriptor_Deck_Division_US_8th_Inf_multi",
                                         root_msg,
                                         DivisionName=mod_context.register("9TH INFANTRY DIVISION (MTZ.)"),

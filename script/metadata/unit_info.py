@@ -23,7 +23,7 @@ class UnitInfo(object):
 
     @property
     def pack(self: Self) -> MapRow:
-        return MapRow(key=self.unit.deck_pack_descriptor_path, value=self.num_packs)
+        return MapRow(key=self.unit.deck_pack_descriptor_path, value=str(self.num_packs))
 
     @staticmethod
     def from_deck_unite_rule(unit: UnitMetadata, num_packs: int, rule: TDeckUniteRule) -> Self:
