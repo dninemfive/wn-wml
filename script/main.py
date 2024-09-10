@@ -2,6 +2,9 @@ from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
 from datetime import datetime
+import units.m198_155mm_clu
+import units.m198_copperhead
+import units.stinger_tdar
 from utils.io import write
 from message import Message, try_nest
 from metadata.division_unit_registry import DivisionUnitRegistry, DivisionRuleLookup
@@ -125,8 +128,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     division_units.register_vanilla("Howz_M102_105mm_US", 2)
                     # XM119 IMCS 105mm
                     division_units.register_vanilla("Howz_M198_155mm_US", 2)
-                    # M198 155mm [CLU]
-                    # M198 COPPERHEAD
+                    division_units.register(units.m198_155mm_clu.create(ctx))
+                    division_units.register(units.m198_copperhead.create(ctx))
                     # M58 MICLIC
                     # XM142 HIMARS [HE]
                     # XM142 HIMARS [CLU]
@@ -169,7 +172,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # M998 SETTER
                     # MIM-72A T-CHAPARRAL
                     division_units.register_vanilla("MANPAD_Stinger_C_US", 1)
-                    # STINGER (TDAR)
+                    division_units.register(units.stinger_tdar.create(ctx))
                     # EXCALIBUR VWC
                     """ HEL """
                     # AH-1S COBRA

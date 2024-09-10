@@ -9,8 +9,11 @@ import os
 import shutil
 
 def edit_member(obj: Object, name: str, value: CellValue | None):
-    index = obj.by_member(name).index
-    obj[index].value = value
+    try:
+        index = obj.by_member(name).index
+        obj[index].value = value
+    except:
+        obj.add(MemberRow(value, name))
 
 def edit_members(obj: Object, **kwargs: CellValue | None):
     for k, v in kwargs.items():

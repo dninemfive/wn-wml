@@ -23,11 +23,11 @@ class DivisionUnitRegistry(object):
         with try_nest(self.parent_msg, f"Registering {info.unit.name}") as _:
             self.units.append(info)
 
-    def register_vanilla(self: Self, unit: str | UnitMetadata, packs: int):
+    def register_vanilla(self: Self, unit: str | UnitMetadata, packs: int, override_transports: list[str] | None = None):
         if isinstance(unit, str):
             unit = UnitMetadata(unit)
         with try_nest(self.parent_msg, f"Registering vanilla unit {unit}") as msg:
-            unite_rule = self.lookup.look_up(unit.descriptor_path)
+            unite_rule = self.lookup.look_up(unit.descriptor_path, override_transports)
             if unite_rule is not None:
                 self.units.append(UnitInfo.from_deck_unite_rule(unit, packs, unite_rule))
             else:

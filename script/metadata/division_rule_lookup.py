@@ -13,7 +13,7 @@ class DivisionRuleLookup(object):
         self.division_rules: Map = ndf.by_name("DivisionRules").value.by_member("DivisionRules").value
         self.division_prio = [f'~/Descriptor_Deck_Division_{x}_multi' for x in division_prio]
 
-    def look_up(self: Self, unit_descriptor_path: str, override_transports: list[str] | None) -> TDeckUniteRule | None:
+    def look_up(self: Self, unit_descriptor_path: str, override_transports: list[str] | None = None) -> TDeckUniteRule | None:
         result = None
         unit_rule_list: List
         for division in self.division_prio:
