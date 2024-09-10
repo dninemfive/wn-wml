@@ -9,7 +9,7 @@ import units.m998_humvee_supply
 import units.mot_mp_patrol
 from utils.io import write
 from message import Message, try_nest
-from metadata.deck_unit_info import DivisionUnits
+from metadata.deck_unit_info import DivisionUnitRegistry, DivisionRuleLookup
 from misc.unit_creator import UnitCreator, UNIT_UI
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
@@ -71,7 +71,7 @@ pack_list: dict[str, int] = {
     '~/Descriptor_Deck_Pack_UH60A_Supply_US': 1,
     # add new units here...
 }
-unit_data = DivisionUnits()
+unit_data = DivisionUnitRegistry(DivisionRuleLookup())
 with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as root_msg:
     with ModCreationContext(mod_metadata, root_msg, *paths.ALL) as mod_context:
             with root_msg.nest("Creating units") as msg:

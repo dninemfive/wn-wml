@@ -1,6 +1,6 @@
 from typing import Self
 from message import Message, try_nest
-from metadata.deck_unit_info import DivisionUnits
+from metadata.deck_unit_info import DivisionUnitRegistry
 from metadata.division import DivisionMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
@@ -8,7 +8,7 @@ from ndf_parse.model.abc import CellValue
 from utils.ndf import edit_members, make_obj, ndf_path
 
 class DivisionCreator(object):
-    def __init__(self: Self, guid: str, copy_of: str, insert_after: str | None, division: DivisionMetadata, units: DivisionUnits, **changes: CellValue | None):
+    def __init__(self: Self, guid: str, copy_of: str, insert_after: str | None, division: DivisionMetadata, units: DivisionUnitRegistry, **changes: CellValue | None):
         self.guid = guid
         self.copy_of = copy_of
         self.division = division

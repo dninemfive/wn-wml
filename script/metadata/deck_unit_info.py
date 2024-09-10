@@ -105,7 +105,7 @@ class DivisionRuleLookup(object):
                 return TDeckUniteRule.from_ndf(result)
         return result
 
-class DivisionUnits(object):
+class DivisionUnitRegistry(object):
 
     def __init__(self: Self, lookup: DivisionRuleLookup, parent_msg: Message | None = None, *units: UnitInfo):
         self.units: list[UnitInfo] = []
@@ -118,13 +118,13 @@ class DivisionUnits(object):
         with try_nest(self.parent_msg, f"Registering {info.unit.name}") as _:
             self.units.append(info)
 
-    def reg_vanilla(self: Self, unit: str | UnitMetadata):
+    def reg_vanilla(self: Self, unit: str | UnitMetadata, packs: int):
         if isinstance(unit, str):
             unit = UnitMetadata(unit)
         with try_nest(self.parent_msg, f"Registering vanilla unit {unit}") as msg:
             unite_rule = TDeckUniteRule.from_ndf(self.lookup.look_up(unit.descriptor_path))
             if unite_rule is not None:
-                self.units.append(unite_rule)
+                self.units.append(UnitInfo(unit, packs, ))
             else:
                 with msg.nest("Failed: could not find unit in any division rule") as _:
                     pass
