@@ -22,7 +22,7 @@ def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
             # TODO: automatically get this from Airborne CMD
             NumberOfUnitInPack=6,
             # unit rule xp should also be higher
-            NumberOfUnitInPackXpMultiplier=[0, 1, 0.6, 0]
+            NumberOfUnitInPackXPMultiplier=[0, 1, 0.6, 0]
         )
         return ((mot_rifles_ldr.new.deck_pack_descriptor_path, 2), rule)
         

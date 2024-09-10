@@ -22,7 +22,7 @@ def dict_to_map(input: dict) -> Map:
         result.add(MapRow((k, str(v))))
     return result
 
-def list_to_List(*input: str) -> List:
+def to_List(*input: str) -> List:
     result = List()
     for s in input:
         result.add(ListRow(s))

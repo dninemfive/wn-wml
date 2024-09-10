@@ -155,9 +155,18 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # F-14B TOMCAT [LGB]
                     # F/A-18C [AA]
                     # F/A-18D [FAC]
-            for l, _ in unit_data:
-                k, v = l
-                pack_list[k] = v 
+            # make division rules
+            with root_msg.nest("Making division rules") as _:
+                rules = Object('TDeckDivisionRule')
+                rule_list = List()
+                for packs, rule in unit_data:
+                    # add packs to division
+                    k, v = packs
+                    pack_list[k] = v
+                    # add rules to division rules
+                    rule_list.add(ListRow(rule.to_obj()))
+                division_rules_map: Map = mod_context.ndf[paths.DIVISION_RULES].by_name("DivisionRules").value.by_member("DivisionRules").value
+                division_rules_map.add(key=div_metadata.descriptor_path, value=rule_list)
             # make division
             division_texture_name: str = mod_context.add_division_emblem(root_msg, "img/downscaled_patch.png", div_metadata)            
 

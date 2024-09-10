@@ -4,7 +4,7 @@ from metadata.deck_unit_info import TDeckUniteRule
 from misc.unit_creator import UNIT_UI
 from ndf_parse.model import List, ListRow
 from units.util import make_unit_rule
-from utils.ndf import list_to_List as qlist
+from utils.ndf import to_List as qlist
 
 def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
     # M998 AVENGER

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from metadata.division import DivisionMetadata
 from ndf_parse.model import List, MemberRow, Object
 from typing import Self
+from utils.ndf import to_List
 
 @dataclass
 class TDeckUniteRule(object):
@@ -9,7 +10,17 @@ class TDeckUniteRule(object):
     AvailableWithoutTransport: bool
     AvailableTransportList: list[str] | None
     NumberOfUnitInPack: int
-    NumberOfUnitInPackXpMultiplier: tuple[float, float, float, float]
+    NumberOfUnitInPackXPMultiplier: tuple[float, float, float, float]
+
+    def to_obj(self: Self) -> Object:
+        result = Object('TDeckUniteRule')
+        result.add(MemberRow(self.UnitDescriptor, "UnitDescriptor"))
+        result.add(MemberRow(str(self.AvailableWithoutTransport), "AvailableWithoutTransport"))
+        if(self.AvailableTransportList is not None):
+            result.add(MemberRow(to_List(*self.AvailableTransportList), "AvailableTransportList"))
+        result.add(MemberRow(str(self.NumberOfUnitInPack), "NumberOfUnitInPack"))
+        result.add(MemberRow(to_List(*[str(x) for x in self.NumberOfUnitInPackXPMultiplier]), "NumberOfUnitInPackXPMultiplier"))
+        return result
     
 class DivisionUnits(object):
     division: DivisionMetadata
@@ -18,11 +29,5 @@ class DivisionUnits(object):
     def DivisionRules(self: Self) -> tuple[str, Object]:
         unit_rule_list: list[Object] = []
         for _, unit_rule in self.units:
-            obj = Object('TDeckUniteRule')
-            obj.add(MemberRow(unit_rule.UnitDescriptor, "UnitDescriptor"))
-            obj.add(MemberRow(str(unit_rule.AvailableWithoutTransport), "AvailableWithoutTransport"))
-            if(unit_rule.AvailableTransportList is not None):
-                obj.add(MemberRow(unit_rule.AvailableTransportList, "AvailableTransportList"))
-            obj.add(MemberRow(str(unit_rule.NumberOfUnitInPack), "NumberOfUnitInPack"))
-            obj.add(MemberRow(list(unit_rule.NumberOfUnitInPackXpMultiplier), "NumberOfUnitInPackXpMultiplier"))
+            unit_rule_list.append(unit_rule.to_obj())
         return (self.division.descriptor_path, unit_rule_list)
