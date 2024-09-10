@@ -1,7 +1,6 @@
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
 from metadata.deck_unit_info import UnitInfo
-from units.util import make_unit_rule
 
 # todo: put most of this structure in an @annotation
 def create(ctx: UnitCreationContext) -> UnitInfo | None:

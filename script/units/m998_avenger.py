@@ -4,7 +4,6 @@ from metadata.deck_unit_info import UnitInfo
 from metadata.unit import UnitMetadata
 from misc.unit_creator import UNIT_UI
 from ndf_parse.model import List, ListRow
-from units.util import make_unit_rule
 from utils.ndf import to_List as qlist
 
 def create(ctx: UnitCreationContext) -> UnitInfo | None:

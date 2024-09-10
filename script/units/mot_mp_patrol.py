@@ -13,5 +13,5 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
             specialties.remove(specialties.find_by_cond(lambda x: x.value == "'_para'"))
             ui_module.edit_members(SpecialtiesList=specialties)
         mp_patrol.remove_module("TDeploymentShiftModuleDescriptor")
-        return UnitInfo(mp_patrol, 2, [0, 6, 4, 0], ["$/GFX/Unit/Descriptor_Unit_d9_M998_HUMVEE_SQC_US"])
+        return UnitInfo(mp_patrol, 2, [0, 6, 4, 0], ["$/GFX/Unit/Descriptor_Unit_d9_M998_HUMVEE_SQC_US", "$/GFX/Unit/Descriptor_Unit_M1025_Humvee_MP_US"])
         
