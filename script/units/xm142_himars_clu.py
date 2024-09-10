@@ -4,6 +4,7 @@ from metadata.division_unit_registry import UnitInfo
 from metadata.unit import UnitMetadata
 from misc.unit_creator import UNIT_UI
 from misc.ammo_creator import AmmoCreator
+from misc.weapon_creator import WeaponCreator
 from ndf_parse.model import List, ListRow
 from utils.ndf import to_List as qlist
 
@@ -15,6 +16,8 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
         with AmmoCreator(ctx, "RocketArt_M26_227mm_Cluster_HIMARS") as ammo:
             ammo.edit_members(NbTirParSalves=6,
                               AffichageMunitionParSalve=6)
+        with WeaponCreator(ctx, m198_clu.new, "M270_MLRS_cluster_US") as weapon:
+            weapon.object.by_member("TurretDescriptorList").value.<first>.by_member("MountedWeaponDescriptorList").value.<first>.by_member("Ammunition").value = "Ammo_d9_RocketArt_M26_227mm_Cluster_HIMARS"
         with m198_clu.module_context('TBaseDamageModuleDescriptor') as damage_module:
             # TODO: dynamically adjust this from M198 
             damage_module.edit_members(MaxPhysicalDamages=7)

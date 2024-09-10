@@ -6,7 +6,7 @@ from metadata.unit import UnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from ndf_paths import AMMUNITION
+from ndf_paths import WEAPON_DESCRIPTOR
 from typing import Self
 from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module, remove_module
 
@@ -20,7 +20,7 @@ class WeaponCreator(object):
         self.root_msg = self.ctx.root_msg.nest(f"Making {self.name}")
         self.root_msg.__enter__()
         with self.root_msg.nest(f"Copying {self.copy_of}") as _:
-            self.unit_object = self.make_copy(self.ctx.ndf[AMMUNITION])
+            self.object = self.make_copy(self.ctx.ndf[WEAPON_DESCRIPTOR])
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
@@ -33,24 +33,21 @@ class WeaponCreator(object):
 
     def make_copy(self: Self, ndf: List) -> Object:
         copy: Object = ndf.by_name(self.src.descriptor_name).value.copy()
-        edit_members(copy,
-                     DescriptorId=self.ctx.generate_guid(self.name))
-        # TODO: update HitRollRuleDescriptor guid
         return copy
 
-    @ndf_path(AMMUNITION)
+    @ndf_path(WEAPON_DESCRIPTOR)
     def edit_ammunition(self: Self, ndf: List):
-        ndf.add(ListRow(self.unit_object, namespace=self.name, visibility="export"))
+        ndf.add(ListRow(self.object, namespace=self.name, visibility="export"))
 
     def edit_members(self: Self, **kwargs: CellValue):
-        edit_members(self.unit_object, **kwargs)
+        edit_members(self.object, **kwargs)
 
     def module_context(self: Self, module_type: str) -> ModuleContext:
-        return ModuleContext(self.unit_object, module_type)
+        return ModuleContext(self.object, module_type)
 
     def get_module(self: Self, module_type: str) -> Object:
-        result: Object | None = get_module(self.unit_object, module_type)
+        result: Object | None = get_module(self.object, module_type)
         return result
     
     def remove_module(self: Self, module_type: str) -> None:
-        remove_module(self.unit_object, module_type)
+        remove_module(self.object, module_type)
