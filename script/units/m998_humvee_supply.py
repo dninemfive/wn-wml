@@ -1,6 +1,7 @@
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
 from metadata.deck_unit_info import TDeckUniteRule
+from units.util import make_unit_rule
 
 # todo: put most of this structure in an @annotation
 def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
@@ -17,12 +18,4 @@ def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
         with ModuleContext(m998_humvee_supply.unit_object, "TUnitUIModuleDescriptor") as ui_module:
             # TUnitUIModuleDescriptor/UpgradeFromUnit cleared
             ui_module.object.remove_by_member("UpgradeFromUnit")
-            rule = TDeckUniteRule(
-                m998_humvee_supply.new.descriptor_path,
-                AvailableWithoutTransport=True,
-                AvailableTransportList=None,
-                # TODO: automatically get this from Rover 101FC
-                NumberOfUnitInPack=10,
-                NumberOfUnitInPackXpMultiplier=[1, 0.8, 0.6, 0.4]
-            )
-            return ((m998_humvee_supply.new.deck_pack_descriptor_path, 2), rule)
+            return make_unit_rule(m998_humvee_supply.new, [10, 8, 6, 4], 2)

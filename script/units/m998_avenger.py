@@ -14,5 +14,5 @@ def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
         m998_avenger.remove_module("TDeploymentShiftModuleDescriptor")
         # remove para trait
         m998_avenger.edit_ui_module(SpecialtiesList=qlist("'AA'"))
-        return make_unit_rule(m998_avenger.new, [0, 4, 3, 0], 2)
+        return make_unit_rule(m998_avenger, [0, 4, 3, 0], 2)
         
