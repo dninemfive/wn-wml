@@ -1,9 +1,9 @@
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
-from metadata.deck_unit_info import TDeckUniteRule
+from metadata.deck_unit_info import UnitInfo
 from utils.ndf import dict_to_map
 
-def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
+def create(ctx: UnitCreationContext) -> UnitInfo | None:
     # ✪ MOT. RIFLES LDR.
     # copy: Airborne Ldr.
     with ctx.create_unit("MOT. RIFLES LDR.", "US", "Airborne_CMD_US") as mot_rifles_ldr:# MOT. RIFLES (AT-4)
@@ -54,15 +54,5 @@ def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
             with ModuleContext(mot_rifles.unit_object, "TUnitUIModuleDescriptor") as ui_module:
                 # TODO: upgrade from cmd. mot. rifles
                 ui_module.remove_member("UpgradeFromUnit")
-        rule = TDeckUniteRule(
-            mot_rifles_ldr.new.descriptor_path,
-            AvailableWithoutTransport=False,
-            # TODO: decide on transports
-            AvailableTransportList=["$/GFX/Unit/Descriptor_Unit_M998_Humvee_US"],
-            # TODO: automatically get this from Airborne CMD
-            NumberOfUnitInPack=6,
-            # unit rule xp should also be higher
-            NumberOfUnitInPackXPMultiplier=[0, 1, 0.6, 0]
-        )
-        return ((mot_rifles_ldr.new.deck_pack_descriptor_path, 2), rule)
+        return UnitInfo(mot_rifles, 2, [0,8,5,3], ["$/GFX/Unit/Descriptor_Unit_d9_M998_HUMVEE_SQC_US"])
         

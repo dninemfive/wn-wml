@@ -2,7 +2,7 @@ from typing import Self
 from message import Message, try_nest
 from metadata.division import DivisionMetadata
 from ndf_parse import Mod
-from ndf_parse.model import List, ListRow, Map, MapRow, Object
+from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 from utils.ndf import edit_members, ndf_path
 
@@ -64,7 +64,8 @@ class DivisionCreator(object):
             pack_list[k] = v
             # add rules to division rules
             rule_list.add(ListRow(rule.to_obj()))
-        division_rules_map: Map = mod_context.ndf[paths.DIVISION_RULES].by_name("DivisionRules").value.by_member("DivisionRules").value
-        division_rules_map.add(key=div_metadata.descriptor_path, value=rule_list)
+        rules.add(MemberRow(rule_list, "UnitRuleList"))
+        division_rules_map: Map = ndf.by_name("DivisionRules").value.by_member("DivisionRules").value
+        division_rules_map.add(key=self.division.descriptor_path, value=rules)
 
     
