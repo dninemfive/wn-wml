@@ -91,9 +91,7 @@ class ModCreationContext(object):
     def generate_key(self: Self) -> str:
         result = self.metadata.localization_prefix
         for _ in range(10 - len(result)):
-            print(result)
             result += random.choice(CHARACTERS)
-        print(result)
         return result
 
     def generate_localization_csv(self: Self) -> str:

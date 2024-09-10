@@ -18,4 +18,4 @@ def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
         with ModuleContext(m998_humvee_supply.unit_object, "TUnitUIModuleDescriptor") as ui_module:
             # TUnitUIModuleDescriptor/UpgradeFromUnit cleared
             ui_module.object.remove_by_member("UpgradeFromUnit")
-            return make_unit_rule(m998_humvee_supply.new, [10, 8, 6, 4], 2)
+            return make_unit_rule(m998_humvee_supply, [10, 8, 6, 4], 2)

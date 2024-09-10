@@ -14,5 +14,5 @@ def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
             specialties.remove(specialties.find_by_cond(lambda x: x.value == "'_para'"))
             ui_module.edit_members(SpecialtiesList=specialties)
         mp_patrol.remove_module("TDeploymentShiftModuleDescriptor")
-        return make_unit_rule(mp_patrol, [0, 6, 4, 0], 2, ["$/GFX/Unit/Descriptor_Unit_M998_Humvee_US"])
+        return make_unit_rule(mp_patrol, [0, 6, 4, 0], 2, ["$/GFX/Unit/Descriptor_Unit_d9_M998_HUMVEE_SQC_US"])
         

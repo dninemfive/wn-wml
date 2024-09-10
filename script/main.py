@@ -4,6 +4,7 @@ from context.unit_creation_context import UnitCreationContext
 from datetime import datetime
 import units.m1075_pls_supply
 import units.m998_avenger
+import units.m998_humvee_sqc
 import units.m998_humvee_supply
 import units.mot_mp_patrol
 from utils.io import write
@@ -92,8 +93,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # MOT. RIFLES (DRAGON)
                     # ✪ MOT. ENGINEERS LDR.
                     # MOT. ENGINEERS
-                    # M998 HUMVEE SQC
-                    # just copy M1038 HUMVEE
+                    # transports don't get added separately
+                    units.m998_humvee_sqc.create(ctx)
                     # M998 HUMVEE M2HB
                     # copy the AB version, but no forward deploy and normal vision
                     # M998 HUMVEE AGL
