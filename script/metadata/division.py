@@ -24,11 +24,11 @@ class DivisionMetadata(object):
     
     @property
     def base_name(self: Self) -> str:
-        return f"{self.dev_short_name}_{self.country}_{self.short_name}_multi"
+        return f"{self.dev_short_name}_{self.country}_{self.short_name}"
 
     @property
     def cfg_name(self: Self) -> str:
-        return f"'{self.base_name}'"
+        return f"'{self.base_name}_multi'"
     
     @property
     def descriptor_name(self: Self) -> str:
@@ -37,3 +37,7 @@ class DivisionMetadata(object):
     @property
     def descriptor_path(self: Self) -> str:
         return f'~/{self.descriptor_name}'
+    
+    @property
+    def emblem_namespace(self: Self) -> str:
+        return f'Texture_Division_Emblem_{self.base_name}'

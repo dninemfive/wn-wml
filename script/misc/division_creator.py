@@ -38,7 +38,7 @@ class DivisionCreator(object):
     @ndf_path(rf"GameData\Generated\Gameplay\Decks\DivisionList.ndf")
     def edit_division_list_ndf(self: Self, ndf: List):
         division_list: List = ndf.by_name("DivisionList").value.by_member("DivisionList").value
-        division_list.add(self.division.descriptor_path)
+        division_list.insert(2, self.division.descriptor_path)
 
     @ndf_path(rf"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf")
     def edit_deck_serializer_ndf(self: Self, ndf: List):

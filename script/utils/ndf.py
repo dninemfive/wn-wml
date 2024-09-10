@@ -1,10 +1,12 @@
 # https://realpython.com/primer-on-python-decorators/#fancy-decorators
 from functools import wraps
 from ndf_parse import Mod
-from ndf_parse.model import List, ListRow, Map, MapRow, Object
+from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 from typing import Any, Callable, Generator
 from message import Message, try_nest
+import os
+import shutil
 
 def edit_member(obj: Object, name: str, value: CellValue | None):
     index = obj.by_member(name).index
@@ -109,3 +111,34 @@ def ndf_path(path: str, save: bool = True):
     # lost the link but this was suggested in a StackExchange post
     decorate._ndf_path = path
     return decorate
+
+def make_obj(type: str, **props: CellValue) -> Object:
+    result = Object(type)
+    for k, v in props.items():
+        result.add(MemberRow(value=v, member=k))
+    return result
+
+def make_map(**items: CellValue) -> Map:
+    result = Map()
+    for k, v in items.items():
+        result.add(MapRow(k=k, v=v))
+
+def add_image(ndf_file: List,
+              src_file_path: str,
+              mod_output_path: str,
+              folder_relative_to_gamedata: str,
+              image_name: str,
+              texture_bank_name: str,
+              component_state: str = "~/ComponentState/Normal") -> str:
+    destination_folder = os.path.join(mod_output_path, "GameData", folder_relative_to_gamedata)
+    os.makedirs(destination_folder)
+    dst_image_filename = f'{image_name}{os.path.splitext(src_file_path)[1]}'
+    shutil.copyfile(src_file_path, os.path.join(destination_folder, dst_image_filename))
+    texture_obj = make_obj('TUIResourceTexture_Common',
+                           FileName=f'"GameData:/{folder_relative_to_gamedata}/{dst_image_filename}"')
+    ndf_file.add(ListRow(texture_obj, namespace=image_name))
+    ndf_file.by_name(texture_bank_name).value\
+            .by_member("Textures").value\
+            .add(key=f'"{image_name}"',
+                 value=dict_to_map({component_state:f"~/{image_name}"}))
+    return f'"{image_name}"'

@@ -5,9 +5,10 @@ from misc.division_creator import DivisionCreator
 from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
+from ndf_paths import DIVISION_TEXTURES
 from message import Message, try_nest
 from misc.cache_set import CacheSet
-from utils.ndf import root_paths
+from utils.ndf import root_paths, add_image
 from uuid import uuid4
 # https://stackoverflow.com/a/2823331
 import string
@@ -100,3 +101,12 @@ class ModCreationContext(object):
         for k in sorted(self.localization_cache.keys()):
             result += "\n" + f'"{self.localization_cache[k]}";"{k}"'
         return result
+    
+    def add_division_emblem(self: Self, msg: Message | None, image_path: str, division: DivisionMetadata) -> str:
+        with try_nest(msg, f"Adding division emblem from image at {image_path}") as _:
+            return add_image(self.ndf[DIVISION_TEXTURES],
+                             image_path,
+                             self.metadata.folder_path,
+                             "Assets/2D/Interface/UseOutGame/Division/Emblem",
+                             division.emblem_namespace, 
+                             "DivisionAdditionalTextureBank")

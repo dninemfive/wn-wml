@@ -158,26 +158,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 k, v = l
                 pack_list[k] = v 
             # make division
-            IMAGE_DST_FOLDER = os.path.join(mod_metadata.folder_path, "GameData/Assets/2D/Interface/UseOutGame/Division/Emblem")
-            division_texture_name="Texture_Division_Emblem_d9_US_9ID"
-            with root_msg.nest(f"Copying textures to {IMAGE_DST_FOLDER}") as _:
-                LOCAL_IMAGE_NAME = "img/downscaled_patch.png"
-                IMAGE_NAME = '9th_infantry_division'
-                IMAGE_DST_PATH = os.path.join(IMAGE_DST_FOLDER, f'{IMAGE_NAME}.png')
-                os.makedirs(IMAGE_DST_FOLDER)
-                shutil.copyfile(LOCAL_IMAGE_NAME, IMAGE_DST_PATH)
-                texture_obj = Object('TUIResourceTexture_Common')
-                texture_obj.add(MemberRow(f'"GameData:/Assets/2D/Interface/UseOutGame/Division/Emblem/{IMAGE_NAME}.png"', "FileName"))
-                texture_row = ListRow(texture_obj, namespace=division_texture_name)
-                mod_context.ndf[paths.DIVISION_TEXTURES].add(texture_row)
-                texture_bank_subrow = MapRow(key="~/ComponentState/Normal", value=f"~/{division_texture_name}")
-                texture_bank_map = Map()
-                texture_bank_map.add(texture_bank_subrow)
-                texture_bank_row = MapRow(key=f'"{division_texture_name}"', value=texture_bank_map)
-                mod_context.ndf[paths.DIVISION_TEXTURES].by_name("DivisionAdditionalTextureBank").value\
-                                                        .by_member("Textures").value\
-                                                        .add(key=f'"{division_texture_name}"',
-                                                             value=texture_bank_map)
+            division_texture_name: str = mod_context.add_division_emblem(root_msg, "img/downscaled_patch.png", div_metadata)            
 
             # todo: insert this immediately after 8th Infantry Division
             mod_context.create_division(div_metadata,
@@ -185,7 +166,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                                         root_msg,
                                         DivisionName=mod_context.register("9TH INFANTRY DIVISION (MTZ.)"),
                                         DescriptionHintTitleToken=mod_context.register("9TH INFANTRY DIVISION (MOTORIZED)"),
-                                        EmblemTexture = f'"{division_texture_name}"',
+                                        EmblemTexture = division_texture_name,
                                         PackList = dict_to_map(pack_list))
             # add a default deck to Decks.ndf (not required)
     with root_msg.nest("Writing localization") as msg:
