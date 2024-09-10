@@ -142,3 +142,15 @@ def add_image(ndf_file: List,
             .add(key=f'"{image_name}"',
                  value=dict_to_map({component_state:f"~/{image_name}"}))
     return f'"{image_name}"'
+
+def map_from_tuples(*tuples: tuple[str, CellValue]) -> Map:
+    result = Map()
+    for k, v in tuples:
+        result.add(MapRow(k=k, v=v))
+    return result
+
+def map_from_rows(*rows: MapRow) -> Map:
+    result = Map()
+    for row in rows:
+        result.add(row)
+    return result

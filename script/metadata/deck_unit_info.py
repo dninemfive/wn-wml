@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from metadata.division import DivisionMetadata
 from metadata.unit import UnitMetadata
 from misc.unit_creator import UnitCreator
-from ndf_parse.model import List, ListRow, MemberRow, Object
+from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from typing import Self
-from utils.ndf import make_obj, to_List
+from utils.ndf import map_from_rows, make_obj, to_List
 
 class UnitInfo(object):
     def __init__(self: Self,
@@ -18,6 +18,10 @@ class UnitInfo(object):
         self.unit: UnitMetadata = unit
         self.num_packs = num_packs
         self.rule = TDeckUniteRule.make(unit, units_per_pack, transports, force_awt)
+
+    @property
+    def pack(self: Self) -> MapRow:
+        return MapRow(key=self.unit.deck_pack_descriptor_path, value=self.num_packs)
 
     @staticmethod
     def from_vanilla(unit: UnitMetadata, num_packs: int, *divisions_for_rule: str) -> Self:
@@ -60,17 +64,19 @@ class TDeckUniteRule(object):
         )
     
 class DivisionUnits(object):
-    division: DivisionMetadata
-    units: list[UnitInfo]
 
-    def __init__(self: Self, division: DivisionMetadata):
+    def __init__(self: Self, division: DivisionMetadata, *units: UnitInfo):
         self.division = division
+        self.units = units
 
     def register(self: Self, info: UnitInfo):
         self.units.append(info)
 
-    def DivisionRules(self: Self) -> tuple[str, Object]:
-        unit_rule_list = List()
-        for unit in self.units:
-            unit_rule_list.add(ListRow(unit.rule.to_obj()))
-        return (self.division.descriptor_path, make_obj('TDeckDivisionRule', UnitRuleList=unit_rule_list))
+    def pack_list(self: Self) -> Map:
+        return map_from_rows(x.pack for x in self.units)
+    
+    def division_rules(self: Self) -> Object:
+        return make_obj('TDeckDivisionRule',
+                        UnitRuleList=to_List(unit.rule.to_obj()
+                                             for unit
+                                             in self.units))

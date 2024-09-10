@@ -1,16 +1,18 @@
 from typing import Self
 from message import Message, try_nest
+from metadata.deck_unit_info import DivisionUnits
 from metadata.division import DivisionMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from utils.ndf import edit_members, ndf_path
+from utils.ndf import edit_members, make_obj, ndf_path
 
 class DivisionCreator(object):
-    def __init__(self: Self, guid: str, copy_of: str, insert_after: str | None, division: DivisionMetadata, **changes: CellValue | None):
+    def __init__(self: Self, guid: str, copy_of: str, insert_after: str | None, division: DivisionMetadata, units: DivisionUnits, **changes: CellValue | None):
         self.guid = guid
         self.copy_of = copy_of
         self.division = division
+        self.units = units
         self.changes = changes
         self.insert_after = insert_after
 
@@ -33,6 +35,7 @@ class DivisionCreator(object):
                     DescriptorId = self.guid,
                     CfgName = self.division.cfg_name,
                     **self.changes)
+        edit_members(copy.value, PackList=self.units.pack_list())
         copy.namespace = self.division.descriptor_name
         ndf.add(copy)
     
@@ -53,19 +56,4 @@ class DivisionCreator(object):
     @ndf_path(rf"GameData\Generated\Gameplay\Decks\DivisionRules.ndf")
     def edit_division_rules_ndf(self: Self, ndf: List):   
         division_rules: Map[MapRow] = ndf.by_name("DivisionRules").value.by_member("DivisionRules").value
-        copy: Object = division_rules.by_key(f"~/{self.copy_of}").value.copy()
-        division_rules.add(k=self.division.descriptor_path, v=copy)
-
-        rules = Object('TDeckDivisionRule')
-        rule_list = List()
-        for packs, rule in unit_data:
-            # add packs to division
-            k, v = packs
-            pack_list[k] = v
-            # add rules to division rules
-            rule_list.add(ListRow(rule.to_obj()))
-        rules.add(MemberRow(rule_list, "UnitRuleList"))
-        division_rules_map: Map = ndf.by_name("DivisionRules").value.by_member("DivisionRules").value
-        division_rules_map.add(key=self.division.descriptor_path, value=rules)
-
-    
+        division_rules.add(key=self.division.descriptor_path, value=self.units.division_rules())
