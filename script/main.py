@@ -81,8 +81,15 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 with UnitCreationContext(mod_context, msg, div_metadata.id * 1000) as ctx:
                     # TODO: target module changes with like TModuleType:path/to/property ?
                     """ LOG """
+                    division_units.register_vanilla("FOB_US", 1)
                     division_units.register(units.m998_humvee_supply.create(ctx))
                     division_units.register(units.m1075_pls_supply.create(ctx))
+                    division_units.register_vanilla("UH60A_Supply_US", 2)
+                    division_units.register_vanilla("CH47_Super_Chinook_US", 1)
+
+                    division_units.register_vanilla("OH58C_CMD_US", 1)
+                    division_units.register_vanilla("UH60A_CO_US", 1)
+                    division_units.register_vanilla("M577_US", 1)
                     # ✪ M998 HUMVEE SGT.
                     # ✪ M1025 HUMVEE AGL
                     # ✪ M1010 TC3V
@@ -91,23 +98,34 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # units.mot_rifles_ldr.create()
                     # units.mot_rifles_at4.create()
                     # MOT. RIFLES (DRAGON)
-                    # ✪ MOT. ENGINEERS LDR.
+                    division_units.register_vanilla("Rifles_half_CMD_US", 1)
+                    division_units.register_vanilla("Rifles_half_AT4_US", 1)
+                    division_units.register_vanilla("Rifles_half_Dragon_US", 1)
+                    division_units.register_vanilla("Rifles_Cavalry_US", 1)
+                    division_units.register_vanilla("Engineer_CMD_US", 1)
                     # MOT. ENGINEERS
-                    # transports don't get added separately
+                    # maybe change AB ones to fireteams?
+                    division_units.register_vanilla("Airborne_CMD_US", 1)
+                    division_units.register_vanilla("Airborne_Dragon_US", 1)
+                    division_units.register_vanilla("ATteam_TOW2_US", 1)
+                    # transports don't get added as their own packs
                     units.m998_humvee_sqc.create(ctx)
                     # M998 HUMVEE M2HB
                     # copy the AB version, but no forward deploy and normal vision
                     # M998 HUMVEE AGL
                     # copy the AB version, but no forward deploy and normal vision
                     """ ART """
+                    division_units.register_vanilla("Mortier_107mm_US", 2)
+                    # XM1100 120mm
+                    division_units.register_vanilla("Howz_M102_105mm_US", 2)
+                    # XM119 IMCS 105mm
+                    division_units.register_vanilla("Howz_M198_155mm_US", 2)
                     # M198 155mm [CLU]
                     # M198 COPPERHEAD
                     # M58 MICLIC
                     # XM142 HIMARS [HE]
                     # XM142 HIMARS [CLU]
                     # XM142 ATACMS
-                    # XM119 IMCS 105mm
-                    # XM1100 120mm
                     """ TNK """
                     # XM4 AGS
                     # RDF/LT
@@ -116,6 +134,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # M998 HUMVEE GLH-L
                     # M1025 HUMVEE AGL
                     """ REC """
+                    division_units.register_vanilla("M981_FISTV_US", 1)
                     # 👓 M998 HUMVEE M2HB
                     # copy 👓 M1025 HUMVEE M2HB
                     # 👓 FAV
@@ -123,11 +142,17 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # 👓 FAV TOW
                     # 👓 OPERATIONAL SUPPORT
                     # [👓] FOLT
+                    division_units.register_vanilla("Airborne_Scout_US", 1)
+                    division_units.register_vanilla("LRRP_US", 1)
+                    division_units.register_vanilla("Sniper_US", 1)
                     # 👓 FWD SUPPORT [EW]
                     # [👓] MERCURY GREEN RPV
                     # [👓] MOT. SCOUTS
                     # copy SCOUTS, but replace M240 with SAW
                     # [👓] SCAT
+                    division_units.register_vanilla("OH58C_Scout_US", 1)
+                    division_units.register_vanilla("OH58D_Combat_Scout_US", 1)
+                    division_units.register_vanilla("EH60A_EW_US", 1)
                     # [[👓]] JOH-58D KIOWA
                     # insert between OH-58D KIOWA and OH-58D KIOWA Wr.
                     # [[👓]] M561 GAMA GOAT FAAR
@@ -138,10 +163,15 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     division_units.register(units.m998_avenger.create(ctx))
                     # M998 SETTER
                     # MIM-72A T-CHAPARRAL
+                    division_units.register_vanilla("MANPAD_Stinger_C_US", 1)
                     # STINGER (TDAR)
                     # EXCALIBUR VWC
                     """ HEL """
                     # AH-1S COBRA
+                    division_units.register_vanilla("AH1F_Cobra_US", 4)
+                    division_units.register_vanilla("AH1S_Cobra_US", 4)
+                    division_units.register_vanilla("AH1F_ATAS_US", 1)
+                    division_units.register_vanilla("AH64_Apache_US", 2)
                     """ AIR """
                     # A-6E INTRUDER [HE]
                     # A-6E INTRUDER [CLU]

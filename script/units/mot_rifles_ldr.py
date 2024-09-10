@@ -6,9 +6,10 @@ from ndf_parse.model import List
 
 def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
     # ✪ MOT. RIFLES LDR.
+    # see: FM 71-2 appendix A fig. A-11 CO HQ
     # copy: Airborne Ldr.
     with ctx.create_unit("MOT. RIFLES LDR.", "US", "Airborne_CMD_US") as mot_rifles_ldr:
-        # reduce men to 8
+        # 6x M16A2, 2x M240B
         # remove Shock and Airborne traits
         # remove forward deploy
         # reduce cost

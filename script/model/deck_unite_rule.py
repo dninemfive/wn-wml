@@ -5,7 +5,7 @@ from metadata.unit import UnitMetadata
 from misc.unit_creator import UnitCreator
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from typing import Self
-from utils.ndf import map_from_rows, make_obj, to_List
+from utils.ndf import list_from_rows, map_from_rows, make_obj, to_List
 
 UNITE_RULE = 'TDeckUniteRule'
 KEY_AVAILABLE_TRANSPORT_LIST = 'AvailableTransportList'
@@ -24,8 +24,6 @@ class TDeckUniteRule(object):
 
     @staticmethod
     def from_ndf(ndf: Object) -> Self:
-        if ndf.type is not (None or UNITE_RULE):
-            raise TypeError
         transports: List | None = None
         try:
             transports = ndf.by_member(KEY_AVAILABLE_TRANSPORT_LIST).value
@@ -36,7 +34,7 @@ class TDeckUniteRule(object):
             ndf.by_member(KEY_AVAILABLE_WITHOUT_TRANSPORT).value,
             transports,
             ndf.by_member(KEY_NUMBER_OF_UNIT_IN_PACK).value,
-            ndf.by_member(KEY_NUMBER_OF_UNIT_IN_PACK_XP_MULTIPLIER)
+            [float(x) for x in ndf.by_member(KEY_NUMBER_OF_UNIT_IN_PACK_XP_MULTIPLIER).value]
         )
 
     def to_ndf(self: Self) -> Object:
@@ -44,7 +42,7 @@ class TDeckUniteRule(object):
         result.add(MemberRow(self.UnitDescriptor, KEY_UNIT_DESCRIPTOR))
         result.add(MemberRow(str(self.AvailableWithoutTransport), KEY_AVAILABLE_WITHOUT_TRANSPORT))
         if(self.AvailableTransportList is not None):
-            result.add(MemberRow(to_List(*self.AvailableTransportList), KEY_AVAILABLE_TRANSPORT_LIST))
+            result.add(MemberRow(list_from_rows(*self.AvailableTransportList), KEY_AVAILABLE_TRANSPORT_LIST))
         result.add(MemberRow(str(self.NumberOfUnitInPack), KEY_NUMBER_OF_UNIT_IN_PACK))
         result.add(MemberRow(to_List(*[str(x) for x in self.NumberOfUnitInPackXPMultiplier]), KEY_NUMBER_OF_UNIT_IN_PACK_XP_MULTIPLIER))
         return result

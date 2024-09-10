@@ -28,6 +28,12 @@ def to_List(*input: CellValue) -> List:
         result.add(ListRow(s))
     return result
 
+def list_from_rows(*rows: ListRow) -> List:
+    result = List()
+    for row in rows:
+        result.add(row)
+    return result
+
 def object_has_type(object: Object, type: str) -> bool:
     try:
         return object.type == type

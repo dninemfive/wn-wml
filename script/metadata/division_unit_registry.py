@@ -23,13 +23,13 @@ class DivisionUnitRegistry(object):
         with try_nest(self.parent_msg, f"Registering {info.unit.name}") as _:
             self.units.append(info)
 
-    def reg_vanilla(self: Self, unit: str | UnitMetadata, packs: int):
+    def register_vanilla(self: Self, unit: str | UnitMetadata, packs: int):
         if isinstance(unit, str):
             unit = UnitMetadata(unit)
         with try_nest(self.parent_msg, f"Registering vanilla unit {unit}") as msg:
-            unite_rule = TDeckUniteRule.from_ndf(self.lookup.look_up(unit.descriptor_path))
+            unite_rule = self.lookup.look_up(unit.descriptor_path)
             if unite_rule is not None:
-                self.units.append(UnitInfo.from_deck_unite_rule(unite_rule))
+                self.units.append(UnitInfo.from_deck_unite_rule(unit, packs, unite_rule))
             else:
                 with msg.nest("Failed: could not find unit in any division rule") as _:
                     pass

@@ -30,6 +30,6 @@ class UnitInfo(object):
         base_units_per_pack: int = int(rule.NumberOfUnitInPack)
         return UnitInfo(unit,
                         num_packs,
-                        tuple(int(x * base_units_per_pack) for x in rule),
+                        tuple(int(x * base_units_per_pack) for x in rule.NumberOfUnitInPackXPMultiplier),
                         rule.AvailableTransportList,
                         rule.AvailableWithoutTransport)
