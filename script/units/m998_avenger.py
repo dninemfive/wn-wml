@@ -3,6 +3,7 @@ from context.unit_creation_context import UnitCreationContext
 from metadata.deck_unit_info import TDeckUniteRule
 from misc.unit_creator import UNIT_UI
 from ndf_parse.model import List, ListRow
+from units.util import make_unit_rule
 from utils.ndf import list_to_List as qlist
 
 def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
@@ -13,14 +14,5 @@ def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
         m998_avenger.remove_module("TDeploymentShiftModuleDescriptor")
         # remove para trait
         m998_avenger.edit_ui_module(SpecialtiesList=qlist("'AA'"))
-        rule = TDeckUniteRule(
-            m998_avenger.new.descriptor_path,
-            AvailableWithoutTransport=True,
-            AvailableTransportList=None,
-            # TODO: automatically get this from AB M998 AVENGER
-            NumberOfUnitInPack=4,
-            # unit rule xp should also be higher
-            NumberOfUnitInPackXpMultiplier=[0, 1, 0.6, 0]
-        )
-        return ((m998_avenger.new.deck_pack_descriptor_path, 2), rule)
+        return make_unit_rule(m998_avenger.new, [0, 4, 3, 0], 2)
         
