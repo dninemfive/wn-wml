@@ -7,11 +7,12 @@ from ndf_parse.model.abc import CellValue
 from utils.ndf import edit_members, ndf_path
 
 class DivisionCreator(object):
-    def __init__(self: Self, guid: str, copy_of: str, division: DivisionMetadata, **changes: CellValue | None):
+    def __init__(self: Self, guid: str, copy_of: str, insert_after: str | None, division: DivisionMetadata, **changes: CellValue | None):
         self.guid = guid
         self.copy_of = copy_of
         self.division = division
         self.changes = changes
+        self.insert_after = insert_after
 
     @property
     def msg_length(self: Self) -> int:
@@ -38,7 +39,11 @@ class DivisionCreator(object):
     @ndf_path(rf"GameData\Generated\Gameplay\Decks\DivisionList.ndf")
     def edit_division_list_ndf(self: Self, ndf: List):
         division_list: List = ndf.by_name("DivisionList").value.by_member("DivisionList").value
-        division_list.insert(2, self.division.descriptor_path)
+        if self.insert_after is not None:
+            index = division_list.find_by_cond(lambda x: x.value == f"~/{self.insert_after}").index
+            division_list.insert(index + 1, self.division.descriptor_path)
+        else:
+            division_list.add(self.division.descriptor_path)
 
     @ndf_path(rf"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf")
     def edit_deck_serializer_ndf(self: Self, ndf: List):

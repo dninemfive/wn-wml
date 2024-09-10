@@ -61,11 +61,11 @@ class ModCreationContext(object):
         with msg.nest(f"Loading {path}") as _:
             return self.mod.edit(path).current_tree
     
-    def create_division(self: Self, division: DivisionMetadata, copy_of: str, root_msg: Message | None, **changes: CellValue | None) -> None:
+    def create_division(self: Self, division: DivisionMetadata, copy_of: str, insert_after: str | None = None, root_msg: Message | None = None, **changes: CellValue | None) -> None:
         with try_nest(root_msg, 
                       f"Making division {division.short_name}",
                       child_padding=self.msg_length) as msg:
-            DivisionCreator(self.generate_guid(division.descriptor_name), copy_of, division, **changes).apply(self.ndf, msg)
+            DivisionCreator(self.generate_guid(division.descriptor_name), copy_of, insert_after, division, **changes).apply(self.ndf, msg)
 
     def generate_guid(self: Self, guid_key: str) -> str:
         """ Generates a GUID in the format NDF expects """
