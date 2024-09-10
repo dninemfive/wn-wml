@@ -75,7 +75,12 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
     with ModCreationContext(mod_metadata, root_msg, *paths.ALL) as mod_context:
             division_units: DivisionUnitRegistry
             with root_msg.nest("Creating units") as msg:
-                division_units = DivisionUnitRegistry(DivisionRuleLookup(mod_context.ndf[paths.DIVISION_RULES], "US_82nd_Airborne", "US_8th_Inf", "US_11ACR"), msg)
+                division_units = DivisionUnitRegistry(DivisionRuleLookup(mod_context.ndf[paths.DIVISION_RULES],
+                                                                         "US_82nd_Airborne",
+                                                                         "US_8th_Inf",
+                                                                         "US_11ACR",
+                                                                         "US_3rd_Arm"),
+                                                        msg)
                 # make new units              
                 # TODO: maybe default unit country?
                 with UnitCreationContext(mod_context, msg, div_metadata.id * 1000) as ctx:

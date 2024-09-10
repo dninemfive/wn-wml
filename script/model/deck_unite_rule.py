@@ -23,12 +23,15 @@ class TDeckUniteRule(object):
     NumberOfUnitInPackXPMultiplier: tuple[float, float, float, float]
 
     @staticmethod
-    def from_ndf(ndf: Object) -> Self:
+    def from_ndf(ndf: Object, override_transports: list[str] | None = None) -> Self:
         transports: List | None = None
-        try:
-            transports = ndf.by_member(KEY_AVAILABLE_TRANSPORT_LIST).value
-        except:
-            pass
+        if override_transports is not None:
+            transports = to_List(*override_transports)
+        else:
+            try:
+                transports = ndf.by_member(KEY_AVAILABLE_TRANSPORT_LIST).value
+            except:
+                pass
         return TDeckUniteRule(
             ndf.by_member(KEY_UNIT_DESCRIPTOR).value,
             ndf.by_member(KEY_AVAILABLE_WITHOUT_TRANSPORT).value,
