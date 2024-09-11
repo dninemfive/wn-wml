@@ -10,7 +10,9 @@ from ndf_paths import UNITE_DESCRIPTOR
 from typing import Self
 from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module, remove_module
 
+MODULES_DESCRIPTORS = "ModulesDescriptors"
 UNIT_UI = "TUnitUIModuleDescriptor"
+TAGS = "TTagsModuleDescriptor"
 
 class UnitCreator(object):
     def __init__(self: Self, ctx, prefix: str, localized_name: str, country: str, copy_of: str):
@@ -96,5 +98,17 @@ class UnitCreator(object):
         # print(str(result))
         return result
     
+    def get_module_by_name(self: Self, name: str) -> ListRow:
+        return self.unit_object.by_member(MODULES_DESCRIPTORS).value.by_name(name)
+    
     def remove_module(self: Self, module_type: str) -> None:
         remove_module(self.unit_object, module_type)
+
+    def add_tags(self: Self, *tags: str):
+        with self.module_context(TAGS) as tags_module:
+            for tag in tags:
+                tags_module.object.by_member("TagSet").value.add(tag)
+
+    def replace_module_by_name(self: Self, module_name: str, from_unit: str):
+        print("Hey, you forgot to implement UnitCreator.replace_module_by_name!")
+        pass

@@ -21,4 +21,4 @@ class ModuleContext(object):
         edit_members(self.object, **kwargs)
 
     def remove_member(self: Self, name: str) -> None:
-        self.remove_member(name)
+        pass

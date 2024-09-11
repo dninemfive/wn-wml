@@ -2,6 +2,8 @@ from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
 from datetime import datetime
+import units.joh_58c_kiowa
+import units.m167a1_vads
 import units.m198_155mm_clu
 import units.m198_copperhead
 import units.stinger_tdar
@@ -138,7 +140,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # XM4 AGS
                     # RDF/LT
                     # M966 HUMVEE TOW
-                    # M1025 HUMVEE TOW
+                    division_units.register_vanilla("M1025_Humvee_TOW_US", 3)
                     # M998 HUMVEE GLH-L
                     # M1025 HUMVEE AGL
                     """ REC """
@@ -165,9 +167,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # insert between OH-58D KIOWA and OH-58D KIOWA Wr.
                     # [[👓]] M561 GAMA GOAT FAAR
                     """ AA """
-                    # JOH-58C KIOWA
-                    # M167A1 VADS 20mm
-                    # copy AB version, remove forward deploy and add the air-transportable trait
+                    division_units.register(units.joh_58c_kiowa.create(ctx))
+                    division_units.register(units.m167a1_vads.create(ctx))
                     division_units.register(units.m998_avenger.create(ctx))
                     # M998 SETTER
                     # MIM-72A T-CHAPARRAL
