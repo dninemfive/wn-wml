@@ -11,7 +11,7 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
     # M198 155mm COPPERHEAD
     # copy M198 155mm
     with ctx.create_unit("STINGER (TDAR)", "US", "MANPAD_Stinger_C_US") as stinger_tdar:
-        # update transportable (TODO: automate this)
+        # update transportable
         with stinger_tdar.module_context('TTransportableModuleDescriptor') as transportable_module:
             transportable_module.edit_members(TransportedSoldier='"d9_STINGER_TDAR_US"')
         # increase air vision

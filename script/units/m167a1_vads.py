@@ -19,6 +19,6 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
         m167a1_vads.add_tags('"CanBeAirlifted"')
         # advanced: replace soldiers manning it with normal instead of airborne models
         # advanced: insert before AB M167A1 VADS 20mm
-        # update ttransportablemoduledescriptor (TODO: automate)
+        # update ttransportablemoduledescriptor
         return UnitInfo(m167a1_vads, 2, [0, 4, 3, 0])
         

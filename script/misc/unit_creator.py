@@ -29,8 +29,13 @@ class UnitCreator(object):
         self.set_name(self.name)
         with self.module_context("TTagsModuleDescriptor") as tags_module:
             tag_set: List = tags_module.object.by_member("TagSet").value
-            tag_set.remove(tag_set.find_by_cond(lambda x: x.value == f'"UNITE_{self.src.name}"'))
+            tag_set.remove(tag_set.find_by_cond(lambda x: x.value == self.src.tag))
             tag_set.add(ListRow(self.new.tag))
+        try:
+            with self.module_context("TTransportableModuleDescriptor") as transportable_module:
+                transportable_module.edit_members(TransportedSoldier=f'"{self.new.name}"')
+        except:
+            pass
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
@@ -50,9 +55,6 @@ class UnitCreator(object):
         edit_members(copy,
                      DescriptorId=self.ctx.generate_guid(self.new.descriptor_name),
                      ClassNameForDebug=self.new.class_name_for_debug)
-        # TODO: remove old UNITE_xxx_yy tag and replace with new one
-        # tags: List = get_module(copy, 'TTagsModuleDescriptor').by_member("TagSet").value
-        # tags.remove()
         return copy
 
     @ndf_path(rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf')

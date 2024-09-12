@@ -6,7 +6,6 @@ from ndf_paths import UNITE_DESCRIPTOR
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 
-# todo: put most of this structure in an @annotation
 def create(ctx: UnitCreationContext) -> UnitInfo | None:
     # M998 HUMVEE SUPPLY
     #   copy of: M35 Supply
