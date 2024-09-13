@@ -8,7 +8,7 @@ from misc.unit_creator import UnitCreator
 from model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from typing import Self
-from utils.ndf import map_from_rows, make_obj, to_List
+from utils.ndf.misc import map_from_rows, make_obj, to_List
 
 def ensure_unit_path_list(transports: str | list[str] | None) -> list[str] | None:
         if transports is None:

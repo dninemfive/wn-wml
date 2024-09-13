@@ -1,7 +1,8 @@
 from ndf_parse.model import Object
 from ndf_parse.model.abc import CellValue
 from typing import Self
-from script.utils.ndf.misc import get_module_index, edit_members
+from utils.ndf.misc import edit_members
+from utils.ndf.unit_module import get_module_index
 
 class ModuleContext(object):
     def __init__(self: Self, unit: Object, module_type: str, by_name: bool = False):

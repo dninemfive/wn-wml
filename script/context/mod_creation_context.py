@@ -9,7 +9,7 @@ from ndf_paths import DIVISION_TEXTURES
 from message import Message, try_nest
 from metadata.division_unit_registry import DivisionUnitRegistry
 from misc.cache_set import CacheSet
-from utils.ndf import root_paths, add_image
+from utils.ndf.misc import root_paths, add_image
 from uuid import uuid4
 # https://stackoverflow.com/a/2823331
 import string

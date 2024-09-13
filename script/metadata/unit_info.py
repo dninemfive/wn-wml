@@ -6,7 +6,7 @@ from model.deck_unite_rule import TDeckUniteRule
 from misc.unit_creator import UnitCreator
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from typing import Self
-from utils.ndf import map_from_rows, make_obj, to_List
+from utils.ndf.misc import map_from_rows, make_obj, to_List
 
 class UnitInfo(object):
     def __init__(self: Self,

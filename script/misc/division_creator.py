@@ -5,7 +5,7 @@ from metadata.division import DivisionMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from utils.ndf import edit_members, make_obj, ndf_path
+from utils.ndf.misc import edit_members, make_obj, ndf_path
 
 class DivisionCreator(object):
     def __init__(self: Self, guid: str, copy_of: str, insert_after: str | None, division: DivisionMetadata, units: DivisionUnitRegistry, **changes: CellValue | None):

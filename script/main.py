@@ -2,6 +2,7 @@ from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
 from datetime import datetime
+import units.m1010_tc3v
 import units.m198_155mm_clu
 import units.m198_copperhead
 import units.stinger_tdar
@@ -12,7 +13,6 @@ from misc.unit_creator import UnitCreator, UNIT_UI
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from utils.bat import generate_mod, reset_source
-from utils.ndf import dict_to_map, edit_members, get_module, replace_unit_module
 from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
@@ -62,7 +62,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     division_units.register_vanilla("M577_US", 1)
                     # ✪ M998 HUMVEE SGT.
                     # ✪ M1025 HUMVEE AGL
-                    # ✪ M1010 TC3V
+                    division_units.register(units.m1010_tc3v.create(ctx))
                     """ INF """
                     M998_HUMVEE, M1038_HUMVEE = "Descriptor_Unit_M998_Humvee_US", "Descriptor_Unit_M1038_Humvee_US"
                     BLACKHAWK, CHINOOK = "Descriptor_Unit_UH60A_Black_Hawk_US", "Descriptor_Unit_CH47_Chinook_US"

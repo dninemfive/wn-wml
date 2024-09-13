@@ -1,7 +1,7 @@
 from context.module_context import ModuleContext
 from context.unit_creation_context import UnitCreationContext
 from metadata.division_unit_registry import UnitInfo
-from utils.ndf import dict_to_map
+from utils.ndf.misc import dict_to_map
 
 def create(ctx: UnitCreationContext) -> UnitInfo | None:
     # ✪ MOT. RIFLES LDR.

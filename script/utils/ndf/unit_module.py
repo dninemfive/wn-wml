@@ -39,7 +39,7 @@ def get_module(unit: Object, type_or_name: str, by_name: bool = False) -> Object
     return get_row(unit, type_or_name, by_name).value
 
 def replace_module(unit: Object, value: CellValue, type_or_name: str, by_name: bool = False) -> None:
-    get_row(unit, type_or_name, by_name) = value
+    get_row(unit, type_or_name, by_name).value = value
 
 def replace_module_from(dest_unit: Object, src_unit: Object, type_or_name: str, by_name: bool = False):
     replace_module(dest_unit, get_module(src_unit, type_or_name, by_name).copy(), type_or_name, by_name)

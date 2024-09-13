@@ -4,7 +4,7 @@ from metadata.division_unit_registry import UnitInfo
 from metadata.unit import UnitMetadata
 from misc.unit_creator import UNIT_UI
 from ndf_parse.model import List, ListRow
-from utils.ndf import to_List as qlist
+from utils.ndf.misc import to_List as qlist
 
 def create(ctx: UnitCreationContext) -> UnitInfo | None:
     # M998 AVENGER
