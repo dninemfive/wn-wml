@@ -18,7 +18,6 @@ def create(ctx: UnitCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
         rule = TDeckUniteRule(
             mot_rifles_ldr.new.descriptor_path,
             AvailableWithoutTransport=False,
-            # TODO: decide on transports
             AvailableTransportList=["$/GFX/Unit/Descriptor_Unit_M998_Humvee_US"],
             # TODO: automatically get this from Airborne CMD
             NumberOfUnitInPack=6,
