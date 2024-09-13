@@ -47,41 +47,6 @@ def replace_by_type(list: List, type: str, value: CellValue):
     index: int = list.find_by_cond(lambda x: object_has_type(x.value, type))
     list.replace(index, value)
 
-def get_module(unit: Object, module_type: str) -> ListRow | None:
-    result: ListRow | None = None
-    for module in unit.by_member("ModulesDescriptors").value.match_pattern(f'{module_type}()'):
-        result = module
-        break
-    return result
-
-def get_module_index(unit: Object, type_or_name: str, by_name: bool = False) -> int:
-    fn = get_module_index_by_name if by_name else get_module_index_by_type
-    return fn(unit, type_or_name)
-
-def get_module_index_by_type(unit: Object, type: str) -> int | None:
-    result: int | None = None
-    for module in unit.by_member("ModulesDescriptors").value.match_pattern(f'{type}()'):
-        result = module.index
-        break
-    return result
-
-def get_module_index_by_name(unit: Object, name: str) -> int:
-    result: int | None = None
-    modules: List = unit.by_member("ModulesDescriptors").value
-    row: ListRow = modules.by_name(name)
-    return row.index
-
-def remove_module(unit: Object, module_type: str) -> None:
-    unit.by_member("ModulesDescriptors").value.remove(get_module_index(unit, module_type))
-
-def replace_unit_module(unit: Object, module_type: str, module: ListRow | Object):
-    modules: List = unit.by_member('ModulesDescriptors').value
-    replace_by_type(modules, module_type, ensure_listrow(module))
-
-def replace_unit_modules(unit: Object, **kwargs: ListRow | Object):
-    for k, v in kwargs.items():
-        replace_unit_module(unit, k, v)
-
 def editing_or_reading(save: bool):
     return 'Editing' if save else 'Reading'
 
