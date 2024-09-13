@@ -19,13 +19,19 @@ class DivisionUnitRegistry(object):
         self.lookup = lookup
         self.parent_msg = parent_msg
 
-    def register(self: Self, info: UnitInfo):
+    def register(self: Self, info: UnitInfo, override_transports: str | list[str] | None = None):
+        if isinstance(override_transports, str):
+            override_transports = [override_transports]
+        if override_transports is not None:
+            info.rule.AvailableTransportList = override_transports
         with try_nest(self.parent_msg, f"Registering {info.unit.name}") as _:
             self.units.append(info)
 
-    def register_vanilla(self: Self, unit: str | UnitMetadata, packs: int, override_transports: list[str] | None = None):
+    def register_vanilla(self: Self, unit: str | UnitMetadata, packs: int, override_transports: str | list[str] | None = None):
         if isinstance(unit, str):
             unit = UnitMetadata(unit)
+        if isinstance(override_transports, str):
+            override_transports = [override_transports]
         with try_nest(self.parent_msg, f"Registering vanilla unit {unit}") as msg:
             unite_rule = self.lookup.look_up(unit.descriptor_path, override_transports)
             if unite_rule is not None:

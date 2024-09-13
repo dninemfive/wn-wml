@@ -63,34 +63,40 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # ✪ M998 HUMVEE SGT.
                     # ✪ M1025 HUMVEE AGL
                     # ✪ M1010 TC3V
-                    """ INF """                    
+                    """ INF """
+                    M998_HUMVEE, M1038_HUMVEE = "Descriptor_Unit_M998_Humvee_US", "Descriptor_Unit_M1038_Humvee_US"
+                    BLACKHAWK, CHINOOK = "Descriptor_Unit_UH60A_Black_Hawk_US", "Descriptor_Unit_CH47_Chinook_US"
+                    SMALL_UNIT_TRANSPORTS = [M998_HUMVEE, BLACKHAWK]
+                    LARGE_UNIT_TRANSPORTS = [M1038_HUMVEE, BLACKHAWK]
                     division_units.register(units.mot_mp_patrol.create(ctx))
                     # units.mot_rifles_ldr.create()
                     # units.mot_rifles_at4.create()
                     # MOT. RIFLES (DRAGON)
-                    division_units.register_vanilla("Rifles_half_CMD_US", 1)
-                    division_units.register_vanilla("Rifles_half_AT4_US", 1)
-                    division_units.register_vanilla("Rifles_half_Dragon_US", 1)
-                    division_units.register_vanilla("Rifles_Cavalry_US", 1)
-                    division_units.register_vanilla("Engineer_CMD_US", 1)
+                    division_units.register_vanilla("Rifles_half_CMD_US", 1, SMALL_UNIT_TRANSPORTS)
+                    division_units.register_vanilla("Rifles_half_AT4_US", 1, SMALL_UNIT_TRANSPORTS)
+                    division_units.register_vanilla("Rifles_half_Dragon_US", 1, SMALL_UNIT_TRANSPORTS)
+                    division_units.register_vanilla("Rifles_Cavalry_US", 1, SMALL_UNIT_TRANSPORTS)
+                    division_units.register_vanilla("Engineer_CMD_US", 1, M998_HUMVEE)
                     # MOT. ENGINEERS
                     # maybe change AB ones to fireteams?
-                    division_units.register_vanilla("Airborne_CMD_US", 1)
-                    division_units.register_vanilla("Airborne_Dragon_US", 1)
-                    division_units.register_vanilla("ATteam_TOW2_US", 1)
+                    division_units.register_vanilla("Airborne_CMD_US", 1, M1038_HUMVEE)
+                    division_units.register_vanilla("Airborne_Dragon_US", 1, M1038_HUMVEE)
+                    division_units.register_vanilla("ATteam_TOW2_US", 1, SMALL_UNIT_TRANSPORTS)
                     # transports don't get added as their own packs
                     # M998 HUMVEE M2HB
                     # copy the AB version, but no forward deploy and normal vision
                     # M998 HUMVEE AGL
                     # copy the AB version, but no forward deploy and normal vision
                     """ ART """
-                    division_units.register_vanilla("Mortier_107mm_US", 2)
+                    HEAVY_TRANSPORTS = [M1038_HUMVEE, CHINOOK]
+                    division_units.register_vanilla("Mortier_107mm_US", 2, SMALL_UNIT_TRANSPORTS)
                     # XM1100 120mm
-                    division_units.register_vanilla("Howz_M102_105mm_US", 2)
+                    division_units.register_vanilla("Howz_M102_105mm_US", 2, SMALL_UNIT_TRANSPORTS)
                     # XM119 IMCS 105mm
-                    division_units.register_vanilla("Howz_M198_155mm_US", 2)
-                    division_units.register(units.m198_155mm_clu.create(ctx))
-                    division_units.register(units.m198_copperhead.create(ctx))
+                    
+                    division_units.register_vanilla("Howz_M198_155mm_US", 2, HEAVY_TRANSPORTS)
+                    division_units.register(units.m198_155mm_clu.create(ctx), HEAVY_TRANSPORTS)
+                    division_units.register(units.m198_copperhead.create(ctx), HEAVY_TRANSPORTS)
                     # M58 MICLIC
                     # XM142 HIMARS [HE]
                     # XM142 HIMARS [CLU]
@@ -103,6 +109,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # M998 HUMVEE GLH-L
                     # M1025 HUMVEE AGL
                     """ REC """
+                    REC_HUMVEE_M2HB, REC_HUMVEE_AGL = "Descriptor_Unit_M1025_Humvee_scout_US", "Descriptor_Unit_M1025_Humvee_AGL_nonPara_US"
+                    SMALL_RECON_TRANSPORTS = [M998_HUMVEE, REC_HUMVEE_M2HB, REC_HUMVEE_AGL, BLACKHAWK]
                     division_units.register_vanilla("M981_FISTV_US", 1)
                     # 👓 M998 HUMVEE M2HB
                     # copy 👓 M1025 HUMVEE M2HB
@@ -111,9 +119,9 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # 👓 FAV TOW
                     # 👓 OPERATIONAL SUPPORT
                     # [👓] FOLT
-                    division_units.register_vanilla("Airborne_Scout_US", 1)
-                    division_units.register_vanilla("LRRP_US", 1)
-                    division_units.register_vanilla("Sniper_US", 1)
+                    division_units.register_vanilla("Airborne_Scout_US", 1, [M998_HUMVEE, REC_HUMVEE_M2HB])
+                    division_units.register_vanilla("LRRP_US", 1, SMALL_RECON_TRANSPORTS)
+                    division_units.register_vanilla("Sniper_US", 1, SMALL_RECON_TRANSPORTS)
                     # 👓 FWD SUPPORT [EW]
                     # [👓] MERCURY GREEN RPV
                     # [👓] MOT. SCOUTS
@@ -132,8 +140,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     division_units.register(units.m998_avenger.create(ctx))
                     # M998 SETTER
                     # MIM-72A T-CHAPARRAL
-                    division_units.register_vanilla("MANPAD_Stinger_C_US", 1)
-                    division_units.register(units.stinger_tdar.create(ctx))
+                    division_units.register_vanilla("MANPAD_Stinger_C_US", 1, SMALL_UNIT_TRANSPORTS)
+                    division_units.register(units.stinger_tdar.create(ctx), SMALL_UNIT_TRANSPORTS)
                     # EXCALIBUR VWC
                     """ HEL """
                     # AH-1S COBRA

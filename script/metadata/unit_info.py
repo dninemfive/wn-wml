@@ -19,7 +19,7 @@ class UnitInfo(object):
             unit = unit.new
         self.unit: UnitMetadata = unit
         self.num_packs = num_packs
-        self.rule = TDeckUniteRule.make(unit, units_per_pack, transports, force_awt)
+        self.rule: TDeckUniteRule = TDeckUniteRule.make(unit, units_per_pack, transports, force_awt)
 
     @property
     def pack(self: Self) -> MapRow:
