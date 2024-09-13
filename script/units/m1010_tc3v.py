@@ -30,7 +30,7 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
         # TODO: larger command radius than usual
         m1010_tc3v.append_module(ListRow(Object('TCommanderModuleDescriptor')))
         # remove capturable module
-        m1010_tc3v.remove_module_by_value("~/CapturableModuleDescriptor")
+        # m1010_tc3v.remove_module_by_value("~/CapturableModuleDescriptor")
         m1025_cmd = ctx.ndf[paths.UNITE_DESCRIPTOR].by_name("Descriptor_Unit_M1025_Humvee_CMD_US").value
         # scanner from M1025 CMD
         m1010_tc3v.replace_module_from(m1025_cmd, 'TScannerConfigurationDescriptor')
@@ -40,7 +40,7 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
             production_module.edit_members(Factory="EDefaultFactories/Logistic", 
                                            ProductionResourcesNeeded=dict_to_map(("$/GFX/Resources/Resource_CommandPoints", str(85)),
                                                                                  ("$/GFX/Resources/Resource_Tickets",       str(1))))
-        m1010_tc3v.remove_module_by_value('~/InfluenceDataModuleDescriptor')
+        # m1010_tc3v.remove_module_by_value('~/InfluenceDataModuleDescriptor')
         m1010_tc3v.append_module_from(m1025_cmd, 'TZoneInfluenceMapModuleDescriptor')
         m1010_tc3v.append_module(ListRow(Object('TInfluenceScoutModuleDescriptor')))
         m1010_tc3v.append_module(ListRow('~/InfluenceDataModuleDescriptor'))
