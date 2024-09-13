@@ -54,12 +54,22 @@ def get_module(unit: Object, module_type: str) -> ListRow | None:
         break
     return result
 
-def get_module_index(unit: Object, module_type: str) -> int | None:
+def get_module_index(unit: Object, type_or_name: str, by_name: bool = False) -> int:
+    fn = get_module_index_by_name if by_name else get_module_index_by_type
+    return fn(unit, type_or_name)
+
+def get_module_index_by_type(unit: Object, type: str) -> int | None:
     result: int | None = None
-    for module in unit.by_member("ModulesDescriptors").value.match_pattern(f'{module_type}()'):
+    for module in unit.by_member("ModulesDescriptors").value.match_pattern(f'{type}()'):
         result = module.index
         break
     return result
+
+def get_module_index_by_name(unit: Object, name: str) -> int:
+    result: int | None = None
+    modules: List = unit.by_member("ModulesDescriptors").value
+    row: ListRow = modules.by_name(name)
+    return row.index
 
 def remove_module(unit: Object, module_type: str) -> None:
     unit.by_member("ModulesDescriptors").value.remove(get_module_index(unit, module_type))

@@ -40,6 +40,6 @@ class UnitMetadata(object):
     @staticmethod
     def delocalize(localized_name: str) -> str:
         result: str = "_".join(localized_name.split())
-        for c in [".", "(", ")", "-", "[", "]"]:
+        for c in [".", "(", ")", "-", "[", "]", "#"]:
             result = result.replace(c, "")
         return result

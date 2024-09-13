@@ -4,13 +4,13 @@ from typing import Self
 from utils.ndf import get_module_index, edit_members
 
 class ModuleContext(object):
-    def __init__(self: Self, unit: Object, module_type: str):
+    def __init__(self: Self, unit: Object, module_type: str, by_name: bool = False):
         self.unit = unit
         self.module_type = module_type
+        self.by_name = by_name
     
     def __enter__(self: Self) -> Self:
-        # self.root_msg = self.ctx.root_msg.nest(f"Editing {self.module_name} on {self.unit.by_member("ClassNameForDebug").value}")
-        self.index = get_module_index(self.unit, self.module_type)
+        self.index = get_module_index(self.unit, self.module_type, self.by_name)
         self.object: Object = self.unit.by_member("ModulesDescriptors").value[self.index].value
         return self
     

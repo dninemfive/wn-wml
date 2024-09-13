@@ -8,9 +8,17 @@ from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 from ndf_paths import UNITE_DESCRIPTOR
 from typing import Self
-from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module, remove_module
+from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module, remove_module, get_module_index
 
 UNIT_UI = "TUnitUIModuleDescriptor"
+
+def ensure_quotes(s: str, quote: str = '"') -> str:
+    if not s.startswith(quote):
+        s = f'"{s}'
+    if not s.endswith(quote):
+        s = f'{s}"'
+    return s
+
 
 class UnitCreator(object):
     def __init__(self: Self, ctx, prefix: str, localized_name: str, country: str, copy_of: str):
@@ -48,9 +56,6 @@ class UnitCreator(object):
         edit_members(copy,
                      DescriptorId=self.ctx.generate_guid(self.new.descriptor_name),
                      ClassNameForDebug=self.new.class_name_for_debug)
-        # TODO: remove old UNITE_xxx_yy tag and replace with new one
-        # tags: List = get_module(copy, 'TTagsModuleDescriptor').by_member("TagSet").value
-        # tags.remove()
         return copy
 
     @ndf_path(rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf')
@@ -80,8 +85,8 @@ class UnitCreator(object):
         all_units_tactic = ndf.by_name("AllUnitsTactic").value
         all_units_tactic.add(self.new.descriptor_path)
 
-    def module_context(self: Self, module_type: str) -> ModuleContext:
-        return ModuleContext(self.unit_object, module_type)
+    def module_context(self: Self, type_or_name: str, by_name: bool = False) -> ModuleContext:
+        return ModuleContext(self.unit_object, type_or_name, by_name)
     
     def edit_ui_module(self: Self, **changes: CellValue) -> None:
         with self.module_context(UNIT_UI) as ui_module:
@@ -91,10 +96,37 @@ class UnitCreator(object):
         self.edit_ui_module(NameToken=self.ctx.ctx.register(name))
 
     def get_module(self: Self, module_type: str) -> Object:
-        # print(f"Trying to get module {module_type} on {self.new.class_name_for_debug}")
         result: Object | None = get_module(self.unit_object, module_type)
-        # print(str(result))
         return result
     
     def remove_module(self: Self, module_type: str) -> None:
         remove_module(self.unit_object, module_type)
+
+    def add_tag(self: Self, tag: str) -> None:
+        tag = ensure_quotes(tag)
+        with self.module_context("TTagsModuleDescriptor") as tags_module:
+            tag_set: List = tags_module.object.by_member("TagSet").value
+            tag_set.add(tag)
+    
+    def add_tags(self: Self, *tags: str) -> None:
+        for tag in tags:
+            self.add_tag(tag)
+
+    def remove_tag(self: Self, tag: str) -> None:
+        tag = ensure_quotes(tag)
+        with self.module_context("TTagsModuleDescriptor") as tags_module:
+            tag_set: List = tags_module.object.by_member("TagSet").value
+            index = tag_set.find_by_cond(lambda x: x.value == tag)
+            tag_set.remove(index)
+
+    def remove_tags(self: Self, *tags: str) -> None:
+        for tag in tags:
+            self.remove_tag(tag)
+
+    def get_module_index(self: Self, name_or_type: str, by_name: bool = False) -> int:
+        return get_module_index(self.unit_object, name_or_type, by_name)
+    
+    def replace_module(self: Self, other_unit: Object, name_or_type: str, by_name: bool = False) -> None:
+        self_index = get_module_index(self.unit_object, name_or_type, by_name)
+        other_index = get_module_index(other_unit, name_or_type, by_name)
+        self.unit_object.by_member("ModulesDescriptors").value[self_index] = 
