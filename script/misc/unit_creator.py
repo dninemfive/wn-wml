@@ -8,7 +8,8 @@ from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 from ndf_paths import UNITE_DESCRIPTOR
 from typing import Self
-from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module, remove_module, get_module_index
+from utils.ndf.misc import edit_members, ndf_path
+import utils.ndf.unit_module as modules
 
 UNIT_UI = "TUnitUIModuleDescriptor"
 
@@ -95,13 +96,6 @@ class UnitCreator(object):
     def set_name(self: Self, name: str) -> None:
         self.edit_ui_module(NameToken=self.ctx.ctx.register(name))
 
-    def get_module(self: Self, module_type: str) -> Object:
-        result: Object | None = get_module(self.unit_object, module_type)
-        return result
-    
-    def remove_module(self: Self, module_type: str) -> None:
-        remove_module(self.unit_object, module_type)
-
     def add_tag(self: Self, tag: str) -> None:
         tag = ensure_quotes(tag)
         with self.module_context("TTagsModuleDescriptor") as tags_module:
@@ -123,10 +117,22 @@ class UnitCreator(object):
         for tag in tags:
             self.remove_tag(tag)
 
-    def get_module_index(self: Self, name_or_type: str, by_name: bool = False) -> int:
-        return get_module_index(self.unit_object, name_or_type, by_name)
+    # modules
+
+    def get_module_index(self: Self, type_or_name: str, by_name: bool = False) -> int:
+        return modules.get_module(self.unit_object, type_or_name, by_name)
     
-    def replace_module(self: Self, other_unit: Object, name_or_type: str, by_name: bool = False) -> None:
-        self_index = get_module_index(self.unit_object, name_or_type, by_name)
-        other_index = get_module_index(other_unit, name_or_type, by_name)
-        self.unit_object.by_member("ModulesDescriptors").value[self_index] = 
+    def replace_module_from(self: Self, other_unit: Object, type_or_name: str, by_name: bool = False) -> None:
+        return modules.replace_module_from(self.unit_object, other_unit, type_or_name, by_name)
+    
+    def append_module(self: Self, module: ListRow):
+        return modules.append_module(self.unit_object, module)
+    
+    def remove_module(self: Self, type_or_name: str, by_name: bool = False):
+        return modules.remove_module(self.unit_object, type_or_name, by_name)
+    
+    def remove_module_by_value(self: Self, module: str):
+        return modules.remove_by_value(self.unit_object, module)
+    
+    def append_module_from(self: Self, other_unit: Object, type_or_name: str, by_name: bool = False):
+        return modules.append_module_from(self.unit_object, other_unit, type_or_name, by_name)
