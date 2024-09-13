@@ -82,6 +82,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     division_units.register_vanilla("Rifles_half_Dragon_US", 1, SMALL_SQUAD_CARRIERS)
                     division_units.register_vanilla("Rifles_Cavalry_US", 1, SMALL_SQUAD_CARRIERS)
                     division_units.register_vanilla("Engineer_CMD_US", 1, [M998_HUMVEE, HUMVEE_AGL])
+                    division_units.register_vanilla("Rifles_HMG_US", 1, LARGE_SQUAD_CARRIERS)
                     # MOT. ENGINEERS
                     # maybe change AB ones to fireteams?
                     division_units.register_vanilla("Airborne_CMD_US", 1)
@@ -172,8 +173,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                                         root_msg,
                                         DivisionName=mod_context.register("9TH INFANTRY DIVISION (MTZ.)"),
                                         DescriptionHintTitleToken=mod_context.register("9TH INFANTRY DIVISION (MOTORIZED)"),
-                                        EmblemTexture = division_texture_name,
-                                        PackList = dict_to_map(pack_list))
+                                        EmblemTexture = division_texture_name)
             # add a default deck to Decks.ndf (not required)
     with root_msg.nest("Writing localization") as msg:
         with open(LOCALIZATION_PATH, "w") as file:
