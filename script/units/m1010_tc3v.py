@@ -7,7 +7,7 @@ import ndf_paths as paths
 
 def create(ctx: UnitCreationContext) -> UnitInfo | None:
     # ✪ M1010 TC3V
-    with ctx.create_unit("#CMD ", "US", "M35_trans_US") as m1010_tc3v: # 🏳️‍⚧️
+    with ctx.create_unit("#CMD M1010 TC3V", "US", "M35_trans_US") as m1010_tc3v: # 🏳️‍⚧️
         # acknow type = cmd
         with m1010_tc3v.module_context("TTypeUnitModuleDescriptor") as unit_type_module:
             unit_type_module.edit_members(AcknowUnitType="~/TAcknowUnitType_Command",
@@ -38,8 +38,8 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
         m1010_tc3v.remove_module('Transporter', by_name=True)
         with m1010_tc3v.module_context('TProductionModuleDescriptor') as production_module:
             production_module.edit_members(Factory="EDefaultFactories/Logistic", 
-                                           ProductionResourcesNeeded=dict_to_map(("$/GFX/Resources/Resource_CommandPoints", str(85)),
-                                                                                 ("$/GFX/Resources/Resource_Tickets",       str(1))))
+                                           ProductionRessourcesNeeded=dict_to_map({"$/GFX/Resources/Resource_CommandPoints": str(85),
+                                                                                   "$/GFX/Resources/Resource_Tickets":       str(1)}))
         # m1010_tc3v.remove_module_by_value('~/InfluenceDataModuleDescriptor')
         m1010_tc3v.append_module_from(m1025_cmd, 'TZoneInfluenceMapModuleDescriptor')
         m1010_tc3v.append_module(ListRow(Object('TInfluenceScoutModuleDescriptor')))
@@ -54,7 +54,7 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
         # m1075_pls.edit_ui_module(UpgradeFromUnit="Descriptor_Unit_d9_CMD_M1025_AGL_CMD_US")
         with m1010_tc3v.module_context('TUnitUIModuleDescriptor') as ui_module:
             ui_module.remove_member('UpgradeFromUnit')
-        m1010_tc3v.edit_ui_module(UnitRole='tank_B',
+        m1010_tc3v.edit_ui_module(UnitRole="'tank_B'",
                                   SpecialtiesList=to_List("'hq_veh'", "'_leader'"),
                                   InfoPanelConfigurationToken="'Default'",
                                   MenuIconTexture="'Texture_RTS_H_CMD_veh'",
