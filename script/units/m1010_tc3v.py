@@ -58,5 +58,6 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
                                   SpecialtiesList=to_List("'hq_veh'", "'_leader'"),
                                   InfoPanelConfigurationToken="'Default'",
                                   MenuIconTexture="'Texture_RTS_H_CMD_veh'",
-                                  TypeStrategicCount='ETypeStrategicDetailedCount/CMD_Veh')
+                                  TypeStrategicCount='ETypeStrategicDetailedCount/CMD_Veh',
+                                  ButtonTexture="'Texture_Button_Unit_VLRA_trans_FR'")
         return UnitInfo(m1010_tc3v, 1, [0, 3, 2, 0])
