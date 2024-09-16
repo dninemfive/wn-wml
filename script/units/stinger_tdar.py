@@ -1,5 +1,5 @@
 from context.module_context import ModuleContext
-from context.unit_registrar import UnitRegistrar
+from script.context.unit_id_manager import UnitIdManager
 from metadata.division_unit_registry import UnitInfo
 from metadata.unit import UnitMetadata
 from misc.unit_creator import UNIT_UI
@@ -7,7 +7,7 @@ from ndf_parse.model import List, ListRow
 from utils.ndf import to_List as qlist
 from utils.ndf import map_from_tuples
 
-def create(ctx: UnitRegistrar) -> UnitInfo | None:
+def create(ctx: UnitIdManager) -> UnitInfo | None:
     # M198 155mm COPPERHEAD
     # copy M198 155mm
     with ctx.create_unit("STINGER (TDAR)", "US", "MANPAD_Stinger_C_US") as stinger_tdar:

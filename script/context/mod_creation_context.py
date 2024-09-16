@@ -1,10 +1,10 @@
-
+from context.guid_manager import GuidManager
 from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
 from message import Message, try_nest
 from metadata.division_unit_registry import DivisionUnitRegistry
 from misc.cache_set import CacheSet
-from misc.division_creator import DivisionCreator
+from script.context.division_creator import DivisionCreator
 from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
@@ -49,6 +49,7 @@ class ModCreationContext(object):
         self.root_msg = root_msg
         self.paths = ndf_paths
         self.caches = CacheSet(CACHE_FOLDER, GUID, LOCALIZATION, UNIT_ID)
+        self.guid_manager = GuidManager(self.guid_cache)
        
     def __enter__(self: Self) -> Self:
         self.mod.check_if_src_is_newer()
@@ -79,13 +80,7 @@ class ModCreationContext(object):
                       child_padding=self.msg_length) as msg:
             DivisionCreator(self.generate_guid(division.descriptor_name), copy_of, insert_after, division, units, **changes).apply(self.ndf, msg)
 
-    def generate_guid(self: Self, guid_key: str) -> str:
-        """ Generates a GUID in the format NDF expects """
-        if guid_key in self.guid_cache:
-            return self.guid_cache[guid_key]
-        result: str = f'GUID:{{{str(uuid4())}}}'
-        self.guid_cache[guid_key] = result
-        return result
+    
     
     def register(self: Self, string: str) -> str:
         """ Registers a localized string in the localization cache. Returns the __key__ generated for this string! """

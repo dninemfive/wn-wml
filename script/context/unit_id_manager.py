@@ -1,21 +1,15 @@
 from context.mod_creation_context import ModCreationContext
 from message import Message
 from misc.unit_creator import UnitCreator
-from ndf_parse.model import List
 from typing import Self
 
-class UnitRegistrar(object):
+class UnitIdManager(object):
     @property
     def id_cache(self: Self) -> dict[str, str]:
         return self.ctx.unit_id_cache
 
-    @property
-    def ndf(self: Self) -> dict[str, List]:
-        return self.ctx.ndf
-
-    def __init__(self: Self, ctx: ModCreationContext, root_msg: Message, initial_id: int):
+    def __init__(self: Self, ctx: ModCreationContext, initial_id: int):
         self.ctx = ctx
-        self.root_msg = root_msg
         self.current_id = initial_id
         
     def create_unit(self: Self, name: str, country: str, copy_of: str) -> UnitCreator:

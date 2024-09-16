@@ -1,12 +1,12 @@
 from context.module_context import ModuleContext
-from context.unit_registrar import UnitRegistrar
+from script.context.unit_id_manager import UnitIdManager
 from metadata.division_unit_registry import UnitInfo
 from metadata.unit import UnitMetadata
 from misc.unit_creator import UNIT_UI
 from ndf_parse.model import List, ListRow
 from utils.ndf import to_List as qlist
 
-def create(ctx: UnitRegistrar) -> UnitInfo | None:
+def create(ctx: UnitIdManager) -> UnitInfo | None:
     # M198 155mm [CLU]
     # copy M198 155mm
     with ctx.create_unit("M198 155mm [CLU]", "US", "Howz_M198_155mm_US") as m198_clu:

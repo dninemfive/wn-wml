@@ -1,8 +1,8 @@
 from context.module_context import ModuleContext
-from context.unit_registrar import UnitRegistrar
+from script.context.unit_id_manager import UnitIdManager
 from metadata.division_unit_registry import UnitInfo
 
-def create(ctx: UnitRegistrar) -> UnitInfo | None:
+def create(ctx: UnitIdManager) -> UnitInfo | None:
     # M1075 PLS
     # copy of: HEMTT
     with ctx.create_unit("M1075 PLS SUPPLY", "US", "HEMTT_US") as m1075_pls:

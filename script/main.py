@@ -1,6 +1,6 @@
 from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
-from context.unit_registrar import UnitRegistrar
+from script.context.unit_id_manager import UnitIdManager
 from datetime import datetime
 import units.m198_155mm_clu
 import units.m198_copperhead
@@ -45,7 +45,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                                                         msg)
                 # make new units              
                 # TODO: maybe default unit country?
-                with UnitRegistrar(mod_context, msg, div_metadata.id * 1000) as ctx:
+                with UnitIdManager(mod_context, msg, div_metadata.id * 1000) as ctx:
                     # TODO: target module changes with like TModuleType:path/to/property ?
                     """ LOG """
                     division_units.register_vanilla("FOB_US", 1)
