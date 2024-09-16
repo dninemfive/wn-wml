@@ -1,9 +1,9 @@
 from context.module_context import ModuleContext
-from context.unit_creation_context import UnitCreationContext
+from context.unit_registrar import UnitRegistrar
 from metadata.division_unit_registry import UnitInfo
 from utils.ndf import dict_to_map
 
-def create(ctx: UnitCreationContext) -> UnitInfo | None:
+def create(ctx: UnitRegistrar) -> UnitInfo | None:
     # ✪ MOT. RIFLES LDR.
     # copy: Airborne Ldr.
     with ctx.create_unit("MOT. RIFLES LDR.", "US", "Airborne_CMD_US") as mot_rifles_ldr:# MOT. RIFLES (AT-4)

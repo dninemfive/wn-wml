@@ -16,10 +16,6 @@ class DivisionCreator(object):
         self.changes = changes
         self.insert_after = insert_after
 
-    @property
-    def msg_length(self: Self) -> int:
-        return max([len(prop._ndf_path) for prop in dir(self) if hasattr(prop, "_ndf_path")])
-
     def apply(self: Self, ndf: dict[str, List], msg: Message):
         # for fn on class with ndf_path decorator,
         #   fn()

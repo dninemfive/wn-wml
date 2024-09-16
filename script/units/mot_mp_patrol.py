@@ -1,10 +1,10 @@
 from context.module_context import ModuleContext
-from context.unit_creation_context import UnitCreationContext
+from context.unit_registrar import UnitRegistrar
 from metadata.division_unit_registry import UnitInfo
 from misc.unit_creator import UNIT_UI
 from ndf_parse.model import List
 
-def create(ctx: UnitCreationContext) -> UnitInfo | None:
+def create(ctx: UnitRegistrar) -> UnitInfo | None:
     # MOT. MP PATROL
     # (just copy AB MP PATROL)
     with ctx.create_unit("MOT. MP PATROL", "US", "Airborne_MP_US") as mp_patrol:

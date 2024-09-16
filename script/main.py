@@ -1,6 +1,6 @@
 from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
-from context.unit_creation_context import UnitCreationContext
+from context.unit_registrar import UnitRegistrar
 from datetime import datetime
 import units.m198_155mm_clu
 import units.m198_copperhead
@@ -17,7 +17,8 @@ from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
 from context.mod_creation_context import ModCreationContext
-import ndf_paths as paths
+import paths
+import ndf_paths
 import os
 import shutil
 import units
@@ -26,21 +27,17 @@ import units.m998_avenger
 import units.m998_humvee_supply
 import units.mot_mp_patrol
 
-WARNO_DIRECTORY = rf"C:\Program Files (x86)\Steam\steamapps\common\WARNO"
-
-wn_metadata = WarnoMetadata(WARNO_DIRECTORY)
+wn_metadata = WarnoMetadata(paths.WARNO_DIRECTORY)
 mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn_metadata, "0.0.0", 'd9', 'd99ID')
-div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)    
-
-LOCALIZATION_PATH = os.path.join(mod_metadata.folder_path, "GameData", "Localisation", mod_metadata.name, "UNITS.csv")
+div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)
 
 reset_source(mod_metadata, wn_metadata)
 
 with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as root_msg:
-    with ModCreationContext(mod_metadata, root_msg, *paths.ALL) as mod_context:
+    with ModCreationContext(mod_metadata, root_msg, *ndf_paths.ALL) as mod_context:
             division_units: DivisionUnitRegistry
             with root_msg.nest("Creating units") as msg:
-                division_units = DivisionUnitRegistry(DivisionRuleLookup(mod_context.ndf[paths.DIVISION_RULES],
+                division_units = DivisionUnitRegistry(DivisionRuleLookup(mod_context.ndf[ndf_paths.DIVISION_RULES],
                                                                          "US_82nd_Airborne",
                                                                          "US_8th_Inf",
                                                                          "US_11ACR",
@@ -48,7 +45,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                                                         msg)
                 # make new units              
                 # TODO: maybe default unit country?
-                with UnitCreationContext(mod_context, msg, div_metadata.id * 1000) as ctx:
+                with UnitRegistrar(mod_context, msg, div_metadata.id * 1000) as ctx:
                     # TODO: target module changes with like TModuleType:path/to/property ?
                     """ LOG """
                     division_units.register_vanilla("FOB_US", 1)
@@ -173,8 +170,6 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                                         DescriptionHintTitleToken=mod_context.register("9TH INFANTRY DIVISION (MOTORIZED)"),
                                         EmblemTexture = division_texture_name)
             # add a default deck to Decks.ndf (not required)
-    with root_msg.nest("Writing localization") as msg:
-        with open(LOCALIZATION_PATH, "w") as file:
-             file.write(mod_context.generate_localization_csv())
+    
     generate_mod(mod_metadata, root_msg)
 print(f"Generation finished at {datetime.now().time()}")

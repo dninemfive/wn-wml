@@ -1,23 +1,25 @@
-from typing import Self
+
 from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
+from message import Message, try_nest
+from metadata.division_unit_registry import DivisionUnitRegistry
+from misc.cache_set import CacheSet
 from misc.division_creator import DivisionCreator
 from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
 from ndf_paths import DIVISION_TEXTURES
-from message import Message, try_nest
-from metadata.division_unit_registry import DivisionUnitRegistry
-from misc.cache_set import CacheSet
-from utils.ndf import root_paths, add_image
+from paths import CACHE_FOLDER
+from typing import Self
+from utils.ndf import add_image
 from uuid import uuid4
 # https://stackoverflow.com/a/2823331
-import string
 import random
-import utils.io as io
+import string
 
 GUID = "guid"
 LOCALIZATION = "localization"
+UNIT_ID = "unit_id"
 CHARACTERS = [*string.ascii_letters, *[str(x) for x in range(10)]]
 
 class ModCreationContext(object):
@@ -37,12 +39,16 @@ class ModCreationContext(object):
     def localization_cache(self: Self) -> dict[str, str]:
         return self.caches[LOCALIZATION]
     
+    @property
+    def unit_id_cache(self: Self) -> dict[str, str]:
+        return self.caches[UNIT_ID]
+    
     def __init__(self: Self, metadata: ModMetadata, root_msg: Message | None, *ndf_paths: str):
         self.metadata = metadata
         self.mod = Mod(metadata.folder_path, metadata.folder_path)
         self.root_msg = root_msg
         self.paths = ndf_paths
-        self.caches = CacheSet(GUID, LOCALIZATION)
+        self.caches = CacheSet(CACHE_FOLDER, GUID, LOCALIZATION, UNIT_ID)
        
     def __enter__(self: Self) -> Self:
         self.mod.check_if_src_is_newer()
@@ -52,10 +58,9 @@ class ModCreationContext(object):
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
-        with self.root_msg.nest("Writing edits", child_padding=self.msg_length) as write_msg:
-            for edit in self.mod.edits:
-                with write_msg.nest(f"Writing {edit.file_path}") as _:
-                    self.mod.write_edit(edit)
+        with self.root_msg.nest("Saving mod", child_padding=self.msg_length) as write_msg:
+            self.write_edits(write_msg)
+            self.generate_and_write_localization(write_msg)
         self.caches.save(self.root_msg)
     
     def load_ndf(self: Self, path: str, msg: Message) -> List:
@@ -101,10 +106,14 @@ class ModCreationContext(object):
             result += random.choice(CHARACTERS)
         return result
 
-    def generate_localization_csv(self: Self) -> str:
+    def generate_localization_csv(self: Self, msg: Message | None) -> str:
+        if msg is None:
+            msg = self.root_msg
         result = '"TOKEN";"REFTEXT"'
-        for k in sorted(self.localization_cache.keys()):
-            result += "\n" + f'"{self.localization_cache[k]}";"{k}"'
+        with msg.nest("Generating localization") as msg2:
+            for k in sorted(self.localization_cache.keys()):
+                with msg2.nest(f"{self.localization_cache[k]}\t{k}") as _:
+                    result += "\n" + f'"{self.localization_cache[k]}";"{k}"'
         return result
     
     def add_division_emblem(self: Self, msg: Message | None, image_path: str, division: DivisionMetadata) -> str:
@@ -115,3 +124,18 @@ class ModCreationContext(object):
                              "Assets/2D/Interface/UseOutGame/Division/Emblem",
                              division.emblem_namespace, 
                              "DivisionAdditionalTextureBank")
+        
+    def write_edits(self: Self, msg: Message | None = None) -> None:
+        if msg is None:
+            msg = self.root_msg
+        for edit in self.mod.edits:
+            with msg.nest(f"Writing {edit.file_path}") as _:
+                self.mod.write_edit(edit)
+        
+    def generate_and_write_localization(self: Self, msg: Message | None = None) -> None:
+        if msg is None:
+            msg = self.root_msg
+        csv = self.generate_localization_csv(msg)
+        with msg.nest("Writing localization") as msg:
+            with open(self.metadata.localization_path, "w") as file:
+                file.write(csv)

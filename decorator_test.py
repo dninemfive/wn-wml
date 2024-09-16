@@ -1,4 +1,4 @@
-from script.message import Message, try_nest
+from message import Message, try_nest
 # shoutout to the only explanation which made sense to me: https://realpython.com/primer-on-python-decorators/#fancy-decorators
 def ndf_path(path: str, save: bool = True):
     """

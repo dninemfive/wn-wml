@@ -13,5 +13,9 @@ class ModMetadata(object):
     localization_prefix: str
     
     @property
-    def folder_path(self: Self):
+    def folder_path(self: Self) -> str:
         return os.path.join(self.warno.mods_path, self.name)
+    
+    @property
+    def localization_path(self: Self) -> str:
+        return os.path.join(self.folder_path, "GameData", "Localisation", self.name, "UNITS.csv")

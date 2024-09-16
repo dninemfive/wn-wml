@@ -1,9 +1,9 @@
 from context.module_context import ModuleContext
-from context.unit_creation_context import UnitCreationContext
+from context.unit_registrar import UnitRegistrar
 from metadata.division_unit_registry import UnitInfo
 
 # todo: put most of this structure in an @annotation
-def create(ctx: UnitCreationContext) -> UnitInfo | None:
+def create(ctx: UnitRegistrar) -> UnitInfo | None:
     # M998 HUMVEE SUPPLY
     #   copy of: M35 Supply
     with ctx.create_unit("M998 HUMVEE SUPPLY", "US", "M35_supply_US") as m998_humvee_supply:
