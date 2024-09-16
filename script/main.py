@@ -8,7 +8,7 @@ import units.stinger_tdar
 from utils.io import write
 from utils.types.message import Message, try_nest
 from metadata.division_unit_registry import DivisionUnitRegistry, DivisionRuleLookup
-from script.creators.unit_creator import UnitCreator, UNIT_UI
+from script.creators.unit import UnitCreator, UNIT_UI
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from utils.bat import generate_mod, reset_source

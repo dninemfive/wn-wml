@@ -1,17 +1,18 @@
-from creators.division_creator import DivisionCreator
-from creators.unit_creator import UnitCreator
-from script.managers.guid import GuidManager
-from script.managers.localization import LocalizationManager
-from script.managers.unit_id import UnitIdManager
+from constants.misc import GUID, LOCALIZATION, UNIT_ID
+from constants.ndf_paths import DIVISION_TEXTURES
+from constants.paths import CACHE_FOLDER
+from creators.division import DivisionCreator
+from creators.unit import UnitCreator
+from managers.guid import GuidManager
+from managers.localization import LocalizationManager
+from managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
-from metadata.mod import ModMetadata
 from metadata.division_unit_registry import DivisionUnitRegistry
+from metadata.mod import ModMetadata
+from metadata.new_unit import NewUnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
-from globals.ndf_paths import DIVISION_TEXTURES
-from globals.paths import CACHE_FOLDER
-from globals.misc import GUID, LOCALIZATION, UNIT_ID
 from typing import Self
 from utils.ndf import add_image
 from utils.types.cache_set import CacheSet
@@ -76,7 +77,10 @@ class ModCreationContext(object):
         return UnitIdManager(self.unit_id_cache, initial_id)
     
     def create_unit(self: Self, name: str, country: str, copy_of: str) -> UnitCreator:
-        return UnitCreator(self.ndf, self.unit_ids, self.guids, self.prefix, name, country, copy_of, self.root_msg)
+        return UnitCreator(self.ndf,
+                           NewUnitMetadata.from_(self.prefix, name, country, self.guids, self.localization),
+                           copy_of,
+                           self.root_msg)
     
     def add_division_emblem(self: Self, msg: Message | None, image_path: str, division: DivisionMetadata) -> str:
         with try_nest(msg, f"Adding division emblem from image at {image_path}") as _:

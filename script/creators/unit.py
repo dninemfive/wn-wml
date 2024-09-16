@@ -1,36 +1,39 @@
 from context.module_context import ModuleContext
+from metadata.new_unit import NewUnitMetadata
+from script.metadata import new_unit
 from utils.types.message import Message
 from metadata.unit import UnitMetadata
-from ndf_parse import Mod
-from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
+from ndf_parse.model import List, ListRow, Map, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from constants.ndf_paths import UNITE_DESCRIPTOR, SHOWROOM_EQUIVALENCE, DIVISION_PACKS, DECK_SERIALIZER, ALL_UNITS_TACTIC
+from constants.ndf_paths import ALL_UNITS_TACTIC, DIVISION_PACKS, SHOWROOM_EQUIVALENCE, UNITE_DESCRIPTOR
 from typing import Self
-from script.managers.guid import GuidManager
-from script.managers.unit_id import UnitIdManager
-from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module, remove_module
+from utils.ndf import edit_members, ndf_path, get_module, remove_module
 
 UNIT_UI = "TUnitUIModuleDescriptor"
 
 class UnitCreator(object):
-    def __init__(self: Self, ndf: dict[str, List], id_manager: UnitIdManager, guid_manager: GuidManager, prefix: str, localized_name: str, country: str, copy_of: str, msg: Message | None = None):
+    def __init__(self: Self,
+                 ndf: dict[str, List],
+                 new_unit_metadata: NewUnitMetadata,
+                 copy_of: str,
+                 msg: Message | None = None):
         self.ndf = ndf
-        self.name = localized_name
-        self.id_manager = id_manager
-        self.guids = guid_manager
-        self.new: UnitMetadata = UnitMetadata.from_localized_name(prefix, localized_name, country)
+        self.localized_name = new_unit_metadata.localized_name
+        self.name_token = new_unit_metadata.name_token
+        self.guid = new_unit_metadata.guid
+        self.new: UnitMetadata = new_unit_metadata.unit_metadata
         self.src = UnitMetadata(copy_of)
         self.root_msg = msg
 
     def __enter__(self: Self) -> Self:
-        self.root_msg = self.root_msg.nest(f"Making {self.name}")
+        self.root_msg = self.root_msg.nest(f"Making {self.localized_name}")
         self.root_msg.__enter__()
         with self.root_msg.nest(f"Copying {self.src.descriptor_name}") as _:
-            self.unit_object = self.make_copy(self.ctx.ndf[UNITE_DESCRIPTOR])
-        self.set_name(self.name)
+            self.unit_object = self.make_copy(self.ndf[UNITE_DESCRIPTOR])
+        self.edit_ui_module(NameToken=self.name_token)
         with self.module_context("TTagsModuleDescriptor") as tags_module:
             tag_set: List = tags_module.object.by_member("TagSet").value
-            tag_set.remove(tag_set.find_by_cond(lambda x: x.value == f'"UNITE_{self.src.name}"'))
+            tag_set.remove(tag_set.find_by_cond(lambda x: x.value == self.src.tag))
             tag_set.add(ListRow(self.new.tag))
         return self
     
@@ -41,7 +44,6 @@ class UnitCreator(object):
     def apply(self: Self, ndf: dict[str, List], msg: Message):
         with msg.nest(f"Saving {self.new.name}") as msg2:
             self.edit_unite_descriptor(ndf, msg2)
-            self.edit_deck_serializer(ndf, msg2)
             self.edit_division_packs(ndf, msg2)
             self.edit_showroom_equivalence(ndf, msg2)
             self.edit_all_units_tactic(ndf, msg2)
@@ -49,11 +51,8 @@ class UnitCreator(object):
     def make_copy(self: Self, ndf: List) -> Object:
         copy: Object = ndf.by_name(self.src.descriptor_name).value.copy()
         edit_members(copy,
-                     DescriptorId=self.guids.generate(self.new.descriptor_name),
+                     DescriptorId=self.guid,
                      ClassNameForDebug=self.new.class_name_for_debug)
-        # TODO: remove old UNITE_xxx_yy tag and replace with new one
-        # tags: List = get_module(copy, 'TTagsModuleDescriptor').by_member("TagSet").value
-        # tags.remove()
         return copy
 
     @ndf_path(UNITE_DESCRIPTOR)
@@ -83,13 +82,8 @@ class UnitCreator(object):
         with self.module_context(UNIT_UI) as ui_module:
             ui_module.edit_members(**changes)
 
-    def set_name(self: Self, name: str) -> None:
-        self.edit_ui_module(NameToken=self.ctx.ctx.register(name))
-
     def get_module(self: Self, module_type: str) -> Object:
-        # print(f"Trying to get module {module_type} on {self.new.class_name_for_debug}")
         result: Object | None = get_module(self.unit_object, module_type)
-        # print(str(result))
         return result
     
     def remove_module(self: Self, module_type: str) -> None:

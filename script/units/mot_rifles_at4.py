@@ -1,9 +1,9 @@
 from context.module_context import ModuleContext
 from script.context.unit_id_manager import UnitIdManager
-from metadata.division_unit_registry import UnitInfo
+from metadata.division_unit_registry import UnitRules
 from utils.ndf import dict_to_map
 
-def create(ctx: UnitIdManager) -> UnitInfo | None:
+def create(ctx: UnitIdManager) -> UnitRules | None:
     # ✪ MOT. RIFLES LDR.
     # copy: Airborne Ldr.
     with ctx.create_unit("MOT. RIFLES LDR.", "US", "Airborne_CMD_US") as mot_rifles_ldr:# MOT. RIFLES (AT-4)
@@ -54,5 +54,5 @@ def create(ctx: UnitIdManager) -> UnitInfo | None:
             with ModuleContext(mot_rifles.unit_object, "TUnitUIModuleDescriptor") as ui_module:
                 # TODO: upgrade from cmd. mot. rifles
                 ui_module.remove_member("UpgradeFromUnit")
-        return UnitInfo(mot_rifles, 2, [0,8,5,3], ["$/GFX/Unit/Descriptor_Unit_d9_M998_HUMVEE_SQC_US"])
+        return UnitRules(mot_rifles, 2, [0,8,5,3], ["$/GFX/Unit/Descriptor_Unit_d9_M998_HUMVEE_SQC_US"])
         

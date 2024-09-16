@@ -5,9 +5,9 @@ from script.managers.unit_id import UnitIdManager
 from utils.types.message import Message, try_nest
 from metadata.division import DivisionMetadata
 from metadata.unit import UnitMetadata
-from metadata.unit_info import UnitInfo
+from metadata.unit_info import UnitRules
 from metadata.division_rule_lookup import DivisionRuleLookup
-from script.creators.unit_creator import UnitCreator
+from script.creators.unit import UnitCreator
 from model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from typing import Self
@@ -24,7 +24,7 @@ def ensure_unit_path_list(transports: str | list[str] | None) -> list[str] | Non
 class DivisionUnitRegistry(object):
     def __init__(self: Self, ctx: ModCreationContext, metadata: DivisionMetadata, parent_msg: Message | None = None, *division_priorities: str):
         self.metadata = metadata
-        self.units: list[UnitInfo] = []
+        self.units: list[UnitRules] = []
         self.parent_msg = parent_msg
         self.unit_ids = UnitIdManager(ctx.unit_id_cache, metadata.id * 1000)
         self.lookup = DivisionRuleLookup(ctx.ndf[DIVISION_RULES], division_priorities)
@@ -35,7 +35,7 @@ class DivisionUnitRegistry(object):
         for k, v in self.unit_ids:
             unit_ids.add(k=k, v=v)
 
-    def register(self: Self, info: UnitInfo, override_transports: str | list[str] | None = None):
+    def register(self: Self, info: UnitRules, override_transports: str | list[str] | None = None):
         override_transports = ensure_unit_path_list(override_transports)
         if override_transports is not None:
             info.rule.AvailableTransportList = override_transports
@@ -51,7 +51,7 @@ class DivisionUnitRegistry(object):
         with try_nest(self.parent_msg, f"Registering vanilla unit {unit}") as msg:
             unite_rule = self.lookup.look_up(unit.descriptor_path, override_transports)
             if unite_rule is not None:
-                self.units.append(UnitInfo.from_deck_unite_rule(unit, packs, unite_rule))
+                self.units.append(UnitRules.from_deck_unite_rule(unit, packs, unite_rule))
             else:
                 with msg.nest("Failed: could not find unit in any division rule") as _:
                     pass

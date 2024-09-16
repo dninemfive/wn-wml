@@ -9,7 +9,6 @@ class ModuleContext(object):
         self.module_type = module_type
     
     def __enter__(self: Self) -> Self:
-        # self.root_msg = self.ctx.root_msg.nest(f"Editing {self.module_name} on {self.unit.by_member("ClassNameForDebug").value}")
         self.index = get_module_index(self.unit, self.module_type)
         self.object: Object = self.unit.by_member("ModulesDescriptors").value[self.index].value
         return self
