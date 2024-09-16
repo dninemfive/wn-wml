@@ -1,5 +1,4 @@
 from context.mod_creation_context import ModCreationContext
-from message import Message
 from misc.unit_creator import UnitCreator
 from typing import Self
 
@@ -20,6 +19,3 @@ class UnitIdManager(object):
             self.id_cache[descriptor_name] = self.current_id
             self.current_id += 1
         return self.id_cache[descriptor_name]
-
-    def generate_guid(self: Self, guid_key: str) -> str:
-        return self.ctx.generate_guid(guid_key)

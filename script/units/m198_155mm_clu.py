@@ -1,5 +1,4 @@
 from context.module_context import ModuleContext
-from script.context.unit_id_manager import UnitIdManager
 from metadata.division_unit_registry import UnitInfo
 from metadata.unit import UnitMetadata
 from misc.unit_creator import UNIT_UI
