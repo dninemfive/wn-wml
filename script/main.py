@@ -1,14 +1,14 @@
 from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
-from script.context.unit_id_manager import UnitIdManager
+from managers.unit_id import UnitIdManager
 from datetime import datetime
 import units.m198_155mm_clu
 import units.m198_copperhead
 import units.stinger_tdar
 from utils.io import write
-from message import Message, try_nest
+from utils.types.message import Message, try_nest
 from metadata.division_unit_registry import DivisionUnitRegistry, DivisionRuleLookup
-from misc.unit_creator import UnitCreator, UNIT_UI
+from script.creators.unit_creator import UnitCreator, UNIT_UI
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from utils.bat import generate_mod, reset_source
@@ -17,8 +17,8 @@ from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
 from context.mod_creation_context import ModCreationContext
-import paths
-import ndf_paths
+import constants.paths as paths
+import constants.ndf_paths as ndf_paths
 import os
 import shutil
 import units
@@ -27,7 +27,7 @@ import units.m998_avenger
 import units.m998_humvee_supply
 import units.mot_mp_patrol
 
-wn_metadata = WarnoMetadata(paths.WARNO_DIRECTORY)
+wn_metadata = WarnoMetadata(globals.paths.WARNO_DIRECTORY)
 mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn_metadata, "0.0.0", 'd9', 'd99ID')
 div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)
 
@@ -37,12 +37,13 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
     with ModCreationContext(mod_metadata, root_msg, *ndf_paths.ALL) as mod_context:
             division_units: DivisionUnitRegistry
             with root_msg.nest("Creating units") as msg:
-                division_units = DivisionUnitRegistry(DivisionRuleLookup(mod_context.ndf[ndf_paths.DIVISION_RULES],
-                                                                         "US_82nd_Airborne",
-                                                                         "US_8th_Inf",
-                                                                         "US_11ACR",
-                                                                         "US_3rd_Arm"),
-                                                        msg)
+                division_units = DivisionUnitRegistry(mod_context,
+                                                      div_metadata,
+                                                      root_msg,
+                                                      "US_82nd_Airborne",
+                                                      "US_8th_Inf",
+                                                      "US_11ACR",
+                                                      "US_3rd_Arm")
                 # make new units              
                 # TODO: maybe default unit country?
                 with UnitIdManager(mod_context, msg, div_metadata.id * 1000) as ctx:
@@ -166,8 +167,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                                         division_units,
                                         "Descriptor_Deck_Division_US_8th_Inf_multi",
                                         root_msg,
-                                        DivisionName=mod_context.register("9TH INFANTRY DIVISION (MTZ.)"),
-                                        DescriptionHintTitleToken=mod_context.register("9TH INFANTRY DIVISION (MOTORIZED)"),
+                                        DivisionName=mod_context.localization.register("9TH INFANTRY DIVISION (MTZ.)"),
+                                        DescriptionHintTitleToken=mod_context.localization.register("9TH INFANTRY DIVISION (MOTORIZED)"),
                                         EmblemTexture = division_texture_name)
             # add a default deck to Decks.ndf (not required)
     

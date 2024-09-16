@@ -1,6 +1,6 @@
-from utils.io import load, write
-from message import Message, try_nest
 from typing import Generator, Self
+from utils.io import load, write
+from utils.types.message import Message, try_nest
 
 class Cache(object):
     def __init__(self: Self, file_path: str):
@@ -25,3 +25,7 @@ class Cache(object):
     @property
     def values(self: Self) -> Generator[str]:
         yield from self._data.values()
+
+    @property
+    def items(self: Self) -> Generator[tuple[str, str]]:
+        yield from self._data.items()

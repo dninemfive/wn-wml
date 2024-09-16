@@ -1,6 +1,6 @@
-from cache.cache import Cache
-from message import Message, try_nest
 from typing import Self
+from utils.types.cache import Cache
+from utils.types.message import Message, try_nest
 import os
 
 class CacheSet(object):

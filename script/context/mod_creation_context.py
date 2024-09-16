@@ -1,8 +1,8 @@
 from creators.division_creator import DivisionCreator
 from creators.unit_creator import UnitCreator
-from managers.guid_manager import GuidManager
-from managers.localization_manager import LocalizationManager
-from managers.unit_id_manager import UnitIdManager
+from script.managers.guid import GuidManager
+from script.managers.localization import LocalizationManager
+from script.managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
 from metadata.mod import ModMetadata
 from metadata.division_unit_registry import DivisionUnitRegistry
@@ -42,7 +42,6 @@ class ModCreationContext(object):
         self.caches = CacheSet(CACHE_FOLDER, GUID, LOCALIZATION, UNIT_ID)
         self.guids = GuidManager(self.guid_cache)
         self.localization = LocalizationManager(self.localization_cache, self.metadata.localization_prefix)
-        self.unit_ids = UnitIdManager(self, 139000)
        
     def __enter__(self: Self) -> Self:
         self.mod.check_if_src_is_newer()
@@ -72,9 +71,12 @@ class ModCreationContext(object):
                       f"Making division {division.short_name}",
                       child_padding=self.msg_length) as msg:
             DivisionCreator(self.generate_guid(division.descriptor_name), copy_of, insert_after, division, units, **changes).apply(self.ndf, msg)
+
+    def start_unit_ids_at(self: Self, initial_id: int) -> UnitIdManager:
+        return UnitIdManager(self.unit_id_cache, initial_id)
     
     def create_unit(self: Self, name: str, country: str, copy_of: str) -> UnitCreator:
-        return UnitCreator(self, self.prefix, name, country, copy_of)
+        return UnitCreator(self.ndf, self.unit_ids, self.guids, self.prefix, name, country, copy_of, self.root_msg)
     
     def add_division_emblem(self: Self, msg: Message | None, image_path: str, division: DivisionMetadata) -> str:
         with try_nest(msg, f"Adding division emblem from image at {image_path}") as _:

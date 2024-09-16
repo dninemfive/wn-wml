@@ -1,9 +1,9 @@
 from context.module_context import ModuleContext
-from script.context.unit_id_manager import UnitIdManager
+from context.mod_creation_context import ModCreationContext
 from metadata.division_unit_registry import UnitInfo
 
 # todo: put most of this structure in an @annotation
-def create(ctx: UnitIdManager) -> UnitInfo | None:
+def create(ctx: ModCreationContext) -> UnitInfo | None:
     # M998 HUMVEE SUPPLY
     #   copy of: M35 Supply
     with ctx.create_unit("M998 HUMVEE SUPPLY", "US", "M35_supply_US") as m998_humvee_supply:

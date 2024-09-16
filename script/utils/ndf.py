@@ -4,7 +4,7 @@ from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 from typing import Any, Callable, Generator
-from message import Message, try_nest
+from utils.types.message import Message, try_nest
 import os
 import shutil
 
@@ -163,3 +163,6 @@ def map_from_rows(*rows: MapRow) -> Map:
     for row in rows:
         result.add(row)
     return result
+
+def ensure_unit_path(descriptor: str) -> str:
+    return descriptor if descriptor.startswith("$/GFX/Unit/") else f'$/GFX/Unit/{descriptor}'

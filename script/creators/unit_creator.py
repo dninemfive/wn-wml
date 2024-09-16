@@ -4,10 +4,10 @@ from metadata.unit import UnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from globals.ndf_paths import UNITE_DESCRIPTOR, SHOWROOM_EQUIVALENCE, DIVISION_PACKS, DECK_SERIALIZER, ALL_UNITS_TACTIC
+from constants.ndf_paths import UNITE_DESCRIPTOR, SHOWROOM_EQUIVALENCE, DIVISION_PACKS, DECK_SERIALIZER, ALL_UNITS_TACTIC
 from typing import Self
-from managers.guid_manager import GuidManager
-from managers.unit_id_manager import UnitIdManager
+from script.managers.guid import GuidManager
+from script.managers.unit_id import UnitIdManager
 from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module, remove_module
 
 UNIT_UI = "TUnitUIModuleDescriptor"
@@ -70,11 +70,6 @@ class UnitCreator(object):
         deck_pack_descriptor = Object('DeckPackDescriptor')
         deck_pack_descriptor.add(MemberRow(self.new.descriptor_path, "Unit"))
         ndf.add(ListRow(deck_pack_descriptor, namespace=self.new.deck_pack_descriptor_name))
-
-    @ndf_path(DECK_SERIALIZER)
-    def edit_deck_serializer(self: Self, ndf: List):
-        unit_ids: Map = ndf.by_name("DeckSerializer").value.by_member('UnitIds').value
-        unit_ids.add(k=self.new.descriptor_path, v=str(self.ctx.register(self.new.descriptor_name)))
 
     @ndf_path(ALL_UNITS_TACTIC)
     def edit_all_units_tactic(self: Self, ndf: List):

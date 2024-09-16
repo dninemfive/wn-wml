@@ -1,5 +1,5 @@
-from message import Message, try_nest
-from misc.cache import Cache
+from utils.types.message import Message, try_nest
+from utils.types.cache import Cache
 from typing import Self
 import random
 import string

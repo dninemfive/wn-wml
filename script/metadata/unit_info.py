@@ -1,12 +1,8 @@
-from dataclasses import dataclass
-from message import Message, try_nest
-from metadata.division import DivisionMetadata
 from metadata.unit import UnitMetadata
 from model.deck_unite_rule import TDeckUniteRule
-from misc.unit_creator import UnitCreator
-from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
+from creators.unit_creator import UnitCreator
+from ndf_parse.model import MapRow
 from typing import Self
-from utils.ndf import map_from_rows, make_obj, to_List
 
 class UnitInfo(object):
     def __init__(self: Self,

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from message import Message, try_nest
+from utils.types.message import Message, try_nest
 from metadata.division import DivisionMetadata
 from metadata.unit import UnitMetadata
-from misc.unit_creator import UnitCreator
+from script.creators.unit_creator import UnitCreator
 from model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from typing import Self
@@ -18,7 +18,7 @@ class DivisionRuleLookup(object):
         unit_rule_list: List
         for division in self.division_prio:
             try:
-                unit_rule_list: list = self.division_rules.by_key(division).value.by_member("UnitRuleList").value
+                unit_rule_list: List = self.division_rules.by_key(division).value.by_member("UnitRuleList").value
                 result = unit_rule_list.find_by_cond(lambda x: x.value.by_member("UnitDescriptor").value == unit_descriptor_path).value
             except:
                 continue

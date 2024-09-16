@@ -1,32 +1,39 @@
+from constants.ndf_paths import DIVISION_RULES
 from dataclasses import dataclass
-from message import Message, try_nest
+from script.context.mod_creation_context import ModCreationContext
+from script.managers.unit_id import UnitIdManager
+from utils.types.message import Message, try_nest
 from metadata.division import DivisionMetadata
 from metadata.unit import UnitMetadata
 from metadata.unit_info import UnitInfo
 from metadata.division_rule_lookup import DivisionRuleLookup
-from misc.unit_creator import UnitCreator
+from script.creators.unit_creator import UnitCreator
 from model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from typing import Self
-from utils.ndf import map_from_rows, make_obj, to_List
+from utils.ndf import map_from_rows, make_obj, to_List, ndf_path, ensure_unit_path
+from constants.ndf_paths import DECK_SERIALIZER
 
 def ensure_unit_path_list(transports: str | list[str] | None) -> list[str] | None:
         if transports is None:
             return None
         if isinstance(transports, str):
             transports = [transports]
-        def ensure_path(descriptor: str) -> str:
-            return descriptor if descriptor.startswith("$/GFX/Unit/") else f'$/GFX/Unit/{descriptor}'
-        return [ensure_path(x) for x in transports]
+        return [ensure_unit_path(x) for x in transports]
 
 class DivisionUnitRegistry(object):
-
-    def __init__(self: Self, lookup: DivisionRuleLookup, parent_msg: Message | None = None, *units: UnitInfo):
+    def __init__(self: Self, ctx: ModCreationContext, metadata: DivisionMetadata, parent_msg: Message | None = None, *division_priorities: str):
+        self.metadata = metadata
         self.units: list[UnitInfo] = []
-        for unit in units:
-            self.register(unit)
-        self.lookup = lookup
         self.parent_msg = parent_msg
+        self.unit_ids = UnitIdManager(ctx.unit_id_cache, metadata.id * 1000)
+        self.lookup = DivisionRuleLookup(ctx.ndf[DIVISION_RULES], division_priorities)
+    
+    @ndf_path(DECK_SERIALIZER)
+    def edit_deck_serializer(self: Self, ndf: List):
+        unit_ids: Map = ndf.by_name("DeckSerializer").value.by_member('UnitIds').value
+        for k, v in self.unit_ids:
+            unit_ids.add(k=k, v=v)
 
     def register(self: Self, info: UnitInfo, override_transports: str | list[str] | None = None):
         override_transports = ensure_unit_path_list(override_transports)
@@ -35,6 +42,7 @@ class DivisionUnitRegistry(object):
             info.rule.AvailableWithoutTransport = False
         with try_nest(self.parent_msg, f"Registering {info.unit.name}") as _:
             self.units.append(info)
+            self.unit_ids.register(info.unit.descriptor_name)
 
     def register_vanilla(self: Self, unit: str | UnitMetadata, packs: int, override_transports: str | list[str] | None = None):
         if isinstance(unit, str):

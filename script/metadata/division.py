@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Self
-from message import Message
+from utils.types.message import Message
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, Object
 from ndf_parse.model.abc import CellValue
