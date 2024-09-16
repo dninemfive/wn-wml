@@ -65,6 +65,7 @@ class UnitCreator(object):
 
     @ndf_path(rf'GameData\Generated\Gameplay\Gfx\ShowRoomEquivalence.ndf')
     def edit_showroom_equivalence(self: Self, ndf: List):
+        # TODO: allow setting this when generating the unit
         unit_to_showroom_equivalent: Map = ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
         unit_to_showroom_equivalent.add(k=self.new.descriptor_path, v=self.src.showroom_descriptor_path)
 
