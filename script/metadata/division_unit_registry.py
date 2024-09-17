@@ -1,18 +1,16 @@
-from constants.ndf_paths import DIVISION_RULES
-from dataclasses import dataclass
-from script.context.mod_creation_context import ModCreationContext
-from script.managers.unit_id import UnitIdManager
-from utils.types.message import Message, try_nest
+from typing import Self
+
+from constants.ndf_paths import DECK_SERIALIZER, DIVISION_RULES
+from context.mod_creation_context import ModCreationContext
+from managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
+from metadata.division_rule_lookup import DivisionRuleLookup
 from metadata.unit import UnitMetadata
 from metadata.unit_info import UnitRules
-from metadata.division_rule_lookup import DivisionRuleLookup
-from script.creators.unit import UnitCreator
-from model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
-from typing import Self
-from utils.ndf import map_from_rows, make_obj, to_List, ndf_path, ensure_unit_path
-from constants.ndf_paths import DECK_SERIALIZER
+from utils.ndf import ensure_unit_path, make_obj, map_from_rows, ndf_path, to_List
+from utils.types.message import Message, try_nest
+
 
 def ensure_unit_path_list(transports: str | list[str] | None) -> list[str] | None:
         if transports is None:

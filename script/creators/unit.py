@@ -1,13 +1,13 @@
+from typing import Self
+
+from constants.ndf_paths import ALL_UNITS_TACTIC, DIVISION_PACKS, SHOWROOM_EQUIVALENCE, UNITE_DESCRIPTOR
 from context.module_context import ModuleContext
 from metadata.new_unit import NewUnitMetadata
-from script.metadata import new_unit
-from utils.types.message import Message
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, ListRow, Map, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from constants.ndf_paths import ALL_UNITS_TACTIC, DIVISION_PACKS, SHOWROOM_EQUIVALENCE, UNITE_DESCRIPTOR
-from typing import Self
-from utils.ndf import edit_members, ndf_path, get_module, remove_module
+from utils.ndf import edit_members, get_module, ndf_path, remove_module
+from utils.types.message import Message
 
 UNIT_UI = "TUnitUIModuleDescriptor"
 

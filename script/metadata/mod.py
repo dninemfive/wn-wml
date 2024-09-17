@@ -1,8 +1,10 @@
-from dataclasses import dataclass
-from metadata.warno import WarnoMetadata
-from typing import Self
 import os
-    
+from dataclasses import dataclass
+from typing import Self
+
+from metadata.warno import WarnoMetadata
+
+
 @dataclass
 class ModMetadata(object):
     author: str

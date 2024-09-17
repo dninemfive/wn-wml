@@ -1,3 +1,5 @@
+from typing import Self
+
 from constants.misc import GUID, LOCALIZATION, UNIT_ID
 from constants.ndf_paths import DIVISION_TEXTURES
 from constants.paths import CACHE_FOLDER
@@ -13,10 +15,10 @@ from metadata.new_unit import NewUnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
-from typing import Self
 from utils.ndf import add_image
 from utils.types.cache_set import CacheSet
 from utils.types.message import Message, try_nest
+
 
 class ModCreationContext(object):
     @property

@@ -1,5 +1,7 @@
 from typing import Generator, Self
+
 from utils.types.cache import Cache
+
 
 class UnitIdManager(object):
     def __init__(self: Self, cache: Cache, initial_id: int):

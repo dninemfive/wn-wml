@@ -1,12 +1,12 @@
+from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
-from script.context.unit_id_manager import UnitIdManager
+from creators.unit import UNIT_UI
 from metadata.division_unit_registry import UnitRules
 from metadata.unit import UnitMetadata
-from script.creators.unit import UNIT_UI
 from ndf_parse.model import List, ListRow
 from utils.ndf import to_List as qlist
 
-def create(ctx: UnitIdManager) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> UnitRules | None:
     # M198 155mm COPPERHEAD
     # copy M198 155mm
     with ctx.create_unit("M198 COPPERHEAD", "US", "Howz_M198_155mm_US") as m198_clu:

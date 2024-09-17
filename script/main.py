@@ -1,33 +1,27 @@
-from context.mod_creation_context import ModCreationContext
-from context.module_context import ModuleContext
-from managers.unit_id import UnitIdManager
-from datetime import datetime
-import units.m198_155mm_clu
-import units.m198_copperhead
-import units.stinger_tdar
-from utils.io import write
-from utils.types.message import Message, try_nest
-from metadata.division_unit_registry import DivisionUnitRegistry, DivisionRuleLookup
-from script.creators.unit import UnitCreator, UNIT_UI
-from ndf_parse import Mod
-from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
-from utils.bat import generate_mod, reset_source
-from utils.ndf import dict_to_map, edit_members, get_module, replace_unit_module
-from metadata.division import DivisionMetadata
-from metadata.mod import ModMetadata
-from metadata.warno import WarnoMetadata
-from context.mod_creation_context import ModCreationContext
-import constants.paths as paths
-import constants.ndf_paths as ndf_paths
 import os
 import shutil
+from datetime import datetime
+
+import constants.ndf_paths as ndf_paths
+import constants.paths as paths
 import units
-import units.m1075_pls_supply
+import units.m198_155mm_clu
+import units.m198_copperhead
 import units.m998_avenger
 import units.m998_humvee_supply
+import units.m1075_pls_supply
 import units.mot_mp_patrol
+import units.stinger_tdar
+from context.mod_creation_context import ModCreationContext
+from managers.unit_id import UnitIdManager
+from metadata.division import DivisionMetadata
+from metadata.division_unit_registry import DivisionUnitRegistry
+from metadata.mod import ModMetadata
+from metadata.warno import WarnoMetadata
+from utils.bat import generate_mod, reset_source
+from utils.types.message import Message
 
-wn_metadata = WarnoMetadata(globals.paths.WARNO_DIRECTORY)
+wn_metadata = WarnoMetadata(paths.WARNO_DIRECTORY)
 mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn_metadata, "0.0.0", 'd9', 'd99ID')
 div_metadata = DivisionMetadata('d9', '9ID', 'US', 1390)
 

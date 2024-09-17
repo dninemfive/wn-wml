@@ -1,8 +1,8 @@
-from message import Message, try_nest
 from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
 # https://stackoverflow.com/a/5469427
 from subprocess import PIPE, Popen
+from utils.types.message import Message, try_nest
 import os
 # https://stackoverflow.com/a/1557364
 import shutil

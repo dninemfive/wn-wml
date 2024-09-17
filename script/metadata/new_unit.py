@@ -1,9 +1,10 @@
 from dataclasses import dataclass
+from typing import Self
+
 from managers.guid import GuidManager
 from managers.localization import LocalizationManager
 from metadata.unit import UnitMetadata
-from typing import Self
-from utils.localization import delocalize
+
 
 @dataclass
 class NewUnitMetadata(object):

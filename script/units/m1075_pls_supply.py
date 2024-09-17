@@ -1,8 +1,8 @@
+from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
-from script.context.unit_id_manager import UnitIdManager
 from metadata.division_unit_registry import UnitRules
 
-def create(ctx: UnitIdManager) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> UnitRules | None:
     # M1075 PLS
     # copy of: HEMTT
     with ctx.create_unit("M1075 PLS SUPPLY", "US", "HEMTT_US") as m1075_pls:

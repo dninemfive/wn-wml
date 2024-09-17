@@ -1,5 +1,5 @@
-from context.module_context import ModuleContext
 from context.mod_creation_context import ModCreationContext
+from context.module_context import ModuleContext
 from metadata.division_unit_registry import UnitRules
 
 # todo: put most of this structure in an @annotation

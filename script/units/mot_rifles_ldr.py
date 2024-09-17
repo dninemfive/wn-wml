@@ -1,10 +1,10 @@
+from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
-from script.context.unit_id_manager import UnitIdManager
-from metadata.division_unit_registry import TDeckUniteRule
-from script.creators.unit import UNIT_UI
+from creators.unit import UNIT_UI
+from model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import List
 
-def create(ctx: UnitIdManager) -> tuple[tuple[str, int], TDeckUniteRule]:
+def create(ctx: ModCreationContext) -> tuple[tuple[str, int], TDeckUniteRule]:
     # ✪ MOT. RIFLES LDR.
     # see: FM 71-2 appendix A fig. A-11 CO HQ
     # copy: Airborne Ldr.

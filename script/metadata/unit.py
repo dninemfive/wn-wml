@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Self
+
 from utils.localization import delocalize
+
 
 @dataclass
 class UnitMetadata(object):

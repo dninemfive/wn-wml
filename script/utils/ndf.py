@@ -1,5 +1,3 @@
-# https://realpython.com/primer-on-python-decorators/#fancy-decorators
-from functools import wraps
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue

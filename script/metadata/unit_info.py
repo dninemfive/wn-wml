@@ -1,8 +1,10 @@
+from typing import Self
+
 from creators.unit import UnitCreator
 from metadata.unit import UnitMetadata
 from model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import MapRow
-from typing import Self
+
 
 class UnitRules(object):
     def __init__(self: Self,
