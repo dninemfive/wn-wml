@@ -9,6 +9,9 @@ class Cache(object):
 
     def __getitem__(self: Self, key: str) -> str:
         return self._data[key]
+    
+    def __setitem__(self: Self, key: str, val: str):
+        self._data[key] = val
 
     def load(self: Self, parent_msg: Message | None = None) -> None:
         with try_nest(parent_msg, self.file_path) as _:
@@ -19,13 +22,13 @@ class Cache(object):
             write(self._data, self.file_path)
 
     @property
-    def keys(self: Self) -> Generator[str]:
+    def keys(self: Self): # -> Generator[str]:
         yield from self._data.keys()
 
     @property
-    def values(self: Self) -> Generator[str]:
+    def values(self: Self): # -> Generator[str]:
         yield from self._data.values()
 
     @property
-    def items(self: Self) -> Generator[tuple[str, str]]:
+    def items(self: Self): # -> Generator[tuple[str, str]]:
         yield from self._data.items()

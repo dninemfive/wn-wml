@@ -34,7 +34,7 @@ class LocalizationManager(object):
     def generate_csv(self: Self, msg: Message | None) -> str:
         result = '"TOKEN";"REFTEXT"'
         with try_nest(msg, "Generating localization") as msg2:
-            for k in sorted(self._cache.keys()):
+            for k in sorted(self._cache.keys):
                 with msg2.nest(f"{self._cache[k]}\t{k}") as _:
                     result += "\n" + f'"{self._cache[k]}";"{k}"'
         return result

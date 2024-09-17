@@ -1,6 +1,6 @@
 from typing import Self
 
-from constants.misc import GUID, LOCALIZATION, UNIT_ID
+from constants.misc import GUID, LOCALIZATION, MESSAGE_PADDING, UNIT_ID
 from constants.ndf_paths import DIVISION_TEXTURES
 from constants.paths import CACHE_FOLDER
 from creators.division import DivisionCreator
@@ -48,13 +48,13 @@ class ModCreationContext(object):
        
     def __enter__(self: Self) -> Self:
         self.mod.check_if_src_is_newer()
-        with try_nest(self.root_msg, "Loading ndf files", child_padding=self.msg_length) as msg:
+        with try_nest(self.root_msg, "Loading ndf files", child_padding=MESSAGE_PADDING) as msg:
             self.ndf = {x:self.load_ndf(x, msg) for x in self.paths}
         self.caches.load(self.root_msg)
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
-        with self.root_msg.nest("Saving mod", child_padding=self.msg_length) as write_msg:
+        with self.root_msg.nest("Saving mod", child_padding=MESSAGE_PADDING) as write_msg:
             self.write_edits(write_msg)
             self.generate_and_write_localization(write_msg)
         self.caches.save(self.root_msg)

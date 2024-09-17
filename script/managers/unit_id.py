@@ -8,7 +8,7 @@ class UnitIdManager(object):
         self._cache = cache
         self.current_id = initial_id
     
-    def items(self: Self) -> Generator[tuple[str, str]]:
+    def items(self: Self): # -> Generator[tuple[str, str]]:
         yield from sorted(self._cache.items, key=lambda x: x[1])
 
     def register(self: Self, descriptor_name: str) -> int:

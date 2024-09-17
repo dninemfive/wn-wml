@@ -1,7 +1,7 @@
 from typing import Self
 
 from constants.ndf_paths import DECK_SERIALIZER, DIVISION_RULES
-from context.mod_creation_context import ModCreationContext
+# from context.mod_creation_context import ModCreationContext
 from managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
 from metadata.division_rule_lookup import DivisionRuleLookup
@@ -20,7 +20,8 @@ def ensure_unit_path_list(transports: str | list[str] | None) -> list[str] | Non
         return [ensure_unit_path(x) for x in transports]
 
 class DivisionUnitRegistry(object):
-    def __init__(self: Self, ctx: ModCreationContext, metadata: DivisionMetadata, parent_msg: Message | None = None, *division_priorities: str):
+    # ctx: ModCreationContext
+    def __init__(self: Self, ctx, metadata: DivisionMetadata, parent_msg: Message | None = None, *division_priorities: str):
         self.metadata = metadata
         self.units: list[UnitRules] = []
         self.parent_msg = parent_msg

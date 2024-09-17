@@ -13,7 +13,6 @@ class ModMetadata(object):
     version: str
     dev_short_name: str
     localization_prefix: str
-    initial_unit_id: int
     
     @property
     def folder_path(self: Self) -> str:

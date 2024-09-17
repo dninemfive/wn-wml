@@ -22,4 +22,3 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         # change unit attack/defense value (see M240 CLU vs regular)
         # change unit cost (see M240 CLU vs regular)
         return UnitRules(m198_clu, 2, [0, 4, 3, 0])
-        
