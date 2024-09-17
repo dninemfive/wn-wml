@@ -60,7 +60,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 BLACKHAWK, CHINOOK = "Descriptor_Unit_UH60A_Black_Hawk_US", "Descriptor_Unit_CH47_Chinook_US"
                 SMALL_UNIT_TRANSPORTS = [M998_HUMVEE, BLACKHAWK]
                 LARGE_UNIT_TRANSPORTS = [M1038_HUMVEE, BLACKHAWK]
-                division_units.register(units.mot_mp_patrol.create(mod_context))
+                # TODO: variant of the mod which doesn't reference the MP Humvee because it's a DLC unit
+                division_units.register(units.mot_mp_patrol.create(mod_context), [M998_HUMVEE, "M1025_Humvee_MP_US"])
                 # units.mot_rifles_ldr.create()
                 # units.mot_rifles_at4.create()
                 # MOT. RIFLES (DRAGON)
