@@ -163,7 +163,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                     # F/A-18C [AA]
                     # F/A-18D [FAC]
             # make division
-            division_texture_name: str = mod_context.add_division_emblem(root_msg, "img/downscaled_patch.png", div_metadata) 
+            division_texture_name: str = mod_context.add_division_emblem(root_msg, "img/patch_128.png", div_metadata) 
             mod_context.create_division(div_metadata,
                                         "Descriptor_Deck_Division_US_82nd_Airborne_multi",
                                         division_units,
