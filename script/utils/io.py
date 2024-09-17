@@ -8,9 +8,10 @@ def try_read(path: str) -> str | None:
 
 def load(path: str, default: object | None = None) -> object | None:
     val = try_read(path)
-    if(val is not (None or "")):
+    try:
         return eval(val)
-    return default
+    except:
+        return default
     
 def write(obj: object, path: str):
     with open(path, "w") as f:

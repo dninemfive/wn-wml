@@ -31,7 +31,7 @@ class DivisionUnitRegistry(object):
     @ndf_path(DECK_SERIALIZER)
     def edit_deck_serializer(self: Self, ndf: List):
         unit_ids: Map = ndf.by_name("DeckSerializer").value.by_member('UnitIds').value
-        for k, v in self.unit_ids:
+        for k, v in self.unit_ids.items:
             unit_ids.add(k=k, v=v)
 
     def register(self: Self, info: UnitRules, override_transports: str | list[str] | None = None):
@@ -41,7 +41,7 @@ class DivisionUnitRegistry(object):
             info.rule.AvailableWithoutTransport = False
         with try_nest(self.parent_msg, f"Registering {info.unit.name}") as _:
             self.units.append(info)
-            self.unit_ids.register(info.unit.descriptor_name)
+            self.unit_ids.register(info.unit.descriptor_path)
 
     def register_vanilla(self: Self, unit: str | UnitMetadata, packs: int, override_transports: str | list[str] | None = None):
         if isinstance(unit, str):
