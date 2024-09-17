@@ -1,7 +1,6 @@
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from utils.types.message import Message, try_nest
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 
