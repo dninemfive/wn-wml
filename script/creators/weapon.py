@@ -8,7 +8,8 @@ from metadata.unit import UnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from utils.ndf import edit_members, get_module, ndf_path, remove_module, replace_unit_module
+from utils.ndf.misc import edit_members, ndf_path
+from utils.ndf.unit_module import get_module, remove_module
 from utils.types.message import Message
 
 

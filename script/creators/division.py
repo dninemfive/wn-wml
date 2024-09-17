@@ -5,7 +5,7 @@ from metadata.division import DivisionMetadata
 from metadata.division_unit_registry import DivisionUnitRegistry
 from ndf_parse.model import List, ListRow, Map, MapRow
 from ndf_parse.model.abc import CellValue
-from utils.ndf import edit_members, ndf_path
+from utils.ndf.misc import edit_members, ndf_path
 from utils.types.message import Message
 
 

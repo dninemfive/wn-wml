@@ -8,7 +8,7 @@ from metadata.division_rule_lookup import DivisionRuleLookup
 from metadata.unit import UnitMetadata
 from metadata.unit_rules import UnitRules
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
-from utils.ndf import ensure_unit_path, make_obj, map_from_rows, ndf_path, to_List
+from utils.ndf.misc import ensure_unit_path, make_obj, map_from_rows, ndf_path, to_List
 from utils.types.message import Message, try_nest
 
 

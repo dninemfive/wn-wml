@@ -4,7 +4,7 @@ from typing import Self
 from creators.unit import UnitCreator
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, MemberRow, Object
-from utils.ndf import list_from_rows, to_List
+from utils.ndf.misc import list_from_rows, to_List
 
 UNITE_RULE = 'TDeckUniteRule'
 KEY_AVAILABLE_TRANSPORT_LIST = 'AvailableTransportList'
