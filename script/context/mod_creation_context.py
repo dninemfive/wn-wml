@@ -72,8 +72,8 @@ class ModCreationContext(object):
                         **changes: CellValue | None) -> None:
         with try_nest(root_msg, 
                       f"Making division {division.short_name}",
-                      child_padding=self.msg_length) as msg:
-            DivisionCreator(self.generate_guid(division.descriptor_name), copy_of, insert_after, division, units, **changes).apply(self.ndf, msg)
+                      child_padding=MESSAGE_PADDING) as msg:
+            DivisionCreator(self.guids.generate(division.descriptor_name), copy_of, insert_after, division, units, **changes).apply(self.ndf, msg)
 
     def start_unit_ids_at(self: Self, initial_id: int) -> UnitIdManager:
         return UnitIdManager(self.unit_id_cache, initial_id)

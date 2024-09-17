@@ -13,6 +13,9 @@ class Cache(object):
     def __setitem__(self: Self, key: str, val: str):
         self._data[key] = val
 
+    def __contains__(self: Self, key: str) -> bool:
+        return key in self._data
+
     def load(self: Self, parent_msg: Message | None = None) -> None:
         with try_nest(parent_msg, self.file_path) as _:
             self._data = load(self.file_path, {})
