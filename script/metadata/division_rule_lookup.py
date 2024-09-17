@@ -25,4 +25,4 @@ class DivisionRuleLookup(object):
                     if result is not None:
                         result = TDeckUniteRule.from_ndf(result, override_transports)
                         return result
-        return result
+        raise Exception(f"Could not find {unit_descriptor_path} in any of the specified divisions!")
