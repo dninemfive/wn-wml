@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 from typing import Self
 
+from utils.localization import delocalize
+
+
 @dataclass
 class UnitMetadata(object):
     name: str
@@ -35,11 +38,4 @@ class UnitMetadata(object):
     
     @staticmethod
     def from_localized_name(prefix: str, localized_name: str, country: str) -> Self:
-        return UnitMetadata(f"{prefix}_{UnitMetadata.delocalize(localized_name)}_{country}")
-    
-    @staticmethod
-    def delocalize(localized_name: str) -> str:
-        result: str = "_".join(localized_name.split())
-        for c in [".", "(", ")", "-", "[", "]", "#"]:
-            result = result.replace(c, "")
-        return result
+        return UnitMetadata(f"{prefix}_{delocalize(localized_name)}_{country}")

@@ -1,12 +1,13 @@
+from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
-from context.unit_creation_context import UnitCreationContext
-from metadata.division_unit_registry import UnitInfo
+from creators.unit import UNIT_UI
+from metadata.division_unit_registry import UnitRules
 from metadata.unit import UnitMetadata
-from misc.unit_creator import UNIT_UI
 from ndf_parse.model import List, ListRow
 from utils.ndf.misc import to_List as qlist
 
-def create(ctx: UnitCreationContext) -> UnitInfo | None:
+
+def create(ctx: ModCreationContext) -> UnitRules | None:
     # M198 155mm COPPERHEAD
     # copy M198 155mm
     with ctx.create_unit("M198 COPPERHEAD", "US", "Howz_M198_155mm_US") as m198_clu:
@@ -24,5 +25,5 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
         # change unit dangerousness (see 2S3M1 vs regular)
         # change unit attack/defense value (see 2S3M1 vs regular)
         # change unit cost (see 2S3M1 vs regular)
-        return UnitInfo(m198_clu, 2, [0, 4, 3, 0])
+        return UnitRules(m198_clu, 2, [0, 4, 3, 0])
         

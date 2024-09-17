@@ -1,33 +1,29 @@
 from typing import Self
+
+from constants.misc import GUID, LOCALIZATION, MESSAGE_PADDING, UNIT_ID
+from constants.ndf_paths import DIVISION_TEXTURES
+from constants.paths import CACHE_FOLDER
+from creators.division import DivisionCreator
+from creators.unit import UnitCreator
+from managers.guid import GuidManager
+from managers.localization import LocalizationManager
+from managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
+from metadata.division_unit_registry import DivisionUnitRegistry
 from metadata.mod import ModMetadata
-from misc.division_creator import DivisionCreator
+from metadata.new_unit import NewUnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
-from ndf_paths import DIVISION_TEXTURES
-from message import Message, try_nest
-from metadata.division_unit_registry import DivisionUnitRegistry
-from misc.cache_set import CacheSet
-from utils.ndf.misc import root_paths, add_image
-from uuid import uuid4
-# https://stackoverflow.com/a/2823331
-import string
-import random
-import utils.io as io
+from utils.ndf import add_image
+from utils.types.cache_set import CacheSet
+from utils.types.message import Message, try_nest
 
-GUID = "guid"
-LOCALIZATION = "localization"
-CHARACTERS = [*string.ascii_letters, *[str(x) for x in range(10)]]
 
 class ModCreationContext(object):
     @property
     def prefix(self: Self) -> str:
         return self.metadata.dev_short_name
-
-    @property
-    def msg_length(self: Self):
-        return max([len(x) for x in self.paths]) + len("Editing ")
     
     @property
     def guid_cache(self: Self) -> dict[str, str]:
@@ -37,25 +33,30 @@ class ModCreationContext(object):
     def localization_cache(self: Self) -> dict[str, str]:
         return self.caches[LOCALIZATION]
     
+    @property
+    def unit_id_cache(self: Self) -> dict[str, str]:
+        return self.caches[UNIT_ID]
+    
     def __init__(self: Self, metadata: ModMetadata, root_msg: Message | None, *ndf_paths: str):
         self.metadata = metadata
         self.mod = Mod(metadata.folder_path, metadata.folder_path)
         self.root_msg = root_msg
         self.paths = ndf_paths
-        self.caches = CacheSet(GUID, LOCALIZATION)
+        self.caches = CacheSet(CACHE_FOLDER, GUID, LOCALIZATION, UNIT_ID)
+        self.guids = GuidManager(self.guid_cache)
+        self.localization = LocalizationManager(self.localization_cache, self.metadata.localization_prefix)
        
     def __enter__(self: Self) -> Self:
         self.mod.check_if_src_is_newer()
-        with try_nest(self.root_msg, "Loading ndf files", child_padding=self.msg_length) as msg:
+        with try_nest(self.root_msg, "Loading ndf files", child_padding=MESSAGE_PADDING) as msg:
             self.ndf = {x:self.load_ndf(x, msg) for x in self.paths}
         self.caches.load(self.root_msg)
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
-        with self.root_msg.nest("Writing edits", child_padding=self.msg_length) as write_msg:
-            for edit in self.mod.edits:
-                with write_msg.nest(f"Writing {edit.file_path}") as _:
-                    self.mod.write_edit(edit)
+        with self.root_msg.nest("Saving mod", child_padding=MESSAGE_PADDING) as write_msg:
+            self.write_edits(write_msg)
+            self.generate_and_write_localization(write_msg)
         self.caches.save(self.root_msg)
     
     def load_ndf(self: Self, path: str, msg: Message) -> List:
@@ -71,41 +72,17 @@ class ModCreationContext(object):
                         **changes: CellValue | None) -> None:
         with try_nest(root_msg, 
                       f"Making division {division.short_name}",
-                      child_padding=self.msg_length) as msg:
-            DivisionCreator(self.generate_guid(division.descriptor_name), copy_of, insert_after, division, units, **changes).apply(self.ndf, msg)
+                      child_padding=MESSAGE_PADDING) as msg:
+            DivisionCreator(self.guids.generate(division.descriptor_name), copy_of, insert_after, division, units, **changes).apply(self.ndf, msg)
 
-    def generate_guid(self: Self, guid_key: str) -> str:
-        """ Generates a GUID in the format NDF expects """
-        if guid_key in self.guid_cache:
-            return self.guid_cache[guid_key]
-        result: str = f'GUID:{{{str(uuid4())}}}'
-        self.guid_cache[guid_key] = result
-        return result
+    def start_unit_ids_at(self: Self, initial_id: int) -> UnitIdManager:
+        return UnitIdManager(self.unit_id_cache, initial_id)
     
-    def register(self: Self, string: str) -> str:
-        """ Registers a localized string in the localization cache. Returns the __key__ generated for this string! """
-        if string in self.localization_cache:
-            return f"'{self.localization_cache[string]}'"
-        if len(self.metadata.localization_prefix) > 5:
-            raise Exception("Localization prefix cannot be longer than 5 characters, as keys must be 10 or fewer characters total!")
-        key = self.generate_key()
-        while key in self.localization_cache.values():
-            key = self.generate_key()
-        # intentionally backward: we want to be able to look up strings by their values
-        self.localization_cache[string] = key
-        return f"'{key}'"
-
-    def generate_key(self: Self) -> str:
-        result = self.metadata.localization_prefix
-        for _ in range(10 - len(result)):
-            result += random.choice(CHARACTERS)
-        return result
-
-    def generate_localization_csv(self: Self) -> str:
-        result = '"TOKEN";"REFTEXT"'
-        for k in sorted(self.localization_cache.keys()):
-            result += "\n" + f'"{self.localization_cache[k]}";"{k}"'
-        return result
+    def create_unit(self: Self, name: str, country: str, copy_of: str) -> UnitCreator:
+        return UnitCreator(self.ndf,
+                           NewUnitMetadata.from_(self.prefix, name, country, self.guids, self.localization),
+                           copy_of,
+                           self.root_msg)
     
     def add_division_emblem(self: Self, msg: Message | None, image_path: str, division: DivisionMetadata) -> str:
         with try_nest(msg, f"Adding division emblem from image at {image_path}") as _:
@@ -115,3 +92,18 @@ class ModCreationContext(object):
                              "Assets/2D/Interface/UseOutGame/Division/Emblem",
                              division.emblem_namespace, 
                              "DivisionAdditionalTextureBank")
+        
+    def write_edits(self: Self, msg: Message | None = None) -> None:
+        if msg is None:
+            msg = self.root_msg
+        for edit in self.mod.edits:
+            with msg.nest(f"Writing {edit.file_path}") as _:
+                self.mod.write_edit(edit)
+        
+    def generate_and_write_localization(self: Self, msg: Message | None = None) -> None:
+        if msg is None:
+            msg = self.root_msg
+        csv = self.localization.generate_csv(msg)
+        with msg.nest("Writing localization") as msg:
+            with open(self.metadata.localization_path, "w") as file:
+                file.write(csv)

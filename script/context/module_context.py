@@ -1,3 +1,5 @@
+from typing import Self
+
 from ndf_parse.model import Object
 from ndf_parse.model.abc import CellValue
 from typing import Self

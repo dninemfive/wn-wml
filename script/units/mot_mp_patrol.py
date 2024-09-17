@@ -1,10 +1,11 @@
+from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
-from context.unit_creation_context import UnitCreationContext
-from metadata.division_unit_registry import UnitInfo
-from misc.unit_creator import UNIT_UI
+from creators.unit import UNIT_UI
+from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List
 
-def create(ctx: UnitCreationContext) -> UnitInfo | None:
+
+def create(ctx: ModCreationContext) -> UnitRules | None:
     # MOT. MP PATROL
     # (just copy AB MP PATROL)
     with ctx.create_unit("MOT. MP PATROL", "US", "Airborne_MP_US") as mp_patrol:
@@ -13,8 +14,5 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
             specialties.remove(specialties.find_by_cond(lambda x: x.value == "'_para'"))
             ui_module.edit_members(SpecialtiesList=specialties)
         mp_patrol.remove_module("TDeploymentShiftModuleDescriptor")
-        # update transportable (TODO: automate this)
-        with mp_patrol.module_context('TTransportableModuleDescriptor') as transportable_module:
-            transportable_module.edit_members(TransportedSoldier='"d9_MOT_MP_PATROL_US"')
-        return UnitInfo(mp_patrol, 2, [0, 6, 4, 0], ["$/GFX/Unit/Descriptor_Unit_M1025_Humvee_MP_US"])
+        return UnitRules(mp_patrol, 2, [0, 6, 4, 0], ["$/GFX/Unit/Descriptor_Unit_M1025_Humvee_MP_US"])
         
