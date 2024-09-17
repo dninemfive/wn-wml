@@ -7,5 +7,17 @@ DIVISION_RULES          = rf"GameData\Generated\Gameplay\Decks\DivisionRules.ndf
 SHOWROOM_EQUIVALENCE    = rf'GameData\Generated\Gameplay\Gfx\ShowRoomEquivalence.ndf'
 UNITE_DESCRIPTOR        = rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf'
 DIVISION_TEXTURES       = rf'GameData\Generated\UserInterface\Textures\DivisionTextures.ndf'
+AMMUNITION              = rf'GameData\Generated\Gameplay\Gfx\Ammunition.ndf'
+WEAPON_DESCRIPTOR       = rf'GameData\Generated\Gameplay\Gfx\Ammunition.ndf'
 
-ALL = set([ALL_UNITS_TACTIC, DECK_SERIALIZER, DIVISIONS, DIVISION_LIST, DIVISION_PACKS, DIVISION_RULES, SHOWROOM_EQUIVALENCE, UNITE_DESCRIPTOR, DIVISION_TEXTURES])
+ALL = set([ALL_UNITS_TACTIC,
+           DECK_SERIALIZER,
+           DIVISIONS,
+           DIVISION_LIST,
+           DIVISION_PACKS,
+           DIVISION_RULES,
+           SHOWROOM_EQUIVALENCE,
+           UNITE_DESCRIPTOR,
+           DIVISION_TEXTURES,
+           AMMUNITION,
+           WEAPON_DESCRIPTOR])

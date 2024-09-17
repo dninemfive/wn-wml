@@ -13,8 +13,5 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             specialties.remove(specialties.find_by_cond(lambda x: x.value == "'_para'"))
             ui_module.edit_members(SpecialtiesList=specialties)
         mp_patrol.remove_module("TDeploymentShiftModuleDescriptor")
-        # update transportable (TODO: automate this)
-        with mp_patrol.module_context('TTransportableModuleDescriptor') as transportable_module:
-            transportable_module.edit_members(TransportedSoldier='"d9_MOT_MP_PATROL_US"')
         return UnitRules(mp_patrol, 2, [0, 6, 4, 0], ["$/GFX/Unit/Descriptor_Unit_M1025_Humvee_MP_US"])
         

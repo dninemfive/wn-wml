@@ -16,7 +16,6 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             with ModuleContext(mot_rifles.unit_object, "TTacticalLabelModuleDescriptor") as tactical_label_module:
                 tactical_label_module.edit_members(NbSoldiers=8)
             with ModuleContext(mot_rifles.unit_object, "TInfantrySquadWeaponAssignmentModuleDescriptor") as weapon_assignment_module:
-                # TODO: simplify this since most squads follow the same general pattern
                 weapon_assignment_module.edit_members(InitialSoldiersToTurretIndexMap=dict_to_map(
                     {
                         (

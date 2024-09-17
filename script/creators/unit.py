@@ -9,7 +9,9 @@ from ndf_parse.model.abc import CellValue
 from utils.ndf import edit_members, get_module, ndf_path, remove_module
 from utils.types.message import Message
 
+MODULES_DESCRIPTORS = "ModulesDescriptors"
 UNIT_UI = "TUnitUIModuleDescriptor"
+TAGS = "TTagsModuleDescriptor"
 
 class UnitCreator(object):
     def __init__(self: Self,
@@ -35,6 +37,11 @@ class UnitCreator(object):
             tag_set: List = tags_module.object.by_member("TagSet").value
             tag_set.remove(tag_set.find_by_cond(lambda x: x.value == self.src.tag))
             tag_set.add(ListRow(self.new.tag))
+        try:
+            with self.module_context("TTransportableModuleDescriptor") as transportable_module:
+                transportable_module.edit_members(TransportedSoldier=f'"{self.new.name}"')
+        except:
+            pass
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
@@ -86,5 +93,17 @@ class UnitCreator(object):
         result: Object | None = get_module(self.unit_object, module_type)
         return result
     
+    def get_module_by_name(self: Self, name: str) -> ListRow:
+        return self.unit_object.by_member(MODULES_DESCRIPTORS).value.by_name(name)
+    
     def remove_module(self: Self, module_type: str) -> None:
         remove_module(self.unit_object, module_type)
+
+    def add_tags(self: Self, *tags: str):
+        with self.module_context(TAGS) as tags_module:
+            for tag in tags:
+                tags_module.object.by_member("TagSet").value.add(tag)
+
+    def replace_module_by_name(self: Self, module_name: str, from_unit: str):
+        print("Hey, you forgot to implement UnitCreator.replace_module_by_name!")
+        pass

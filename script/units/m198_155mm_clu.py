@@ -12,7 +12,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         with m198_clu.module_context('TBaseDamageModuleDescriptor') as damage_module:
             # TODO: dynamically adjust this from M198 
             damage_module.edit_members(MaxPhysicalDamages=7)
-        # update transportable (TODO: automate this)
+        # update transportable
         with m198_clu.module_context('TTransportableModuleDescriptor') as transportable_module:
             transportable_module.edit_members(TransportedSoldier='"d9_M198_155mm_CLU_US"')
         # upgrade from vanilla unit

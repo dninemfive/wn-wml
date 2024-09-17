@@ -11,7 +11,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     # M198 155mm COPPERHEAD
     # copy M198 155mm
     with ctx.create_unit("STINGER (TDAR)", "US", "MANPAD_Stinger_C_US") as stinger_tdar:
-        # update transportable (TODO: automate this)
+        # update transportable
         with stinger_tdar.module_context('TTransportableModuleDescriptor') as transportable_module:
             transportable_module.edit_members(TransportedSoldier='"d9_STINGER_TDAR_US"')
         # increase air vision
@@ -19,6 +19,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         #    OpticalStrengthAltitude = 120
         #    SpecializedDetectionsGRU = MAP[(EVisionUnitType/AlwaysInHighAltitude, 10601.0)]
         # TODO: dynamically set this by averaging the Stinger C value with the M167A2 value
+        # even more TODO: custom trait which leaves the normal Stinger C value when moving and activates the radar when stationary
         with stinger_tdar.module_context('TScannerConfigurationDescriptor') as scanner_module:
             scanner_module.edit_members(OpticalStrengthAltitude=100, 
                                         SpecializedDetectionsGRU=map_from_tuples(("EVisionUnitType/AlwaysInHighAltitude",
