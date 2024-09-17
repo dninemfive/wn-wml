@@ -29,3 +29,10 @@ def memberrow(pair_or_key: tuple[str, CellValue] | MemberRow | str, value_or_non
 
 def unit_path(descriptor: str) -> str:
     return descriptor if descriptor.startswith("$/GFX/Unit/") else f'$/GFX/Unit/{descriptor}'
+
+def quotes(s: str, quote: str = '"') -> str:
+    if not s.startswith(quote):
+        s = f'{quote}{s}'
+    if not s.endswith(quote):
+        s = f'{s}{quote}'
+    return s

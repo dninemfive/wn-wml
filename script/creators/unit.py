@@ -1,7 +1,8 @@
 from typing import Self
 
 import utils.ndf.edit as edit
-import utils.ndf.unit_module as unit_module
+import utils.ndf.ensure as ensure
+import utils.ndf.unit_module as modules
 from constants.ndf_paths import ALL_UNITS_TACTIC, DIVISION_PACKS, SHOWROOM_EQUIVALENCE, UNITE_DESCRIPTOR
 from context.module_context import ModuleContext
 from metadata.new_unit import NewUnitMetadata
@@ -84,28 +85,53 @@ class UnitCreator(object):
         all_units_tactic = ndf.by_name("AllUnitsTactic").value
         all_units_tactic.add(self.new.descriptor_path)
 
-    def module_context(self: Self, module_type: str) -> ModuleContext:
-        return ModuleContext(self.unit_object, module_type)
+    def module_context(self: Self, type_or_name: str, by_name: bool = False) -> ModuleContext:
+        return ModuleContext(self.unit_object, type_or_name, by_name)
     
     def edit_ui_module(self: Self, **changes: CellValue) -> None:
         with self.module_context(UNIT_UI) as ui_module:
             ui_module.edit_members(**changes)
 
-    def get_module(self: Self, module_type: str) -> Object:
-        result: Object | None = unit_module.get(self.unit_object, module_type)
-        return result
-    
-    def get_module_by_name(self: Self, name: str) -> ListRow:
-        return self.unit_object.by_member(MODULES_DESCRIPTORS).value.by_name(name)
-    
-    def remove_module(self: Self, module_type: str) -> None:
-        unit_module.remove(self.unit_object, module_type)
+    def set_name(self: Self, name: str) -> None:
+        self.edit_ui_module(NameToken=self.ctx.ctx.register(name))
 
-    def add_tags(self: Self, *tags: str):
-        with self.module_context(TAGS) as tags_module:
-            for tag in tags:
-                tags_module.object.by_member("TagSet").value.add(tag)
+    def add_tag(self: Self, tag: str) -> None:
+        tag = ensure.quotes(tag)
+        with self.module_context("TTagsModuleDescriptor") as tags_module:
+            tag_set: List = tags_module.object.by_member("TagSet").value
+            tag_set.add(tag)
+    
+    def add_tags(self: Self, *tags: str) -> None:
+        for tag in tags:
+            self.add_tag(tag)
 
-    def replace_module_by_name(self: Self, module_name: str, from_unit: str):
-        print("Hey, you forgot to implement UnitCreator.replace_module_by_name!")
-        pass
+    def remove_tag(self: Self, tag: str) -> None:
+        tag = ensure.quotes(tag)
+        with self.module_context("TTagsModuleDescriptor") as tags_module:
+            tag_set: List = tags_module.object.by_member("TagSet").value
+            index = tag_set.find_by_cond(lambda x: x.value == tag)
+            tag_set.remove(index)
+
+    def remove_tags(self: Self, *tags: str) -> None:
+        for tag in tags:
+            self.remove_tag(tag)
+
+    # modules
+
+    def get_module_index(self: Self, type_or_name: str, by_name: bool = False) -> int:
+        return modules.get(self.unit_object, type_or_name, by_name)
+    
+    def replace_module_from(self: Self, other_unit: Object, type_or_name: str, by_name: bool = False) -> None:
+        return modules.replace_from(self.unit_object, other_unit, type_or_name, by_name)
+    
+    def append_module(self: Self, module: ListRow):
+        return modules.append(self.unit_object, module)
+    
+    def remove_module(self: Self, type_or_name: str, by_name: bool = False):
+        return modules.remove(self.unit_object, type_or_name, by_name)
+    
+    def remove_module_by_value(self: Self, module: str):
+        return modules.remove_by_value(self.unit_object, module)
+    
+    def append_module_from(self: Self, other_unit: Object, type_or_name: str, by_name: bool = False):
+        return modules.append_from(self.unit_object, other_unit, type_or_name, by_name)

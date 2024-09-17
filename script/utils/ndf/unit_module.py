@@ -35,14 +35,14 @@ def get(unit: Object, type_or_name: str, by_name: bool = False) -> Object:
 def replace_module(unit: Object, value: CellValue, type_or_name: str, by_name: bool = False) -> None:
     get_row(unit, type_or_name, by_name).value = value
 
-def replace_module_from(dest_unit: Object, src_unit: Object, type_or_name: str, by_name: bool = False):
+def replace_from(dest_unit: Object, src_unit: Object, type_or_name: str, by_name: bool = False):
     replace_module(dest_unit, get(src_unit, type_or_name, by_name).copy(), type_or_name, by_name)
 
-def append_module(dest_unit: Object, module: ListRow):
+def append(dest_unit: Object, module: ListRow):
     get_modules_descriptors(dest_unit).add(module)
 
-def append_module_from(dest_unit: Object, src_unit: Object, type_or_name: str, by_name: bool = False):
-    append_module(dest_unit, get_row(src_unit, type_or_name, by_name))
+def append_from(dest_unit: Object, src_unit: Object, type_or_name: str, by_name: bool = False):
+    append(dest_unit, get_row(src_unit, type_or_name, by_name))
 
 def remove(target_unit: Object, type_or_name: str, by_name: bool = False):
     get_modules_descriptors(target_unit).remove(get_index(target_unit, type_or_name, by_name))
