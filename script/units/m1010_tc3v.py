@@ -24,9 +24,9 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         vlra = ctx.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name("Descriptor_Unit_VLRA_trans_FR").value
         # model of VLRA
         m1010_tc3v.replace_module_from(vlra, "ApparenceModel", by_name=True)
-        m1010_tc3v.replace_module_from(vlra, 'TCadavreGeneratorModuleDescriptor')
-        # damage of VLRA
-        m1010_tc3v.replace_module_from(vlra, "TBaseDamageModuleDescriptor")
+        m1010_tc3v.replace_modules_from(vlra,
+                                        'TCadavreGeneratorModuleDescriptor',
+                                        'TBaseDamageModuleDescriptor')
         # add command module
         # TODO: larger command radius than usual
         m1010_tc3v.append_module(ListRow(Object('TCommanderModuleDescriptor')))
@@ -43,13 +43,13 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                                                                        "$/GFX/Resources/Resource_Tickets":       str(1)})
         # m1010_tc3v.remove_module_by_value('~/InfluenceDataModuleDescriptor')
         m1010_tc3v.append_module_from(m1025_cmd, 'TZoneInfluenceMapModuleDescriptor')
-        m1010_tc3v.append_module(ListRow(Object('TInfluenceScoutModuleDescriptor')))
-        m1010_tc3v.append_module(ListRow('~/InfluenceDataModuleDescriptor'))
-        m1010_tc3v.replace_module_from(m1025_cmd, 'TCubeActionModuleDescriptor')
-        # TODO: automatically generate new order descriptor for units
-        m1010_tc3v.replace_module_from(m1025_cmd, 'TOrderConfigModuleDescriptor')
-        m1010_tc3v.replace_module_from(m1025_cmd, 'TOrderableModuleDescriptor')
-        m1010_tc3v.replace_module_from(m1025_cmd, 'TTacticalLabelModuleDescriptor')
+        m1010_tc3v.append_modules(ListRow(Object('TInfluenceScoutModuleDescriptor')),
+                                  ListRow('~/InfluenceDataModuleDescriptor'))
+        m1010_tc3v.replace_modules_from(m1025_cmd,
+                                        'TCubeActionModuleDescriptor',
+                                        'TOrderConfigModuleDescriptor',             # TODO: automatically generate new order descriptor for units
+                                        'TOrderableModuleDescriptor',
+                                        'TTacticalLabelModuleDescriptor')
         # TODO: remove last TModuleSelector (where Default = TSellModuleDescriptor())
         # TODO: upgrades from ✪ M1025 AGL
         # m1075_pls.edit_ui_module(UpgradeFromUnit="Descriptor_Unit_d9_CMD_M1025_AGL_CMD_US")
