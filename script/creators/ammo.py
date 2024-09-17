@@ -1,14 +1,16 @@
 # right, python is stupid so i can't use type hints for this
 # from context.unit_creation_context import UnitCreationContext
+from typing import Self
+
+from constants.ndf_paths import AMMUNITION
 from context.module_context import ModuleContext
-from utils.types.message import Message
 from metadata.unit import UnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from constants.ndf_paths import AMMUNITION
-from typing import Self
-from utils.ndf import edit_members, ndf_path, get_module, replace_unit_module, remove_module
+from utils.ndf import edit_members, get_module, ndf_path, remove_module, replace_unit_module
+from utils.types.message import Message
+
 
 class AmmoCreator(object):
     def __init__(self: Self, ctx, name: str, copy_of: str):

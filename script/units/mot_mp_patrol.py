@@ -4,6 +4,7 @@ from creators.unit import UNIT_UI
 from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List
 
+
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # MOT. MP PATROL
     # (just copy AB MP PATROL)

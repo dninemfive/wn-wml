@@ -7,6 +7,7 @@ from ndf_parse.model import List, ListRow
 from utils.ndf import map_from_tuples
 from utils.ndf import to_List as qlist
 
+
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # M198 155mm COPPERHEAD
     # copy M198 155mm

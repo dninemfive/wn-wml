@@ -2,7 +2,7 @@ from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
 from creators.unit import UNIT_UI
 from metadata.unit import UnitMetadata
-from metadata.unit_info import UnitRules
+from metadata.unit_rules import UnitRules
 from ndf_parse.model import List, ListRow
 from utils.ndf import to_List as qlist
 

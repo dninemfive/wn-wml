@@ -3,6 +3,7 @@ from context.module_context import ModuleContext
 from metadata.division_unit_registry import UnitRules
 from metadata.unit import UnitMetadata
 
+
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # M198 155mm [CLU]
     # copy M198 155mm
