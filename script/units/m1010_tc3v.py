@@ -1,9 +1,10 @@
-from context.module_context import ModuleContext
+import constants.ndf_paths as ndf_paths
+import utils.ndf.make as make
 from context.mod_creation_context import ModCreationContext
+from context.module_context import ModuleContext
 from metadata.unit_rules import UnitRules
 from ndf_parse.model import List, ListRow, Object
-from utils.ndf.misc import dict_to_map, to_List
-import constants.ndf_paths as ndf_paths
+
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # ✪ M1010 TC3V
@@ -38,8 +39,8 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         m1010_tc3v.remove_module('Transporter', by_name=True)
         with m1010_tc3v.module_context('TProductionModuleDescriptor') as production_module:
             production_module.edit_members(Factory="EDefaultFactories/Logistic", 
-                                           ProductionRessourcesNeeded=dict_to_map({"$/GFX/Resources/Resource_CommandPoints": str(85),
-                                                                                   "$/GFX/Resources/Resource_Tickets":       str(1)}))
+                                           ProductionRessourcesNeeded=make.map({"$/GFX/Resources/Resource_CommandPoints": str(85),
+                                                                                "$/GFX/Resources/Resource_Tickets":       str(1)}))
         # m1010_tc3v.remove_module_by_value('~/InfluenceDataModuleDescriptor')
         m1010_tc3v.append_module_from(m1025_cmd, 'TZoneInfluenceMapModuleDescriptor')
         m1010_tc3v.append_module(ListRow(Object('TInfluenceScoutModuleDescriptor')))
@@ -55,7 +56,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         with m1010_tc3v.module_context('TUnitUIModuleDescriptor') as ui_module:
             ui_module.remove_member('UpgradeFromUnit')
         m1010_tc3v.edit_ui_module(UnitRole="'tank_B'",
-                                  SpecialtiesList=to_List("'hq_veh'", "'_leader'"),
+                                  SpecialtiesList=make.list("'hq_veh'", "'_leader'"),
                                   InfoPanelConfigurationToken="'Default'",
                                   MenuIconTexture="'Texture_RTS_H_CMD_veh'",
                                   TypeStrategicCount='ETypeStrategicDetailedCount/CMD_Veh',

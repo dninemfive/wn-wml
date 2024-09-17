@@ -1,11 +1,12 @@
 from typing import Self
 
+import utils.ndf.edit as edit
 from constants.ndf_paths import DECK_SERIALIZER, DIVISION_LIST, DIVISION_RULES, DIVISIONS
 from metadata.division import DivisionMetadata
 from metadata.division_unit_registry import DivisionUnitRegistry
 from ndf_parse.model import List, ListRow, Map, MapRow
 from ndf_parse.model.abc import CellValue
-from utils.ndf.misc import edit_members, ndf_path
+from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
 
 
@@ -34,11 +35,11 @@ class DivisionCreator(object):
     @ndf_path(DIVISIONS)
     def edit_divisions_ndf(self: Self, ndf: List):
         copy: ListRow = ndf.by_name(self.copy_of).copy()
-        edit_members(copy.value, 
+        edit.members(copy.value, 
                     DescriptorId = self.guid,
                     CfgName = self.division.cfg_name,
                     **self.changes)
-        edit_members(copy.value, PackList=self.units.pack_list())
+        edit.members(copy.value, PackList=self.units.pack_list())
         copy.namespace = self.division.descriptor_name
         ndf.add(copy)
     

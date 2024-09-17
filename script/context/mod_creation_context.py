@@ -15,7 +15,7 @@ from metadata.new_unit import NewUnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
-from utils.ndf.misc import add_image
+from utils.ndf.files import add_image
 from utils.types.cache_set import CacheSet
 from utils.types.message import Message, try_nest
 

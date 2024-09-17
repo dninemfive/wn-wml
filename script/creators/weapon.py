@@ -8,8 +8,8 @@ from metadata.unit import UnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from utils.ndf.misc import edit_members, ndf_path
-from utils.ndf.unit_module import get_module, remove_module
+from script.utils.ndf.edit import edit_members, ndf_path
+from utils.ndf.unit_module import get, remove
 from utils.types.message import Message
 
 
@@ -49,8 +49,8 @@ class WeaponCreator(object):
         return ModuleContext(self.object, module_type)
 
     def get_module(self: Self, module_type: str) -> Object:
-        result: Object | None = get_module(self.object, module_type)
+        result: Object | None = get(self.object, module_type)
         return result
     
     def remove_module(self: Self, module_type: str) -> None:
-        remove_module(self.object, module_type)
+        remove(self.object, module_type)

@@ -1,5 +1,7 @@
 from typing import Self
 
+import utils.ndf.ensure as ensure
+import utils.ndf.make as make
 from constants.ndf_paths import DECK_SERIALIZER, DIVISION_RULES
 # from context.mod_creation_context import ModCreationContext
 from managers.unit_id import UnitIdManager
@@ -8,7 +10,7 @@ from metadata.division_rule_lookup import DivisionRuleLookup
 from metadata.unit import UnitMetadata
 from metadata.unit_rules import UnitRules
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
-from utils.ndf.misc import ensure_unit_path, make_obj, map_from_rows, ndf_path, to_List
+from utils.ndf.decorators import ndf_path
 from utils.types.message import Message, try_nest
 
 
@@ -17,7 +19,7 @@ def ensure_unit_path_list(transports: str | list[str] | None) -> list[str] | Non
             return None
         if isinstance(transports, str):
             transports = [transports]
-        return [ensure_unit_path(x) for x in transports]
+        return [ensure.unit_path(x) for x in transports]
 
 class DivisionUnitRegistry(object):
     # ctx: ModCreationContext
@@ -56,10 +58,10 @@ class DivisionUnitRegistry(object):
                     pass
 
     def pack_list(self: Self) -> Map:
-        return map_from_rows(x.pack for x in self.units)
+        return make.map(x.pack for x in self.units)
     
     def division_rules(self: Self) -> Object:
-        return make_obj('TDeckDivisionRule',
-                        UnitRuleList=to_List(*[unit.rule.to_ndf()
-                                             for unit
-                                             in self.units]))
+        return make.object('TDeckDivisionRule',
+                            UnitRuleList=make.list(*[unit.rule.to_ndf()
+                                                    for unit
+                                                    in self.units]))

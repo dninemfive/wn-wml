@@ -1,13 +1,14 @@
 from typing import Self
 
+import utils.ndf.edit as edit
+import utils.ndf.unit_module as unit_module
 from constants.ndf_paths import ALL_UNITS_TACTIC, DIVISION_PACKS, SHOWROOM_EQUIVALENCE, UNITE_DESCRIPTOR
 from context.module_context import ModuleContext
 from metadata.new_unit import NewUnitMetadata
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, ListRow, Map, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from utils.ndf.misc import edit_members, ndf_path
-from utils.ndf.unit_module import get_module, remove_module
+from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
@@ -58,7 +59,7 @@ class UnitCreator(object):
 
     def make_copy(self: Self, ndf: List) -> Object:
         copy: Object = ndf.by_name(self.src.descriptor_name).value.copy()
-        edit_members(copy,
+        edit.members(copy,
                      DescriptorId=self.guid,
                      ClassNameForDebug=self.new.class_name_for_debug)
         return copy
@@ -91,14 +92,14 @@ class UnitCreator(object):
             ui_module.edit_members(**changes)
 
     def get_module(self: Self, module_type: str) -> Object:
-        result: Object | None = get_module(self.unit_object, module_type)
+        result: Object | None = unit_module.get(self.unit_object, module_type)
         return result
     
     def get_module_by_name(self: Self, name: str) -> ListRow:
         return self.unit_object.by_member(MODULES_DESCRIPTORS).value.by_name(name)
     
     def remove_module(self: Self, module_type: str) -> None:
-        remove_module(self.unit_object, module_type)
+        unit_module.remove(self.unit_object, module_type)
 
     def add_tags(self: Self, *tags: str):
         with self.module_context(TAGS) as tags_module:
