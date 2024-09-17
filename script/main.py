@@ -54,7 +54,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("M577_US", 1)
                 # ✪ M998 HUMVEE SGT.
                 # ✪ M1025 HUMVEE AGL
-                division_units.register(units.m1010_tc3v.create(ctx))
+                division_units.register(units.m1010_tc3v.create(mod_context))
                 """ INF """
                 M998_HUMVEE, M1038_HUMVEE = "Descriptor_Unit_M998_Humvee_US", "Descriptor_Unit_M1038_Humvee_US"
                 BLACKHAWK, CHINOOK = "Descriptor_Unit_UH60A_Black_Hawk_US", "Descriptor_Unit_CH47_Chinook_US"

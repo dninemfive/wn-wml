@@ -1,11 +1,11 @@
 from context.module_context import ModuleContext
-from context.unit_creation_context import UnitCreationContext
-from metadata.division_unit_registry import UnitInfo
+from context.mod_creation_context import ModCreationContext
+from metadata.unit_rules import UnitRules
 from ndf_parse.model import List, ListRow, Object
 from utils.ndf.misc import dict_to_map, to_List
-import ndf_paths as paths
+import constants.ndf_paths as ndf_paths
 
-def create(ctx: UnitCreationContext) -> UnitInfo | None:
+def create(ctx: ModCreationContext) -> UnitRules | None:
     # ✪ M1010 TC3V
     with ctx.create_unit("#CMD M1010 TC3V", "US", "M35_trans_US") as m1010_tc3v: # 🏳️‍⚧️
         # acknow type = cmd
@@ -20,7 +20,7 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
         m1010_tc3v.add_tags("AllowedForMissileRoE", "Commandant", "InfmapCommander", "Vehicule_CMD")
         # remove "Vehicule_Transport"
         m1010_tc3v.remove_tag("Vehicule_Transport")
-        vlra = ctx.ndf[paths.UNITE_DESCRIPTOR].by_name("Descriptor_Unit_VLRA_trans_FR").value
+        vlra = ctx.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name("Descriptor_Unit_VLRA_trans_FR").value
         # model of VLRA
         m1010_tc3v.replace_module_from(vlra, "ApparenceModel", by_name=True)
         m1010_tc3v.replace_module_from(vlra, 'TCadavreGeneratorModuleDescriptor')
@@ -31,7 +31,7 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
         m1010_tc3v.append_module(ListRow(Object('TCommanderModuleDescriptor')))
         # remove capturable module
         # m1010_tc3v.remove_module_by_value("~/CapturableModuleDescriptor")
-        m1025_cmd = ctx.ndf[paths.UNITE_DESCRIPTOR].by_name("Descriptor_Unit_M1025_Humvee_CMD_US").value
+        m1025_cmd = ctx.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name("Descriptor_Unit_M1025_Humvee_CMD_US").value
         # scanner from M1025 CMD
         m1010_tc3v.replace_module_from(m1025_cmd, 'TScannerConfigurationDescriptor')
         # remove transporter module
@@ -60,4 +60,4 @@ def create(ctx: UnitCreationContext) -> UnitInfo | None:
                                   MenuIconTexture="'Texture_RTS_H_CMD_veh'",
                                   TypeStrategicCount='ETypeStrategicDetailedCount/CMD_Veh',
                                   ButtonTexture="'Texture_Button_Unit_VLRA_trans_FR'")
-        return UnitInfo(m1010_tc3v, 1, [0, 3, 2, 0])
+        return UnitRules(m1010_tc3v, 1, [0, 3, 2, 0])
