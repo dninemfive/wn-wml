@@ -1,6 +1,5 @@
 import constants.ndf_paths as ndf_paths
 from utils.ndf import ensure
-import utils.ndf.make as make
 from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
 from metadata.unit_rules import UnitRules

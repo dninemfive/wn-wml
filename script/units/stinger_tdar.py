@@ -4,7 +4,6 @@ from creators.unit import UNIT_UI
 from metadata.division_unit_registry import UnitRules
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, ListRow
-import utils.ndf.make as make
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # M198 155mm COPPERHEAD
@@ -21,7 +20,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         # even more TODO: custom trait which leaves the normal Stinger C value when moving and activates the radar when stationary
         with stinger_tdar.module_context('TScannerConfigurationDescriptor') as scanner_module:
             scanner_module.edit_members(OpticalStrengthAltitude=100, 
-                                        SpecializedDetectionsGRU=make.map(**{"EVisionUnitType/AlwaysInHighAltitude": str((8481.0 + 10601.0)/2)}))
+                                        SpecializedDetectionsGRU={"EVisionUnitType/AlwaysInHighAltitude": str((8481.0 + 10601.0)/2)})
         # upgrade from AB Stinger C
         with stinger_tdar.module_context('TUnitUIModuleDescriptor') as ui_module:
             ui_module.edit_members(UpgradeFromUnit="Descriptor_Unit_MANPAD_Stinger_C_Aero_US")
