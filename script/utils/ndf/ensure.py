@@ -14,65 +14,75 @@ def maprow(pair_or_key: tuple[str, CellValue] | MapRow | str, value_or_none: Cel
     if isinstance(pair_or_key, str):
         if value_or_none is None:
             raise ValueError("If first argument is not a tuple or MapRow, second argument must not be None!")
-        return MapRow(k=pair_or_key, v=ndf_type(value_or_none))
+        return MapRow(pair_or_key, ndf_type(value_or_none))
     elif isinstance(pair_or_key, MapRow):
         return pair_or_key
     else:
-        return MapRow(k=pair_or_key[0], v=ndf_type(pair_or_key[1]))
+        return MapRow(pair_or_key[0], ndf_type(pair_or_key[1]))
     
 def memberrow(pair_or_key: tuple[str, CellValue] | MemberRow | str, value_or_none: CellValue | None = None):
     if isinstance(pair_or_key, str):
         if value_or_none is None:
             raise ValueError("If first argument is not a tuple or MemberRow, second argument must not be None!")
-        return MemberRow(k=pair_or_key, v=ndf_type(value_or_none))
+        return MemberRow(pair_or_key, ndf_type(value_or_none))
     elif isinstance(pair_or_key, MemberRow):
         return pair_or_key
     else:
-        return MemberRow(k=pair_or_key[0], v=ndf_type(pair_or_key[1]))
+        return MemberRow(pair_or_key[0], ndf_type(pair_or_key[1]))
 
-def map(_dict: Map | dict, *kvps: tuple[str, CellValue], **items: CellValue) -> Map:
+def _add_from(map_or_object: Map | Object, items: dict[str, CellValue | None] | list[tuple[str, CellValue | None]]):
+    row_fn = maprow if isinstance(map_or_object, Map) else memberrow
+    row_type = MapRow if isinstance(map_or_object, Map) else MemberRow
+    for item in (items.items() if isinstance(items, dict) else items):
+        if isinstance(item, row_type):
+            map_or_object.add(item)
+        else:
+            k, v = item
+            if v is None:
+                continue
+            map_or_object.add(row_fn(k, v))
+
+def _map(_dict: Map | dict = {}, *kvps: tuple[str, CellValue | None], **items: CellValue | None) -> Map:
+    # TODO: remove None values from existing maps and/or add kvps, items to them
     if isinstance(_dict, Map):
         return _dict
     result = Map()
-    for k, v in _dict.items():
-        result.add(maprow(k, v))
-    for k, v in kvps:
-        result.add(maprow(k, v))
-    for k, v in items:
-        result.add(maprow(k, v))
+    _add_from(result, _dict)
+    _add_from(result, kvps)
+    _add_from(result, items)
     return result
 
-def object(type: str, _dict: Object | dict, *kvps: tuple[str, CellValue], **items: CellValue) -> Object:
+def _object(type: str, _dict: Object | dict = {}, *kvps: tuple[str, CellValue], **items: CellValue) -> Object:
     result = Object(type)
-    for k, v in _dict.items():
-        result.add(memberrow(k, v))
-    for k, v in kvps:
-        result.add(memberrow(k, v))
-    for k, v in items:
-        result.add(memberrow(k, v))
+    _add_from(result, _dict)
+    _add_from(result, kvps)
+    _add_from(result, items)
     return result
 
-def list(_list: List | list[CellValue], *items: CellValue) -> List:
+def _list(_list: List | list[CellValue] = [], *items: CellValue) -> List:
     if isinstance(_list, List):
         return _list
     result = List()
     for item in _list:
-        result.add(listrow(item))
+        result.add(listrow(ndf_type(item)))
     for item in items:
-        result.add(listrow(item))
+        result.add(listrow(ndf_type(item)))
     return result
 
-def ndf_type(value: dict | list | int | str, type: str | None = None) -> Map | List | str | Object:
+def ndf_type(value: dict | list | int | str, _type: str | None = None) -> Map | List | str | Object:
     if isinstance(value, dict):
-        if type is None:
-            return map(value)
+        if _type is None:
+            return _map(value)
         else:
-            return object(type, value)
+            return _object(_type, value)
     elif isinstance(value, list):
-        return list(value)
-    elif isinstance(value, Number):
+        return _list(value)
+    elif isinstance(value, Number) or isinstance(value, bool):
         return str(value)
-    elif isinstance(value, str):
+    elif isinstance(value, str)\
+        or isinstance(value, Map)\
+        or isinstance(value, List)\
+        or isinstance(value, Object):
         return value
     raise TypeError(f"ensure.ndf_type() doesn't work on type {type(value)}!")
 

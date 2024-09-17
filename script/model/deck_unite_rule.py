@@ -4,7 +4,7 @@ from typing import Self
 from creators.unit import UnitCreator
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, MemberRow, Object
-import utils.ndf.make as make
+import utils.ndf.ensure as ensure
 
 UNITE_RULE = 'TDeckUniteRule'
 KEY_AVAILABLE_TRANSPORT_LIST = 'AvailableTransportList'
@@ -25,7 +25,7 @@ class TDeckUniteRule(object):
     def from_ndf(ndf: Object, override_transports: list[str] | None = None) -> Self:
         transports: List | None = None
         if override_transports is not None:
-            transports = make.list(*override_transports)
+            transports = ensure._list(override_transports)
         else:
             try:
                 transports = ndf.by_member(KEY_AVAILABLE_TRANSPORT_LIST).value
@@ -40,14 +40,14 @@ class TDeckUniteRule(object):
         )
 
     def to_ndf(self: Self) -> Object:
-        result = Object(UNITE_RULE)
-        result.add(MemberRow(self.UnitDescriptor, KEY_UNIT_DESCRIPTOR))
-        result.add(MemberRow(str(self.AvailableWithoutTransport), KEY_AVAILABLE_WITHOUT_TRANSPORT))
-        if(self.AvailableTransportList is not None):
-            result.add(MemberRow(make.list(*self.AvailableTransportList), KEY_AVAILABLE_TRANSPORT_LIST))
-        result.add(MemberRow(str(self.NumberOfUnitInPack), KEY_NUMBER_OF_UNIT_IN_PACK))
-        result.add(MemberRow(make.list(*[str(x) for x in self.NumberOfUnitInPackXPMultiplier]), KEY_NUMBER_OF_UNIT_IN_PACK_XP_MULTIPLIER))
-        return result
+        return ensure._object(UNITE_RULE,
+        {
+            KEY_UNIT_DESCRIPTOR:                        self.UnitDescriptor,
+            KEY_AVAILABLE_WITHOUT_TRANSPORT:            self.AvailableWithoutTransport,
+            KEY_AVAILABLE_TRANSPORT_LIST:               self.AvailableTransportList,
+            KEY_NUMBER_OF_UNIT_IN_PACK:                 self.NumberOfUnitInPack,
+            KEY_NUMBER_OF_UNIT_IN_PACK_XP_MULTIPLIER:   self.NumberOfUnitInPackXPMultiplier
+        })
     
     @staticmethod
     def make(metadata: UnitMetadata | UnitCreator,

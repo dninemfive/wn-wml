@@ -15,11 +15,11 @@ def add_image(ndf_file: List,
     os.makedirs(destination_folder)
     dst_image_filename = f'{image_name}{os.path.splitext(src_file_path)[1]}'
     shutil.copyfile(src_file_path, os.path.join(destination_folder, dst_image_filename))
-    texture_obj = ensure.object('TUIResourceTexture_Common',
-                                FileName=f'"GameData:/{folder_relative_to_gamedata}/{dst_image_filename}"')
+    texture_obj = ensure._object('TUIResourceTexture_Common',
+                                 FileName=f'"GameData:/{folder_relative_to_gamedata}/{dst_image_filename}"')
     ndf_file.add(ListRow(texture_obj, namespace=image_name))
     ndf_file.by_name(texture_bank_name).value\
             .by_member("Textures").value\
             .add(key=f'"{image_name}"',
-                 value=ensure.map(component_state=f"~/{image_name}"))
+                 value=ensure._map(component_state=f"~/{image_name}"))
     return f'"{image_name}"'

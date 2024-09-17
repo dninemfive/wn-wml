@@ -1,7 +1,6 @@
 from typing import Self
 
 import utils.ndf.ensure as ensure
-import utils.ndf.make as make
 from constants.ndf_paths import DECK_SERIALIZER, DIVISION_RULES
 # from context.mod_creation_context import ModCreationContext
 from managers.unit_id import UnitIdManager
@@ -58,10 +57,10 @@ class DivisionUnitRegistry(object):
                     pass
 
     def pack_list(self: Self) -> Map:
-        return make.map(x.pack for x in self.units)
+        return ensure._map(x.pack for x in self.units)
     
     def division_rules(self: Self) -> Object:
-        return make.object('TDeckDivisionRule',
-                            UnitRuleList=make.list(*[unit.rule.to_ndf()
-                                                    for unit
-                                                    in self.units]))
+        return ensure._object('TDeckDivisionRule',
+                            UnitRuleList=[unit.rule.to_ndf()
+                                          for unit
+                                          in self.units])
