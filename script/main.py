@@ -61,7 +61,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 SMALL_UNIT_TRANSPORTS = [M998_HUMVEE, BLACKHAWK]
                 LARGE_UNIT_TRANSPORTS = [M1038_HUMVEE, BLACKHAWK]
                 # TODO: variant of the mod which doesn't reference the MP Humvee because it's a DLC unit
-                division_units.register(units.mot_mp_patrol.create(mod_context), [M998_HUMVEE, "M1025_Humvee_MP_US"])
+                division_units.register(units.mot_mp_patrol.create(mod_context), [M998_HUMVEE, "Descriptor_Unit_M1025_Humvee_MP_US"])
                 # units.mot_rifles_ldr.create()
                 # units.mot_rifles_at4.create()
                 # MOT. RIFLES (DRAGON)
