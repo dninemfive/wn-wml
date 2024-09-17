@@ -29,6 +29,7 @@ class DivisionCreator(object):
         self.edit_division_list_ndf(ndf, msg)
         self.edit_division_rules_ndf(ndf, msg)
         self.edit_deck_serializer_ndf(ndf, msg)
+        self.units.edit_deck_serializer(ndf, msg)
 
     @ndf_path(DIVISIONS)
     def edit_divisions_ndf(self: Self, ndf: List):
