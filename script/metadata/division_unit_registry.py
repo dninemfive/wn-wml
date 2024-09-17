@@ -26,7 +26,7 @@ class DivisionUnitRegistry(object):
         self.units: list[UnitRules] = []
         self.parent_msg = parent_msg
         self.unit_ids = UnitIdManager(ctx.unit_id_cache, metadata.id * 1000)
-        self.lookup = DivisionRuleLookup(ctx.ndf[DIVISION_RULES], division_priorities)
+        self.lookup = DivisionRuleLookup(ctx.ndf[DIVISION_RULES], *division_priorities)
     
     @ndf_path(DECK_SERIALIZER)
     def edit_deck_serializer(self: Self, ndf: List):
