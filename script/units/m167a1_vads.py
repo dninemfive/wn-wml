@@ -4,7 +4,7 @@ from creators.unit import UNIT_UI
 from metadata.unit import UnitMetadata
 from metadata.unit_rules import UnitRules
 from ndf_parse.model import List, ListRow
-from utils.ndf.misc import to_List as qlist
+from script.utils.ndf.edit import to_List as qlist
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:

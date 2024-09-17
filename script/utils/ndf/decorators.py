@@ -22,19 +22,4 @@ def ndf_path(path: str, save: bool = True):
     # lost the link but this was suggested in a StackExchange post
     decorate._ndf_path = path
     return decorate
-
-def load_ndf_path(path: str, save: bool = True):
-    """
-    Decorator which allows defining NDF edits to a particular file:
-
-    @ndf_path("Divisions.ndf")
-    """
-    def decorate(f: Callable[..., None]):
-        # @wraps doesn't understand self (afaict) so using it here is counterproductive
-        def wrap(self: Any, mod: Mod, msg: Message | None, *args: Any, **kwargs: Any):
-            with try_nest(msg, f"{editing_or_reading(save)} {path}") as _:
-                with mod.edit(path, save) as data:
-                    return f(self, data, *args, **kwargs)
-        return wrap
-    decorate._ndf_path = path
-    return decorate
+    

@@ -21,5 +21,5 @@ def add_image(ndf_file: List,
     ndf_file.by_name(texture_bank_name).value\
             .by_member("Textures").value\
             .add(key=f'"{image_name}"',
-                 value=ensure._map(component_state=f"~/{image_name}"))
+                 value=ensure._map({component_state: f"~/{image_name}"}))
     return f'"{image_name}"'

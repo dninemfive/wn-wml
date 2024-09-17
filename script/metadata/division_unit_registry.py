@@ -49,7 +49,7 @@ class DivisionUnitRegistry(object):
             unit = UnitMetadata(unit)
         override_transports = ensure_unit_path_list(override_transports)
         with try_nest(self.parent_msg, f"Registering vanilla unit {unit}") as msg:
-            unite_rule = self.lookup.look_up(unit.descriptor_path, override_transports)
+            unite_rule = self.lookup.look_up(unit.descriptor_path, override_transports, msg)
             if unite_rule is not None:
                 self.units.append(UnitRules.from_deck_unite_rule(unit, packs, unite_rule))
             else:

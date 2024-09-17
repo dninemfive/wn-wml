@@ -24,11 +24,11 @@ def memberrow(pair_or_key: tuple[str, CellValue] | MemberRow | str, value_or_non
     if isinstance(pair_or_key, str):
         if value_or_none is None:
             raise ValueError("If first argument is not a tuple or MemberRow, second argument must not be None!")
-        return MemberRow(pair_or_key, ndf_type(value_or_none))
+        return MemberRow(member=pair_or_key, value=ndf_type(value_or_none))
     elif isinstance(pair_or_key, MemberRow):
         return pair_or_key
     else:
-        return MemberRow(pair_or_key[0], ndf_type(pair_or_key[1]))
+        return MemberRow(member=pair_or_key[0], value=ndf_type(pair_or_key[1]))
 
 def _add_from(map_or_object: Map | Object, items: dict[str, CellValue | None] | list[tuple[str, CellValue | None]]):
     row_fn = maprow if isinstance(map_or_object, Map) else memberrow
