@@ -119,7 +119,13 @@ class UnitCreator(object):
     # modules
 
     def get_module_index(self: Self, type_or_name: str, by_name: bool = False) -> int:
+        return modules.get_index(self.unit_object, type_or_name, by_name)
+    
+    def get_module(self: Self, type_or_name: str, by_name: bool = False) -> Object:
         return modules.get(self.unit_object, type_or_name, by_name)
+    
+    def get_module_row(self: Self, type_or_name: str, by_name: bool = False) -> ListRow:
+        return modules.get_row(self.unit_object, type_or_name, by_name)
     
     def replace_module_from(self: Self, other_unit: Object, type_or_name: str, by_name: bool = False) -> None:
         return modules.replace_from(self.unit_object, other_unit, type_or_name, by_name)

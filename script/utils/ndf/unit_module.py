@@ -1,6 +1,7 @@
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
+from utils.ndf import ensure
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 
@@ -38,8 +39,8 @@ def replace_module(unit: Object, value: CellValue, type_or_name: str, by_name: b
 def replace_from(dest_unit: Object, src_unit: Object, type_or_name: str, by_name: bool = False):
     replace_module(dest_unit, get(src_unit, type_or_name, by_name).copy(), type_or_name, by_name)
 
-def append(dest_unit: Object, module: ListRow):
-    get_modules_descriptors(dest_unit).add(module)
+def append(dest_unit: Object, module: ListRow | Object):
+    get_modules_descriptors(dest_unit).add(ensure.listrow(module))
 
 def append_from(dest_unit: Object, src_unit: Object, type_or_name: str, by_name: bool = False):
     append(dest_unit, get_row(src_unit, type_or_name, by_name))

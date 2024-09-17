@@ -14,7 +14,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         m1038_humvee_modules: List = ctx.ndf[UNITE_DESCRIPTOR].by_name("Descriptor_Unit_M1038_Humvee_US").value.by_member(MODULES_DESCRIPTORS).value
         # ApparenceModel replaced with that of M1038 Humvee
         apparence_model: Object = m1038_humvee_modules.by_name("ApparenceModel").value.copy()
-        m998_humvee_supply.get_module_by_name("ApparenceModel").value = apparence_model
+        m998_humvee_supply.get_module_row("ApparenceModel", by_name=True).value = apparence_model
         # GenericMovement replaced with that of M1038 Humvee
         # LandMovement replaced with that of M1038 Humvee
         # TBaseDamageModuleDescriptor replaced with that of M1038 Humvee

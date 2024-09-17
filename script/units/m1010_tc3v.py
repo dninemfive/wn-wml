@@ -1,4 +1,5 @@
 import constants.ndf_paths as ndf_paths
+from utils.ndf import ensure
 import utils.ndf.make as make
 from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
@@ -39,8 +40,8 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         m1010_tc3v.remove_module('Transporter', by_name=True)
         with m1010_tc3v.module_context('TProductionModuleDescriptor') as production_module:
             production_module.edit_members(Factory="EDefaultFactories/Logistic", 
-                                           ProductionRessourcesNeeded=make.map({"$/GFX/Resources/Resource_CommandPoints": str(85),
-                                                                                "$/GFX/Resources/Resource_Tickets":       str(1)}))
+                                           ProductionRessourcesNeeded={"$/GFX/Resources/Resource_CommandPoints": str(85),
+                                                                       "$/GFX/Resources/Resource_Tickets":       str(1)})
         # m1010_tc3v.remove_module_by_value('~/InfluenceDataModuleDescriptor')
         m1010_tc3v.append_module_from(m1025_cmd, 'TZoneInfluenceMapModuleDescriptor')
         m1010_tc3v.append_module(ListRow(Object('TInfluenceScoutModuleDescriptor')))
@@ -56,9 +57,10 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         with m1010_tc3v.module_context('TUnitUIModuleDescriptor') as ui_module:
             ui_module.remove_member('UpgradeFromUnit')
         m1010_tc3v.edit_ui_module(UnitRole="'tank_B'",
-                                  SpecialtiesList=make.list("'hq_veh'", "'_leader'"),
+                                  SpecialtiesList=["'hq_veh'", "'_leader'"],
                                   InfoPanelConfigurationToken="'Default'",
                                   MenuIconTexture="'Texture_RTS_H_CMD_veh'",
                                   TypeStrategicCount='ETypeStrategicDetailedCount/CMD_Veh',
                                   ButtonTexture="'Texture_Button_Unit_VLRA_trans_FR'")
+        # TODO: separate showroom model
         return UnitRules(m1010_tc3v, 1, [0, 3, 2, 0])
