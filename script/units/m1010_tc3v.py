@@ -22,13 +22,13 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         m1010_tc3v.add_tags("AllowedForMissileRoE", "Commandant", "InfmapCommander", "Vehicule_CMD")
         # remove "Vehicule_Transport"
         m1010_tc3v.remove_tag("Vehicule_Transport")
-        edit_with_vlra(m1010_tc3v, get_unit(ctx, "VLRA_trans_FR"))
+        edit_with_vlra(m1010_tc3v, m1010_tc3v.get_other_unit(ctx, "VLRA_trans_FR"))
         # add command module
         # TODO: larger command radius than usual
         m1010_tc3v.append_module(ListRow(Object('TCommanderModuleDescriptor')))
         # remove capturable module
         m1010_tc3v.remove_module_where(lambda x: isinstance(x.value, str) and x.value == "~/CapturableModuleDescriptor")
-        edit_with_m1025(m1010_tc3v, get_unit(ctx, "M1025_Humvee_CMD_US"))
+        edit_with_m1025(m1010_tc3v, m1010_tc3v.get_other_unit("M1025_Humvee_CMD_US"))
         # remove transporter module
         m1010_tc3v.remove_module('Transporter', by_name=True)
         with m1010_tc3v.module_context('TProductionModuleDescriptor') as production_module:
@@ -40,14 +40,10 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
 
         def is_sell_module(row: ListRow) -> bool:
             if isinstance(row.value, Object):
-                print(f"is_sell_module({str(row.value.type)})")
                 if row.value.type == 'TModuleSelector':
                     default = row.value.by_member("Default", strict=False)
-                    print(f'\t{type(default)}')
                     if isinstance(default, MemberRow):
-                        print(f'\t\t{type(default.value)}')
                         if(isinstance(default.value, Object)):
-                            print(f'\t\t\t{default.value.type}')
                             return default.value.type == 'TSellModuleDescriptor'
             return False                        
         m1010_tc3v.remove_module_where(is_sell_module)
@@ -64,9 +60,6 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                                   ButtonTexture="'Texture_Button_Unit_VLRA_trans_FR'")
         # TODO: separate showroom model
         return UnitRules(m1010_tc3v, 1, [0, 3, 2, 0])
-    
-def get_unit(ctx: ModCreationContext, unit: str) -> Object:
-    return ctx.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(f"Descriptor_Unit_{unit}").value
     
 def edit_with_vlra(m1010_tc3v: UnitCreator, vlra: Object) -> None:
     # model of VLRA

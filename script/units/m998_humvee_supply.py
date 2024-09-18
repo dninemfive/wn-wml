@@ -4,6 +4,8 @@ from context.module_context import ModuleContext
 from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List, Object
 
+from creators.unit import UnitCreator
+
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 
 # todo: put most of this structure in an @annotation
@@ -11,16 +13,26 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     # M998 HUMVEE SUPPLY
     #   copy of: M35 Supply
     with ctx.create_unit("M998 HUMVEE SUPPLY", "US", "M35_supply_US") as m998_humvee_supply:
-        m1038_humvee_modules: List = ctx.ndf[UNITE_DESCRIPTOR].by_name("Descriptor_Unit_M1038_Humvee_US").value.by_member(MODULES_DESCRIPTORS).value
-        # ApparenceModel replaced with that of M1038 Humvee
-        apparence_model: Object = m1038_humvee_modules.by_name("ApparenceModel").value.copy()
-        m998_humvee_supply.get_module_row("ApparenceModel", by_name=True).value = apparence_model
-        # GenericMovement replaced with that of M1038 Humvee
-        # LandMovement replaced with that of M1038 Humvee
-        # TBaseDamageModuleDescriptor replaced with that of M1038 Humvee
-        # TSupplyModuleDescriptor replaced with that of Rover 101FC Supply
-        # TProductionModuleDescriptor/ProductionResourcesNeeded replaced with that of Rover 101FC Supply
+        edit_with_m1038(m998_humvee_supply, m998_humvee_supply.get_other_unit("M1038_Humvee_US"))
+        edit_with_rover101fc(m998_humvee_supply, m998_humvee_supply.get_other_unit("Rover_101FC_supply_UK"))
         with ModuleContext(m998_humvee_supply.unit_object, "TUnitUIModuleDescriptor") as ui_module:
             # TUnitUIModuleDescriptor/UpgradeFromUnit cleared
             ui_module.object.remove_by_member("UpgradeFromUnit")
         return UnitRules(m998_humvee_supply, 2, [10, 8, 6, 4])
+
+def edit_with_m1038(m998_humvee_supply: UnitCreator, m1038_humvee: Object) -> None:
+    # ApparenceModel replaced with that of M1038 Humvee
+    m998_humvee_supply.replace_module_from(m1038_humvee, 'ApparenceModel', by_name=True)
+    # GenericMovement replaced with that of M1038 Humvee
+    m998_humvee_supply.replace_module_from(m1038_humvee, 'GenericMovement', by_name=True)
+    # LandMovement replaced with that of M1038 Humvee
+    m998_humvee_supply.replace_module_from(m1038_humvee, 'LandMovement', by_name=True)
+    # TBaseDamageModuleDescriptor replaced with that of M1038 Humvee
+    m998_humvee_supply.replace_module_from(m1038_humvee, 'TBaseDamageModuleDescriptor')
+
+def edit_with_rover101fc(m998_humvee_supply: UnitCreator, rover_101fc_supply: Object) -> None:
+    # TSupplyModuleDescriptor replaced with that of Rover 101FC Supply
+    m998_humvee_supply.replace_module_from(rover_101fc_supply, 'TSupplyModuleDescriptor')
+    # TProductionModuleDescriptor/ProductionResourcesNeeded replaced with that of Rover 101FC Supply
+    m998_humvee_supply.replace_module_from(rover_101fc_supply, 'TProductionModuleDescriptor')
+    pass

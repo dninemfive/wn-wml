@@ -11,6 +11,7 @@ from ndf_parse.model import List, ListRow, Map, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
+import constants.ndf_paths as ndf_paths
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 UNIT_UI = "TUnitUIModuleDescriptor"
@@ -65,22 +66,22 @@ class UnitCreator(object):
                      ClassNameForDebug=self.new.class_name_for_debug)
         return copy
 
-    @ndf_path(UNITE_DESCRIPTOR)
+    @ndf_path(ndf_paths.UNITE_DESCRIPTOR)
     def edit_unite_descriptor(self: Self, ndf: List):
         ndf.add(ListRow(self.unit_object, namespace=self.new.descriptor_name, visibility="export"))
 
-    @ndf_path(SHOWROOM_EQUIVALENCE)
+    @ndf_path(ndf_paths.SHOWROOM_EQUIVALENCE)
     def edit_showroom_equivalence(self: Self, ndf: List):
         unit_to_showroom_equivalent: Map = ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
         unit_to_showroom_equivalent.add(k=self.new.descriptor_path, v=self.src.showroom_descriptor_path)
 
-    @ndf_path(DIVISION_PACKS)
+    @ndf_path(ndf_paths.DIVISION_PACKS)
     def edit_division_packs(self: Self, ndf: List):
         deck_pack_descriptor = Object('DeckPackDescriptor')
         deck_pack_descriptor.add(MemberRow(self.new.descriptor_path, "Unit"))
         ndf.add(ListRow(deck_pack_descriptor, namespace=self.new.deck_pack_descriptor_name))
 
-    @ndf_path(ALL_UNITS_TACTIC)
+    @ndf_path(ndf_paths.ALL_UNITS_TACTIC)
     def edit_all_units_tactic(self: Self, ndf: List):
         all_units_tactic = ndf.by_name("AllUnitsTactic").value
         all_units_tactic.add(self.new.descriptor_path)
@@ -141,3 +142,6 @@ class UnitCreator(object):
     
     def append_module_from(self: Self, other_unit: Object, type_or_name: str, by_name: bool = False):
         return modules.append_from(self.unit_object, other_unit, type_or_name, by_name)
+    
+    def get_other_unit(self: Self, unit: str) -> Object:
+        return self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(f"Descriptor_Unit_{unit}").value
