@@ -40,9 +40,12 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
 
         def is_sell_module(row: ListRow) -> bool:
             if isinstance(row.value, Object):
+                print(f"is_sell_module({str(row.value.type)})")
                 if row.value.type == 'TModuleSelector':
                     default = row.value.by_member("Default", strict=False)
+                    print(f'\t{str(type(default))}')
                     if isinstance(default, Object):
+                        print(f'\t{str(default.type)}')
                         return default.type == 'TSellModuleDescriptor'
             return False                        
         m1010_tc3v.remove_module_where(is_sell_module)
