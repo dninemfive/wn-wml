@@ -49,11 +49,6 @@ def append_from(dest_unit: Object, src_unit: Object, type_or_name: str, by_name:
 def remove(target_unit: Object, type_or_name: str, by_name: bool = False):
     get_modules_descriptors(target_unit).remove(get_index(target_unit, type_or_name, by_name))
 
-def remove_by_value(target_unit: Object, module: str):
-    modules: List = get_modules_descriptors(target_unit)
-    index = modules.find_by_cond(lambda x: x.value == module).index
-    modules.remove(index)
-
 def remove_where(target_unit: Object, predicate: Callable[[ListRow], bool]):
     modules: List = get_modules_descriptors(target_unit)
     modules.remove(modules.find_by_cond(predicate).index)

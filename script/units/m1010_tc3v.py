@@ -1,10 +1,10 @@
 import constants.ndf_paths as ndf_paths
-from script.creators.unit import UnitCreator
-from utils.ndf import ensure
 from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
+from creators.unit import UnitCreator
 from metadata.unit_rules import UnitRules
 from ndf_parse.model import List, ListRow, Object
+from utils.ndf import ensure
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
@@ -22,13 +22,13 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         m1010_tc3v.add_tags("AllowedForMissileRoE", "Commandant", "InfmapCommander", "Vehicule_CMD")
         # remove "Vehicule_Transport"
         m1010_tc3v.remove_tag("Vehicule_Transport")
-        edit_with_vlra(m1010_tc3v, get_unit("VLRA_trans_FR"))
+        edit_with_vlra(m1010_tc3v, get_unit(ctx, "VLRA_trans_FR"))
         # add command module
         # TODO: larger command radius than usual
         m1010_tc3v.append_module(ListRow(Object('TCommanderModuleDescriptor')))
         # remove capturable module
-        m1010_tc3v.remove_module_by_value("~/CapturableModuleDescriptor")
-        edit_with_m1025(m1010_tc3v, get_unit("M1025_Humvee_CMD_US"))
+        m1010_tc3v.remove_module_where(lambda x: isinstance(x.value, str) and x.value == "~/CapturableModuleDescriptor")
+        edit_with_m1025(m1010_tc3v, get_unit(ctx, "M1025_Humvee_CMD_US"))
         # remove transporter module
         m1010_tc3v.remove_module('Transporter', by_name=True)
         with m1010_tc3v.module_context('TProductionModuleDescriptor') as production_module:
@@ -36,8 +36,16 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                                            ProductionRessourcesNeeded={"$/GFX/Resources/Resource_CommandPoints": str(85),
                                                                        "$/GFX/Resources/Resource_Tickets":       str(1)})
         
-        m1010_tc3v.append_module(Object('TInfluenceScoutModuleDescriptor'))        
-        m1010_tc3v.remove_module_where(lambda x: x.value.by_member("Default").type == "TSellModuleDescriptor")
+        m1010_tc3v.append_module(Object('TInfluenceScoutModuleDescriptor'))
+
+        def is_sell_module(row: ListRow) -> bool:
+            if isinstance(row.value, Object):
+                if row.value.type == 'TModuleSelector':
+                    default = row.value.by_member("Default", strict=False)
+                    if isinstance(default, Object):
+                        return default.type == 'TSellModuleDescriptor'
+            return False                        
+        m1010_tc3v.remove_module_where(is_sell_module)
         # TODO: upgrades from ✪ M1025 AGL
         # m1075_pls.edit_ui_module(UpgradeFromUnit="Descriptor_Unit_d9_CMD_M1025_AGL_CMD_US")
         # TODO: modify fuel module

@@ -136,11 +136,8 @@ class UnitCreator(object):
     def remove_module(self: Self, type_or_name: str, by_name: bool = False):
         return modules.remove(self.unit_object, type_or_name, by_name)
     
-    def remove_module_by_value(self: Self, module: str):
-        return modules.remove_by_value(self.unit_object, module)
-    
     def remove_module_where(self: Self, predicate: Callable[[ListRow], bool]):
-        return modules.remove_where(predicate)
+        return modules.remove_where(self.unit_object, predicate)
     
     def append_module_from(self: Self, other_unit: Object, type_or_name: str, by_name: bool = False):
         return modules.append_from(self.unit_object, other_unit, type_or_name, by_name)
