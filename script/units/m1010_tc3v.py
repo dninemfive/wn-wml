@@ -3,7 +3,7 @@ from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
 from creators.unit import UnitCreator
 from metadata.unit_rules import UnitRules
-from ndf_parse.model import List, ListRow, Object
+from ndf_parse.model import List, ListRow, MemberRow, Object
 from utils.ndf import ensure
 
 
@@ -43,10 +43,12 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                 print(f"is_sell_module({str(row.value.type)})")
                 if row.value.type == 'TModuleSelector':
                     default = row.value.by_member("Default", strict=False)
-                    print(f'\t{str(type(default))}')
-                    if isinstance(default, Object):
-                        print(f'\t{str(default.type)}')
-                        return default.type == 'TSellModuleDescriptor'
+                    print(f'\t{type(default)}')
+                    if isinstance(default, MemberRow):
+                        print(f'\t\t{type(default.value)}')
+                        if(isinstance(default.value, Object)):
+                            print(f'\t\t\t{default.value.type}')
+                            return default.value.type == 'TSellModuleDescriptor'
             return False                        
         m1010_tc3v.remove_module_where(is_sell_module)
         # TODO: upgrades from ✪ M1025 AGL
