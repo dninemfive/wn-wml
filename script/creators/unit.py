@@ -22,6 +22,7 @@ class UnitCreator(object):
                  ndf: dict[str, List],
                  new_unit_metadata: NewUnitMetadata,
                  copy_of: str,
+                 showroom_src: str | None = None,
                  msg: Message | None = None):
         self.ndf = ndf
         self.localized_name = new_unit_metadata.localized_name
@@ -29,6 +30,7 @@ class UnitCreator(object):
         self.guid = new_unit_metadata.guid
         self.new: UnitMetadata = new_unit_metadata.unit_metadata
         self.src = UnitMetadata(copy_of)
+        self.showroom_src = UnitMetadata(showroom_src) if showroom_src is not None else self.src
         self.root_msg = msg
 
     def __enter__(self: Self) -> Self:
@@ -73,7 +75,7 @@ class UnitCreator(object):
     @ndf_path(ndf_paths.SHOWROOM_EQUIVALENCE)
     def edit_showroom_equivalence(self: Self, ndf: List):
         unit_to_showroom_equivalent: Map = ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
-        unit_to_showroom_equivalent.add(k=self.new.descriptor_path, v=self.src.showroom_descriptor_path)
+        unit_to_showroom_equivalent.add(k=self.new.descriptor_path, v=self.showroom_src.showroom_descriptor_path)
 
     @ndf_path(ndf_paths.DIVISION_PACKS)
     def edit_division_packs(self: Self, ndf: List):

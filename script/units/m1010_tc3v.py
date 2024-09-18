@@ -9,7 +9,7 @@ from utils.ndf import ensure
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # ✪ M1010 TC3V
-    with ctx.create_unit("#CMD M1010 TC3V", "US", "M35_trans_US") as m1010_tc3v: # 🏳️‍⚧️
+    with ctx.create_unit("#CMD M1010 TC3V", "US", "M35_trans_US", "VLRA_trans_FR") as m1010_tc3v: # 🏳️‍⚧️
         # acknow type = cmd
         with m1010_tc3v.module_context("TTypeUnitModuleDescriptor") as unit_type_module:
             unit_type_module.edit_members(AcknowUnitType="~/TAcknowUnitType_Command",
@@ -22,7 +22,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         m1010_tc3v.add_tags("AllowedForMissileRoE", "Commandant", "InfmapCommander", "Vehicule_CMD")
         # remove "Vehicule_Transport"
         m1010_tc3v.remove_tag("Vehicule_Transport")
-        edit_with_vlra(m1010_tc3v, m1010_tc3v.get_other_unit(ctx, "VLRA_trans_FR"))
+        edit_with_vlra(m1010_tc3v, m1010_tc3v.get_other_unit("VLRA_trans_FR"))
         # add command module
         # TODO: larger command radius than usual
         m1010_tc3v.append_module(ListRow(Object('TCommanderModuleDescriptor')))

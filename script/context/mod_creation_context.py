@@ -78,10 +78,11 @@ class ModCreationContext(object):
     def start_unit_ids_at(self: Self, initial_id: int) -> UnitIdManager:
         return UnitIdManager(self.unit_id_cache, initial_id)
     
-    def create_unit(self: Self, name: str, country: str, copy_of: str) -> UnitCreator:
+    def create_unit(self: Self, name: str, country: str, copy_of: str, showroom_src: str | None = None) -> UnitCreator:
         return UnitCreator(self.ndf,
                            NewUnitMetadata.from_(self.prefix, name, country, self.guids, self.localization),
                            copy_of,
+                           showroom_src,
                            self.root_msg)
     
     def add_division_emblem(self: Self, msg: Message | None, image_path: str, division: DivisionMetadata) -> str:

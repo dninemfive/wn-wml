@@ -12,7 +12,7 @@ MODULES_DESCRIPTORS = "ModulesDescriptors"
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # M998 HUMVEE SUPPLY
     #   copy of: M35 Supply
-    with ctx.create_unit("M998 HUMVEE SUPPLY", "US", "M35_supply_US") as m998_humvee_supply:
+    with ctx.create_unit("M998 HUMVEE SUPPLY", "US", "M35_supply_US", "M1038_Humvee_US") as m998_humvee_supply:
         edit_with_m1038(m998_humvee_supply, m998_humvee_supply.get_other_unit("M1038_Humvee_US"))
         edit_with_rover101fc(m998_humvee_supply, m998_humvee_supply.get_other_unit("Rover_101FC_supply_UK"))
         with ModuleContext(m998_humvee_supply.unit_object, "TUnitUIModuleDescriptor") as ui_module:
