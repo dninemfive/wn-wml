@@ -1,3 +1,4 @@
+from typing import Callable
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
@@ -51,7 +52,11 @@ def remove(target_unit: Object, type_or_name: str, by_name: bool = False):
 def remove_by_value(target_unit: Object, module: str):
     modules: List = get_modules_descriptors(target_unit)
     index = modules.find_by_cond(lambda x: x.value == module).index
-    modules.remove(index)    
+    modules.remove(index)
+
+def remove_where(target_unit: Object, predicate: Callable[[ListRow], bool]):
+    modules: List = get_modules_descriptors(target_unit)
+    modules.remove(modules.find_by_cond(predicate).index)
 
 def collate_modules(ndf: List, primary_src: str, others: dict[str, list[str]]) -> List:
     raise NotImplemented

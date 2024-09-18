@@ -1,4 +1,5 @@
 import constants.ndf_paths as ndf_paths
+from script.creators.unit import UnitCreator
 from utils.ndf import ensure
 from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
@@ -21,38 +22,25 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         m1010_tc3v.add_tags("AllowedForMissileRoE", "Commandant", "InfmapCommander", "Vehicule_CMD")
         # remove "Vehicule_Transport"
         m1010_tc3v.remove_tag("Vehicule_Transport")
-        vlra = ctx.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name("Descriptor_Unit_VLRA_trans_FR").value
-        # model of VLRA
-        m1010_tc3v.replace_module_from(vlra, "ApparenceModel", by_name=True)
-        m1010_tc3v.replace_modules_from(vlra,
-                                        'TCadavreGeneratorModuleDescriptor',
-                                        'TBaseDamageModuleDescriptor')
+        edit_with_vlra(m1010_tc3v, get_unit("VLRA_trans_FR"))
         # add command module
         # TODO: larger command radius than usual
         m1010_tc3v.append_module(ListRow(Object('TCommanderModuleDescriptor')))
         # remove capturable module
-        # m1010_tc3v.remove_module_by_value("~/CapturableModuleDescriptor")
-        m1025_cmd = ctx.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name("Descriptor_Unit_M1025_Humvee_CMD_US").value
-        # scanner from M1025 CMD
-        m1010_tc3v.replace_module_from(m1025_cmd, 'TScannerConfigurationDescriptor')
+        m1010_tc3v.remove_module_by_value("~/CapturableModuleDescriptor")
+        edit_with_m1025(m1010_tc3v, get_unit("M1025_Humvee_CMD_US"))
         # remove transporter module
         m1010_tc3v.remove_module('Transporter', by_name=True)
         with m1010_tc3v.module_context('TProductionModuleDescriptor') as production_module:
             production_module.edit_members(Factory="EDefaultFactories/Logistic", 
                                            ProductionRessourcesNeeded={"$/GFX/Resources/Resource_CommandPoints": str(85),
                                                                        "$/GFX/Resources/Resource_Tickets":       str(1)})
-        # m1010_tc3v.remove_module_by_value('~/InfluenceDataModuleDescriptor')
-        m1010_tc3v.append_module_from(m1025_cmd, 'TZoneInfluenceMapModuleDescriptor')
-        m1010_tc3v.append_modules(ListRow(Object('TInfluenceScoutModuleDescriptor')),
-                                  ListRow('~/InfluenceDataModuleDescriptor'))
-        m1010_tc3v.replace_modules_from(m1025_cmd,
-                                        'TCubeActionModuleDescriptor',
-                                        'TOrderConfigModuleDescriptor',             # TODO: automatically generate new order descriptor for units
-                                        'TOrderableModuleDescriptor',
-                                        'TTacticalLabelModuleDescriptor')
-        # TODO: remove last TModuleSelector (where Default = TSellModuleDescriptor())
+        
+        m1010_tc3v.append_module(Object('TInfluenceScoutModuleDescriptor'))        
+        m1010_tc3v.remove_module_where(lambda x: x.value.by_member("Default").type == "TSellModuleDescriptor")
         # TODO: upgrades from ✪ M1025 AGL
         # m1075_pls.edit_ui_module(UpgradeFromUnit="Descriptor_Unit_d9_CMD_M1025_AGL_CMD_US")
+        # TODO: modify fuel module
         with m1010_tc3v.module_context('TUnitUIModuleDescriptor') as ui_module:
             ui_module.remove_member('UpgradeFromUnit')
         m1010_tc3v.edit_ui_module(UnitRole="'tank_B'",
@@ -63,3 +51,25 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                                   ButtonTexture="'Texture_Button_Unit_VLRA_trans_FR'")
         # TODO: separate showroom model
         return UnitRules(m1010_tc3v, 1, [0, 3, 2, 0])
+    
+def get_unit(ctx: ModCreationContext, unit: str) -> Object:
+    return ctx.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(f"Descriptor_Unit_{unit}").value
+    
+def edit_with_vlra(m1010_tc3v: UnitCreator, vlra: Object) -> None:
+    # model of VLRA
+    m1010_tc3v.replace_module_from(vlra, 'ApparenceModel', by_name=True)
+    m1010_tc3v.replace_module_from(vlra, 'TCadavreGeneratorModuleDescriptor')
+    m1010_tc3v.replace_module_from(vlra, 'TBaseDamageModuleDescriptor')
+    
+def edit_with_m1025(m1010_tc3v: UnitCreator, m1025_cmd: Object) -> None:
+    # scanner from M1025 CMD
+    m1010_tc3v.replace_module_from(m1025_cmd, 'TScannerConfigurationDescriptor')
+    m1010_tc3v.replace_module_from(m1025_cmd, 'TemplateUnitCriticalModule')
+    m1010_tc3v.replace_module_from(m1025_cmd, 'TScannerConfigurationDescriptor')                                        
+    m1010_tc3v.replace_module_from(m1025_cmd, 'TCubeActionModuleDescriptor')
+    # TODO: automatically generate new order descriptor for units
+    m1010_tc3v.replace_module_from(m1025_cmd, 'TOrderConfigModuleDescriptor')
+    m1010_tc3v.replace_module_from(m1025_cmd, 'TOrderableModuleDescriptor')
+    m1010_tc3v.replace_module_from(m1025_cmd, 'TTacticalLabelModuleDescriptor')
+
+    m1010_tc3v.append_module_from(m1025_cmd, 'TZoneInfluenceMapModuleDescriptor')

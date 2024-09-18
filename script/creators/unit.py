@@ -1,4 +1,4 @@
-from typing import Self
+from typing import Callable, Self
 
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
@@ -130,16 +130,8 @@ class UnitCreator(object):
     def replace_module_from(self: Self, other_unit: Object, type_or_name: str, by_name: bool = False) -> None:
         return modules.replace_from(self.unit_object, other_unit, type_or_name, by_name)
     
-    def replace_modules_from(self: Self, other_unit: Object, by_name: bool = False, *types_or_names):
-        for type_or_name in types_or_names:
-            self.replace_module_from(other_unit, type_or_name, by_name)
-    
-    def append_module(self: Self, module: ListRow):
+    def append_module(self: Self, module: Object | ListRow):
         return modules.append(self.unit_object, module)
-    
-    def append_modules(self: Self, *modules: ListRow):
-        for module in modules:
-            self.append_module(module)
     
     def remove_module(self: Self, type_or_name: str, by_name: bool = False):
         return modules.remove(self.unit_object, type_or_name, by_name)
@@ -147,9 +139,8 @@ class UnitCreator(object):
     def remove_module_by_value(self: Self, module: str):
         return modules.remove_by_value(self.unit_object, module)
     
+    def remove_module_where(self: Self, predicate: Callable[[ListRow], bool]):
+        return modules.remove_where(predicate)
+    
     def append_module_from(self: Self, other_unit: Object, type_or_name: str, by_name: bool = False):
         return modules.append_from(self.unit_object, other_unit, type_or_name, by_name)
-    
-    def append_modules_from(self: Self, other_unit: Object, by_name: bool = False, *types_or_names):
-        for type_or_name in types_or_names:
-            self.append_module_from(other_unit, type_or_name, by_name)
