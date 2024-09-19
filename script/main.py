@@ -13,6 +13,7 @@ import units.m198_copperhead
 import units.m998_avenger
 import units.m998_humvee_supply
 import units.m1075_pls
+import units.mk19_40mm
 import units.mot_mp_patrol
 import units.rq_2_pioneer
 import units.stinger_tdar
@@ -83,6 +84,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("Ranger_Dragon_US", 1, M1038_HUMVEE)
                 # RANGERS (M224)
                 division_units.register_vanilla("ATteam_TOW2_US", 1, SMALL_UNIT_TRANSPORTS)
+                division_units.register(units.mk19_40mm.create(mod_context), SMALL_UNIT_TRANSPORTS)
                 """ ART """
                 HEAVY_TRANSPORTS = ["Descriptor_Unit_M35_trans_US", CHINOOK]
                 division_units.register_vanilla("Mortier_107mm_US", 2, SMALL_UNIT_TRANSPORTS)
