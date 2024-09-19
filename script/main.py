@@ -76,7 +76,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # RANGER GUNNERS
                 division_units.register_vanilla("Engineer_CMD_US", 1, M998_HUMVEE)
                 # MOT. ENGINEERS
-                division_units.register_vanilla("Rangers_CMD_US", 1, M1038_HUMVEE)
+                division_units.register_vanilla("Rangers_CMD_US", 1, M998_HUMVEE)
                 division_units.register_vanilla("Ranger_Dragon_US", 1, M1038_HUMVEE)
                 # RANGERS (M224)
                 division_units.register_vanilla("ATteam_TOW2_US", 1, SMALL_UNIT_TRANSPORTS)
@@ -115,7 +115,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # 👓 FAV TOW
                 # 👓 OPERATIONAL SUPPORT
                 # [👓] FOLT
-                division_units.register_vanilla("LRRP_US", 1, SMALL_RECON_TRANSPORTS)
+                division_units.register_vanilla("LRRP_US", 1, M998_HUMVEE)
                 division_units.register_vanilla("Sniper_US", 1, SMALL_RECON_TRANSPORTS)
                 # 👓 FWD SUPPORT [EW]
                 # [👓] MERCURY GREEN RPV

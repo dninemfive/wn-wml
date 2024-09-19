@@ -51,4 +51,6 @@ def edit_with_m1025(cmd_m998_humvee_agl: UnitCreator, m1025_cmd: Object) -> None
     cmd_m998_humvee_agl.replace_module_from(m1025_cmd, 'TTacticalLabelModuleDescriptor')
     cmd_m998_humvee_agl.append_module_from(m1025_cmd, 'TZoneInfluenceMapModuleDescriptor')
     # change stealth to Mediocre (same as M1025 Humvee CP)
+    cmd_m998_humvee_agl.append_module_from(m1025_cmd, 'TVisibilityModuleDescriptor')
     # change autonomy to 36/61 (same as M1025 Humvee CP)
+    cmd_m998_humvee_agl.append_module_from(m1025_cmd, 'TFuelModuleDescriptor')
