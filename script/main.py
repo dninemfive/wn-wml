@@ -73,9 +73,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("Rifles_HMG_US", 1, LARGE_UNIT_TRANSPORTS)
                 division_units.register_vanilla("Engineer_CMD_US", 1, M998_HUMVEE)
                 # MOT. ENGINEERS
-                # maybe change AB ones to fireteams?
-                division_units.register_vanilla("Airborne_CMD_US", 1, M1038_HUMVEE)
-                division_units.register_vanilla("Airborne_Dragon_US", 1, M1038_HUMVEE)
+                division_units.register_vanilla("Rangers_CMD_US", 1, M1038_HUMVEE)
+                division_units.register_vanilla("Ranger_Dragon_US", 1, M1038_HUMVEE)
                 division_units.register_vanilla("ATteam_TOW2_US", 1, SMALL_UNIT_TRANSPORTS)
                 # transports don't get added as their own packs
                 # M998 HUMVEE M2HB
@@ -83,7 +82,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # M998 HUMVEE AGL
                 # copy the AB version, but no forward deploy and normal vision
                 """ ART """
-                HEAVY_TRANSPORTS = [M1038_HUMVEE, CHINOOK]
+                HEAVY_TRANSPORTS = ["Descriptor_Unit_M35_trans_US", CHINOOK]
                 division_units.register_vanilla("Mortier_107mm_US", 2, SMALL_UNIT_TRANSPORTS)
                 # XM1100 120mm
                 division_units.register_vanilla("Howz_M102_105mm_US", 2, SMALL_UNIT_TRANSPORTS)
