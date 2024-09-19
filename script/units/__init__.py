@@ -1,6 +1,6 @@
 """ LOG """
 import units.m998_humvee_supply
-import units.m1075_pls_supply
+import units.m1075_pls
 """ INF """
 import units.mot_mp_patrol
 """ ART """

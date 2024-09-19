@@ -15,9 +15,14 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     with ctx.create_unit("M998 HUMVEE SUPPLY", "US", "M35_supply_US", "M1038_Humvee_US") as m998_humvee_supply:
         edit_with_m1038(m998_humvee_supply, m998_humvee_supply.get_other_unit("M1038_Humvee_US"))
         edit_with_rover101fc(m998_humvee_supply, m998_humvee_supply.get_other_unit("Rover_101FC_supply_UK"))
-        with ModuleContext(m998_humvee_supply.unit_object, "TUnitUIModuleDescriptor") as ui_module:
-            # TUnitUIModuleDescriptor/UpgradeFromUnit cleared
-            ui_module.object.remove_by_member("UpgradeFromUnit")
+        with m998_humvee_supply.module_context("TUnitUIModuleDescriptor") as ui_module:
+            # upgrade from M561 SUPPLY GOAT
+            ui_module.edit_members(UpgradeFromUnit='Descriptor_Unit_Gama_Goat_supply_US',
+                                   # TODO: automate this as part of copying the appearance of another unit?
+                                   ButtonTexture='Texture_Button_Unit_M1038_Humvee_US')
+            # make M35 upgrade from this instead
+        with ModuleContext(m998_humvee_supply.get_other_unit('M35_supply_US'), 'TUnitUIModuleDescriptor') as m35_ui_module:
+            m35_ui_module.edit_members(UpgradeFromUnit='Descriptor_Unit_d9_M998_HUMVEE_SUPPLY_US')
         # TODO: make stealth mediocre? see M561 SUPPLY GOAT
         return UnitRules(m998_humvee_supply, 2, [10, 8, 6, 4])
 

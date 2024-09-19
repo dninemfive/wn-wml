@@ -4,13 +4,13 @@ from datetime import datetime
 
 import constants.ndf_paths as ndf_paths
 import constants.paths as paths
-import units
 import units.m1010_tc3v
+import units.m1075_pls
 import units.m198_155mm_clu
 import units.m198_copperhead
 import units.m998_avenger
 import units.m998_humvee_supply
-import units.m1075_pls_supply
+import units.m1075_pls
 import units.mot_mp_patrol
 import units.stinger_tdar
 from context.mod_creation_context import ModCreationContext
@@ -46,7 +46,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 """ LOG """
                 division_units.register_vanilla("FOB_US", 1)
                 division_units.register(units.m998_humvee_supply.create(mod_context))
-                division_units.register(units.m1075_pls_supply.create(mod_context))
+                division_units.register_vanilla("M35_supply_US", 1)
+                division_units.register(units.m1075_pls.create(mod_context))
                 division_units.register_vanilla("UH60A_Supply_US", 2)
                 division_units.register_vanilla("CH47_Super_Chinook_US", 1)
 
