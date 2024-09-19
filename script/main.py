@@ -14,6 +14,7 @@ import units.m998_avenger
 import units.m998_humvee_supply
 import units.m1075_pls
 import units.mot_mp_patrol
+import units.rq_2_pioneer
 import units.stinger_tdar
 from context.mod_creation_context import ModCreationContext
 from managers.unit_id import UnitIdManager
@@ -129,6 +130,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # [[👓]] JOH-58D KIOWA
                 # insert between OH-58D KIOWA and OH-58D KIOWA Wr.
                 # [[👓]] M561 GAMA GOAT FAAR
+                division_units.register(units.rq_2_pioneer.create(mod_context))
                 division_units.register(units.e2c_hawkeye.create(mod_context))
                 """ AA """
                 # JOH-58C KIOWA
