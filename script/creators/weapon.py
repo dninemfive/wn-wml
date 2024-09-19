@@ -2,14 +2,14 @@
 # from context.unit_creation_context import UnitCreationContext
 from typing import Self
 
+import utils.ndf.edit as edit
 from constants.ndf_paths import WEAPON_DESCRIPTOR
 from context.module_context import ModuleContext
 from metadata.unit import UnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from script.utils.ndf.edit import edit_members, ndf_path
-from utils.ndf.unit_module import get, remove
+from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
 
 
@@ -43,14 +43,4 @@ class WeaponCreator(object):
         ndf.add(ListRow(self.object, namespace=self.name, visibility="export"))
 
     def edit_members(self: Self, **kwargs: CellValue):
-        edit_members(self.object, **kwargs)
-
-    def module_context(self: Self, module_type: str) -> ModuleContext:
-        return ModuleContext(self.object, module_type)
-
-    def get_module(self: Self, module_type: str) -> Object:
-        result: Object | None = get(self.object, module_type)
-        return result
-    
-    def remove_module(self: Self, module_type: str) -> None:
-        remove(self.object, module_type)
+        edit.members(self.object, **kwargs)
