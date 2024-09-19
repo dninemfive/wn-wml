@@ -4,8 +4,8 @@ from datetime import datetime
 
 import constants.ndf_paths as ndf_paths
 import constants.paths as paths
-import units.m1010_tc3v
-import units.m1075_pls
+import units.cmd_m998_humvee_agl
+import units.cmd_m1010_tc3v
 import units.m198_155mm_clu
 import units.m198_copperhead
 import units.m998_avenger
@@ -54,9 +54,10 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("OH58C_CMD_US", 1)
                 division_units.register_vanilla("UH60A_CO_US", 1)
                 division_units.register_vanilla("M577_US", 1)
-                # ✪ M998 HUMVEE SGT.
-                # ✪ M1025 HUMVEE AGL
-                division_units.register(units.m1010_tc3v.create(mod_context))
+                
+                division_units.register_vanilla("M1025_Humvee_CMD_US", 1)
+                division_units.register(units.cmd_m998_humvee_agl.create(mod_context))
+                division_units.register(units.cmd_m1010_tc3v.create(mod_context))
                 """ INF """
                 M998_HUMVEE, M1038_HUMVEE = "Descriptor_Unit_M998_Humvee_US", "Descriptor_Unit_M1038_Humvee_US"
                 BLACKHAWK, CHINOOK = "Descriptor_Unit_UH60A_Black_Hawk_US", "Descriptor_Unit_CH47_Chinook_US"
@@ -64,31 +65,27 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 LARGE_UNIT_TRANSPORTS = [M1038_HUMVEE, BLACKHAWK]
                 # TODO: variant of the mod which doesn't reference the MP Humvee because it's a DLC unit
                 division_units.register(units.mot_mp_patrol.create(mod_context), [M998_HUMVEE, "Descriptor_Unit_M1025_Humvee_MP_US"])
-                # units.mot_rifles_ldr.create()
-                # units.mot_rifles_at4.create()
+                # MOT. RIFLES LDR.
+                # MOT. RIFLES
                 # MOT. RIFLES (DRAGON)
                 division_units.register_vanilla("Rifles_half_CMD_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register_vanilla("Rifles_half_AT4_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register_vanilla("Rifles_half_Dragon_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register_vanilla("Rifles_Cavalry_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register_vanilla("Rifles_HMG_US", 1, LARGE_UNIT_TRANSPORTS)
+                # RANGER GUNNERS
                 division_units.register_vanilla("Engineer_CMD_US", 1, M998_HUMVEE)
                 # MOT. ENGINEERS
                 division_units.register_vanilla("Rangers_CMD_US", 1, M1038_HUMVEE)
                 division_units.register_vanilla("Ranger_Dragon_US", 1, M1038_HUMVEE)
+                # RANGERS (M224)
                 division_units.register_vanilla("ATteam_TOW2_US", 1, SMALL_UNIT_TRANSPORTS)
-                # transports don't get added as their own packs
-                # M998 HUMVEE M2HB
-                # copy the AB version, but no forward deploy and normal vision
-                # M998 HUMVEE AGL
-                # copy the AB version, but no forward deploy and normal vision
                 """ ART """
                 HEAVY_TRANSPORTS = ["Descriptor_Unit_M35_trans_US", CHINOOK]
                 division_units.register_vanilla("Mortier_107mm_US", 2, SMALL_UNIT_TRANSPORTS)
                 # XM1100 120mm
                 division_units.register_vanilla("Howz_M102_105mm_US", 2, SMALL_UNIT_TRANSPORTS)
-                # XM119 IMCS 105mm
-                
+                # XM119 IMCS 105mm                
                 division_units.register_vanilla("Howz_M198_155mm_US", 2, HEAVY_TRANSPORTS)
                 division_units.register(units.m198_155mm_clu.create(mod_context), HEAVY_TRANSPORTS)
                 division_units.register(units.m198_copperhead.create(mod_context), HEAVY_TRANSPORTS)
@@ -102,7 +99,11 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # M966 HUMVEE TOW
                 # M1025 HUMVEE TOW
                 # M998 HUMVEE GLH-L
-                # M1025 HUMVEE AGL
+                # M1025 HUMVEE AGL                
+                # transports don't get registered separately
+                # M1025 HUMVEE MP
+                # M998 HUMVEE M2HB
+                # M998 HUMVEE AGL
                 """ REC """
                 REC_HUMVEE_M2HB, REC_HUMVEE_AGL = "Descriptor_Unit_M1025_Humvee_scout_US", "Descriptor_Unit_M1025_Humvee_AGL_nonPara_US"
                 SMALL_RECON_TRANSPORTS = [M998_HUMVEE, REC_HUMVEE_M2HB, REC_HUMVEE_AGL, BLACKHAWK]
@@ -114,7 +115,6 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # 👓 FAV TOW
                 # 👓 OPERATIONAL SUPPORT
                 # [👓] FOLT
-                division_units.register_vanilla("Airborne_Scout_US", 1, [M998_HUMVEE, REC_HUMVEE_M2HB])
                 division_units.register_vanilla("LRRP_US", 1, SMALL_RECON_TRANSPORTS)
                 division_units.register_vanilla("Sniper_US", 1, SMALL_RECON_TRANSPORTS)
                 # 👓 FWD SUPPORT [EW]

@@ -60,14 +60,13 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         # ended up fudging it to be more in-line with vanilla values
         with m1010_tc3v.module_context('TFuelModuleDescriptor') as fuel_module:
             fuel_module.edit_members(FuelCapacity=75, FuelMoveDuration=to_fmd(35, 54))
-        with m1010_tc3v.module_context('TUnitUIModuleDescriptor') as ui_module:
-            ui_module.remove_member('UpgradeFromUnit')
         m1010_tc3v.edit_ui_module(UnitRole="'tank_B'",
                                   SpecialtiesList=["'hq_veh'", "'_leader'"],
                                   InfoPanelConfigurationToken="'Default'",
                                   MenuIconTexture="'Texture_RTS_H_CMD_veh'",
                                   TypeStrategicCount='ETypeStrategicDetailedCount/CMD_Veh',
-                                  ButtonTexture="'Texture_Button_Unit_VLRA_trans_FR'")
+                                  ButtonTexture="'Texture_Button_Unit_VLRA_trans_FR'",
+                                  UpgradeFromUnit='Descriptor_Unit_d9_CMD_M998_HUMVEE_AGL_US')
         return UnitRules(m1010_tc3v, 1, [0, 3, 2, 0])
     
 def edit_with_vlra(m1010_tc3v: UnitCreator, vlra: Object) -> None:
