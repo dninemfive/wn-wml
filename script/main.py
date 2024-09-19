@@ -98,9 +98,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # XM4 AGS
                 # RDF/LT
                 # M966 HUMVEE TOW
-                # M1025 HUMVEE TOW
+                division_units.register_vanilla('M1025_Humvee_TOW_US', 3)
                 # M998 HUMVEE GLH-L
-                # M1025 HUMVEE AGL                
                 # transports don't get registered separately
                 # M1025 HUMVEE MP
                 # M998 HUMVEE M2HB
