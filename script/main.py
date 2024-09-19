@@ -6,6 +6,7 @@ import constants.ndf_paths as ndf_paths
 import constants.paths as paths
 import units.cmd_m998_humvee_agl
 import units.cmd_m1010_tc3v
+import units.e2c_hawkeye
 import units.m167a2_pivads_20mm
 import units.m198_155mm_clu
 import units.m198_copperhead
@@ -128,6 +129,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # [[👓]] JOH-58D KIOWA
                 # insert between OH-58D KIOWA and OH-58D KIOWA Wr.
                 # [[👓]] M561 GAMA GOAT FAAR
+                division_units.register(units.e2c_hawkeye.create(mod_context))
                 """ AA """
                 # JOH-58C KIOWA
                 division_units.register(units.m167a2_pivads_20mm.create(mod_context), [M998_HUMVEE, CHINOOK])

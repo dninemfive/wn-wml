@@ -130,7 +130,12 @@ class UnitCreator(object):
     def get_module_row(self: Self, type_or_name: str, by_name: bool = False) -> ListRow:
         return modules.get_row(self.unit_object, type_or_name, by_name)
     
-    def replace_module_from(self: Self, other_unit: Object, type_or_name: str, by_name: bool = False) -> None:
+    def replace_module(self: Self, type_or_name: str, module: CellValue, by_name: bool = False):
+        return modules.replace_module(self.unit_object, module, type_or_name, by_name)
+    
+    def replace_module_from(self: Self, other_unit: str | Object, type_or_name: str, by_name: bool = False) -> None:
+        if isinstance(other_unit, str):
+            other_unit = self.get_other_unit(other_unit)
         return modules.replace_from(self.unit_object, other_unit, type_or_name, by_name)
     
     def append_module(self: Self, module: Object | ListRow):
@@ -146,4 +151,4 @@ class UnitCreator(object):
         return modules.append_from(self.unit_object, other_unit, type_or_name, by_name)
     
     def get_other_unit(self: Self, unit: str) -> Object:
-        return self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(f"Descriptor_Unit_{unit}").value
+        return self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(ensure.unit_descriptor(unit)).value

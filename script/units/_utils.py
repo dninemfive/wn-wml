@@ -1,3 +1,8 @@
+# from CommonData\Gameplay\Constantes\InitialisationGameDistanceUnits.ndf
+LBU_TO_GRU_CONVERSION_FACTOR = 2.92198967
+# from CommonData\System\Globals.ndf
+METRE = 26
+
 # determined by trial and error, based on the in-game scale of 1/3.2 (inverted) times a fudge factor
 # TODO: figure out how to determine this properly
 MAGIC_NUMBER = 2.806 

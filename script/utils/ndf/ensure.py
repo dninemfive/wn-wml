@@ -67,7 +67,7 @@ def _list(_list: List | list[CellValue] = [], *items: CellValue) -> List:
         for item in _list:
             result.add(listrow(ndf_type(item)))
     else:
-        result.add(listrow(ndf_type(item)))
+        result.add(listrow(ndf_type(_list)))
     for item in items:
         result.add(listrow(ndf_type(item)))
     return result
@@ -89,8 +89,14 @@ def ndf_type(value: dict | list | int | str, _type: str | None = None) -> Map | 
         return value
     raise TypeError(f"ensure.ndf_type() doesn't work on type {type(value)}!")
 
-def unit_path(descriptor: str) -> str:
-    return descriptor if descriptor.startswith("$/GFX/Unit/") else f'$/GFX/Unit/{descriptor}'
+def _starts_with(s: str, prefix: str) -> str:
+    return s if s.startswith(prefix) else f'{prefix}{s}'
+
+def unit_descriptor(name_or_descriptor: str) -> str:
+    return _starts_with(name_or_descriptor, 'Descriptor_Unit_')
+
+def unit_path(descriptor_or_path: str) -> str:
+    return _starts_with(descriptor_or_path, "$/GFX/Unit/")
 
 def quotes(s: str, quote: str = '"') -> str:
     if not s.startswith(quote):
