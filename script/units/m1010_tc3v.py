@@ -5,6 +5,7 @@ from creators.unit import UnitCreator
 from metadata.unit_rules import UnitRules
 from ndf_parse.model import List, ListRow, MemberRow, Object
 from utils.ndf import ensure
+from units._utils import autonomy_to_fuel_move_duration as to_fmd
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
@@ -49,7 +50,16 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         m1010_tc3v.remove_module_where(is_sell_module)
         # TODO: upgrades from ✪ M1025 AGL
         # m1075_pls.edit_ui_module(UpgradeFromUnit="Descriptor_Unit_d9_CMD_M1025_AGL_CMD_US")
-        # TODO: modify fuel module
+        # modify fuel module:
+        # capacity: 75L (~25gal actual capacity per http://www.jatonkam35s.com/CUCVTechnicalmanuals/TM9-2320-289-10.pdf p 1-12)
+        # range: ~320 real-life mi per https://expeditionportal.com/forum/threads/m1010-ambulance-to-expedition-rig.163413/post-2171787
+        # -> 515 km on-road range
+        # * (36/61) (M1025 Humvee CMD's off- and on-road ranges)
+        # -> ~300 km off-road range 
+        # / 3.2 (in-game conversion) -> 95 km in-game off-road range
+        # ended up fudging it to be more in-line with vanilla values
+        with m1010_tc3v.module_context('TFuelModuleDescriptor') as fuel_module:
+            fuel_module.edit_members(FuelCapacity=75, FuelMoveDuration=to_fmd(35, 54))
         with m1010_tc3v.module_context('TUnitUIModuleDescriptor') as ui_module:
             ui_module.remove_member('UpgradeFromUnit')
         m1010_tc3v.edit_ui_module(UnitRole="'tank_B'",
@@ -58,7 +68,6 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                                   MenuIconTexture="'Texture_RTS_H_CMD_veh'",
                                   TypeStrategicCount='ETypeStrategicDetailedCount/CMD_Veh',
                                   ButtonTexture="'Texture_Button_Unit_VLRA_trans_FR'")
-        # TODO: separate showroom model
         return UnitRules(m1010_tc3v, 1, [0, 3, 2, 0])
     
 def edit_with_vlra(m1010_tc3v: UnitCreator, vlra: Object) -> None:

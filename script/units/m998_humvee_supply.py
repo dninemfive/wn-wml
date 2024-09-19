@@ -18,6 +18,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         with ModuleContext(m998_humvee_supply.unit_object, "TUnitUIModuleDescriptor") as ui_module:
             # TUnitUIModuleDescriptor/UpgradeFromUnit cleared
             ui_module.object.remove_by_member("UpgradeFromUnit")
+        # TODO: make stealth mediocre? see M561 SUPPLY GOAT
         return UnitRules(m998_humvee_supply, 2, [10, 8, 6, 4])
 
 def edit_with_m1038(m998_humvee_supply: UnitCreator, m1038_humvee: Object) -> None:
