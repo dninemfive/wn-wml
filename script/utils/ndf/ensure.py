@@ -63,7 +63,10 @@ def _list(_list: List | list[CellValue] = [], *items: CellValue) -> List:
     if isinstance(_list, List):
         return _list
     result = List()
-    for item in _list:
+    if isinstance(_list, list):
+        for item in _list:
+            result.add(listrow(ndf_type(item)))
+    else:
         result.add(listrow(ndf_type(item)))
     for item in items:
         result.add(listrow(ndf_type(item)))

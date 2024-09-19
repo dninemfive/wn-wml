@@ -6,6 +6,7 @@ import constants.ndf_paths as ndf_paths
 import constants.paths as paths
 import units.cmd_m998_humvee_agl
 import units.cmd_m1010_tc3v
+import units.m167a2_pivads_20mm
 import units.m198_155mm_clu
 import units.m198_copperhead
 import units.m998_avenger
@@ -130,8 +131,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # [[👓]] M561 GAMA GOAT FAAR
                 """ AA """
                 # JOH-58C KIOWA
-                # M167A1 VADS 20mm
-                # copy AB version, remove forward deploy and add the air-transportable trait
+                division_units.register(units.m167a2_pivads_20mm.create(mod_context), [M998_HUMVEE, CHINOOK])
                 division_units.register(units.m998_avenger.create(mod_context))
                 # M998 SETTER
                 # MIM-72A T-CHAPARRAL
