@@ -116,8 +116,6 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 REC_HUMVEE_M2HB, REC_HUMVEE_AGL = "Descriptor_Unit_M1025_Humvee_scout_US", "Descriptor_Unit_M1025_Humvee_AGL_nonPara_US"
                 SMALL_RECON_TRANSPORTS = [M998_HUMVEE, REC_HUMVEE_M2HB, REC_HUMVEE_AGL, BLACKHAWK]
                 division_units.register_vanilla("M981_FISTV_US", 1)
-                # 👓 M998 HUMVEE M2HB
-                # copy 👓 M1025 HUMVEE M2HB
                 # 👓 FAV
                 # 👓 FAV AGL
                 # 👓 FAV TOW
