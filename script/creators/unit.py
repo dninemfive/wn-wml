@@ -135,7 +135,7 @@ class UnitCreator(object):
     
     def replace_module_from(self: Self, other_unit: str | Object, type_or_name: str, by_name: bool = False) -> None:
         if isinstance(other_unit, str):
-            other_unit = self.get_other_unit(other_unit)
+            other_unit = self.get_other_unit(ensure.unit_descriptor(other_unit))
         return modules.replace_from(self.unit_object, other_unit, type_or_name, by_name)
     
     def append_module(self: Self, module: Object | ListRow):

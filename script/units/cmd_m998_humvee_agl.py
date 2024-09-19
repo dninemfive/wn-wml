@@ -47,7 +47,7 @@ def edit_with_m1025(cmd_m998_humvee_agl: UnitCreator, m1025_cmd: Object) -> None
     # scanner from M1025 CMD
     cmd_m998_humvee_agl.replace_module_from(m1025_cmd, 'TScannerConfigurationDescriptor')
     cmd_m998_humvee_agl.replace_module_from(m1025_cmd, 'TemplateUnitCriticalModule')
-    cmd_m998_humvee_agl.replace_module_from(m1025_cmd, 'TScannerConfigurationDescriptor')
+    cmd_m998_humvee_agl.replace_module_from(m1025_cmd, 'TReverseScannerWithIdentificationDescriptor')
     cmd_m998_humvee_agl.replace_module_from(m1025_cmd, 'TTacticalLabelModuleDescriptor')
     cmd_m998_humvee_agl.append_module_from(m1025_cmd, 'TZoneInfluenceMapModuleDescriptor')
     # change stealth to Mediocre (same as M1025 Humvee CP)
