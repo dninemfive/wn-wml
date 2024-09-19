@@ -19,7 +19,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             # upgrade from M561 SUPPLY GOAT
             ui_module.edit_members(UpgradeFromUnit='Descriptor_Unit_Gama_Goat_supply_US',
                                    # TODO: automate this as part of copying the appearance of another unit?
-                                   ButtonTexture='Texture_Button_Unit_M1038_Humvee_US')
+                                   ButtonTexture="'Texture_Button_Unit_M1038_Humvee_US'")
             # make M35 upgrade from this instead
         with ModuleContext(m998_humvee_supply.get_other_unit('M35_supply_US'), 'TUnitUIModuleDescriptor') as m35_ui_module:
             m35_ui_module.edit_members(UpgradeFromUnit='Descriptor_Unit_d9_M998_HUMVEE_SUPPLY_US')
