@@ -8,7 +8,7 @@ SHOWROOM_EQUIVALENCE    = rf'GameData\Generated\Gameplay\Gfx\ShowRoomEquivalence
 UNITE_DESCRIPTOR        = rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf'
 DIVISION_TEXTURES       = rf'GameData\Generated\UserInterface\Textures\DivisionTextures.ndf'
 AMMUNITION              = rf'GameData\Generated\Gameplay\Gfx\Ammunition.ndf'
-WEAPON_DESCRIPTOR       = rf'GameData\Generated\Gameplay\Gfx\Ammunition.ndf'
+WEAPON_DESCRIPTOR       = rf'GameData\Generated\Gameplay\Gfx\WeaponDescriptor.ndf'
 
 ALL = set([ALL_UNITS_TACTIC,
            DECK_SERIALIZER,

@@ -10,6 +10,7 @@ import units.e2c_hawkeye
 import units.m167a2_pivads_20mm
 import units.m198_155mm_clu
 import units.m198_copperhead
+import units.m966_humvee_tow
 import units.m998_avenger
 import units.m998_humvee_agl
 import units.m998_humvee_m2hb
@@ -104,12 +105,11 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 """ TNK """
                 # XM4 AGS
                 # RDF/LT
-                # M966 HUMVEE TOW
+                division_units.register(units.m966_humvee_tow.create(mod_context))
                 division_units.register_vanilla('M1025_Humvee_TOW_US', 3)
                 # M998 HUMVEE GLH-L
                 # transports don't get registered separately
                 # M1025 HUMVEE MP
-                # M998 HUMVEE M2HB
                 units.m998_humvee_m2hb.create(mod_context)
                 units.m998_humvee_agl.create(mod_context)
                 """ REC """
