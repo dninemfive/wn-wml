@@ -1,3 +1,5 @@
+# TODO: dynamically load these from annotations on loaded types?
+
 ALL_UNITS_TACTIC        = rf"GameData\Generated\Gameplay\Gfx\AllUnitsTactic.ndf"
 DECK_SERIALIZER         = rf"GameData\Generated\Gameplay\Decks\DeckSerializer.ndf"
 DIVISIONS               = rf"GameData\Generated\Gameplay\Decks\Divisions.ndf"
@@ -9,6 +11,7 @@ UNITE_DESCRIPTOR        = rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf
 DIVISION_TEXTURES       = rf'GameData\Generated\UserInterface\Textures\DivisionTextures.ndf'
 AMMUNITION              = rf'GameData\Generated\Gameplay\Gfx\Ammunition.ndf'
 WEAPON_DESCRIPTOR       = rf'GameData\Generated\Gameplay\Gfx\WeaponDescriptor.ndf'
+MISSILE_CARRIAGE        = rf'GameData\Generated\Gameplay\Gfx\MissileCarriage.ndf'
 
 ALL = set([ALL_UNITS_TACTIC,
            DECK_SERIALIZER,
@@ -20,4 +23,5 @@ ALL = set([ALL_UNITS_TACTIC,
            UNITE_DESCRIPTOR,
            DIVISION_TEXTURES,
            AMMUNITION,
-           WEAPON_DESCRIPTOR])
+           WEAPON_DESCRIPTOR,
+           MISSILE_CARRIAGE])
