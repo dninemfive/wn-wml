@@ -37,8 +37,8 @@ class UnitMetadata(object):
         return f'"UNITE_{self.name}"'
     
     @property
-    def button_texture_key(self: Self) -> str:
-        return f'"Texture_Button_Unit_{self.name}"'
+    def button_texture_name(self: Self) -> str:
+        return f'Texture_Button_Unit_{self.name}'
     
     @staticmethod
     def from_localized_name(prefix: str, localized_name: str, country: str) -> Self:

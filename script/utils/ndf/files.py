@@ -50,8 +50,8 @@ def make_image_obj(src_file_path: str, mod_output_path: str, folder_relative_to_
     return ensure._object(texture_type,
                           FileName=f'"{copy_image_to_mod_folder(src_file_path, mod_output_path, folder_relative_to_gamedata, image_name)}"')
 
-def add_texture_to_texture_bank(texture_bank: Object, image_key: str, normal_state: Object | str, other_states: dict[str, Object | str]) -> str:
-    states: dict[str, Object] = {'~/ComponentState/Normal', normal_state}
+def add_texture_to_texture_bank(texture_bank: Object, image_key: str, normal_state: Object | str, other_states: dict[str, Object | str] = {}) -> str:
+    states: dict[str, Object] = {'~/ComponentState/Normal':normal_state}
     for k, v in other_states:
         states[k] = v
     texture_bank.by_member("Textures").value.add(key=ensure.quoted(image_key), value=ensure._map(states))

@@ -109,7 +109,7 @@ class ModCreationContext(object):
                                      image_path,
                                      self.metadata.folder_path,
                                      'Assets/2D/Interface/Common/UnitsIcons',
-                                     unit.button_texture_key,
+                                     unit.button_texture_name,
                                      'UnitButtonTextureAdditionalBank')
         
     def write_edits(self: Self, msg: Message | None = None) -> None:

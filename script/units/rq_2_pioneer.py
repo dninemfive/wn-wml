@@ -10,7 +10,7 @@ DRAGONFLY = 'A37B_Dragonfly_US'
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # E-2C HAWKEYE
-    with ctx.create_unit("#RECO1 RQ-2 PIONEER", "US", DRAGONFLY) as rq_2_pioneer:
+    with ctx.create_unit("#RECO1 RQ-2 PIONEER", "US", DRAGONFLY, button_texture_src_path='img/units/rq_2_pioneer/icon.png') as rq_2_pioneer:
         with rq_2_pioneer.module_context('AirplanePositionModuleDescriptor') as position_module:
             position_module.edit_members(LowAltitudeFlyingAltitude=FLIGHT_ALTITUDE)
         with rq_2_pioneer.module_context('GenericMovement', True) as generic_movement_module:
