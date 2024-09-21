@@ -1,16 +1,19 @@
+from typing import Self
+
 from ndf_parse.model import Object
 from ndf_parse.model.abc import CellValue
 from typing import Self
-from utils.ndf import get_module_index, edit_members
+import utils.ndf.edit as edit
+import utils.ndf.unit_module as unit_module
 
 class ModuleContext(object):
-    def __init__(self: Self, unit: Object, module_type: str):
+    def __init__(self: Self, unit: Object, module_type: str, by_name: bool = False):
         self.unit = unit
         self.module_type = module_type
+        self.by_name = by_name
     
     def __enter__(self: Self) -> Self:
-        # self.root_msg = self.ctx.root_msg.nest(f"Editing {self.module_name} on {self.unit.by_member("ClassNameForDebug").value}")
-        self.index = get_module_index(self.unit, self.module_type)
+        self.index = unit_module.get_index(self.unit, self.module_type, self.by_name)
         self.object: Object = self.unit.by_member("ModulesDescriptors").value[self.index].value
         return self
     
@@ -18,7 +21,7 @@ class ModuleContext(object):
         self.unit.by_member("ModulesDescriptors").value[self.index].value = self.object
 
     def edit_members(self: Self, **kwargs: CellValue) -> None:
-        edit_members(self.object, **kwargs)
+        edit.members(self.object, **kwargs)
 
     def remove_member(self: Self, name: str) -> None:
-        self.remove_member(name)
+        self.object.remove_by_member(name)
