@@ -5,4 +5,5 @@ Uses [ndf-parse](https://github.com/Ulibos/ndf-parse) to make updating less tedi
 
 # Credits
 - Division icon is the [9th Infantry Division shoulder patch](https://commons.wikimedia.org/wiki/File:9th_Infantry_Division_patch.svg) found on Wikimedia Commons, created by Steven Williamson and placed in the public domain as a government work product.
+- E-2C Hawkeye icon is a [photograph](https://commons.wikimedia.org/wiki/File:RQ-2B_pioneer_uav.jpg) found on Wikimedia Commons, taken by Thomas Peterson and placed in the public domain as a government work product.
 - RQ-2 Pioneer icon is a [photograph](https://commons.wikimedia.org/wiki/File:RQ-2B_pioneer_uav.jpg) found on Wikimedia Commons, taken by Daniel J. McLain and placed in the public domain as a government work product.
