@@ -37,7 +37,7 @@ def add_image_literal(ndf_file: List,
 
 def copy_image_to_mod_folder(src_file_path: str, mod_output_path: str, folder_relative_to_gamedata: str, image_name: str) -> str:
     destination_folder = os.path.join(mod_output_path, "GameData", folder_relative_to_gamedata)
-    os.makedirs(destination_folder)
+    os.makedirs(destination_folder, exist_ok=True)
     dst_image_filename = f'{image_name}{os.path.splitext(src_file_path)[1]}'
     result_path = os.path.join(destination_folder, dst_image_filename)
     shutil.copyfile(src_file_path, result_path)
