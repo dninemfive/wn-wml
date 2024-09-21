@@ -1,5 +1,6 @@
 from typing import Callable, Self
 
+from creators.weapon import WeaponCreator
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
@@ -31,12 +32,12 @@ class UnitCreator(object):
         self.new: UnitMetadata = new_unit_metadata.unit_metadata
         self.src = UnitMetadata(copy_of)
         self.showroom_src = UnitMetadata(showroom_src) if showroom_src is not None else self.src
-        self.root_msg = msg
+        self.msg = msg
 
     def __enter__(self: Self) -> Self:
-        self.root_msg = self.root_msg.nest(f"Making {self.localized_name}")
-        self.root_msg.__enter__()
-        with self.root_msg.nest(f"Copying {self.src.descriptor_name}") as _:
+        self.msg = self.msg.nest(f"Making {self.localized_name}")
+        self.msg.__enter__()
+        with self.msg.nest(f"Copying {self.src.descriptor_name}") as _:
             self.unit_object = self.make_copy(self.ndf[UNITE_DESCRIPTOR])
         self.edit_ui_module(NameToken=self.name_token)
         with self.module_context("TTagsModuleDescriptor") as tags_module:
@@ -51,18 +52,18 @@ class UnitCreator(object):
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
-        self.apply(self.ndf, self.root_msg)
-        self.root_msg.__exit__(exc_type, exc_value, traceback)
+        self.apply(self.ndf, self.msg)
+        self.msg.__exit__(exc_type, exc_value, traceback)
 
-    def apply(self: Self, ndf: dict[str, List], msg: Message):
-        with msg.nest(f"Saving {self.new.name}") as msg2:
-            self.edit_unite_descriptor(ndf, msg2)
-            self.edit_division_packs(ndf, msg2)
-            self.edit_showroom_equivalence(ndf, msg2)
-            self.edit_all_units_tactic(ndf, msg2)
+    def apply(self: Self):
+        with self.msg.nest(f"Saving {self.new.name}") as msg2:
+            self.edit_unite_descriptor(self.ndf, msg2)
+            self.edit_division_packs(self.ndf, msg2)
+            self.edit_showroom_equivalence(self.ndf, msg2)
+            self.edit_all_units_tactic(self.ndf, msg2)
 
-    def make_copy(self: Self, ndf: List) -> Object:
-        copy: Object = ndf.by_name(self.src.descriptor_name).value.copy()
+    def make_copy(self: Self) -> Object:
+        copy: Object = self.ndf.by_name(self.src.descriptor_name).value.copy()
         edit.members(copy,
                      DescriptorId=self.guid,
                      ClassNameForDebug=self.new.class_name_for_debug)
@@ -87,6 +88,12 @@ class UnitCreator(object):
     def edit_all_units_tactic(self: Self, ndf: List):
         all_units_tactic = ndf.by_name("AllUnitsTactic").value
         all_units_tactic.add(self.new.descriptor_path)
+
+    def edit_weapons(self: Self, copy_of: str) -> WeaponCreator:
+        def _set_weapon_descriptor(descriptor_name: str) -> None:
+            with self.module_context('WeaponManager', by_name=True) as ctx:
+                ctx.edit_members(Default=descriptor_name)
+        return WeaponCreator(self.ndf, self.new, copy_of, self.msg, _set_weapon_descriptor)
 
     def module_context(self: Self, type_or_name: str, by_name: bool = False) -> ModuleContext:
         return ModuleContext(self.unit_object, type_or_name, by_name)

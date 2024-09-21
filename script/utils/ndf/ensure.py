@@ -89,14 +89,14 @@ def ndf_type(value: dict | list | int | str, _type: str | None = None) -> Map | 
         return value
     raise TypeError(f"ensure.ndf_type() doesn't work on type {type(value)}!")
 
-def _starts_with(s: str, prefix: str) -> str:
+def prefix(s: str, prefix: str) -> str:
     return s if s.startswith(prefix) else f'{prefix}{s}'
 
 def unit_descriptor(name_or_descriptor: str) -> str:
-    return _starts_with(name_or_descriptor, 'Descriptor_Unit_')
+    return prefix(name_or_descriptor, 'Descriptor_Unit_')
 
 def unit_path(descriptor_or_path: str) -> str:
-    return _starts_with(descriptor_or_path, "$/GFX/Unit/")
+    return prefix(descriptor_or_path, "$/GFX/Unit/")
 
 def quotes(s: str, quote: str = '"') -> str:
     if not s.startswith(quote):
