@@ -1,18 +1,21 @@
-from typing import Generator, Self
+# Iterator instead of Generator: https://stackoverflow.com/a/63237329
+from typing import Generic, Iterator, Self, TypeVar
 from utils.io import load, write
 from utils.types.message import Message, try_nest
 
-class Cache(object):
+V = TypeVar('V')
+
+class Cache(Generic[V]):
     def __init__(self: Self, file_path: str):
         self.file_path = file_path
-        self._data: dict[str, str] = None
+        self._data: dict[str, V] = None
         self._accessed: dict[str, bool] = None
 
-    def __getitem__(self: Self, key: str) -> str:
+    def __getitem__(self: Self, key: str) -> V:
         self._accessed[key] = True
         return self._data[key]
     
-    def __setitem__(self: Self, key: str, val: str):
+    def __setitem__(self: Self, key: str, val: V):
         self._accessed[key] = True
         self._data[key] = val
 
@@ -30,19 +33,19 @@ class Cache(object):
             write(self._data, self.file_path)
 
     @property
-    def keys(self: Self): # -> Generator[str]
+    def keys(self: Self) -> Iterator[str]:
         yield from self._data.keys()
 
     @property
-    def values(self: Self): # -> Generator[str]
+    def values(self: Self) -> Iterator[V]:
         yield from self._data.values()
 
     @property
-    def items(self: Self): # -> Generator[tuple[str, str]]
+    def items(self: Self) -> Iterator[tuple[str, V]]:
         yield from self._data.items()
 
     @property
-    def accessed_items(self: Self): # -> Generator[tuple[str, str]]
+    def accessed_items(self: Self) -> Iterator[tuple[str, V]]:
         for k, v in self.items:
             if self._accessed[k]:
                 yield (k, v)
