@@ -14,15 +14,15 @@ class DivisionRuleLookup(object):
     def look_up(self: Self, unit_descriptor_path: str, override_transports: list[str] | None = None, parent_msg: Message | None = None) -> TDeckUniteRule | None:
         result = None
         unit_rule_list: List
-        with try_nest(parent_msg, f"Looking up {unit_descriptor_path} for rules") as msg:
-            for division in self.division_prio:
-                with msg.nest(division) as _:
-                    try:
-                        unit_rule_list: List = self.division_rules.by_key(division).value.by_member("UnitRuleList").value
-                        result = unit_rule_list.find_by_cond(lambda x: x.value.by_member("UnitDescriptor").value == unit_descriptor_path).value
-                    except:
-                        continue
-                    if result is not None:
-                        result = TDeckUniteRule.from_ndf(result, override_transports)
-                        return result
+        # with try_nest(parent_msg, f"Looking up {unit_descriptor_path} for rules") as msg:
+        for division in self.division_prio:
+                # with msg.nest(division) as _:
+            try:
+                unit_rule_list: List = self.division_rules.by_key(division).value.by_member("UnitRuleList").value
+                result = unit_rule_list.find_by_cond(lambda x: x.value.by_member("UnitDescriptor").value == unit_descriptor_path).value
+            except:
+                continue
+            if result is not None:
+                result = TDeckUniteRule.from_ndf(result, override_transports)
+                return result
         raise Exception(f"Could not find {unit_descriptor_path} in any of the specified divisions!")

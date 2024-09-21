@@ -1,6 +1,6 @@
 from typing import Self
 
-from constants.misc import GUID, LOCALIZATION, MESSAGE_PADDING, UNIT_ID
+from constants.misc import GUID, LOCALIZATION, UNIT_ID
 from constants.ndf_paths import DIVISION_TEXTURES
 from constants.paths import CACHE_FOLDER
 from creators.division import DivisionCreator
@@ -39,7 +39,7 @@ class ModCreationContext(object):
        
     def __enter__(self: Self) -> Self:
         self.mod.check_if_src_is_newer()
-        with try_nest(self.root_msg, "Loading ndf files", child_padding=MESSAGE_PADDING) as msg:
+        with try_nest(self.root_msg, "Loading ndf files") as msg:
             self.ndf = {x:self.load_ndf(x, msg) for x in sorted(self.paths)}
         self.load_caches()
         return self
@@ -47,7 +47,7 @@ class ModCreationContext(object):
     def __exit__(self: Self, exc_type, exc_value, traceback):
         success = exc_type is None and exc_value is None and traceback is None        
         if success:
-            with self.root_msg.nest("Saving mod", child_padding=MESSAGE_PADDING) as write_msg:
+            with self.root_msg.nest("Saving mod") as write_msg:
                 self.write_edits(write_msg)
                 self.generate_and_write_localization(write_msg)
             self.save_caches()
@@ -75,9 +75,7 @@ class ModCreationContext(object):
                         insert_after: str | None = None,
                         root_msg: Message | None = None,
                         **changes: CellValue | None) -> None:
-        with try_nest(root_msg, 
-                      f"Making division {division.short_name}",
-                      child_padding=MESSAGE_PADDING) as msg:
+        with try_nest(root_msg, f"Making division {division.short_name}") as msg:
             DivisionCreator(self.guids.generate(division.descriptor_name), copy_of, insert_after, division, units, **changes).apply(self.ndf, msg)
 
     def start_unit_ids_at(self: Self, initial_id: int) -> UnitIdManager:

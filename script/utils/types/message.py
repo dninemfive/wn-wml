@@ -9,14 +9,14 @@ def _fmt(start: int, end: int) -> str:
 class Message(object):
     """ Wrapper for the {msg}...Done! pattern in a readable way """
     def __init__(self: Self, msg: str, indent: int = 0, force_nested = False):
-        self.msg = msg
         self.indent = indent
+        self.msg = msg.replace('\n', f'\n{self.indent_str}')
         self.has_nested = force_nested
-        self.start_time = time_ns()
     
     def __enter__(self: Self):
         self.printed_msg = f'{self.indent_str}{self.msg}...'
         print(self.printed_msg, end="", flush=True)
+        self.start_time = time_ns()
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
@@ -35,11 +35,11 @@ class Message(object):
     def indent_str(self: Self) -> str:
         return '  ' * self.indent
 
-    def nest(self: Self, msg: str, padding: int = 0, child_padding: int = 0, *args, **kwargs) -> Self:
+    def nest(self: Self, msg: str, *args, **kwargs) -> Self:
         if not self.has_nested:
             print()
             self.has_nested = True
-        return Message(msg, self.indent + 1, max(self.immediate_child_padding, padding), child_padding, *args, *kwargs)
+        return Message(msg, self.indent + 1, *args, *kwargs)
     
 def try_nest(parent: Message | None, msg: str, *args, **kwargs) -> Message:
     if parent is None:
