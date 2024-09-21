@@ -79,11 +79,14 @@ class ModCreationContext(object):
     def start_unit_ids_at(self: Self, initial_id: int) -> UnitIdManager:
         return UnitIdManager(self.unit_id_cache, initial_id)
     
-    def create_unit(self: Self, name: str, country: str, copy_of: str, showroom_src: str | None = None) -> UnitCreator:
+    def create_unit(self: Self, name: str, country: str, copy_of: str, showroom_src: str | None = None, button_texture_src_path: str | None = None) -> UnitCreator:
+        # TODO: msg here
+        metadata: NewUnitMetadata = NewUnitMetadata.from_(self.prefix, name, country, self.guids, self.localization)
         return UnitCreator(self.ndf,
-                           NewUnitMetadata.from_(self.prefix, name, country, self.guids, self.localization),
+                           metadata,
                            copy_of,
                            showroom_src,
+                           self.try_add_button_texture(button_texture_src_path, metadata.unit_metadata),
                            self.root_msg)
     
     def add_division_emblem(self: Self, msg: Message | None, image_path: str, division: DivisionMetadata) -> str:
@@ -95,6 +98,11 @@ class ModCreationContext(object):
                              division.emblem_namespace, 
                              "DivisionAdditionalTextureBank")
         
+    def try_add_button_texture(self: Self, image_path: str | None, unit: UnitMetadata) -> str | None:
+        if image_path is None:
+            return None
+        return self.add_button_texture(None, image_path, unit)
+    
     def add_button_texture(self: Self, msg: Message | None, image_path: str, unit: UnitMetadata) -> str:
         with try_nest(msg, f'Adding button texture from image at {image_path}') as _:
             return add_image_literal(self.ndf[BUTTON_TEXTURES_UNITES],
