@@ -12,6 +12,7 @@ class Message(object):
         self.indent = indent
         self.msg = msg.replace('\n', f'\n{self.indent_str}')
         self.has_nested = force_nested
+        self.has_failed = False
     
     def __enter__(self: Self):
         self.printed_msg = f'{self.indent_str}{self.msg}...'
@@ -20,16 +21,20 @@ class Message(object):
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
-        report = ""
-        if exc_type is not None or exc_value is not None or traceback is not None:
-            report = f"Failed: {exc_type} {exc_value}"
-        else:
-            report = "Done!"
+        if self.has_failed:
+            return
+        success = exc_type is not None or exc_value is not None or traceback is not None
+        self._print_report("Done!" if success else f"Failed: {exc_type} {exc_value}")
+        
+
+    def fail(self: Self, msg) -> None:
+        self._print_report(f'Failed: {msg}')
+        self.has_failed = True
+        self.__exit__()
+
+    def _print_report(self: Self, report: str):
         indents_or_periods = self.indent_str if self.has_nested else "".ljust(max(PADDING - len(self.printed_msg), 0), ".")
         print(f'{indents_or_periods}{report} {_fmt(self.start_time, time_ns())}')
-
-    def fail(self: Self, exc_type, exc_value, traceback) -> None:
-        self.__exit__(exc_type, exc_value, traceback)
     
     @property
     def indent_str(self: Self) -> str:
