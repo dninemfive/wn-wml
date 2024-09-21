@@ -1,7 +1,7 @@
 from typing import Self
 from time import time_ns
 
-PADDING = 100
+PADDING = 128
 
 def _fmt(start: int, end: int) -> str:
     return f'{(end - start) / 1e9:.3f}s'.rjust(9)
@@ -16,14 +16,15 @@ class Message(object):
     
     def __enter__(self: Self):
         self.printed_msg = f'{self.indent_str}{self.msg}...'
-        print(self.printed_msg, end="", flush=True)
+        end = '\n' if self.has_nested else ''
+        print(self.printed_msg, end=end, flush=True)
         self.start_time = time_ns()
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
         if self.has_failed:
             return
-        success = exc_type is not None or exc_value is not None or traceback is not None
+        success = not (exc_type is not None or exc_value is not None or traceback is not None)
         self._print_report("Done!" if success else f"Failed: {exc_type} {exc_value}")
         
 

@@ -32,7 +32,7 @@ class WeaponCreator(object):
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
-        self.apply(self.ndf, self.msg)
+        self.apply()
         self.callback(self.name)
         self.msg.__exit__(exc_type, exc_value, traceback)
 
@@ -41,7 +41,7 @@ class WeaponCreator(object):
             self.edit_ammunition(self.ndf, msg2)
 
     def make_copy(self: Self) -> Object:
-        copy: Object = self.ndf.by_name(self.copy_of).value.copy()
+        copy: Object = self.ndf[WEAPON_DESCRIPTOR].by_name(self.copy_of).value.copy()
         return copy
 
     @ndf_path(WEAPON_DESCRIPTOR)

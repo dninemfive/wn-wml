@@ -38,7 +38,7 @@ class UnitCreator(object):
         self.msg = self.msg.nest(f"Making {self.localized_name}")
         self.msg.__enter__()
         with self.msg.nest(f"Copying {self.src.descriptor_name}") as _:
-            self.unit_object = self.make_copy(self.ndf[UNITE_DESCRIPTOR])
+            self.unit_object = self.make_copy()
         self.edit_ui_module(NameToken=self.name_token)
         with self.module_context("TTagsModuleDescriptor") as tags_module:
             tag_set: List = tags_module.object.by_member("TagSet").value
@@ -52,7 +52,7 @@ class UnitCreator(object):
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
-        self.apply(self.ndf, self.msg)
+        self.apply()
         self.msg.__exit__(exc_type, exc_value, traceback)
 
     def apply(self: Self):
@@ -63,7 +63,7 @@ class UnitCreator(object):
             self.edit_all_units_tactic(self.ndf, msg2)
 
     def make_copy(self: Self) -> Object:
-        copy: Object = self.ndf.by_name(self.src.descriptor_name).value.copy()
+        copy: Object = self.ndf[UNITE_DESCRIPTOR].by_name(self.src.descriptor_name).value.copy()
         edit.members(copy,
                      DescriptorId=self.guid,
                      ClassNameForDebug=self.new.class_name_for_debug)
@@ -92,7 +92,7 @@ class UnitCreator(object):
     def edit_weapons(self: Self, copy_of: str) -> WeaponCreator:
         def _set_weapon_descriptor(descriptor_name: str) -> None:
             with self.module_context('WeaponManager', by_name=True) as ctx:
-                ctx.edit_members(Default=descriptor_name)
+                ctx.edit_members(Default=ensure.prefix(descriptor_name, '$/GFX/Weapon/'))
         return WeaponCreator(self.ndf, self.new, copy_of, self.msg, _set_weapon_descriptor)
 
     def module_context(self: Self, type_or_name: str, by_name: bool = False) -> ModuleContext:

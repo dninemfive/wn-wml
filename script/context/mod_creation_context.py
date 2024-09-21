@@ -1,4 +1,4 @@
-from typing import Self
+from typing import Any, Self
 
 from constants.misc import GUID, LOCALIZATION, UNIT_ID
 from constants.ndf_paths import DIVISION_TEXTURES
@@ -55,14 +55,16 @@ class ModCreationContext(object):
             pass # self.root_msg.fail()
 
     def load_caches(self: Self) -> None:
-        self.root_msg.nest("Loading caches...")
-        for name, _ in CACHES:
-            getattr(self, name).load()
+        with self.root_msg.nest("Loading caches...") as msg:
+            for name, _ in CACHES:
+                cache: Cache[Any] = getattr(self, f'{name}_cache')
+                cache.load(msg)
 
     def save_caches(self: Self) -> None:
-        self.root_msg.nest("Saving caches...")
-        for name, _ in CACHES:
-            getattr(self, name).save()
+        with self.root_msg.nest("Saving caches...") as msg:
+            for name, _ in CACHES:
+                cache: Cache[Any] = getattr(self, f'{name}_cache')
+                cache.save(msg)
     
     def load_ndf(self: Self, path: str, msg: Message) -> List:
         with msg.nest(f"Loading {path}") as _:
