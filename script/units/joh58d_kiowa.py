@@ -1,5 +1,3 @@
-
-from script.creators import weapon
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 from constants.ndf_paths import AMMUNITION_MISSILES, MISSILE_CARRIAGE, WEAPON_DESCRIPTOR
@@ -36,26 +34,9 @@ def edit_weapons(weapons: WeaponCreator) -> str:
     # copy first turret unit descriptor from Kiowa WR; replace ammunition with TOW 2A x4
     #       Ammo_AGM_BGM71D_TOW_2_x4
     # TODO: TOW 2A instead?
-    turret_weapons: List = weapons.TurretDescriptorList[0].value.by_member('MountedWeaponDescriptorList').value
-    turret_weapons[0].value.by_member('Ammunition').value = '$/GFX/Weapon/Ammo_AGM_BGM71D_TOW_2_x4'
-    # copy second turret unit descriptor from Combat Scout; replace ammunition with Hydra 70mm x19
-    #       Ammo_RocketAir_Hydra_70mm_x19
-    weapon_2 = turret_weapons[0].value.copy()
-    edit.members(weapon_2,
-                 Ammunition='$/GFX/Weapon/Ammo_RocketAir_Hydra_70mm_x19',
-                 EffectTag="'FireEffect_RocketAir_Hydra_70mm_x19'",
-                 HandheldEquipmentKey="'MeshAlternative_2'",
-                 SalvoStockIndex=1,
-                 WeaponActiveAndCanShootPropertyName="'WeaponActiveAndCanShoot_2'",
-                 WeaponIgnoredPropertyName="'WeaponIgnored_2'",
-                 WeaponShootDataPropertyName=['"WeaponShootData_0_2"',])
-    turret_weapons.add(ListRow(weapon_2))
-    turret_weapons.add(ListRow(make_mounted_weapon(
-        weapons,
-        
-    )))
-    weapons.add_mounted_weapon(weapon_index=1,
-                               )
+    weapons.get_turret_weapon(0).by_member('Ammunition').value = '$/GFX/Weapon/Ammo_AGM_BGM71D_TOW_2_x4'
+    weapons.add_mounted_weapon(Ammunition='$/GFX/Weapon/Ammo_RocketAir_Hydra_70mm_x19',
+                               EffectTag="'FireEffect_RocketAir_Hydra_70mm_x19'")
 
 def make_mounted_weapon(weapons: WeaponCreator,
                         base: Object | None = None,

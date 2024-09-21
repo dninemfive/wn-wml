@@ -85,25 +85,44 @@ class WeaponCreator(object):
         self.edit_members(TurretDescriptorList=value)
 
     def get_turret_weapons(self: Self, turret_or_turret_index: Object | ListRow | int) -> List:
-        turret: Object = self.TurretDescriptorList[turret_or_turret_index] if isinstance(turret_or_turret_index, int) else ensure.notrow(turret_or_turret_index)
-        return turret_or_turret_index.by_member('MountedWeaponDescriptorList').value
+        turret: Object = ensure.notrow(self.TurretDescriptorList[turret_or_turret_index]
+                                       if isinstance(turret_or_turret_index, int)
+                                       else turret_or_turret_index)
+        return turret.by_member('MountedWeaponDescriptorList').value
 
-    def get_turret_weapon(self: Self, turret_index: int, weapon_index_in_turret: int) -> Object:
-        return self.get_turret_weapons(turret_index)[weapon_index_in_turret].value
+    def get_turret_weapon(self: Self, turret_or_weapon_index: int, weapon_index_in_turret: int | None = None) -> Object:
+        if weapon_index_in_turret is None:
+            weapon_index_in_turret = turret_or_weapon_index
+            turret_or_weapon_index = 0
+        return self.get_turret_weapons(turret_or_weapon_index)[weapon_index_in_turret].value
     
     def get_weapon_counts(self: Self) -> list[list[int]]:
         result = []
+        weapon_index: int = 0
         for turret in self.TurretDescriptorList:
             turret_data: list[int] = []
-            for weapon in self.get_turret_weapons()
+            for _ in self.get_turret_weapons(turret):
+                turret_data.append(weapon_index)
+                weapon_index += 1
+            result.append(turret_data)
+        return result
+    
+    def next_weapon_index(self: Self) -> int:
+        result: int = -1
+        for l in self.get_weapon_counts():
+            for i in l:
+                result = max(result, i)
+        return result + 1
     
     def add_mounted_weapon(self: Self,
                         base: Object | None = None,
-                        weapon_index:           int = 0,
                         turret_index:           int = 0,
+                        weapon_index:           int | None = None,
                         mesh_offset:            int = 1,
                         weapon_shoot_data_ct:   int = 1,
                         **changes) -> None:
+        if weapon_index is None:
+            weapon_index = self.next_weapon_index()
         copy: Object = base.copy() if base is not None else self.get_turret_weapon(turret_index, 0)
         mesh_index = weapon_index + mesh_offset
         weapon_shoot_datas = [f'"WeaponShootData_{x}_{mesh_index}"' for x in range(weapon_shoot_data_ct)]
