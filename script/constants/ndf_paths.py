@@ -9,6 +9,7 @@ UNITE_DESCRIPTOR        = rf'GameData\Generated\Gameplay\Gfx\UniteDescriptor.ndf
 DIVISION_TEXTURES       = rf'GameData\Generated\UserInterface\Textures\DivisionTextures.ndf'
 AMMUNITION              = rf'GameData\Generated\Gameplay\Gfx\Ammunition.ndf'
 WEAPON_DESCRIPTOR       = rf'GameData\Generated\Gameplay\Gfx\Ammunition.ndf'
+BUTTON_TEXTURES_UNITES  = rf'GameData\Generated\UserInterface\Textures\ButtonTexturesUnites.ndf'
 
 ALL = set([ALL_UNITS_TACTIC,
            DECK_SERIALIZER,
@@ -20,4 +21,5 @@ ALL = set([ALL_UNITS_TACTIC,
            UNITE_DESCRIPTOR,
            DIVISION_TEXTURES,
            AMMUNITION,
-           WEAPON_DESCRIPTOR])
+           WEAPON_DESCRIPTOR,
+           BUTTON_TEXTURES_UNITES])

@@ -1,7 +1,7 @@
 from typing import Self
 
 from constants.misc import GUID, LOCALIZATION, MESSAGE_PADDING, UNIT_ID
-from constants.ndf_paths import DIVISION_TEXTURES
+from constants.ndf_paths import BUTTON_TEXTURES_UNITES, DIVISION_TEXTURES
 from constants.paths import CACHE_FOLDER
 from creators.division import DivisionCreator
 from creators.unit import UnitCreator
@@ -12,10 +12,11 @@ from metadata.division import DivisionMetadata
 from metadata.division_unit_registry import DivisionUnitRegistry
 from metadata.mod import ModMetadata
 from metadata.new_unit import NewUnitMetadata
+from metadata.unit import UnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
-from utils.ndf.files import add_image
+from utils.ndf.files import add_image, add_image_literal
 from utils.types.cache_set import CacheSet
 from utils.types.message import Message, try_nest
 
@@ -93,6 +94,15 @@ class ModCreationContext(object):
                              "Assets/2D/Interface/UseOutGame/Division/Emblem",
                              division.emblem_namespace, 
                              "DivisionAdditionalTextureBank")
+        
+    def add_button_texture(self: Self, msg: Message | None, image_path: str, unit: UnitMetadata) -> str:
+        with try_nest(msg, f'Adding button texture from image at {image_path}') as _:
+            return add_image_literal(self.ndf[BUTTON_TEXTURES_UNITES],
+                                     image_path,
+                                     self.metadata.folder_path,
+                                     'Assets/2D/Interface/Common/UnitsIcons',
+                                     unit.button_texture_key,
+                                     'UnitButtonTextureAdditionalBank')
         
     def write_edits(self: Self, msg: Message | None = None) -> None:
         if msg is None:

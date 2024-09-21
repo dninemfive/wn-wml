@@ -98,7 +98,7 @@ def unit_descriptor(name_or_descriptor: str) -> str:
 def unit_path(descriptor_or_path: str) -> str:
     return _starts_with(descriptor_or_path, "$/GFX/Unit/")
 
-def quotes(s: str, quote: str = '"') -> str:
+def quoted(s: str, quote: str = '"') -> str:
     if not s.startswith(quote):
         s = f'{quote}{s}'
     if not s.endswith(quote):

@@ -99,7 +99,7 @@ class UnitCreator(object):
         self.edit_ui_module(NameToken=self.ctx.ctx.register(name))
 
     def add_tag(self: Self, tag: str) -> None:
-        tag = ensure.quotes(tag)
+        tag = ensure.quoted(tag)
         with self.module_context("TTagsModuleDescriptor") as tags_module:
             tag_set: List = tags_module.object.by_member("TagSet").value
             tag_set.add(tag)
@@ -109,7 +109,7 @@ class UnitCreator(object):
             self.add_tag(tag)
 
     def remove_tag(self: Self, tag: str) -> None:
-        tag = ensure.quotes(tag)
+        tag = ensure.quoted(tag)
         with self.module_context("TTagsModuleDescriptor") as tags_module:
             tag_set: List = tags_module.object.by_member("TagSet").value
             index = tag_set.find_by_cond(lambda x: x.value == tag)

@@ -7,7 +7,7 @@ from utils.localization import delocalize
 @dataclass
 class UnitMetadata(object):
     name: str
-    
+
     @property
     def class_name_for_debug(self: Self) -> str:
         return f"'Unit_{self.name}'"
@@ -35,6 +35,10 @@ class UnitMetadata(object):
     @property
     def tag(self: Self) -> str:
         return f'"UNITE_{self.name}"'
+    
+    @property
+    def button_texture_key(self: Self) -> str:
+        return f'"Texture_Button_Unit_{self.name}"'
     
     @staticmethod
     def from_localized_name(prefix: str, localized_name: str, country: str) -> Self:
