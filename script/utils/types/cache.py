@@ -1,4 +1,5 @@
 # Iterator instead of Generator: https://stackoverflow.com/a/63237329
+import os
 from typing import Generic, Iterator, Self, TypeVar
 from utils.io import load, write
 from utils.types.message import Message, try_nest
@@ -6,8 +7,8 @@ from utils.types.message import Message, try_nest
 V = TypeVar('V')
 
 class Cache(Generic[V]):
-    def __init__(self: Self, file_path: str):
-        self.file_path = file_path
+    def __init__(self: Self, base_path: str, name: str):
+        self.file_path = os.path.join(base_path, f'{name}.cache')
         self._data: dict[str, V] = None
         self._accessed: dict[str, bool] = None
 

@@ -15,34 +15,26 @@ from metadata.new_unit import NewUnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
+from script.utils.types.cache import Cache
 from utils.ndf.files import add_image
 from utils.types.cache_set import CacheSet
 from utils.types.message import Message, try_nest
 
+CACHES: list[tuple[str, type]] = [(GUID, str), (LOCALIZATION, str), (UNIT_ID, int)]
 
 class ModCreationContext(object):
     @property
     def prefix(self: Self) -> str:
         return self.metadata.dev_short_name
     
-    @property
-    def guid_cache(self: Self) -> dict[str, str]:
-        return self.caches[GUID]
-    
-    @property
-    def localization_cache(self: Self) -> dict[str, str]:
-        return self.caches[LOCALIZATION]
-    
-    @property
-    def unit_id_cache(self: Self) -> dict[str, str]:
-        return self.caches[UNIT_ID]
-    
     def __init__(self: Self, metadata: ModMetadata, root_msg: Message | None, *ndf_paths: str):
         self.metadata = metadata
         self.mod = Mod(metadata.folder_path, metadata.folder_path)
         self.root_msg = root_msg
         self.paths = ndf_paths
-        self.caches = CacheSet(CACHE_FOLDER, GUID, LOCALIZATION, UNIT_ID)
+        self.guid_cache:            Cache[str] = Cache(CACHE_FOLDER, GUID)
+        self.localization_cache:    Cache[str] = Cache(CACHE_FOLDER, LOCALIZATION)
+        self.unit_id_cache:         Cache[int] = Cache(CACHE_FOLDER, UNIT_ID)
         self.guids = GuidManager(self.guid_cache)
         self.localization = LocalizationManager(self.localization_cache, self.metadata.localization_prefix)
        
@@ -50,14 +42,28 @@ class ModCreationContext(object):
         self.mod.check_if_src_is_newer()
         with try_nest(self.root_msg, "Loading ndf files", child_padding=MESSAGE_PADDING) as msg:
             self.ndf = {x:self.load_ndf(x, msg) for x in sorted(self.paths)}
-        self.caches.load(self.root_msg)
+        self.load_caches()
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
-        with self.root_msg.nest("Saving mod", child_padding=MESSAGE_PADDING) as write_msg:
-            self.write_edits(write_msg)
-            self.generate_and_write_localization(write_msg)
-        self.caches.save(self.root_msg)
+        success = exc_type is None and exc_value is None and traceback is None        
+        if success:
+            with self.root_msg.nest("Saving mod", child_padding=MESSAGE_PADDING) as write_msg:
+                self.write_edits(write_msg)
+                self.generate_and_write_localization(write_msg)
+            self.save_caches()
+        else:
+            pass # self.root_msg.fail()
+
+    def load_caches(self: Self) -> None:
+        self.root_msg.nest("Loading caches...")
+        for name, _ in CACHES:
+            getattr(self, name).load()
+
+    def save_caches(self: Self) -> None:
+        self.root_msg.nest("Saving caches...")
+        for name, _ in CACHES:
+            getattr(self, name).save()
     
     def load_ndf(self: Self, path: str, msg: Message) -> List:
         with msg.nest(f"Loading {path}") as _:
