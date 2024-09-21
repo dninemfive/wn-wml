@@ -10,7 +10,7 @@ class UnitIdManager(object):
 
     @property
     def items(self: Self): # -> Generator[tuple[str, str]]:
-        yield from sorted(self._cache.items, key=lambda x: x[1])
+        yield from sorted(self._cache.accessed_items, key=lambda x: x[1])
 
     def register(self: Self, descriptor_path: str) -> int:
         if descriptor_path not in self._cache:            
