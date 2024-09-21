@@ -80,9 +80,9 @@ class WeaponCreator(object):
     def TurretDescriptorList(self: Self) -> List:
         return self.object.by_member('TurretDescriptorList').value
     
-    @TurretDescriptorList.setter
-    def TurretDescriptorList(self: Self, value: list[Object] | List) -> None:
-        self.edit_members(TurretDescriptorList=value)
+    # @TurretDescriptorList.setter
+    # def TurretDescriptorList(self: Self, value: list[Object] | List) -> None:
+    #    self.edit_members(TurretDescriptorList=value)
 
     def get_turret_weapons(self: Self, turret_or_turret_index: Object | ListRow | int) -> List:
         turret: Object = ensure.notrow(self.TurretDescriptorList[turret_or_turret_index]
@@ -133,4 +133,4 @@ class WeaponCreator(object):
                     WeaponIgnoredPropertyName=f"'WeaponIgnored_{mesh_index}'",
                     WeaponShootDataPropertyName=weapon_shoot_datas,
                     **changes)
-        self.TurretDescriptorList.add(ListRow(copy))
+        self.TurretDescriptorList.add(ensure.listrow(copy))
