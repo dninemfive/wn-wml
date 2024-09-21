@@ -12,6 +12,7 @@ DIVISION_TEXTURES       = rf'GameData\Generated\UserInterface\Textures\DivisionT
 AMMUNITION              = rf'GameData\Generated\Gameplay\Gfx\Ammunition.ndf'
 WEAPON_DESCRIPTOR       = rf'GameData\Generated\Gameplay\Gfx\WeaponDescriptor.ndf'
 MISSILE_CARRIAGE        = rf'GameData\Generated\Gameplay\Gfx\MissileCarriage.ndf'
+AMMUNITION_MISSILES     = rf'GameData\Generated\Gameplay\Gfx\AmmunitionMissiles.ndf'
 
 ALL = set([ALL_UNITS_TACTIC,
            DECK_SERIALIZER,
@@ -24,4 +25,5 @@ ALL = set([ALL_UNITS_TACTIC,
            DIVISION_TEXTURES,
            AMMUNITION,
            WEAPON_DESCRIPTOR,
-           MISSILE_CARRIAGE])
+           MISSILE_CARRIAGE,
+           AMMUNITION_MISSILES])

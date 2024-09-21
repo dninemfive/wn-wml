@@ -35,3 +35,7 @@ class Cache(object):
     @property
     def items(self: Self): # -> Generator[tuple[str, str]]:
         yield from self._data.items()
+
+    @property
+    def any(self: Self) -> bool:
+        return len(self._data.keys()) > 0

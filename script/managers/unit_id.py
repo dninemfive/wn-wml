@@ -6,7 +6,7 @@ from utils.types.cache import Cache
 class UnitIdManager(object):
     def __init__(self: Self, cache: Cache, initial_id: int):
         self._cache = cache
-        self.current_id = initial_id
+        self.current_id = max([int(x) for x in cache.values]) if cache.any else initial_id
 
     @property
     def items(self: Self): # -> Generator[tuple[str, str]]:

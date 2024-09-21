@@ -7,6 +7,7 @@ import constants.paths as paths
 import units.cmd_m998_humvee_agl
 import units.cmd_m1010_tc3v
 import units.e2c_hawkeye
+import units.joh58d_kiowa
 import units.m167a2_pivads_20mm
 import units.m198_155mm_clu
 import units.m198_copperhead
@@ -131,7 +132,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("OH58C_Scout_US", 1)
                 division_units.register_vanilla("OH58D_Combat_Scout_US", 1)
                 division_units.register_vanilla("EH60A_EW_US", 1)
-                # [[👓]] JOH-58D KIOWA
+                division_units.register(units.joh58d_kiowa.create(mod_context))
                 # insert between OH-58D KIOWA and OH-58D KIOWA Wr.
                 # [[👓]] M561 GAMA GOAT FAAR
                 division_units.register(units.rq_2_pioneer.create(mod_context))

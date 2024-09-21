@@ -49,7 +49,7 @@ class ModCreationContext(object):
     def __enter__(self: Self) -> Self:
         self.mod.check_if_src_is_newer()
         with try_nest(self.root_msg, "Loading ndf files", child_padding=MESSAGE_PADDING) as msg:
-            self.ndf = {x:self.load_ndf(x, msg) for x in self.paths}
+            self.ndf = {x:self.load_ndf(x, msg) for x in sorted(self.paths)}
         self.caches.load(self.root_msg)
         return self
     

@@ -35,14 +35,14 @@ class DivisionUnitRegistry(object):
         for k, v in self.unit_ids.items:
             unit_ids.add(k=k, v=v)
 
-    def register(self: Self, info: UnitRules, override_transports: str | list[str] | None = None):
+    def register(self: Self, rules: UnitRules, override_transports: str | list[str] | None = None):
         override_transports = ensure_unit_path_list(override_transports)
         if override_transports is not None:
-            info.rule.AvailableTransportList = override_transports
-            info.rule.AvailableWithoutTransport = False
-        with try_nest(self.parent_msg, f"Registering {info.unit.name}") as _:
-            self.units.append(info)
-            self.unit_ids.register(info.unit.descriptor_path)
+            rules.rule.AvailableTransportList = override_transports
+            rules.rule.AvailableWithoutTransport = False
+        with try_nest(self.parent_msg, f"Registering {rules.unit.name}") as _:
+            self.units.append(rules)
+            self.unit_ids.register(rules.unit.descriptor_path)
 
     def register_vanilla(self: Self, unit: str | UnitMetadata, packs: int, override_transports: str | list[str] | None = None):
         if isinstance(unit, str):
