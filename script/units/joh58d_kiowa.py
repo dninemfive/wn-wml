@@ -1,20 +1,23 @@
 
+from script.creators import weapon
+import utils.ndf.edit as edit
+import utils.ndf.ensure as ensure
+from constants.ndf_paths import AMMUNITION_MISSILES, MISSILE_CARRIAGE, WEAPON_DESCRIPTOR
 from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
 from creators.unit import UNIT_UI
+from creators.weapon import WeaponCreator
 from metadata.division_unit_registry import UnitRules
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, ListRow, Object
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-from constants.ndf_paths import WEAPON_DESCRIPTOR, MISSILE_CARRIAGE, AMMUNITION_MISSILES
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # JOH-58D KIOWA
     # like a mix of the other Kiowas, with 4 TOW 2A and 19 Hydra 70
     with ctx.create_unit("#RECO3 JOH-58D KIOWA", "US", "OH58D_Combat_Scout_US") as joh58d_kiowa:
-        joh58d_kiowa.get_module('WeaponManager', by_name=True).by_member('Default').value = generate_weapon_descriptor(ctx.ndf[WEAPON_DESCRIPTOR])
+        with joh58d_kiowa.edit_weapons() as weapons:
+            edit_weapons(weapons)
         joh58d_kiowa.get_module('MissileCarriage', by_name=True).by_member('Connoisseur').value = generate_missile_carriages(ctx.ndf[MISSILE_CARRIAGE])
         # insert after Kiowa and before Kiowa WR
         joh58d_kiowa.edit_ui_module(UpgradeFromUnit='Descriptor_Unit_OH58D_Combat_Scout_US')
@@ -27,15 +30,13 @@ def generate_ammo_descriptor(ctx: ModCreationContext) -> str:
     copy: Object = ctx.ndf[AMMUNITION_MISSILES].by_name('Ammo_ATGM_BGM71D_TOW_2A_x2').value.copy()
     copy.by_member('DescriptorId').value = ctx.guids.generate(ammo_name)
     
-def generate_weapon_descriptor(weapon_descriptor_ndf: List) -> str:
-    # copy descriptor
-    copy: Object = weapon_descriptor_ndf.by_name('WeaponDescriptor_OH58D_Kiowa_Warrior_US').value.copy()
+def edit_weapons(weapons: WeaponCreator) -> str:
     # set ammo
-    edit.members(copy, Salves=[1,1])
+    weapons.Salves = [1,1]
     # copy first turret unit descriptor from Kiowa WR; replace ammunition with TOW 2A x4
     #       Ammo_AGM_BGM71D_TOW_2_x4
     # TODO: TOW 2A instead?
-    turret_weapons: List = copy.by_member('TurretDescriptorList').value[0].value.by_member('MountedWeaponDescriptorList').value
+    turret_weapons: List = weapons.TurretDescriptorList[0].value.by_member('MountedWeaponDescriptorList').value
     turret_weapons[0].value.by_member('Ammunition').value = '$/GFX/Weapon/Ammo_AGM_BGM71D_TOW_2_x4'
     # copy second turret unit descriptor from Combat Scout; replace ammunition with Hydra 70mm x19
     #       Ammo_RocketAir_Hydra_70mm_x19
@@ -46,11 +47,34 @@ def generate_weapon_descriptor(weapon_descriptor_ndf: List) -> str:
                  HandheldEquipmentKey="'MeshAlternative_2'",
                  SalvoStockIndex=1,
                  WeaponActiveAndCanShootPropertyName="'WeaponActiveAndCanShoot_2'",
-                 WeaponIgnoredPropertyName="'WeaponIgnored_1'",
+                 WeaponIgnoredPropertyName="'WeaponIgnored_2'",
                  WeaponShootDataPropertyName=['"WeaponShootData_0_2"',])
     turret_weapons.add(ListRow(weapon_2))
-    weapon_descriptor_ndf.add(ListRow(copy, 'export', 'WeaponDescriptor_d9_RECO2_JOH_58D_KIOWA_US'))
-    return '$/GFX/Weapon/WeaponDescriptor_d9_RECO2_JOH_58D_KIOWA_US'
+    turret_weapons.add(ListRow(make_mounted_weapon(
+        weapons,
+        
+    )))
+    weapons.add_mounted_weapon(weapon_index=1,
+                               )
+
+def make_mounted_weapon(weapons: WeaponCreator,
+                        base: Object | None = None,
+                        weapon_index:           int = 0,
+                        turret_index:           int = 0,
+                        mesh_offset:            int = 1,
+                        weapon_shoot_data_ct:   int = 1,
+                        **changes) -> Object:
+    copy: Object = base.copy() if base is not None else weapons.get_turret_weapon(turret_index, 0)
+    mesh_index = weapon_index + mesh_offset
+    weapon_shoot_datas = [f'"WeaponShootData_{x}_{mesh_index}"' for x in range(weapon_shoot_data_ct)]
+    edit.members(copy,
+                 HandheldEquipmentKey=f"'MeshAlternative_{mesh_index}'",
+                 SalvoStockIndex=weapon_index,
+                 WeaponActiveAndCanShootPropertyName=f"'WeaponActiveAndCanShoot_{mesh_index}'",
+                 WeaponIgnoredPropertyName=f"'WeaponIgnored_{mesh_index}'",
+                 WeaponShootDataPropertyName=weapon_shoot_datas,
+                 **changes)
+    return copy
 
 def generate_missile_carriages(missile_carriage_ndf: List) -> str:
     copy: Object = missile_carriage_ndf.by_name('MissileCarriage_OH58D_Combat_Scout_US').value.copy()

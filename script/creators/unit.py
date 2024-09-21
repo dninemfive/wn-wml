@@ -89,7 +89,9 @@ class UnitCreator(object):
         all_units_tactic = ndf.by_name("AllUnitsTactic").value
         all_units_tactic.add(self.new.descriptor_path)
 
-    def edit_weapons(self: Self, copy_of: str) -> WeaponCreator:
+    def edit_weapons(self: Self, copy_of: str | None = None) -> WeaponCreator:
+        if copy_of is None:
+            copy_of = self.src.name
         def _set_weapon_descriptor(descriptor_name: str) -> None:
             with self.module_context('WeaponManager', by_name=True) as ctx:
                 ctx.edit_members(Default=ensure.prefix(descriptor_name, '$/GFX/Weapon/'))

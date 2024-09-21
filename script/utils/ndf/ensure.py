@@ -29,6 +29,11 @@ def memberrow(pair_or_key: tuple[str, CellValue] | MemberRow | str, value_or_non
         return pair_or_key
     else:
         return MemberRow(member=pair_or_key[0], value=ndf_type(pair_or_key[1]))
+    
+def notrow(row_or_value: ListRow | MemberRow | MapRow) -> CellValue:
+    if isinstance(row_or_value, (ListRow, MemberRow, MapRow)):
+        return row_or_value.value
+    return row_or_value
 
 def _add_from(map_or_object: Map | Object, items: dict[str, CellValue | None] | list[tuple[str, CellValue | None]]):
     row_fn = maprow if isinstance(map_or_object, Map) else memberrow
