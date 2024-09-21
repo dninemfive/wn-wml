@@ -15,9 +15,8 @@ from metadata.new_unit import NewUnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
-from script.utils.types.cache import Cache
 from utils.ndf.files import add_image
-from utils.types.cache_set import CacheSet
+from utils.types.cache import Cache
 from utils.types.message import Message, try_nest
 
 CACHES: list[tuple[str, type]] = [(GUID, str), (LOCALIZATION, str), (UNIT_ID, int)]
