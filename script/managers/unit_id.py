@@ -4,7 +4,7 @@ from utils.types.cache import Cache
 
 
 class UnitIdManager(object):
-    def __init__(self: Self, cache: Cache, initial_id: int):
+    def __init__(self: Self, cache: Cache[int], initial_id: int):
         self._cache = cache
         self.current_id = max(cache.values) if cache.any else initial_id
 
@@ -14,6 +14,6 @@ class UnitIdManager(object):
 
     def register(self: Self, descriptor_path: str) -> int:
         if descriptor_path not in self._cache:            
-            self._cache[descriptor_path] = str(self.current_id)
+            self._cache[descriptor_path] = self.current_id
             self.current_id += 1
         return self._cache[descriptor_path]

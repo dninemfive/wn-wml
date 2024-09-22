@@ -33,7 +33,7 @@ class DivisionUnitRegistry(object):
     def edit_deck_serializer(self: Self, ndf: List):
         unit_ids: Map = ndf.by_name("DeckSerializer").value.by_member('UnitIds').value
         for k, v in self.unit_ids.items:
-            unit_ids.add(k=k, v=v)
+            unit_ids.add(k=k, v=str(v))
 
     def register(self: Self, rules: UnitRules, override_transports: str | list[str] | None = None):
         override_transports = ensure_unit_path_list(override_transports)

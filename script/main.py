@@ -14,6 +14,7 @@ import units.m198_copperhead
 import units.m966_humvee_tow
 import units.m998_avenger
 import units.m998_humvee_agl
+import units.m998_humvee_glhl
 import units.m998_humvee_m2hb
 import units.m998_humvee_supply
 import units.m1075_pls
@@ -108,7 +109,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # RDF/LT
                 division_units.register(units.m966_humvee_tow.create(mod_context))
                 division_units.register_vanilla('M1025_Humvee_TOW_US', 3)
-                # M998 HUMVEE GLH-L
+                division_units.register(units.m998_humvee_glhl.create(mod_context))
                 # transports don't get registered separately
                 # M1025 HUMVEE MP
                 units.m998_humvee_m2hb.create(mod_context)

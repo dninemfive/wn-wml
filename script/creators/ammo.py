@@ -6,6 +6,7 @@ import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 from constants.ndf_paths import AMMUNITION
 from context.module_context import ModuleContext
+from managers.guid import GuidManager
 from metadata.unit import UnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
@@ -16,12 +17,12 @@ from utils.types.message import Message
 
 
 class AmmoCreator(object):
-    def __init__(self: Self, ndf: dict[str, List], name: str, copy_of: str, ammo_guid: str, hit_roll_guid: str):
+    def __init__(self: Self, ndf: dict[str, List], name: str, copy_of: str, guids: GuidManager):
         self.ndf = ndf
         self.name = ensure.prefix(name, 'Ammo_')
         self.copy_of = ensure.prefix(copy_of, 'Ammo_')
-        self.ammo_guid = ammo_guid
-        self.hit_roll_guid = hit_roll_guid
+        self.ammo_guid = guids.generate(self.name)
+        self.hit_roll_guid = guids.generate(f'{self.name}HitRoll')
 
     def __enter__(self: Self) -> Self:
         self.root_msg = self.ctx.root_msg.nest(f"Making {self.name}")

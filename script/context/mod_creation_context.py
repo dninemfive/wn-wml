@@ -15,6 +15,7 @@ from metadata.new_unit import NewUnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
+from creators.ammo import AmmoCreator
 from utils.ndf.files import add_image
 from utils.types.cache import Cache
 from utils.types.message import Message, try_nest
@@ -113,3 +114,6 @@ class ModCreationContext(object):
         with msg.nest("Writing localization") as msg:
             with open(self.metadata.localization_path, "w") as file:
                 file.write(csv)
+
+    def create_ammo(self: Self, name: str, copy_of: str) -> AmmoCreator:
+        return AmmoCreator(self.ndf, name, copy_of, self.guids)
