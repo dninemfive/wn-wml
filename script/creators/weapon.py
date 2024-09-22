@@ -84,7 +84,7 @@ class WeaponCreator(object):
     # def TurretDescriptorList(self: Self, value: list[Object] | List) -> None:
     #    self.edit_members(TurretDescriptorList=value)
 
-    def get_turret_weapons(self: Self, turret_or_turret_index: Object | ListRow | int) -> List:
+    def get_turret_weapon_list(self: Self, turret_or_turret_index: Object | ListRow | int) -> List:
         turret: Object = ensure.notrow(self.TurretDescriptorList[turret_or_turret_index]
                                        if isinstance(turret_or_turret_index, int)
                                        else turret_or_turret_index)
@@ -94,14 +94,14 @@ class WeaponCreator(object):
         if weapon_index_in_turret is None:
             weapon_index_in_turret = turret_or_weapon_index
             turret_or_weapon_index = 0
-        return self.get_turret_weapons(turret_or_weapon_index)[weapon_index_in_turret].value
+        return self.get_turret_weapon_list(turret_or_weapon_index)[weapon_index_in_turret].value
     
     def get_weapon_counts(self: Self) -> list[list[int]]:
         result = []
         weapon_index: int = 0
         for turret in self.TurretDescriptorList:
             turret_data: list[int] = []
-            for _ in self.get_turret_weapons(turret):
+            for _ in self.get_turret_weapon_list(turret):
                 turret_data.append(weapon_index)
                 weapon_index += 1
             result.append(turret_data)
@@ -123,7 +123,7 @@ class WeaponCreator(object):
                         **changes) -> None:
         if weapon_index is None:
             weapon_index = self.next_weapon_index()
-        copy: Object = base.copy() if base is not None else self.get_turret_weapon(turret_index, 0)
+        copy: Object = base.copy() if base is not None else self.get_turret_weapon(turret_index, 0).copy()
         mesh_index = weapon_index + mesh_offset
         weapon_shoot_datas = [f'"WeaponShootData_{x}_{mesh_index}"' for x in range(weapon_shoot_data_ct)]
         edit.members(copy,
@@ -133,4 +133,7 @@ class WeaponCreator(object):
                     WeaponIgnoredPropertyName=f"'WeaponIgnored_{mesh_index}'",
                     WeaponShootDataPropertyName=weapon_shoot_datas,
                     **changes)
-        self.TurretDescriptorList.add(ensure.listrow(copy))
+        print("members:")
+        for member in copy:
+            print(str(member))
+        self.get_turret_weapon_list(turret_index).add(ensure.listrow(copy))
