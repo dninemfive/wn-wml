@@ -18,7 +18,7 @@ def get_row(unit: Object, type_or_name: str, by_name: bool) -> ListRow:
             result = module
             break
     if result is None:
-        raise KeyError(f"Could not find module {type_or_name}{" by name" if by_name else ""} on unit {unit.by_member("ClassNameForDebug")}")
+        raise KeyError(f"Could not find module {type_or_name}{" by name" if by_name else ""} on unit {unit.by_member("ClassNameForDebug").value}")
     return result
 
 def get(unit: Object, module_type: str) -> ListRow | None:

@@ -6,6 +6,7 @@ import constants.ndf_paths as ndf_paths
 import constants.paths as paths
 import units.cmd_m998_humvee_agl
 import units.cmd_m1010_tc3v
+import units.cmd_mot_rifles_ldr
 import units.e2c_hawkeye
 import units.joh58d_kiowa
 import units.m167a2_pivads_20mm
@@ -75,7 +76,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 LARGE_UNIT_TRANSPORTS = [M1038_HUMVEE, BLACKHAWK]
                 # TODO: variant of the mod which doesn't reference the MP Humvee because it's a DLC unit
                 division_units.register(units.mot_mp_patrol.create(mod_context), [M998_HUMVEE, "Descriptor_Unit_M1025_Humvee_MP_US"])
-                # MOT. RIFLES LDR.
+                division_units.register(units.cmd_mot_rifles_ldr.create(mod_context), LARGE_UNIT_TRANSPORTS)
                 # MOT. RIFLES
                 # MOT. RIFLES (DRAGON)
                 division_units.register_vanilla("Rifles_half_CMD_US", 1, SMALL_UNIT_TRANSPORTS)
