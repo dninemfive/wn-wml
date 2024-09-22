@@ -11,7 +11,8 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         with mk19.module_context(UNIT_UI) as ui_module:
             specialties: List = ui_module.object.by_member("SpecialtiesList").value
             specialties.remove(specialties.find_by_cond(lambda x: x.value == "'_para'"))
-            ui_module.edit_members(SpecialtiesList=specialties)
+            ui_module.edit_members(SpecialtiesList=specialties,
+                                   UpgradeFromUnit='Descriptor_Unit_HMGteam_M2HB_US')
         mk19.remove_module("TDeploymentShiftModuleDescriptor")
         return UnitRules(mk19, 1, [0, 6, 4, 0])
         
