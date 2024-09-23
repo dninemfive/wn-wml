@@ -1,5 +1,5 @@
 # 👓 FAV
 # model: ILTIS
 # range: custom
-# air transportable, _transport_1
+# transport, _transport_1, air_transportable
 # stealth, vision: M151A2 M2HB

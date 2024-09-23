@@ -19,6 +19,7 @@ import units.m998_humvee_glhl
 import units.m998_humvee_m2hb
 import units.m998_humvee_supply
 import units.m1075_pls
+import units.mim_72a_t_chaparral
 import units.mk19_40mm
 import units.mot_engineers
 import units.mot_mp_patrol
@@ -149,7 +150,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register(units.m167a2_pivads_20mm.create(mod_context), [M998_HUMVEE, CHINOOK])
                 division_units.register(units.m998_avenger.create(mod_context))
                 # M998 SETTER
-                # MIM-72A T-CHAPARRAL
+                division_units.register(units.mim_72a_t_chaparral.create(mod_context), [M998_HUMVEE])
                 division_units.register_vanilla("MANPAD_Stinger_C_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register(units.stinger_tdar.create(mod_context), SMALL_UNIT_TRANSPORTS)
                 # EXCALIBUR VWC
