@@ -18,6 +18,7 @@ Uses [ndf-parse](https://github.com/Ulibos/ndf-parse) to make updating less tedi
 | E-2C Hawkeye | Thomas Peterson | [Wikimedia Commons](https://en.m.wikipedia.org/wiki/File:Grumman_E-2C_Hawkeye_in_flight_DN-SD-04-13416.jpg) | |
 | RQ-2 Pioneer | Daniel J. McLain | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:RQ-2B_pioneer_uav.jpg) | |
 | XM-85 T-Chaparral | unknown | [Federation of American Scientists Military Analysis Network](https://man.fas.org/dod-101/sys/land/chaparral_i.htm) | i was not able to find copyright information for the colorized version which i used, but [this Wikimedia Commons page](https://commons.wikimedia.org/wiki/File:Towed_Chaparral.jpg) with a grayscale version of the same photograph indicates that it is a government work product, which is very likely given the trailer's prototype status. |
+| M1075 PLS | unknown | [Federation of American Scientists Military Analysis Network](https://man.fas.org/dod-101/sys/land/pls.htm) | |
 
 ## Adaptations
 1. The patch was adapted to look better at a low resolution by replacing the black outlines around the circle with a darker shade of green
