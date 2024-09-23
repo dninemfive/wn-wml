@@ -21,6 +21,8 @@ import units.m998_humvee_supply
 import units.m1075_pls
 import units.mk19_40mm
 import units.mot_mp_patrol
+import units.mot_rifles
+import units.mot_rifles_dragon
 import units.rq_2_pioneer
 import units.stinger_tdar
 from context.mod_creation_context import ModCreationContext
@@ -78,7 +80,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # TODO: variant of the mod which doesn't reference the MP Humvee because it's a DLC unit
                 division_units.register(units.mot_mp_patrol.create(mod_context), [M998_HUMVEE, "Descriptor_Unit_M1025_Humvee_MP_US"])
                 division_units.register(units.cmd_mot_rifles_ldr.create(mod_context), LARGE_UNIT_TRANSPORTS)
-                # MOT. RIFLES
+                division_units.register(units.mot_rifles.create(mod_context), LARGE_UNIT_TRANSPORTS)
+                division_units.register(units.mot_rifles_dragon.create(mod_context), LARGE_UNIT_TRANSPORTS)
                 # MOT. RIFLES (DRAGON)
                 division_units.register_vanilla("Rifles_half_CMD_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register_vanilla("Rifles_half_AT4_US", 1, SMALL_UNIT_TRANSPORTS)
@@ -88,8 +91,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # RANGER GUNNERS
                 division_units.register_vanilla("Engineer_CMD_US", 1, [M998_HUMVEE, M998_HUMVEE_AGL])
                 # MOT. ENGINEERS
-                division_units.register_vanilla("Rangers_CMD_US", 1, SMALL_UNIT_TRANSPORTS)
-                division_units.register_vanilla("Ranger_Dragon_US", 1, LARGE_UNIT_TRANSPORTS)
+                division_units.register_vanilla("Airborne_CMD_US", 1, [M1038_HUMVEE])
+                division_units.register_vanilla("Airborne_Dragon_US", 1, [M1038_HUMVEE])
                 # RANGERS (M224)
                 division_units.register_vanilla("ATteam_TOW2_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register(units.mk19_40mm.create(mod_context), SMALL_UNIT_TRANSPORTS)
