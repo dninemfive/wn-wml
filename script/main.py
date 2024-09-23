@@ -23,6 +23,7 @@ import units.mk19_40mm
 import units.mot_mp_patrol
 import units.mot_rifles
 import units.mot_rifles_dragon
+import units.mot_scouts
 import units.rq_2_pioneer
 import units.stinger_tdar
 from context.mod_creation_context import ModCreationContext
@@ -130,15 +131,13 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("LRRP_US", 1, M998_HUMVEE)
                 division_units.register_vanilla("Sniper_US", 1, SMALL_RECON_TRANSPORTS)
                 # 👓 FWD SUPPORT [EW]
-                # [👓] MERCURY GREEN RPV
-                # [👓] MOT. SCOUTS
+                division_units.register(units.mot_scouts.create(mod_context))
                 # copy SCOUTS, but replace M240 with SAW
                 # [👓] SCAT
                 division_units.register_vanilla("OH58C_Scout_US", 1)
                 division_units.register_vanilla("OH58D_Combat_Scout_US", 1)
                 division_units.register_vanilla("EH60A_EW_US", 1)
                 division_units.register(units.joh58d_kiowa.create(mod_context))
-                # insert between OH-58D KIOWA and OH-58D KIOWA Wr.
                 # [[👓]] M561 GAMA GOAT FAAR
                 division_units.register(units.rq_2_pioneer.create(mod_context))
                 division_units.register(units.e2c_hawkeye.create(mod_context))
