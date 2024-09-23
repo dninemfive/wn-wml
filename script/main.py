@@ -29,6 +29,7 @@ from metadata.division import DivisionMetadata
 from metadata.division_unit_registry import DivisionUnitRegistry
 from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
+import units.xm142_himars_clu
 from utils.bat import generate_mod, reset_source
 from utils.types.message import Message
 
@@ -103,7 +104,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register(units.m198_copperhead.create(mod_context), HEAVY_TRANSPORTS)
                 # M58 MICLIC
                 # XM142 HIMARS [HE]
-                # XM142 HIMARS [CLU]
+                division_units.register(units.xm142_himars_clu.create(mod_context))
                 # XM142 ATACMS
                 """ TNK """
                 # XM4 AGS

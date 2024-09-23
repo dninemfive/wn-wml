@@ -1,13 +1,12 @@
+import utils.ndf.edit as edit
 from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
+from creators.ammo import AmmoCreator
 from creators.unit import UNIT_UI
+from creators.weapon import WeaponCreator
 from metadata.division_unit_registry import UnitRules
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, ListRow
-from script.utils.ndf.edit import to_List as qlist
-
-from creators.ammo import AmmoCreator
-from creators.weapon import WeaponCreator
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
@@ -15,24 +14,27 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     # copy BM-21 Grad
     with ctx.create_unit("XM142 HIMARS [CLU]", "US", "BM21_Grad_SOV") as xm142_himars_clu:
         # copy MLRS ammo but with 6 instead of 12 shots
-        with AmmoCreator(ctx, "RocketArt_M26_227mm_Cluster_HIMARS") as ammo:
+        ammo_name = 'RocketArt_M26_227mm_Cluster_x6'
+        with ctx.create_ammo(ammo_name, 'Ammo_RocketArt_M26_227mm_Cluster') as ammo:
             ammo.edit_members(NbTirParSalves=6,
                               AffichageMunitionParSalve=6)
-        test = List
-        test.index()
-        with WeaponCreator(ctx, xm142_himars_clu.new, "M270_MLRS_cluster_US") as weapon:
-            weapon.object.by_member("TurretDescriptorList").value[0]\
-                         .by_member("MountedWeaponDescriptorList").value[0]\
-                         .by_member("Ammunition").value = "Ammo_d9_RocketArt_M26_227mm_Cluster_HIMARS"
+        ammo_name = f'Ammo_d9_{ammo_name}'
+        # change weapon
+        with xm142_himars_clu.edit_weapons() as weapons:
+            edit.members(weapons.get_turret_weapon(0),
+                         Ammunition=f'$/GFX/Weapon/{ammo_name}',
+                         EffectTag="'FireEffect_RocketArt_M26_227mm_Cluster'")
         # change nationalite
         with xm142_himars_clu.module_context("TTypeUnitModuleDescriptor") as unit_type_module:
             unit_type_module.edit_members(Nationalite="ENationalite/Allied",
                                           MotherCountry="'US'")
-        # change weapon
         # update speed, fuel capacity
         # change upgradefromunit, countrytexture
-        # change unit dangerousness (see 2S3M1 vs regular)
-        # change unit attack/defense value (see 2S3M1 vs regular)
-        # change unit cost (see 2S3M1 vs regular)
+        with xm142_himars_clu.module_context('TUnitUIModuleDescriptor') as ui_module:
+            ui_module.remove_member('UpgradeFromUnit')
+            ui_module.edit_members(CountryTexture="'CommonTexture_MotherCountryFlag_US'")
+        # change unit dangerousness
+        # change unit attack/defense value
+        # change unit cost
         return UnitRules(xm142_himars_clu, 2, [0, 4, 3, 0])
         

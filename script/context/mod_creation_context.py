@@ -3,6 +3,7 @@ from typing import Any, Self
 from constants.misc import GUID, LOCALIZATION, UNIT_ID
 from constants.ndf_paths import BUTTON_TEXTURES_UNITES, DIVISION_TEXTURES
 from constants.paths import CACHE_FOLDER
+from creators.ammo import AmmoCreator
 from creators.division import DivisionCreator
 from creators.unit import UnitCreator
 from managers.guid import GuidManager
@@ -16,7 +17,7 @@ from metadata.unit import UnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List
 from ndf_parse.model.abc import CellValue
-from creators.ammo import AmmoCreator
+from utils.ndf import ensure
 from utils.ndf.files import add_image, add_image_literal
 from utils.types.cache import Cache
 from utils.types.message import Message, try_nest
@@ -134,4 +135,4 @@ class ModCreationContext(object):
                 file.write(csv)
 
     def create_ammo(self: Self, name: str, copy_of: str) -> AmmoCreator:
-        return AmmoCreator(self.ndf, name, copy_of, self.guids)
+        return AmmoCreator(self.ndf, ensure.prefix(name, f'{self.prefix}_'), copy_of, self.guids)

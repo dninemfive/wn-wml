@@ -13,30 +13,31 @@ from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 from utils.ndf.decorators import ndf_path
 from utils.ndf.unit_module import get, remove
-from utils.types.message import Message
+from utils.types.message import Message, try_nest
 
 
 class AmmoCreator(object):
-    def __init__(self: Self, ndf: dict[str, List], name: str, copy_of: str, guids: GuidManager):
+    def __init__(self: Self, ndf: dict[str, List], name: str, copy_of: str, guids: GuidManager, parent_msg: Message | None = None):
         self.ndf = ndf
         self.name = ensure.prefix(name, 'Ammo_')
         self.copy_of = ensure.prefix(copy_of, 'Ammo_')
         self.ammo_guid = guids.generate(self.name)
         self.hit_roll_guid = guids.generate(f'{self.name}HitRoll')
+        self.parent_msg = parent_msg
 
     def __enter__(self: Self) -> Self:
-        self.root_msg = self.ctx.root_msg.nest(f"Making {self.name}")
-        self.root_msg.__enter__()
-        with self.root_msg.nest(f"Copying {self.copy_of}") as _:
-            self.object = self.make_copy(self.ctx.ndf[AMMUNITION])
+        self.msg = try_nest(self.parent_msg, f"Making {self.name}")
+        self.msg.__enter__()
+        with self.msg.nest(f"Copying {self.copy_of}") as _:
+            self.object = self.make_copy(self.ndf[AMMUNITION])
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
-        self.apply(self.ctx.ndf, self.root_msg)
-        self.root_msg.__exit__(exc_type, exc_value, traceback)
+        self.apply(self.ndf, self.msg)
+        self.msg.__exit__(exc_type, exc_value, traceback)
 
     def apply(self: Self, ndf: dict[str, List], msg: Message):
-        with msg.nest(f"Saving {self.new.name}") as msg2:
+        with msg.nest(f"Saving {self.name}") as msg2:
             self.edit_ammunition(ndf, msg2)
 
     def make_copy(self: Self, ndf: List) -> Object:
