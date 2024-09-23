@@ -4,6 +4,7 @@ from creators.unit import UNIT_UI, UnitCreator
 from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List
 import utils.ndf.edit as edit
+import utils.ndf.unit_module as module
 from units._utils import edit_standard_squad
 
 
@@ -17,6 +18,6 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         # insert between scouts and ab scouts
         mot_scouts.edit_ui_module(UpgradeFromUnit='Descriptor_Unit_Scout_US')
         ab_scouts = mot_scouts.get_other_unit('Descriptor_Unit_Airborne_Scout_US')
-        edit.members(ab_scouts.by_member('TUnitUIModuleDescriptor').value, UpgradeFromUnit='Descriptor_Unit_d9_RECO2_MOT_SCOUTS_US')
+        edit.members(module.get(ab_scouts, 'TUnitUIModuleDescriptor'), UpgradeFromUnit='Descriptor_Unit_d9_RECO2_MOT_SCOUTS_US')
         # TODO: update appearance to have weapons match
         return UnitRules(mot_scouts, 2, [0, 6, 4, 0])

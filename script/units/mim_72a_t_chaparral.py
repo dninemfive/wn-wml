@@ -1,6 +1,7 @@
 from context.mod_creation_context import ModCreationContext
 from metadata.unit_rules import UnitRules
 import utils.ndf.edit as edit
+import utils.ndf.unit_module as module
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # MIM-72A T-CHAPARRAL
@@ -15,7 +16,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                          Ammunition=f'$/GFX/Weapon/Ammo_SAM_MIM72A')
         # make M48A1 CHAPARRAL upgrade from this
         m48_chap = t_chap.get_other_unit('M48_Chaparral_MIM72F_US')
-        edit.members(m48_chap.by_member('TUnitUIModuleDescriptor').value, UpgradeFromUnit='Descriptor_Unit_d9_MIM72A_TCHAPARRAL_US')
+        edit.members(module.get(m48_chap, 'TUnitUIModuleDescriptor'), UpgradeFromUnit='Descriptor_Unit_d9_MIM72A_TCHAPARRAL_US')
         # make AB M998 AVENGER upgrade from M998 AVENGER
         # advanced: replace british dude models with US dude models
         return UnitRules(t_chap, 2, [0, 4, 3, 0])
