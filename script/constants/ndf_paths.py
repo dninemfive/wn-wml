@@ -13,6 +13,7 @@ AMMUNITION              = rf'GameData\Generated\Gameplay\Gfx\Ammunition.ndf'
 WEAPON_DESCRIPTOR       = rf'GameData\Generated\Gameplay\Gfx\WeaponDescriptor.ndf'
 MISSILE_CARRIAGE        = rf'GameData\Generated\Gameplay\Gfx\MissileCarriage.ndf'
 AMMUNITION_MISSILES     = rf'GameData\Generated\Gameplay\Gfx\AmmunitionMissiles.ndf'
+BUTTON_TEXTURES_UNITES  = rf'GameData\Generated\UserInterface\Textures\ButtonTexturesUnites.ndf'
 
 ALL = set([ALL_UNITS_TACTIC,
            DECK_SERIALIZER,
@@ -25,5 +26,6 @@ ALL = set([ALL_UNITS_TACTIC,
            DIVISION_TEXTURES,
            AMMUNITION,
            WEAPON_DESCRIPTOR,
+           BUTTON_TEXTURES_UNITES,
            MISSILE_CARRIAGE,
            AMMUNITION_MISSILES])

@@ -9,7 +9,7 @@ FLIGHT_SPEED = 480
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # E-2C HAWKEYE
-    with ctx.create_unit("#RECO3 E-2C HAWKEYE [EW]", "US", "EF111_Raven_US") as e2c_hawkeye:
+    with ctx.create_unit("#RECO3 E-2C HAWKEYE [EW]", "US", "EF111_Raven_US", button_texture_src_path='img/units/e2c_hawkeye/icon.png') as e2c_hawkeye:
         e2c_hawkeye.add_tags('Avion_Reco')
         e2c_hawkeye.remove_tags('Avion_SEAD')
         with e2c_hawkeye.module_context('AirplanePositionModuleDescriptor') as position_module:

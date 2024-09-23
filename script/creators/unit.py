@@ -24,6 +24,7 @@ class UnitCreator(object):
                  new_unit_metadata: NewUnitMetadata,
                  copy_of: str,
                  showroom_src: str | None = None,
+                 button_texture_key: str | None = None,
                  msg: Message | None = None):
         self.ndf = ndf
         self.localized_name = new_unit_metadata.localized_name
@@ -32,6 +33,7 @@ class UnitCreator(object):
         self.new: UnitMetadata = new_unit_metadata.unit_metadata
         self.src = UnitMetadata(copy_of)
         self.showroom_src = UnitMetadata(showroom_src) if showroom_src is not None else self.src
+        self.button_texture_key = button_texture_key
         self.msg = msg
 
     def __enter__(self: Self) -> Self:
@@ -40,6 +42,8 @@ class UnitCreator(object):
         with self.msg.nest(f"Copying {self.src.descriptor_name}") as _:
             self.unit_object = self.make_copy()
         self.edit_ui_module(NameToken=self.name_token)
+        if self.button_texture_key is not None:
+            self.edit_ui_module(ButtonTexture=self.button_texture_key)
         with self.module_context("TTagsModuleDescriptor") as tags_module:
             tag_set: List = tags_module.object.by_member("TagSet").value
             tag_set.remove(tag_set.find_by_cond(lambda x: x.value == self.src.tag))
@@ -108,7 +112,7 @@ class UnitCreator(object):
         self.edit_ui_module(NameToken=self.ctx.ctx.register(name))
 
     def add_tag(self: Self, tag: str) -> None:
-        tag = ensure.quotes(tag)
+        tag = ensure.quoted(tag)
         with self.module_context("TTagsModuleDescriptor") as tags_module:
             tag_set: List = tags_module.object.by_member("TagSet").value
             tag_set.add(tag)
@@ -118,7 +122,7 @@ class UnitCreator(object):
             self.add_tag(tag)
 
     def remove_tag(self: Self, tag: str) -> None:
-        tag = ensure.quotes(tag)
+        tag = ensure.quoted(tag)
         with self.module_context("TTagsModuleDescriptor") as tags_module:
             tag_set: List = tags_module.object.by_member("TagSet").value
             index = tag_set.find_by_cond(lambda x: x.value == tag)
