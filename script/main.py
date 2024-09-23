@@ -19,7 +19,6 @@ import units.m998_humvee_glhl
 import units.m998_humvee_m2hb
 import units.m998_humvee_supply
 import units.m1075_pls
-import units.mim_72a_t_chaparral
 import units.mk19_40mm
 import units.mot_engineers
 import units.mot_mp_patrol
@@ -29,14 +28,15 @@ import units.mot_scouts
 import units.ranger_recon
 import units.rq_2_pioneer
 import units.stinger_tdar
+import units.xm85_t_chaparral
+import units.xm142_himars_clu
+import units.xm142_himars_he
 from context.mod_creation_context import ModCreationContext
 from managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
 from metadata.division_unit_registry import DivisionUnitRegistry
 from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
-import units.xm142_himars_clu
-import units.xm142_himars_he
 from utils.bat import generate_mod, reset_source
 from utils.types.message import Message
 
@@ -150,7 +150,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register(units.m167a2_pivads_20mm.create(mod_context), [M998_HUMVEE, CHINOOK])
                 division_units.register(units.m998_avenger.create(mod_context))
                 # M998 SETTER
-                division_units.register(units.mim_72a_t_chaparral.create(mod_context), [M998_HUMVEE])
+                division_units.register(units.xm85_t_chaparral.create(mod_context), [M998_HUMVEE])
                 division_units.register_vanilla("MANPAD_Stinger_C_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register(units.stinger_tdar.create(mod_context), SMALL_UNIT_TRANSPORTS)
                 # EXCALIBUR VWC
