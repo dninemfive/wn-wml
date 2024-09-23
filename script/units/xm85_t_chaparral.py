@@ -6,7 +6,7 @@ import utils.ndf.unit_module as module
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # MIM-72A T-CHAPARRAL
     # copy RAPIER FSA
-    with ctx.create_unit("MIM-72A T-CHAPARRAL", "US", "DCA_Rapier_FSA_UK") as t_chap:
+    with ctx.create_unit("XM-85 T-CHAPARRAL", "US", "DCA_Rapier_FSA_UK") as t_chap:
         # replace weapon with M48A1 CHAPARRAL
         t_chap.replace_module_from('M48_Chaparral_MIM72F_US', 'WeaponManager', by_name=True)
         with t_chap.edit_weapons() as weapons:
