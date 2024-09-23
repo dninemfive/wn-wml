@@ -15,6 +15,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         m998_avenger.remove_module("TDeploymentShiftModuleDescriptor")
         # remove para trait
         m998_avenger.edit_ui_module(SpecialtiesList=ensure._list("'AA'"))
+        # make AB M998 AVENGER upgrade from M998 AVENGER
         # TODO: maybe allow deployment via CH-47D?
         return UnitRules(m998_avenger, 2, [0, 4, 3, 0])
         

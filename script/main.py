@@ -92,14 +92,16 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("Rifles_half_Dragon_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register_vanilla("Rifles_Cavalry_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register_vanilla("Rifles_HMG_US", 1, LARGE_UNIT_TRANSPORTS)
+                # RANGERS (M203)
+                # RANGER AT SECTION
                 # RANGER GUNNERS
                 division_units.register_vanilla("Engineer_CMD_US", 1, [M998_HUMVEE, M998_HUMVEE_AGL])
                 division_units.register(units.mot_engineers.create(mod_context), [M998_HUMVEE, M998_HUMVEE_AGL])
                 division_units.register_vanilla("Airborne_CMD_US", 1, [M1038_HUMVEE])
                 division_units.register_vanilla("Airborne_Dragon_US", 1, [M1038_HUMVEE])
-                # RANGERS (M224)
                 division_units.register_vanilla("ATteam_TOW2_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register(units.mk19_40mm.create(mod_context), [M998_HUMVEE, M998_HUMVEE_AGL, BLACKHAWK])
+                # M224 60mm
                 """ ART """
                 HEAVY_TRANSPORTS = ["Descriptor_Unit_M35_trans_US", CHINOOK]
                 division_units.register_vanilla("Mortier_107mm_US", 2, SMALL_UNIT_TRANSPORTS)
@@ -132,9 +134,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # 👓 FAV TOW
                 # 👓 OPERATIONAL SUPPORT
                 # [👓] FOLT
-                division_units.register_vanilla("LRRP_US", 1, M998_HUMVEE)
-                division_units.register(units.ranger_recon.create(mod_context), 'Descriptor_Unit_M151A2_scout_US')
-                division_units.register_vanilla("Sniper_US", 1, SMALL_RECON_TRANSPORTS)
+                division_units.register_vanilla("LRRP_US", 2, M998_HUMVEE)
                 # 👓 FWD SUPPORT [EW]
                 division_units.register(units.mot_scouts.create(mod_context), SMALL_RECON_TRANSPORTS)
                 # [👓] SCAT

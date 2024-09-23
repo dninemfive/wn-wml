@@ -20,4 +20,4 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         ab_scouts = mot_scouts.get_other_unit('Descriptor_Unit_Airborne_Scout_US')
         edit.members(module.get(ab_scouts, 'TUnitUIModuleDescriptor'), UpgradeFromUnit='Descriptor_Unit_d9_RECO2_MOT_SCOUTS_US')
         # TODO: update appearance to have weapons match
-        return UnitRules(mot_scouts, 2, [0, 6, 4, 0])
+        return UnitRules(mot_scouts, 3, [0, 6, 4, 0])

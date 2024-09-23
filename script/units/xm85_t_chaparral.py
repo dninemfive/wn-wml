@@ -16,7 +16,6 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         # make M48A1 CHAPARRAL upgrade from this
         m48_chap = t_chap.get_other_unit('M48_Chaparral_MIM72F_US')
         edit.members(module.get(m48_chap, 'TUnitUIModuleDescriptor'), UpgradeFromUnit=t_chap.new.descriptor_name)
-        # make AB M998 AVENGER upgrade from M998 AVENGER
         # set country to US
         with t_chap.module_context('TUnitUIModuleDescriptor') as ui_module:
             ui_module.remove_member('UpgradeFromUnit')
