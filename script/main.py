@@ -20,10 +20,12 @@ import units.m998_humvee_m2hb
 import units.m998_humvee_supply
 import units.m1075_pls
 import units.mk19_40mm
+import units.mot_engineers
 import units.mot_mp_patrol
 import units.mot_rifles
 import units.mot_rifles_dragon
 import units.mot_scouts
+import units.ranger_recon
 import units.rq_2_pioneer
 import units.stinger_tdar
 from context.mod_creation_context import ModCreationContext
@@ -33,6 +35,7 @@ from metadata.division_unit_registry import DivisionUnitRegistry
 from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
 import units.xm142_himars_clu
+import units.xm142_himars_he
 from utils.bat import generate_mod, reset_source
 from utils.types.message import Message
 
@@ -90,12 +93,12 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("Rifles_HMG_US", 1, LARGE_UNIT_TRANSPORTS)
                 # RANGER GUNNERS
                 division_units.register_vanilla("Engineer_CMD_US", 1, [M998_HUMVEE, M998_HUMVEE_AGL])
-                # MOT. ENGINEERS
+                division_units.register(units.mot_engineers.create(mod_context), [M998_HUMVEE, M998_HUMVEE_AGL])
                 division_units.register_vanilla("Airborne_CMD_US", 1, [M1038_HUMVEE])
                 division_units.register_vanilla("Airborne_Dragon_US", 1, [M1038_HUMVEE])
                 # RANGERS (M224)
                 division_units.register_vanilla("ATteam_TOW2_US", 1, SMALL_UNIT_TRANSPORTS)
-                division_units.register(units.mk19_40mm.create(mod_context), SMALL_UNIT_TRANSPORTS)
+                division_units.register(units.mk19_40mm.create(mod_context), [M998_HUMVEE, M998_HUMVEE_AGL, BLACKHAWK])
                 """ ART """
                 HEAVY_TRANSPORTS = ["Descriptor_Unit_M35_trans_US", CHINOOK]
                 division_units.register_vanilla("Mortier_107mm_US", 2, SMALL_UNIT_TRANSPORTS)
@@ -106,7 +109,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register(units.m198_155mm_clu.create(mod_context), HEAVY_TRANSPORTS)
                 division_units.register(units.m198_copperhead.create(mod_context), HEAVY_TRANSPORTS)
                 # M58 MICLIC
-                # XM142 HIMARS [HE]
+                division_units.register(units.xm142_himars_he.create(mod_context))
                 division_units.register(units.xm142_himars_clu.create(mod_context))
                 # XM142 ATACMS
                 """ TNK """
@@ -129,10 +132,10 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # 👓 OPERATIONAL SUPPORT
                 # [👓] FOLT
                 division_units.register_vanilla("LRRP_US", 1, M998_HUMVEE)
+                division_units.register(units.ranger_recon.create(mod_context), 'Descriptor_Unit_M151A2_scout_US')
                 division_units.register_vanilla("Sniper_US", 1, SMALL_RECON_TRANSPORTS)
                 # 👓 FWD SUPPORT [EW]
-                division_units.register(units.mot_scouts.create(mod_context))
-                # copy SCOUTS, but replace M240 with SAW
+                division_units.register(units.mot_scouts.create(mod_context), SMALL_RECON_TRANSPORTS)
                 # [👓] SCAT
                 division_units.register_vanilla("OH58C_Scout_US", 1)
                 division_units.register_vanilla("OH58D_Combat_Scout_US", 1)
