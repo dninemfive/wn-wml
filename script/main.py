@@ -82,7 +82,6 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register(units.cmd_mot_rifles_ldr.create(mod_context), LARGE_UNIT_TRANSPORTS)
                 division_units.register(units.mot_rifles.create(mod_context), LARGE_UNIT_TRANSPORTS)
                 division_units.register(units.mot_rifles_dragon.create(mod_context), LARGE_UNIT_TRANSPORTS)
-                # MOT. RIFLES (DRAGON)
                 division_units.register_vanilla("Rifles_half_CMD_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register_vanilla("Rifles_half_AT4_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register_vanilla("Rifles_half_Dragon_US", 1, SMALL_UNIT_TRANSPORTS)
