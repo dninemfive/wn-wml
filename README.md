@@ -13,6 +13,7 @@ Uses [ndf-parse](https://github.com/Ulibos/ndf-parse) to make updating less tedi
 # Image Credits
 - The 9th Infantry Division (MTZ.) icon is adapted from<sup>1</sup> the [9th Infantry Division shoulder patch](https://commons.wikimedia.org/wiki/File:9th_Infantry_Division_patch.svg) found on Wikimedia Commons, created by Steven Williamson and placed in the public domain as a government work product.
 - The icons for some units are adapted from<sup>2</sup> photographs taken by US Armed Forces members and are also government work products in the public domain, described below:
+
 | Unit | Photographer | Source | Notes |
 | ---- | ------------ | ------ | ----- |
 | E-2C Hawkeye | Thomas Peterson | [Wikimedia Commons](https://en.m.wikipedia.org/wiki/File:Grumman_E-2C_Hawkeye_in_flight_DN-SD-04-13416.jpg) | |
