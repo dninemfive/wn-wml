@@ -12,8 +12,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         with t_chap.edit_weapons() as weapons:
             weapons.Salves = [1]
             edit.members(weapons.get_turret_weapon(0),
-                         # convenient that they had MIM-72A all set up for me
-                         Ammunition=f'$/GFX/Weapon/Ammo_SAM_MIM72A')
+                         Ammunition=f'$/GFX/Weapon/Ammo_SAM_MIM72F')
         # make M48A1 CHAPARRAL upgrade from this
         m48_chap = t_chap.get_other_unit('M48_Chaparral_MIM72F_US')
         edit.members(module.get(m48_chap, 'TUnitUIModuleDescriptor'), UpgradeFromUnit=t_chap.new.descriptor_name)
