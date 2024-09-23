@@ -10,7 +10,7 @@ from units._utils import METRE
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # M198 155mm COPPERHEAD
     # copy M198 155mm
-    with ctx.create_unit("M198 155mm COPPERHEAD", "US", "Howz_M198_155mm_US") as m198_copperhead:
+    with ctx.create_unit("M198 COPPERHEAD", "US", "Howz_M198_155mm_US") as m198_copperhead:
         # change ammo type to guided
         ammo_name = 'Ammo_d9_Howz_Canon_155mm_Copperhead'
         with ctx.create_ammo(ammo_name, 'Ammo_Howz_Canon_M198_Howitzer_155mm') as ammo:
