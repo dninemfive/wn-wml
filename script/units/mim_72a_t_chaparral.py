@@ -18,5 +18,9 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         m48_chap = t_chap.get_other_unit('M48_Chaparral_MIM72F_US')
         edit.members(module.get(m48_chap, 'TUnitUIModuleDescriptor'), UpgradeFromUnit='Descriptor_Unit_d9_MIM72A_TCHAPARRAL_US')
         # make AB M998 AVENGER upgrade from M998 AVENGER
+        # set country to US
+        with t_chap.module_context('TUnitUIModuleDescriptor') as ui_module:
+            ui_module.remove_member('UpgradeFromUnit')
+            ui_module.edit_members(CountryTexture="'CommonTexture_MotherCountryFlag_US'")
         # advanced: replace british dude models with US dude models
         return UnitRules(t_chap, 2, [0, 4, 3, 0])
