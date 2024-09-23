@@ -135,4 +135,4 @@ class ModCreationContext(object):
                 file.write(csv)
 
     def create_ammo(self: Self, name: str, copy_of: str) -> AmmoCreator:
-        return AmmoCreator(self.ndf, ensure.prefix(name, f'{self.prefix}_'), copy_of, self.guids)
+        return AmmoCreator(self.ndf, ensure.prefix(name, f'Ammo_{self.prefix}_'), copy_of, self.guids)

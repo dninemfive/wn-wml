@@ -14,11 +14,10 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     # copy BM-21 Grad
     with ctx.create_unit("XM142 HIMARS [CLU]", "US", "BM21_Grad_SOV") as xm142_himars_clu:
         # copy MLRS ammo but with 6 instead of 12 shots
-        ammo_name = 'RocketArt_M26_227mm_Cluster_x6'
+        ammo_name = 'Ammo_d9_RocketArt_M26_227mm_Cluster_x6'
         with ctx.create_ammo(ammo_name, 'Ammo_RocketArt_M26_227mm_Cluster') as ammo:
             ammo.edit_members(NbTirParSalves=6,
                               AffichageMunitionParSalve=6)
-        ammo_name = f'Ammo_d9_{ammo_name}'
         # change weapon
         with xm142_himars_clu.edit_weapons() as weapons:
             edit.members(weapons.get_turret_weapon(0),
