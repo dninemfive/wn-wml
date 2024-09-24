@@ -47,6 +47,10 @@ class ModCreationContext(object):
         self.load_caches()
         return self
     
+    def load_ndf(self: Self, path: str, msg: Message) -> List:
+        with msg.nest(f"Loading {path}") as _:
+            return self.mod.edit(path).current_tree
+    
     def __exit__(self: Self, exc_type, exc_value, traceback):
         success = exc_type is None and exc_value is None and traceback is None        
         if success:
@@ -68,10 +72,6 @@ class ModCreationContext(object):
             for name, _ in CACHES:
                 cache: Cache[Any] = getattr(self, f'{name}_cache')
                 cache.save(msg)
-    
-    def load_ndf(self: Self, path: str, msg: Message) -> List:
-        with msg.nest(f"Loading {path}") as _:
-            return self.mod.edit(path).current_tree
     
     def create_division(self: Self,
                         division: DivisionMetadata,

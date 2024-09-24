@@ -25,7 +25,6 @@ import units.mot_mp_patrol
 import units.mot_rifles
 import units.mot_rifles_dragon
 import units.mot_scouts
-import units.ranger_recon
 import units.rq_2_pioneer
 import units.stinger_tdar
 import units.xm85_t_chaparral
