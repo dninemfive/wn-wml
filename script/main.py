@@ -32,8 +32,10 @@ import units.rangers_m203
 import units.rq_2_pioneer
 import units.stinger_tdar
 import units.xm85_t_chaparral
+import units.xm119_imcs
 import units.xm142_himars_clu
 import units.xm142_himars_he
+import units.xm1100_120mm
 from context.mod_creation_context import ModCreationContext
 from managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
@@ -108,9 +110,9 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 """ ART """
                 HEAVY_TRANSPORTS = ["Descriptor_Unit_M35_trans_US", CHINOOK]
                 division_units.register_vanilla("Mortier_107mm_US", 2, SMALL_UNIT_TRANSPORTS)
-                # XM1100 120mm
+                division_units.register(units.xm1100_120mm.create(mod_context))
                 division_units.register_vanilla("Howz_M102_105mm_US", 2, SMALL_UNIT_TRANSPORTS)
-                # XM119 IMCS 105mm                
+                division_units.register(units.xm119_imcs.create(mod_context))
                 division_units.register_vanilla("Howz_M198_155mm_US", 2, HEAVY_TRANSPORTS)
                 division_units.register(units.m198_155mm_clu.create(mod_context), HEAVY_TRANSPORTS)
                 division_units.register(units.m198_copperhead.create(mod_context), HEAVY_TRANSPORTS)

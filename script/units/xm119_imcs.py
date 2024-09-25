@@ -23,6 +23,8 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                                   UnitRole="'tank_C'",
                                   UpgradeFromUnit='Descriptor_Unit_Howz_M102_105mm_US')
         # change main weapon to a somewhat improved version of the M102 (a bit better fire rate + RAP projectiles, probably)
+        m198 = xm119_imcs.get_other_unit('Howz_M198_155mm_US')
+        edit.members(module.get(m198, 'TUnitUIModuleDescriptor'), UpgradeFromUnit=None)
         # change country (+flag) to US
         xm119_imcs.MotherCountry = 'US'
         xm119_imcs.remove_module('TDeploymentShiftModuleDescriptor')
