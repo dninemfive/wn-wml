@@ -9,7 +9,7 @@ from units._utils import edit_standard_squad
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # RANGERS (M203)
-    with ctx.create_unit("MOT. RIFLES", "US", "Ranger_US") as rangers_m203:
+    with ctx.create_unit("RANGERS (M203)", "US", "Ranger_US") as rangers_m203:
         # weapons:
         # - Colt Commando x4
         # - M16A2 x3 (squad leader + 2 grenadier)

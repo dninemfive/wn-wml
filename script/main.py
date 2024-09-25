@@ -4,7 +4,6 @@ from datetime import datetime
 
 import constants.ndf_paths as ndf_paths
 import constants.paths as paths
-from script.creators import division
 import units.cmd_m998_humvee_agl
 import units.cmd_m1010_tc3v
 import units.cmd_mot_rifles_ldr

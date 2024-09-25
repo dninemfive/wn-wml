@@ -183,4 +183,5 @@ class UnitCreator(object):
     @CommandPointCost.setter
     def CommandPointCost(self: Self, val: int) -> None:
         with self.module_context('TProductionModuleDescriptor') as context:
-            context.object.by_member('ProductionRessourcesNeeded').by_key('$/GFX/Resources/Resource_CommandPoints').value = val
+            context.object.by_member('ProductionRessourcesNeeded').value\
+                          .by_key('$/GFX/Resources/Resource_CommandPoints').value = val
