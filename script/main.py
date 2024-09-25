@@ -4,6 +4,7 @@ from datetime import datetime
 
 import constants.ndf_paths as ndf_paths
 import constants.paths as paths
+from script.creators import division
 import units.cmd_m998_humvee_agl
 import units.cmd_m1010_tc3v
 import units.cmd_mot_rifles_ldr
@@ -25,6 +26,9 @@ import units.mot_mp_patrol
 import units.mot_rifles
 import units.mot_rifles_dragon
 import units.mot_scouts
+import units.ranger_at_section
+import units.ranger_gunners
+import units.rangers_m203
 import units.rq_2_pioneer
 import units.stinger_tdar
 import units.xm85_t_chaparral
@@ -91,9 +95,9 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("Rifles_half_Dragon_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register_vanilla("Rifles_Cavalry_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register_vanilla("Rifles_HMG_US", 1, LARGE_UNIT_TRANSPORTS)
-                # RANGERS (M203)
-                # RANGER AT SECTION
-                # RANGER GUNNERS
+                division_units.register(units.rangers_m203.create(mod_context))
+                division_units.register(units.ranger_at_section.create(mod_context))
+                division_units.register(units.ranger_gunners.create(mod_context))
                 division_units.register_vanilla("Engineer_CMD_US", 1, [M998_HUMVEE, M998_HUMVEE_AGL])
                 division_units.register(units.mot_engineers.create(mod_context), [M998_HUMVEE, M998_HUMVEE_AGL])
                 division_units.register_vanilla("Airborne_CMD_US", 1, [M1038_HUMVEE])
@@ -133,7 +137,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # 👓 FAV TOW
                 # 👓 OPERATIONAL SUPPORT
                 # [👓] FOLT
-                division_units.register_vanilla("LRRP_US", 2, M998_HUMVEE)
+                division_units.register_vanilla("LRRP_US", 2, [M998_HUMVEE, "Descriptor_Unit_M151A2_scout_US"])
                 # 👓 FWD SUPPORT [EW]
                 division_units.register(units.mot_scouts.create(mod_context), SMALL_RECON_TRANSPORTS)
                 # [👓] SCAT
@@ -141,7 +145,6 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("OH58D_Combat_Scout_US", 1)
                 division_units.register_vanilla("EH60A_EW_US", 1)
                 division_units.register(units.joh58d_kiowa.create(mod_context))
-                # [[👓]] M561 GAMA GOAT FAAR
                 division_units.register(units.rq_2_pioneer.create(mod_context))
                 division_units.register(units.e2c_hawkeye.create(mod_context))
                 """ AA """
