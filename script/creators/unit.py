@@ -185,3 +185,15 @@ class UnitCreator(object):
         with self.module_context('TProductionModuleDescriptor') as context:
             context.object.by_member('ProductionRessourcesNeeded').value\
                           .by_key('$/GFX/Resources/Resource_CommandPoints').value = val
+            
+    @property
+    def MotherCountry(self: Self) -> str:
+        unit_type_module: Object = self.get_module('TTypeUnitModuleDescriptor')
+        return ensure.unquoted(unit_type_module.by_member('MotherCountry').value, "'")
+
+    @MotherCountry.setter
+    def MotherCountry(self: Self, val: str) -> None:
+        with self.module_context("TTypeUnitModuleDescriptor") as unit_type_module:
+            unit_type_module.edit_members(MotherCountry=ensure.quoted(val, "'"))
+        with self.module_context('TUnitUIModuleDescriptor') as ui_module:
+            ui_module.edit_members(CountryTexture=f"'CommonTexture_MotherCountryFlag_{ensure.unquoted(val, "'")}'")

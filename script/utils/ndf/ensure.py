@@ -109,3 +109,9 @@ def quoted(s: str, quote: str = '"') -> str:
     if not s.endswith(quote):
         s = f'{s}{quote}'
     return s
+
+def unquoted(s: str, quote: str = '"') -> str:
+    if s.startswith(quote):
+        s = s[len(quote):]
+    if s.endswith(quote):
+        s = s[:len(quote)]
