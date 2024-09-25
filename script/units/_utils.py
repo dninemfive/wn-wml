@@ -48,9 +48,3 @@ def insert_between(unit: UnitCreator, first: Object, second: Object) -> None:
     # make second upgrade from unit
     raise NotImplemented
 
-def adjust_squad(squad: Object, *loadouts: tuple[int, list[str] | list[str]]) -> None:
-    # for loadout in loadouts
-    # add tuple[1] ct of soldiers (default 1 if ct not included) with the specified loadout
-    # create custom gfx depiction based on this
-    # create showroom unit
-    raise NotImplemented
