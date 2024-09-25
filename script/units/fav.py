@@ -16,6 +16,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             type_module.edit_members(AcknowUnitType='~/TAcknowUnitType_Reco',
                                      TypeUnitFormation="'Reconnaissance'")
         fav.MotherCountry = 'US'
+        fav.Factory = 'Recons'
         fav.add_tag('Vehicule_Reco')
         # transport, _transport_1, air_transportable
         fav.edit_ui_module(SpecialtiesList=["'reco'", "'_transport1'", "'air_transportable'"],
