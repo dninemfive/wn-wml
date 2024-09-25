@@ -165,3 +165,22 @@ class UnitCreator(object):
     
     def get_other_unit(self: Self, unit: str) -> Object:
         return self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(ensure.unit_descriptor(unit)).value
+    
+    @property
+    def UpgradeFromUnit(self: Self) -> str:
+        return self.get_module(UNIT_UI).by_member('UpgradeFromUnit').value
+
+    @UpgradeFromUnit.setter
+    def UpgradeFromUnit(self: Self, val: str) -> None:
+        self.edit_ui_module(UpgradeFromUnit=ensure.prefix(val, 'Descriptor_Unit_'))
+
+    @property
+    def CommandPointCost(self: Self) -> int:
+        return int(self.get_module('TProductionModuleDescriptor')
+                       .by_member('ProductionRessourcesNeeded').value
+                       .by_key('$/GFX/Resources/Resource_CommandPoints').value)
+    
+    @CommandPointCost.setter
+    def CommandPointCost(self: Self, val: int) -> None:
+        with self.module_context('TProductionModuleDescriptor') as context:
+            context.object.by_member('ProductionRessourcesNeeded').by_key('$/GFX/Resources/Resource_CommandPoints').value = val

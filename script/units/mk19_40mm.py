@@ -14,5 +14,6 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             ui_module.edit_members(SpecialtiesList=specialties,
                                    UpgradeFromUnit='Descriptor_Unit_HMGteam_M2HB_US')
         mk19.remove_module("TDeploymentShiftModuleDescriptor")
+        # TODO: change depiction to use non-AB models
         return UnitRules(mk19, 1, [0, 6, 4, 0])
         
