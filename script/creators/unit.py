@@ -197,3 +197,11 @@ class UnitCreator(object):
             unit_type_module.edit_members(MotherCountry=ensure.quoted(val, "'"))
         with self.module_context('TUnitUIModuleDescriptor') as ui_module:
             ui_module.edit_members(CountryTexture=f"'CommonTexture_MotherCountryFlag_{ensure.unquoted(val, "'")}'")
+
+    @property
+    def Factory(self: Self) -> str:
+        return self.get_module('TProductionModuleDescriptor').by_member('Factory').value
+    
+    @Factory.setter
+    def Factory(self: Self, val: str) -> None:
+        edit.members(self.get_module('TProductionModuleDescriptor'), Factory=ensure.prefix(val, 'EDefaultFactories/'))

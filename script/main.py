@@ -8,6 +8,8 @@ import units.cmd_m998_humvee_agl
 import units.cmd_m1010_tc3v
 import units.cmd_mot_rifles_ldr
 import units.e2c_hawkeye
+import units.fav
+import units.folt
 import units.joh58d_kiowa
 import units.m167a2_pivads_20mm
 import units.m198_155mm_clu
@@ -133,12 +135,12 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 """ REC """
                 REC_HUMVEE_M2HB, REC_HUMVEE_AGL = "Descriptor_Unit_M1025_Humvee_scout_US", "Descriptor_Unit_M1025_Humvee_AGL_nonPara_US"
                 SMALL_RECON_TRANSPORTS = [M998_HUMVEE, REC_HUMVEE_M2HB, REC_HUMVEE_AGL, BLACKHAWK]
+                FAV = units.fav.create(mod_context).unit.descriptor_name
                 division_units.register_vanilla("M981_FISTV_US", 1)
-                # 👓 FAV
                 # 👓 FAV AGL
                 # 👓 FAV TOW
                 # 👓 OPERATIONAL SUPPORT
-                # [👓] FOLT
+                division_units.register(units.folt.create(mod_context), FAV)
                 division_units.register_vanilla("LRRP_US", 2, [M998_HUMVEE, "Descriptor_Unit_M151A2_scout_US"])
                 # 👓 FWD SUPPORT [EW]
                 division_units.register(units.mot_scouts.create(mod_context), SMALL_RECON_TRANSPORTS)
