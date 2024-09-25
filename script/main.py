@@ -4,36 +4,31 @@ from datetime import datetime
 
 import constants.ndf_paths as ndf_paths
 import constants.paths as paths
-import units.cmd_m998_humvee_agl
-import units.cmd_m1010_tc3v
-import units.cmd_mot_rifles_ldr
-import units.e2c_hawkeye
-import units.joh58d_kiowa
-import units.m167a2_pivads_20mm
-import units.m198_155mm_clu
-import units.m198_copperhead
-import units.m224_60mm
-import units.m966_humvee_tow
-import units.m998_avenger
-import units.m998_humvee_agl
-import units.m998_humvee_glhl
-import units.m998_humvee_m2hb
-import units.m998_humvee_supply
-import units.m1075_pls
-import units.mk19_40mm
-import units.mot_engineers
-import units.mot_mp_patrol
-import units.mot_rifles
-import units.mot_rifles_dragon
-import units.mot_scouts
-import units.ranger_at_section
-import units.ranger_gunners
-import units.rangers_m203
-import units.rq_2_pioneer
-import units.stinger_tdar
-import units.xm85_t_chaparral
-import units.xm142_himars_clu
-import units.xm142_himars_he
+import units.AA.stinger_tdar
+import units.AA.xm85_t_chaparral
+import units.ART.m198_155mm_clu
+import units.ART.m198_copperhead
+import units.ART.m224_60mm
+import units.ART.xm142_himars_clu
+import units.ART.xm142_himars_he
+import units.INF.mk19_40mm
+import units.INF.mot_engineers
+import units.INF.mot_mp_patrol
+import units.INF.mot_rifles
+import units.INF.mot_rifles_dragon
+import units.INF.mot_scouts
+import units.INF.ranger_at_section
+import units.INF.ranger_gunners
+import units.INF.rangers_m203
+import units.LOG.cmd_m998_humvee_agl
+import units.LOG.cmd_m1010_tc3v
+import units.LOG.m998_humvee_supply
+import units.LOG.m1075_pls
+import units.REC.e2c_hawkeye
+import units.TNK.m966_humvee_tow
+import units.TNK.m998_humvee_agl
+import units.TNK.m998_humvee_glhl
+import units.TNK.m998_humvee_m2hb
 from context.mod_creation_context import ModCreationContext
 from managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
@@ -42,6 +37,9 @@ from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
 from utils.bat import generate_mod, reset_source
 from utils.types.message import Message
+
+import units.LOG as units
+import units.AA as units
 
 wn_metadata = WarnoMetadata(paths.WARNO_DIRECTORY)
 mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn_metadata, "0.0.0", 'd9', 'd99ID')
@@ -87,7 +85,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 LARGE_UNIT_TRANSPORTS = [M1038_HUMVEE, BLACKHAWK]
                 # TODO: variant of the mod which doesn't reference the MP Humvee because it's a DLC unit
                 division_units.register(units.mot_mp_patrol.create(mod_context), [M998_HUMVEE, "Descriptor_Unit_M1025_Humvee_MP_US"])
-                division_units.register(units.cmd_mot_rifles_ldr.create(mod_context), LARGE_UNIT_TRANSPORTS)
+                division_units.register(script.units.INF.cmd_mot_rifles_ldr.create(mod_context), LARGE_UNIT_TRANSPORTS)
                 division_units.register(units.mot_rifles.create(mod_context), LARGE_UNIT_TRANSPORTS)
                 division_units.register(units.mot_rifles_dragon.create(mod_context), LARGE_UNIT_TRANSPORTS)
                 division_units.register_vanilla("Rifles_half_CMD_US", 1, SMALL_UNIT_TRANSPORTS)
@@ -144,13 +142,13 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("OH58C_Scout_US", 1)
                 division_units.register_vanilla("OH58D_Combat_Scout_US", 1)
                 division_units.register_vanilla("EH60A_EW_US", 1)
-                division_units.register(units.joh58d_kiowa.create(mod_context))
-                division_units.register(units.rq_2_pioneer.create(mod_context))
+                division_units.register(script.units.REC.joh58d_kiowa.create(mod_context))
+                division_units.register(script.units.REC.rq_2_pioneer.create(mod_context))
                 division_units.register(units.e2c_hawkeye.create(mod_context))
                 """ AA """
                 # JOH-58C KIOWA
-                division_units.register(units.m167a2_pivads_20mm.create(mod_context), [M998_HUMVEE, CHINOOK])
-                division_units.register(units.m998_avenger.create(mod_context))
+                division_units.register(script.units.AA.m167a2_pivads_20mm.create(mod_context), [M998_HUMVEE, CHINOOK])
+                division_units.register(script.units.AA.m998_avenger.create(mod_context))
                 # M998 SETTER
                 division_units.register(units.xm85_t_chaparral.create(mod_context), [M998_HUMVEE])
                 division_units.register_vanilla("MANPAD_Stinger_C_US", 1, SMALL_UNIT_TRANSPORTS)
