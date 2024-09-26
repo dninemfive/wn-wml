@@ -37,6 +37,10 @@ def get(unit: Object, type_or_name: str, by_name: bool = False) -> Object:
 def replace_module(unit: Object, value: CellValue, type_or_name: str, by_name: bool = False) -> None:
     get_row(unit, type_or_name, by_name).value = value
 
+def replace_where(unit: Object, value: CellValue, predicate: Callable[[ListRow], bool]) -> None:
+    modules: List = get_modules_descriptors(unit)
+    modules.find_by_cond(predicate).value = value
+
 def replace_from(dest_unit: Object, src_unit: Object, type_or_name: str, by_name: bool = False):
     replace_module(dest_unit, get(src_unit, type_or_name, by_name).copy(), type_or_name, by_name)
 

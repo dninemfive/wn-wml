@@ -44,6 +44,14 @@ class UnitMetadata(object):
     def button_texture_name(self: Self) -> str:
         return f'Texture_Button_Unit_{self.name}'
     
+    @property
+    def weapon_descriptor_name(self: Self) -> str:
+        return f'WeaponDescriptor_{self.name}'
+    
+    @property
+    def weapon_descriptor_path(self: Self) -> str:
+        return f'$GFX/Weapon/{self.weapon_descriptor_name}'
+    
     @staticmethod
     def from_localized_name(prefix: str, localized_name: str, country: str) -> Self:
         return UnitMetadata(f"{prefix}_{delocalize(localized_name)}_{country}")

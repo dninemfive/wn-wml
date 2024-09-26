@@ -2,7 +2,7 @@ from typing import Self
 
 from model.squads.infantry_weapon_set import InfantryWeaponSet
 from creators.unit import UnitCreator
-from script.context.module_context import ModuleContext
+from context.module_context import ModuleContext
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from constants import ndf_paths
@@ -19,6 +19,7 @@ from utils.collections import flatten, unique, with_indices
 from utils.ndf import ensure
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
+import constants.ndf_paths as ndf_paths
 
 
 class Squad(object):
@@ -204,6 +205,7 @@ class Squad(object):
         edit.members(copy,
                      DescriptorId=self.guids.generate(copy_of.showroom_descriptor_name))
         # TODO: find member pointing at a weapondescriptor and point it at ours instead
+        module.replace_where(copy, self.metadata.weapon_descriptor_path, lambda x: x.value.startswith('$/GFX/Weapon/'))
         module.replace_module(copy,
                               self._make_infantry_squad_module_descriptor(f'{copy_of.showroom_descriptor_name}/ModulesDescriptors[TInfantrySquadModuleDescriptor]/MimeticDescriptor'),
                               'TInfantrySquadModuleDescriptor')
@@ -211,9 +213,13 @@ class Squad(object):
                               assignment_module.copy(),
                               'TInfantrySquadWeaponAssignmentModuleDescriptor')
         
+    @ndf_path(ndf_paths.WEAPON_DESCRIPTOR)
+    def edit_weapon_descriptors(self: Self, ndf: List):
+        pass
     
     def edit_unit(self: Self, unit: UnitCreator) -> None:
         unit.edit_module_members('TBaseDamageModuleDescriptor', MaxPhysicalDamages=self.total_soldiers)        
         self._edit_groupe_combat(unit.get_module('GroupeCombat', by_name=True))
         unit.replace_module(self._create_infantry_squad_weapon_assignment(), 'TInfantrySquadWeaponAssignmentModuleDescriptor')
         unit.edit_module_members('TTacticalLabelModuleDescriptor', NbSoldiers=self.total_soldiers)
+        unit.edit_module_members('WeaponManager', by_name=True, Default=self.metadata.weapon_descriptor_path)
