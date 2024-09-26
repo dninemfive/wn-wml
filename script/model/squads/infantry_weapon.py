@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Self
 
-from constants.primitive_types import WeaponType
+from constants.primitive_types import InputWeaponType, WeaponType
 from utils.ndf import ensure
 
 

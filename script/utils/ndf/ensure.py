@@ -131,16 +131,21 @@ def prefix_and_suffix(s: str, _prefix: str, _suffix: str) -> str:
     return prefix(suffix(s, _suffix), _prefix)
 
 # type: Literal[str]
-def _including_unquoted(literal_type) -> Iterable[str]:
-    for s in literal_values(literal_type):
-        yield s
-        yield unquoted(s)
+def _including_unquoted(*literal_types) -> list[str]:
+    result = set(str)
+    for literal_type in literal_types:
+        for s in literal_values(literal_type):
+            result.add(s)
+            result.add(unquoted(s))
+    return sorted(result)
 
-def literal(s: str, literal_type, quote: str = "'"):
-    assert s in _including_unquoted(literal_type), f"{s} is not one of {literal_values(literal_type)}"
-    return quoted(s, quote) 
+def literal(s: str, *literal_types):
+    valid_values = _including_unquoted(*literal_types)
+    assert s in valid_values, f"{s} is not one of {valid_values}"
+    return quoted(s, "'")
 
 def country_sound_code(country: str) -> CountrySoundCode:
-    if country in _including_unquoted(country, CountrySoundCode):
-        return quoted(country, "'")
-    return COUNTRY_CODE_TO_COUNTRY_SOUND_CODE[literal(country, CountrySoundCode)]
+    country = literal(country, CountryCode, CountrySoundCode)
+    if country in COUNTRY_CODE_TO_COUNTRY_SOUND_CODE:
+        return COUNTRY_CODE_TO_COUNTRY_SOUND_CODE[country]
+    return country
