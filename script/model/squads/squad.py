@@ -3,6 +3,7 @@ from typing import Self
 from model.squads.infantry_weapon_set import InfantryWeaponSet
 from creators.unit import UnitCreator
 from context.module_context import ModuleContext
+from script.context.mod_creation_context import ModCreationContext
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from constants import ndf_paths
@@ -27,18 +28,20 @@ class Squad(object):
                  guids: GuidManager,
                  metadata: UnitMetadata,
                  country: str,
-                 infantry_selector_tactic: TemplateInfantrySelectorTactic | tuple[int, int],
+                 infantry_selector_tactic: TemplateInfantrySelectorTactic | tuple[int | str, int | str],
                  tactic_depiction: str | List,
+                 weapon_set: InfantryWeaponSet,
                  *loadout: WeaponWithIndex | list[WeaponWithIndex] | tuple[int, list[WeaponWithIndex]]):
         self.guids = guids
         self.metadata = metadata
         self.country = country
-        if not isinstance(infantry_selector_tactic, TemplateInfantrySelectorTactic):
-            infantry_selector_tactic = TemplateInfantrySelectorTactic(infantry_selector_tactic[0], infantry_selector_tactic[1])
+        if isinstance(infantry_selector_tactic, tuple):
+            infantry_selector_tactic = TemplateInfantrySelectorTactic.from_tuple(infantry_selector_tactic)
         self.infantry_selector_tactic = infantry_selector_tactic
         if isinstance(tactic_depiction, str):
             tactic_depiction = ensure.prefix_and_suffix(tactic_depiction, 'TacticDepiction_', '_Alternatives')
         self.tactic_depiction = tactic_depiction
+        self.weapon_set = weapon_set
         self.loadout: list[list[Weapon]] = []
         for item in loadout:
             if isinstance(item, Weapon):
@@ -48,6 +51,25 @@ class Squad(object):
             ct, weapons = item
             for _ in range(ct):
                 self.loadout.append(weapons)
+
+    @staticmethod
+    def copy(ctx: ModCreationContext,
+             metadata: UnitMetadata,
+             country: str,
+             copy_of: str,
+             weapon_set: InfantryWeaponSet,
+             *precedence: int | list[int]):
+        return Squad(ctx.guids,
+                     metadata,
+                     country,
+                     ctx.ndf[ndf_paths.GENERATED_DEPICTION_INFANTRY]
+                        .by_name('TransportedInfantryAlternativesCount').value
+                        .by_key(ensure.quoted(copy_of).value),
+                     ctx.ndf[ndf_paths.GENERATED_DEPICTION_INFANTRY]
+                        .by_name(ensure.prefix_and_suffix(copy_of, 'TacticDepiction_', '_Alternatives').value),
+                     weapon_set,
+                     ... # TODO: aaaaaaaaaaaaaaaaaa
+                     )
 
     @staticmethod
     def from_weapon_set(guids: GuidManager,
