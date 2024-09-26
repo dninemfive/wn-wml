@@ -27,13 +27,14 @@ class Squad(object):
                  creator: UnitCreator,
                  country: str,
                  weapon_set: InfantryWeaponSet,
-                 copy_of: str | None = None):
+                 copy_of: str | UnitMetadata | None = None):
         self.guids = guids
         self.metadata = creator.new
         self.country = country
-        self.copy_of = copy_of if copy_of is not None else creator.src.name
+        self.copy_of = UnitMetadata(copy_of if copy_of is not None else creator.src.name)
         self.weapon_set = weapon_set
         self._keys = _SquadKeys(self.metadata)
+        self._cached_weapon_assignment: dict[int, list[int]] | None = None
 
     # properties
 
@@ -96,11 +97,11 @@ class Squad(object):
         ndf.add(ListRow(self._all_weapon_alternatives(), namespace=self._keys._all_weapon_alternatives))
         ndf.add(ListRow(self._all_weapon_sub_depiction(), namespace=self._keys._all_weapon_sub_depiction))
         ndf.add(ListRow(self._all_weapon_sub_depiction_backpack(), namespace=self._keys._all_weapon_sub_depiction_backpack))
-        tactic_depiction: Object = ndf.by_name(ensure.prefix_and_suffix(self.copy_of, 'TacticDepiction_', '_Alternatives')).value
+        tactic_depiction: Object = ndf.by_name(ensure.prefix_and_suffix(self.copy_of.name, 'TacticDepiction_', '_Alternatives')).value
         ndf.add(ListRow(tactic_depiction.copy(), namespace=self._keys._tactic_depiction_alternatives))
         selector_tactic: TemplateInfantrySelectorTactic\
             = TemplateInfantrySelectorTactic.from_tuple(ndf.by_name('TransportedInfantryAlternativesCount').value\
-                                                           .by_key(ensure.quoted(self.copy_of)).value)
+                                                           .by_key(self.copy_of.quoted_name).value)
         ndf.add(ListRow(self._tactic_depiction_soldier(selector_tactic), self._keys._tactic_depiction_soldier))
         ndf.add(ListRow(self._tactic_depiction_ghost(selector_tactic), self._keys._tactic_depiction_ghost))
         ndf.by_name('InfantryMimetic').value.add(MapRow(key=self._keys._unit, value=self._keys._tactic_depiction_soldier))
@@ -124,25 +125,32 @@ class Squad(object):
     def _edit_groupe_combat(self: Self, module: Object) -> None:
         edit.members(module,
                      Default=self._make_infantry_squad_module_descriptor(f'{self.metadata.descriptor_name}/ModulesDescriptors["GroupeCombat"]/Default/MimeticDescriptor'))
-        
+
     def _create_infantry_squad_weapon_assignment(self: Self) -> Object:
-        turret_map: dict[int, list[int]] = {}
-        for i in range(self.soldier_count):
-            raise NotImplemented # TODO: assign non-secondary weapons in reverse order, with the last [num_secondary] soldiers having the secondaries, if any
+        if self._cached_weapon_assignment is None:
+            turrets: dict[int, list[int]] = {}
+            soldier_index = 0
+            for primary in self.weapon_set.primaries_in_reverse_order:
+                turrets[soldier_index] = [primary.index]
+                # TODO: handle secondaries
+            self._cached_weapon_assignment = turrets
         return ensure._object('TInfantrySquadWeaponAssignmentModuleDescriptor',
-                              InitialSoldiersToTurretIndexMap=turret_map)
-    
-    def _create_showroom_unit(self: Self, copy_of: UnitMetadata, ndf: dict[str, List], assignment_module: Object) -> Object:
-        showroom_units = ndf[ndf_paths.SHOWROOM_UNITS]
-        copy: Object = showroom_units.by_name(copy_of.showroom_descriptor_name).value.copy()
+                               InitialSoldiersToTurretIndexMap=turrets)
+        
+    @ndf_path(ndf_paths.SHOWROOM_UNITS)
+    def edit_showroom_units(self: Self, ndf: List):
+        copy: Object = ndf.by_name(self.copy_of.showroom_descriptor_name).value.copy()
         edit.members(copy,
-                     DescriptorId=self.guids.generate(copy_of.showroom_descriptor_name))
+                     DescriptorId=self.guids.generate(self.copy_of.showroom_descriptor_name))
         module.replace_where(copy, self.metadata.weapon_descriptor_path, lambda x: x.value.startswith('$/GFX/Weapon/'))
         module.replace_module(copy,
-                              self._make_infantry_squad_module_descriptor(f'{copy_of.showroom_descriptor_name}/ModulesDescriptors[TInfantrySquadModuleDescriptor]/MimeticDescriptor'),
+                              self._make_infantry_squad_module_descriptor(module.path_by_type(self.copy_of.showroom_descriptor_name,
+                                                                                             'TInfantrySquadModuleDescriptor',
+                                                                                             'MimeticDescriptor',
+                                                                                             'DescriptorId')),
                               'TInfantrySquadModuleDescriptor')
         module.replace_module(copy,
-                              assignment_module.copy(),
+                              self._create_infantry_squad_weapon_assignment().copy(),
                               'TInfantrySquadWeaponAssignmentModuleDescriptor')
         
     @ndf_path(ndf_paths.WEAPON_DESCRIPTOR)
@@ -155,3 +163,4 @@ class Squad(object):
         unit.replace_module(self._create_infantry_squad_weapon_assignment(), 'TInfantrySquadWeaponAssignmentModuleDescriptor')
         unit.edit_module_members('TTacticalLabelModuleDescriptor', NbSoldiers=self.soldier_count)
         unit.edit_module_members('WeaponManager', by_name=True, Default=self.metadata.weapon_descriptor_path)
+        unit.showroom_src = UnitMetadata(self.copy_of)

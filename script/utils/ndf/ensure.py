@@ -123,12 +123,26 @@ def unquoted(s: str, quote: str = '"') -> str:
         s = s[len(quote):]
     if s.endswith(quote):
         s = s[:-len(quote)]
+    return s
 
 def suffix(s: str, suffix: str) -> str:
     return s if s.endswith(suffix) else f'{s}{suffix}'
 
 def prefix_and_suffix(s: str, _prefix: str, _suffix: str) -> str:
     return prefix(suffix(s, _suffix), _prefix)
+
+def no_prefix(s: str, prefix: str) -> str:
+    if s.startswith(prefix):
+        return s[len(prefix):]
+    return s
+
+def no_suffix(s: str, suffix: str) -> str:
+    if s.endswith(suffix):
+        return s[:-len(suffix)]
+    return s
+
+def no_prefix_or_suffix(s: str, _prefix: str, _suffix: str) -> str:
+    return no_prefix(no_suffix(s, _suffix), _prefix)
 
 # type: Literal[str]
 def _including_unquoted(*literal_types) -> list[str]:

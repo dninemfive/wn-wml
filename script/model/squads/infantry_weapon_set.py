@@ -27,6 +27,14 @@ class InfantryWeaponSet(object):
     @property
     def last(self: Self) -> InfantryWeapons:
         return self.weapons[-1]
+    
+    @property
+    def primaries_in_reverse_order(self: Self) -> Iterator[InfantryWeapons]:
+        yield from reversed(x for x in self.weapons if not x.is_secondary)
+
+    @property
+    def secondaries_in_order(self: Self) -> Iterator[InfantryWeapons]:
+        yield from [x for x in self.weapons if x.is_secondary]
 
     def to_weapon_descriptor(self: Self) -> Object:
         return ensure._object('TWeaponManagerModuleDescriptor',

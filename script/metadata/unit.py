@@ -9,7 +9,7 @@ class UnitMetadata(object):
     name: str
 
     @property
-    def class_name_for_debug(self: Self) -> str:
+    def quoted_name(self: Self) -> str:
         return f"'Unit_{self.name}'"
     
     @property

@@ -23,7 +23,7 @@ class _SquadKeys(object):
     
     @property
     def _unit(self: Self) -> str:
-        return self.metadata.class_name_for_debug
+        return self.metadata.quoted_name
 
     @property
     def _tactic_depiction_alternatives(self: Self) -> str:

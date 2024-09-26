@@ -69,3 +69,17 @@ def collate_modules(ndf: List, primary_src: str, others: dict[str, list[str]]) -
     key_list: list[str] = []
     for module in get_modules_descriptors(primary_obj):
         pass
+
+def _path(parent_name: str,
+          module_path: str,
+          remaining_path: list[str]) -> str:
+    result = f'{parent_name}{module_path}'
+    if any(remaining_path):
+        result += f'/{'/'.join(remaining_path)}'
+    return result
+
+def path_by_type(parent_name: str, module_name: str, *remaining_path: str) -> str:
+    return _path(parent_name, f':{ensure.no_prefix_or_suffix(module_name, 'T', "ModuleDescriptor")}', remaining_path, False)
+
+def path_by_name(parent_name: str, module_name: str, *remaining_path: str) -> str:
+    return _path(parent_name, f'[{module_name}]', remaining_path, True)
