@@ -54,7 +54,7 @@ class UnitMetadata(object):
     
     @property
     def weapon_descriptor_path(self: Self) -> str:
-        return f'$GFX/Weapon/{self.weapon_descriptor_name}'
+        return f'$/GFX/Weapon/{self.weapon_descriptor_name}'
     
     @staticmethod
     def from_localized_name(prefix: str, localized_name: str, country: str) -> Self:

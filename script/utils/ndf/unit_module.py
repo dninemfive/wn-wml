@@ -79,7 +79,7 @@ def _path(parent_name: str,
     return result
 
 def path_by_type(parent_name: str, module_name: str, *remaining_path: str) -> str:
-    return _path(parent_name, f':{ensure.no_prefix_or_suffix(module_name, 'T', "ModuleDescriptor")}', remaining_path, False)
+    return _path(parent_name, f':{ensure.no_prefix_or_suffix(module_name, 'T', "ModuleDescriptor")}', remaining_path)
 
 def path_by_name(parent_name: str, module_name: str, *remaining_path: str) -> str:
-    return _path(parent_name, f'[{module_name}]', remaining_path, True)
+    return _path(parent_name, f'[{module_name}]', remaining_path)

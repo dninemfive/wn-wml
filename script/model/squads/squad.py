@@ -64,10 +64,10 @@ class Squad(object):
         result = List()
         for weapon in self.weapon_set:
             result.add(ListRow(ensure._object('TDepictionDescriptor',
-                                              SelectorId=[_mesh_alternative(weapon.index)],
+                                              SelectorId=[_mesh_alternative(weapon.art_index)],
                                               MeshDescriptor=weapon.model_path)))
         result.add(ListRow(ensure._object('TMeshlessDepictionDescriptor',
-                                          SelectorId="'none'",
+                                          SelectorId=["'none'"],
                                           ReferenceMeshForSkeleton=self.weapon_set.last.model_path)))
         return result
     
@@ -77,15 +77,15 @@ class Squad(object):
             operators.add(ensure.listrow(ensure._object(
                 'DepictionOperator_WeaponInstantFireInfantry',
                 FireEffectTag=[weapon.effect_tag],
-                WeaponShootDataPropertyName=f'"WeaponShootData_0_{weapon.index}"'
+                WeaponShootDataPropertyName=f'"WeaponShootData_0_{weapon.art_index}"'
             )))
         return ensure._object('TemplateAllSubWeaponDepiction',
-                                Alternatives=self._keys._all_weapon_sub_depiction,
+                                Alternatives=self._keys._all_weapon_alternatives,
                                 Operators=operators)
     
     def _all_weapon_sub_depiction_backpack(self: Self) -> Object:
         return ensure._object('TemplateAllSubBackpackWeaponDepiction',
-                                Alternatives=self._keys._all_weapon_sub_depiction)
+                                Alternatives=self._keys._all_weapon_alternatives)
 
     def _conditional_tags(self: Self) -> List:
         result = List()
@@ -99,7 +99,7 @@ class Squad(object):
                                 Selector=selector_tactic.name,
                                 Alternatives=self._keys._tactic_depiction_alternatives,
                                 SubDepictions=[self._keys._all_weapon_sub_depiction, self._keys._all_weapon_sub_depiction_backpack],
-                                Operators=ensure._object('DepictionOperator_SkeletalAnimation2_Default', ConditionalTags=self._conditional_tags()))
+                                Operators=ensure._list(ensure._object('DepictionOperator_SkeletalAnimation2_Default', ConditionalTags=self._conditional_tags())))
     
     def _tactic_depiction_ghost(self: Self, selector_tactic: TemplateInfantrySelectorTactic) -> Object:
         return ensure._object('TemplateInfantryDepictionFactoryGhost',
@@ -126,6 +126,8 @@ class Squad(object):
         
     def apply(self: Self, ndf: dict[str, List], msg: Message | None) -> None:
         self.edit_generated_depiction_infantry(ndf, msg)
+        self.edit_showroom_units(ndf, msg)
+        self.edit_weapon_descriptors(ndf, msg)
 
     def _make_infantry_squad_module_descriptor(self: Self, guid_key: str) -> Object:
         return ensure._object('TInfantrySquadModuleDescriptor',
@@ -146,7 +148,7 @@ class Squad(object):
         copy: Object = ndf.by_name(self.copy_of.showroom_descriptor_name).value.copy()
         edit.members(copy,
                      DescriptorId=self.guids.generate(self.copy_of.showroom_descriptor_name))
-        module.replace_where(copy, self.metadata.weapon_descriptor_path, lambda x: x.value.startswith('$/GFX/Weapon/'))
+        module.replace_where(copy, self.metadata.weapon_descriptor_path, lambda x: isinstance(x.value, str) and x.value.startswith('$/GFX/Weapon/'))
         module.replace_module(copy,
                               self._make_infantry_squad_module_descriptor(module.path_by_type(self.copy_of.showroom_descriptor_name,
                                                                                              'TInfantrySquadModuleDescriptor',
@@ -156,6 +158,7 @@ class Squad(object):
         module.replace_module(copy,
                               self._infantry_squad_weapon_assignment,
                               'TInfantrySquadWeaponAssignmentModuleDescriptor')
+        ndf.add(ListRow(copy, 'export', self.metadata.showroom_descriptor_name))
         
     @ndf_path(ndf_paths.WEAPON_DESCRIPTOR)
     def edit_weapon_descriptors(self: Self, ndf: List):
@@ -168,4 +171,4 @@ class Squad(object):
         unit.edit_module_members('TTacticalLabelModuleDescriptor', NbSoldiers=self.soldier_count)
         unit.edit_module_members('WeaponManager', by_name=True, Default=self.metadata.weapon_descriptor_path)
         # this should edit showroomequivalence when the unit is saved
-        unit.showroom_src = UnitMetadata(self.copy_of)
+        unit.showroom_src = self.metadata
