@@ -130,9 +130,15 @@ class Squad(object):
         if self._cached_weapon_assignment is None:
             turrets: dict[int, list[int]] = {}
             soldier_index = 0
+            secondaries = list(self.weapon_set.secondaries_in_order)
+            secondary_count = sum(x.count for x in secondaries)
             for primary in self.weapon_set.primaries_in_reverse_order:
+                remaining_soldiers = self.soldier_count - soldier_index - 1
+                this_soldier_weapons = [primary.index]
+
                 turrets[soldier_index] = [primary.index]
                 # TODO: handle secondaries
+                soldier_index += 1
             self._cached_weapon_assignment = turrets
         return ensure._object('TInfantrySquadWeaponAssignmentModuleDescriptor',
                                InitialSoldiersToTurretIndexMap=turrets)
