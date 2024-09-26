@@ -92,6 +92,8 @@ def ndf_type(value: dict | list | int | str, _type: str | None = None) -> Map | 
             return _object(_type, value)
     elif isinstance(value, list):
         return _list(value)
+    elif isinstance(value, tuple):
+        return (ndf_type(x) for x in value)
     elif isinstance(value, Number) or isinstance(value, bool):
         return str(value)
     elif isinstance(value, str)\

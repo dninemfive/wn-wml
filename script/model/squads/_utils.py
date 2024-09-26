@@ -1,9 +1,11 @@
 from dataclasses import dataclass
 from typing import Iterable, Literal, Self
-from ndf_parse.model import List, ListRow, MemberRow, Object, Template
+from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object, Template
 
 from managers.guid import GuidManager
 from metadata.unit import UnitMetadata
+from script.constants import ndf_paths
+from script.utils.ndf.decorators import ndf_path
 from utils.collections import flatten, unique, with_indices
 from utils.ndf import ensure
 
@@ -32,12 +34,31 @@ class Weapon(object):
     model_path: str
     weapon_type: Literal["'bazooka'", "'grenade'", "'mmg'", "'smg'"] | None = None
 
+@dataclass
+class TemplateInfantrySelectorTactic(object):
+    UniqueCount:        int
+    surrogate_count:    int
+
+    @property
+    def Surrogates(self: Self) -> str:
+        return f'TacticDepiction{_0(self.surrogate_count)}_Surrogates'
+    
+    @property
+    def name(self: Self) -> str:
+        return f'InfantrySelectorTactic{_0(self.UniqueCount)}{_0(self.surrogate_count)}'
+    
+    @property
+    def tuple(self: Self) -> tuple[int, int]:
+        return (self.UniqueCount, self.surrogate_count)
+
+
 COUNTRY_CODE_TO_COUNTRY_SOUND_CODE = {
-    'DDR': 'GER',
-    'RFA': 'GER',
-    'SOV': 'SOVIET',
-    'UK': 'UK',
-    'US': 'US'
+    'DDR':  'GER',
+    'RFA':  'GER',
+    'SOV':  'SOVIET',
+    'UK' :  'UK',
+    'US' :  'US',
+    'POL':  'SOVIET'
 }
 
 VALID_WEAPON_TYPES = [
@@ -51,22 +72,22 @@ VALID_WEAPON_TYPES = [
 def mesh_alternative(index: int) -> str:
     return f"'MeshAlternative_{index}'"
 
-def all_weapon_sub_depiction(metadata: UnitMetadata) -> str:
-    return ensure.prefix(metadata.name, 'AllWeaponSubDepiction_')
-
-def all_weapon_sub_depiction_backpack(metadata: UnitMetadata) -> str:
-    return ensure.prefix(metadata.name, 'AllWeaponSubDepictionBackpack_')
-
-def selector(unique_count: int, surrogates: int) -> str:
-    return f'InfantrySelectorTactic_{str(unique_count).rjust(2, '0')}_{str(surrogates).rjust(2, '0')}'
-
-def tactic_depiction_alternatives(metadata: UnitMetadata) -> str:
-    return f'TacticDepiction_{metadata.name}_Alternatives'
+def _0(n: int) -> str:
+    return f'_{str(n).rjust(2, '0')}'
 
 class Squad(object):
-    def __init__(self: Self, guids: GuidManager, country: str, *loadout: Weapon | list[Weapon] | tuple[int, list[Weapon]]):
+    def __init__(self: Self,
+                 guids: GuidManager,
+                 metadata: UnitMetadata,
+                 country: str,
+                 infantry_selector_tactic: TemplateInfantrySelectorTactic,
+                 tactic_depiction: str | List,
+                 *loadout: Weapon | list[Weapon] | tuple[int, list[Weapon]]):
         self.guids = guids
+        self.metadata = metadata
         self.country = country
+        self.infantry_selector_tactic = infantry_selector_tactic
+        self.tactic_depiction = tactic_depiction
         self.loadout: list[list[Weapon]] = []
         for item in loadout:
             if isinstance(item, Weapon):
@@ -74,7 +95,7 @@ class Squad(object):
             if isinstance(item, list):
                 item = (1, item)
             ct, weapons = item
-            for i in range(ct):
+            for _ in range(ct):
                 self.loadout.append(weapons)
 
     @property
@@ -98,7 +119,7 @@ class Squad(object):
         result.add(ListRow(ensure._object(SelectorId="'none'", ReferenceMeshForSkeleton=unique_weapons[-1][1].model_path)))
         return result
     
-    def all_weapon_sub_depiction(self: Self, metadata: UnitMetadata):
+    def all_weapon_sub_depiction(self: Self):
         operators = List()
         for index, item in self.unique_weapons_with_indices:
             item: Weapon
@@ -108,12 +129,12 @@ class Squad(object):
                 WeaponShootDataPropertyName=f'"WeaponShootData_0_{index}"'
             )))
         return ensure._template('TemplateAllSubWeaponDepiction',
-                                Alternatives=all_weapon_sub_depiction(metadata),
+                                Alternatives=self.all_weapon_sub_depiction_key,
                                 Operators=operators)
     
-    def all_weapon_sub_depiction_backpack(self: Self, metadata: UnitMetadata) -> Template:
+    def all_weapon_sub_depiction_backpack(self: Self) -> Template:
         return ensure._template('TemplateAllSubBackpackWeaponDepiction',
-                                Alternatives=all_weapon_sub_depiction(metadata))
+                                Alternatives=self.all_weapon_sub_depiction_key)
     
     # TacticDepiction_<unit>_Alternatives: just copy from wherever you're getting the models
 
@@ -124,14 +145,53 @@ class Squad(object):
                 result.add(ensure.memberrow(weapon.weapon_type, mesh_alternative(index)))
         return result
 
-    def tactic_depiction_soldier(self: Self, metadata: UnitMetadata, unique_count: int = 0, surrogates: int = 5) -> Template:
+    def tactic_depiction_soldier(self: Self) -> Template:
         return ensure._template('TemplateInfantryDepictionFactoryTactic',
-                                Selector=selector(unique_count, surrogates),
-                                Alternatives=tactic_depiction_alternatives(metadata),
-                                SubDepictions=[all_weapon_sub_depiction(metadata), all_weapon_sub_depiction_backpack(metadata)],
+                                Selector=self.infantry_selector_tactic.name,
+                                Alternatives=self.tactic_depiction_alternatives_key,
+                                SubDepictions=[self.all_weapon_sub_depiction_key, self.all_weapon_sub_depiction_backpack_key],
                                 Operators=ensure._object('DepictionOperator_SkeletalAnimation2_Default', ConditionalTags=self.conditional_tags()))
     
-    def tactic_depiction_ghost(self: Self, metadata: UnitMetadata, unique_count: int = 0, surrogates: int = 5) -> Template:
+    def tactic_depiction_ghost(self: Self) -> Template:
         return ensure._template('TemplateInfantryDepictionFactoryGhost',
-                                Selector=selector(unique_count, surrogates),
-                                Alternatives=tactic_depiction_alternatives(metadata))
+                                Selector=self.infantry_selector_tactic.name,
+                                Alternatives=self.tactic_depiction_alternatives_key)
+    @property
+    def all_weapon_alternatives_key(self: Self) -> str:
+        return ensure.prefix(self.metadata.name, 'AllWeaponAlternatives_')
+
+    @property
+    def all_weapon_sub_depiction_key(self: Self) -> str:
+        return ensure.prefix(self.metadata.name, 'AllWeaponSubDepiction_')
+
+    @property
+    def all_weapon_sub_depiction_backpack_key(self: Self) -> str:
+        return ensure.prefix(self.metadata.name, 'AllWeaponSubDepictionBackpack_')
+
+    @property
+    def tactic_depiction_alternatives_key(self: Self) -> str:
+        return f'TacticDepiction_{self.metadata.name}_Alternatives'
+
+    @property
+    def tactic_depiction_soldier_key(self: Self) -> str:
+        return f'TacticDepiction_{self.metadata.name}_Soldier'
+    
+    @property
+    def tactic_depiction_ghost_key(self: Self) -> str:
+        return f'TacticDepiction_{self.metadata.name}_Ghost'
+
+    @ndf_path(ndf_paths.GENERATED_DEPICTION_INFANTRY)
+    def edit_generated_depiction_infantry(self: Self, ndf: List) -> None:
+        ndf.add(ListRow(self.gfx(), namespace=f'Gfx_{self.metadata.name}'))
+        ndf.add(ListRow(self.all_weapon_alternatives(), namespace=self.all_weapon_alternatives_key))
+        ndf.add(ListRow(self.all_weapon_sub_depiction(), namespace=self.all_weapon_sub_depiction_key))
+        ndf.add(ListRow(self.all_weapon_sub_depiction_backpack(), namespace=self.all_weapon_sub_depiction_backpack_key))
+        if isinstance(self.tactic_depiction, str):
+            self.tactic_depiction = ndf.by_name(self.tactic_depiction).value
+        ndf.add(ListRow(self.tactic_depiction.copy(), namespace=self.tactic_depiction_alternatives_key))
+        ndf.add(ListRow(self.tactic_depiction_soldier(), self.tactic_depiction_soldier_key))
+        ndf.add(ListRow(self.tactic_depiction_ghost(), self.tactic_depiction_ghost_key))
+        ndf.by_name('InfantryMimetic').value.add(MapRow(key=self.metadata.class_name_for_debug, value=self.tactic_depiction_soldier_key))
+        ndf.by_name('InfantryMimeticGhost').value.add(MapRow(key=self.metadata.class_name_for_debug, value=self.tactic_depiction_ghost_key))
+        ndf.by_name('TransportedInfantryAlternativesCount').value.add(ensure.maprow(self.metadata.class_name_for_debug,
+                                                                                    self.infantry_selector_tactic.tuple))
