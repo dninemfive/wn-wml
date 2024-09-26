@@ -21,6 +21,10 @@ class InfantryWeaponSet(object):
         return len(self.weapons)
     
     @property
+    def soldier_count(self: Self) -> int:
+        return sum(x.count for x in self.weapons if not x.is_secondary)
+    
+    @property
     def indices(self: Self) -> Iterable[int]:
         yield from range(self.count)
 
@@ -29,12 +33,39 @@ class InfantryWeaponSet(object):
         return self.weapons[-1]
     
     @property
-    def primaries_in_reverse_order(self: Self) -> Iterable[InfantryWeapons]:
-        yield from reversed(x for x in self.weapons if not x.is_secondary)
+    def primaries(self: Self) -> Iterable[InfantryWeapons]:
+        yield from [x for x in self.weapons if not x.is_secondary]
 
     @property
-    def secondaries_in_order(self: Self) -> Iterable[InfantryWeapons]:
+    def secondaries(self: Self) -> Iterable[InfantryWeapons]:
         yield from [x for x in self.weapons if x.is_secondary]
+
+    @property
+    def primary_indices(self: Self) -> Iterable[tuple[int, int]]:
+        soldier_index = 0
+        for weapon in reversed(self.primaries):
+            weapon: InfantryWeapons
+            for _ in range(weapon.count):
+                yield (soldier_index, weapon.index)
+                soldier_index += 1
+
+    @property
+    def secondary_indices(self: Self) -> Iterable[tuple[int, int]]:
+        soldier_index = self.soldier_count - 1
+        for weapon in reversed(self.secondaries):
+            weapon: InfantryWeapons
+            for _ in range(weapon.count):
+                yield (soldier_index, weapon.index)
+                soldier_index -= 1
+
+    @property
+    def assignment(self: Self) -> dict[int, list[int]]:
+        result: dict[int, list[int]] = {}
+        for s, w in self.primary_indices:
+            result[s] = [w]
+        for s, w in self.secondary_indices:
+            result[s].append(w)
+        return result
 
     def to_weapon_descriptor(self: Self) -> Object:
         return ensure._object('TWeaponManagerModuleDescriptor',

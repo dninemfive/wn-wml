@@ -40,7 +40,14 @@ class Squad(object):
 
     @property
     def soldier_count(self: Self) -> int:
-        return sum(weapon.count for weapon in self.weapon_set if not weapon.is_secondary)
+        return self.weapon_set.soldier_count
+
+    @property
+    def _infantry_squad_weapon_assignment(self: Self) -> Object:
+        if self._cached_weapon_assignment is None:
+            self._cached_weapon_assignment = self.weapon_set.assignment
+        return ensure._object('TInfantrySquadWeaponAssignmentModuleDescriptor',
+                               InitialSoldiersToTurretIndexMap=self._cached_weapon_assignment)
     
     # internal methods
 
@@ -125,23 +132,6 @@ class Squad(object):
     def _edit_groupe_combat(self: Self, module: Object) -> None:
         edit.members(module,
                      Default=self._make_infantry_squad_module_descriptor(f'{self.metadata.descriptor_name}/ModulesDescriptors["GroupeCombat"]/Default/MimeticDescriptor'))
-
-    def _create_infantry_squad_weapon_assignment(self: Self) -> Object:
-        if self._cached_weapon_assignment is None:
-            turrets: dict[int, list[int]] = {}
-            soldier_index = 0
-            secondaries = list(self.weapon_set.secondaries_in_order)
-            secondary_count = sum(x.count for x in secondaries)
-            for primary in self.weapon_set.primaries_in_reverse_order:
-                remaining_soldiers = self.soldier_count - soldier_index - 1
-                this_soldier_weapons = [primary.index]
-
-                turrets[soldier_index] = [primary.index]
-                # TODO: handle secondaries
-                soldier_index += 1
-            self._cached_weapon_assignment = turrets
-        return ensure._object('TInfantrySquadWeaponAssignmentModuleDescriptor',
-                               InitialSoldiersToTurretIndexMap=turrets)
         
     @ndf_path(ndf_paths.SHOWROOM_UNITS)
     def edit_showroom_units(self: Self, ndf: List):
@@ -156,7 +146,7 @@ class Squad(object):
                                                                                              'DescriptorId')),
                               'TInfantrySquadModuleDescriptor')
         module.replace_module(copy,
-                              self._create_infantry_squad_weapon_assignment().copy(),
+                              self._infantry_squad_weapon_assignment,
                               'TInfantrySquadWeaponAssignmentModuleDescriptor')
         
     @ndf_path(ndf_paths.WEAPON_DESCRIPTOR)
@@ -166,7 +156,8 @@ class Squad(object):
     def edit_unit(self: Self, unit: UnitCreator) -> None:
         unit.edit_module_members('TBaseDamageModuleDescriptor', MaxPhysicalDamages=self.soldier_count)        
         self._edit_groupe_combat(unit.get_module('GroupeCombat', by_name=True))
-        unit.replace_module(self._create_infantry_squad_weapon_assignment(), 'TInfantrySquadWeaponAssignmentModuleDescriptor')
+        unit.replace_module(self._infantry_squad_weapon_assignment, 'TInfantrySquadWeaponAssignmentModuleDescriptor')
         unit.edit_module_members('TTacticalLabelModuleDescriptor', NbSoldiers=self.soldier_count)
         unit.edit_module_members('WeaponManager', by_name=True, Default=self.metadata.weapon_descriptor_path)
+        # this should edit showroomequivalence when the unit is saved
         unit.showroom_src = UnitMetadata(self.copy_of)
