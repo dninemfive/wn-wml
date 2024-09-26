@@ -14,3 +14,9 @@ def unique(list: Iterable[T]) -> Iterable[T]:
         if not item in yielded:
             yield item
             yielded.append(item)
+
+def with_indices(list: Iterable[T], start: int = 0) -> Iterable[tuple[int, T]]:
+    index = start
+    for item in list:
+        yield (index, item)
+        index += 1

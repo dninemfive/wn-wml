@@ -1,9 +1,10 @@
-from typing import Iterable, Self
+from dataclasses import dataclass
+from typing import Iterable, Literal, Self
 from ndf_parse.model import List, ListRow, MemberRow, Object, Template
 
 from managers.guid import GuidManager
 from metadata.unit import UnitMetadata
-from utils.collections import flatten, unique
+from utils.collections import flatten, unique, with_indices
 from utils.ndf import ensure
 
 def adjust_squad(squad: Object, *loadouts: tuple[int, list[str] | list[str]]) -> None:
@@ -24,11 +25,12 @@ def adjust_squad(squad: Object, *loadouts: tuple[int, list[str] | list[str]]) ->
     # showroom unit
     # add new gfx to InfantryMimetic
 
+@dataclass
 class Weapon(object):
-    def __init__(self: Self, ammo_path: str, effect_tag: str, model_path: str):
-        self.ammo_path = ammo_path
-        self.effect_tag = effect_tag
-        self.model_path = model_path
+    ammo_path: str
+    effect_tag: str
+    model_path: str
+    weapon_type: Literal["'bazooka'", "'grenade'", "'mmg'", "'smg'"] | None = None
 
 COUNTRY_CODE_TO_COUNTRY_SOUND_CODE = {
     'DDR': 'GER',
@@ -37,6 +39,29 @@ COUNTRY_CODE_TO_COUNTRY_SOUND_CODE = {
     'UK': 'UK',
     'US': 'US'
 }
+
+VALID_WEAPON_TYPES = [
+    None,
+    "'bazooka'",
+    "'grenade'",
+    "'mmg'",
+    "'smg'"
+]
+
+def mesh_alternative(index: int) -> str:
+    return f"'MeshAlternative_{index}'"
+
+def all_weapon_sub_depiction(metadata: UnitMetadata) -> str:
+    return ensure.prefix(metadata.name, 'AllWeaponSubDepiction_')
+
+def all_weapon_sub_depiction_backpack(metadata: UnitMetadata) -> str:
+    return ensure.prefix(metadata.name, 'AllWeaponSubDepictionBackpack_')
+
+def selector(unique_count: int, surrogates: int) -> str:
+    return f'InfantrySelectorTactic_{str(unique_count).rjust(2, '0')}_{str(surrogates).rjust(2, '0')}'
+
+def tactic_depiction_alternatives(metadata: UnitMetadata) -> str:
+    return f'TacticDepiction_{metadata.name}_Alternatives'
 
 class Squad(object):
     def __init__(self: Self, guids: GuidManager, country: str, *loadout: Weapon | list[Weapon] | tuple[int, list[Weapon]]):
@@ -61,35 +86,52 @@ class Squad(object):
                               SoundOperator=f'$/GFX/Sound/DepictionOperator_MovementSound_SM_Infanterie_{COUNTRY_CODE_TO_COUNTRY_SOUND_CODE[self.country]}')
 
     @property
-    def unique_weapons(self: Self) -> list[Weapon]:
-        return [x for x in unique(flatten(self.loadout))]
+    def unique_weapons_with_indices(self: Self) -> list[tuple[int, Weapon]]:
+        return [with_indices([x for x in unique(flatten(self.loadout))], 1)]
     
     def all_weapon_alternatives(self: Self) -> List:
-        index: int = 1
         result = List()
-        unique_weapons = self.unique_weapons
-        for item in unique_weapons:
-            result.add(ListRow(ensure._object(SelectorId=[f"'MeshAlternative_{index}'"],
+        unique_weapons = self.unique_weapons_with_indices
+        for index, item in unique_weapons:
+            result.add(ListRow(ensure._object(SelectorId=[mesh_alternative(index)],
                                               MeshDescriptor=item.model_path)))
-        result.add(ListRow(ensure._object(SelectorId="'none'", ReferenceMeshForSkeleton=unique_weapons[-1].model_path)))
+        result.add(ListRow(ensure._object(SelectorId="'none'", ReferenceMeshForSkeleton=unique_weapons[-1][1].model_path)))
         return result
     
     def all_weapon_sub_depiction(self: Self, metadata: UnitMetadata):
-        result = Template('TemplateAllSubWeaponDepiction')
-        result.add(ensure.memberrow('Alternatives', ensure.prefix(metadata.name, 'AllWeaponSubDepiction_')))
-        index: int = 1
         operators = List()
-        for item in self.unique_weapons:
+        for index, item in self.unique_weapons_with_indices:
+            item: Weapon
             operators.add(ensure.listrow(ensure._object(
                 'DepictionOperator_WeaponInstantFireInfantry',
                 FireEffectTag=[item.effect_tag],
-                WeaponShootDataPropertyName=f'WeaponShootData_0_{index}'
+                WeaponShootDataPropertyName=f'"WeaponShootData_0_{index}"'
             )))
-            index += 1
-        result.add(ensure.memberrow('Operators', operators))
-        return result
+        return ensure._template('TemplateAllSubWeaponDepiction',
+                                Alternatives=all_weapon_sub_depiction(metadata),
+                                Operators=operators)
     
     def all_weapon_sub_depiction_backpack(self: Self, metadata: UnitMetadata) -> Template:
-        result = Template()
-        result.add(MemberRow('', ensure.prefix(metadata.name, 'AllWeaponSubDepiction_')))
+        return ensure._template('TemplateAllSubBackpackWeaponDepiction',
+                                Alternatives=all_weapon_sub_depiction(metadata))
+    
+    # TacticDepiction_<unit>_Alternatives: just copy from wherever you're getting the models
+
+    def conditional_tags(self: Self) -> List:
+        result = List()
+        for index, weapon in self.unique_weapons_with_indices:
+            if weapon.weapon_type is not None:
+                result.add(ensure.memberrow(weapon.weapon_type, mesh_alternative(index)))
         return result
+
+    def tactic_depiction_soldier(self: Self, metadata: UnitMetadata, unique_count: int = 0, surrogates: int = 5) -> Template:
+        return ensure._template('TemplateInfantryDepictionFactoryTactic',
+                                Selector=selector(unique_count, surrogates),
+                                Alternatives=tactic_depiction_alternatives(metadata),
+                                SubDepictions=[all_weapon_sub_depiction(metadata), all_weapon_sub_depiction_backpack(metadata)],
+                                Operators=ensure._object('DepictionOperator_SkeletalAnimation2_Default', ConditionalTags=self.conditional_tags()))
+    
+    def tactic_depiction_ghost(self: Self, metadata: UnitMetadata, unique_count: int = 0, surrogates: int = 5) -> Template:
+        return ensure._template('TemplateInfantryDepictionFactoryGhost',
+                                Selector=selector(unique_count, surrogates),
+                                Alternatives=tactic_depiction_alternatives(metadata))

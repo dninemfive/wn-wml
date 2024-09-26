@@ -1,7 +1,7 @@
 from enum import member
 from numbers import Number
 from typing import Type
-from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
+from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object, Template
 from ndf_parse.model.abc import CellValue
 
 def listrow(val: CellValue | ListRow) -> ListRow:
@@ -59,6 +59,13 @@ def _map(_dict: Map | dict = {}, *kvps: tuple[str, CellValue | None], **items: C
 
 def _object(type: str, _dict: Object | dict = {}, *kvps: tuple[str, CellValue], **items: CellValue) -> Object:
     result = Object(type)
+    _add_from(result, _dict)
+    _add_from(result, kvps)
+    _add_from(result, items)
+    return result
+
+def _template(type: str, _dict: Object | dict = {}, *kvps: tuple[str, CellValue], **items: CellValue) -> Object:
+    result = Template(type)
     _add_from(result, _dict)
     _add_from(result, kvps)
     _add_from(result, items)
