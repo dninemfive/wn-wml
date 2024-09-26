@@ -1,5 +1,7 @@
 from typing import Self
 
+from model.squads.infantry_weapon_set import InfantryWeaponSet
+from creators.unit import UnitCreator
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from constants import ndf_paths
@@ -9,7 +11,7 @@ from model.squads._utils import (COUNTRY_CODE_TO_COUNTRY_SOUND_CODE,
                                  mesh_alternative)
 from model.squads.template_infantry_selector_tactic import \
     TemplateInfantrySelectorTactic
-from model.squads.weapon import Weapon
+from model.squads.weapon import Weapon, WeaponWithIndex
 from ndf_parse.model import (List, ListRow, Map, MapRow, MemberRow, Object,
                              Template)
 from utils.collections import flatten, unique, with_indices
@@ -23,13 +25,17 @@ class Squad(object):
                  guids: GuidManager,
                  metadata: UnitMetadata,
                  country: str,
-                 infantry_selector_tactic: TemplateInfantrySelectorTactic,
+                 infantry_selector_tactic: TemplateInfantrySelectorTactic | tuple[int, int],
                  tactic_depiction: str | List,
-                 *loadout: Weapon | list[Weapon] | tuple[int, list[Weapon]]):
+                 *loadout: WeaponWithIndex | list[WeaponWithIndex] | tuple[int, list[WeaponWithIndex]]):
         self.guids = guids
         self.metadata = metadata
         self.country = country
+        if not isinstance(infantry_selector_tactic, TemplateInfantrySelectorTactic):
+            infantry_selector_tactic = TemplateInfantrySelectorTactic(infantry_selector_tactic[0], infantry_selector_tactic[1])
         self.infantry_selector_tactic = infantry_selector_tactic
+        if isinstance(tactic_depiction, str):
+            tactic_depiction = ensure.prefix_and_suffix(tactic_depiction, 'TacticDepiction_', '_Alternatives')
         self.tactic_depiction = tactic_depiction
         self.loadout: list[list[Weapon]] = []
         for item in loadout:
@@ -40,6 +46,28 @@ class Squad(object):
             ct, weapons = item
             for _ in range(ct):
                 self.loadout.append(weapons)
+
+    @staticmethod
+    def from_weapon_set(guids: GuidManager,
+                        metadata: UnitMetadata,
+                        country: str,
+                        infantry_selector_tactic: TemplateInfantrySelectorTactic | tuple[int, int],
+                        tactic_depiction: str | List,
+                        weapons: InfantryWeaponSet,
+                        has_at_weapon: bool = True) -> Self:
+        """ Assumes a standard infantry loadout. TODO: describe what that means """
+        loadout: list[tuple[int, list[WeaponWithIndex]]] = []
+        ct = len(weapons.count) if not has_at_weapon else len(weapons.count) - 1
+        order = [weapons.count - i - 1 for i in range(ct)]
+        if has_at_weapon: order.append(weapons.count - 1)
+        for i in order:
+            loadout.append((weapons.counts[i], weapons.weapons[i]))
+        return Squad(guids,
+                     metadata,
+                     country,
+                     infantry_selector_tactic,
+                     tactic_depiction,
+                     *loadout)
 
     # properties
 
@@ -167,7 +195,7 @@ class Squad(object):
         return ensure._object('TInfantrySquadWeaponAssignmentModuleDescriptor',
                               InitialSoldiersToTurretIndexMap=turret_map)
     
-    def edit_unit(self: Self, unit: Object) -> None:
+    def edit_unit(self: Self, unit: Object | UnitCreator) -> None:
         edit.members(module.get(unit, 'TBaseDamageModuleDescriptor'), MaxPhysicalDamages=self.total_soldiers)
         self._edit_groupe_combat(module.get(unit, 'GroupeCombat', by_name=True))
         module.replace_module(unit, self._create_infantry_squad_weapon_assignment(), 'TInfantrySquadWeaponAssignmentModuleDescriptor')

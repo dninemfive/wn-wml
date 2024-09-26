@@ -113,14 +113,16 @@ def unit_path(descriptor_or_path: str) -> str:
     return prefix(descriptor_or_path, "$/GFX/Unit/")
 
 def quoted(s: str, quote: str = '"') -> str:
-    if not s.startswith(quote):
-        s = f'{quote}{s}'
-    if not s.endswith(quote):
-        s = f'{s}{quote}'
-    return s
+    return prefix_and_suffix(s, quote, quote)
 
 def unquoted(s: str, quote: str = '"') -> str:
     if s.startswith(quote):
         s = s[len(quote):]
     if s.endswith(quote):
-        s = s[:len(quote)]
+        s = s[:-len(quote)]
+
+def suffix(s: str, suffix: str) -> str:
+    return s if s.endswith(suffix) else f'{s}{suffix}'
+
+def prefix_and_suffix(s: str, _prefix: str, _suffix: str) -> str:
+    return prefix(suffix(s, _suffix), _prefix)
