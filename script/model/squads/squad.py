@@ -15,6 +15,7 @@ from ndf_parse.model import (List, ListRow, Map, MapRow, MemberRow, Object,
 from utils.collections import flatten, unique, with_indices
 from utils.ndf import ensure
 from utils.ndf.decorators import ndf_path
+from utils.types.message import Message
 
 
 class Squad(object):
@@ -144,6 +145,9 @@ class Squad(object):
         ndf.by_name('InfantryMimeticGhost').value.add(MapRow(key=self.key, value=self.tactic_depiction_ghost_key))
         ndf.by_name('TransportedInfantryAlternativesCount').value.add(ensure.maprow(self.key,
                                                                                     self.infantry_selector_tactic.tuple))
+        
+    def apply(self: Self, ndf: dict[str, List], msg: Message | None) -> None:
+        self.edit_generated_depiction_infantry(ndf, msg)
 
     def _edit_groupe_combat(self: Self, module: Object) -> None:
         default = ensure._object('TInfantrySquadModuleDescriptor',
