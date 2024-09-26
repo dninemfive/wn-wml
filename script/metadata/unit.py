@@ -21,8 +21,12 @@ class UnitMetadata(object):
         return f'$/GFX/Unit/{self.descriptor_name}'
     
     @property
+    def showroom_descriptor_name(self: Self) -> str:
+        return f'Descriptor_ShowRoomUnit_{self.name}'
+
+    @property
     def showroom_descriptor_path(self: Self) -> str:
-        return f'$/GFX/Unit/Descriptor_ShowRoomUnit_{self.name}'
+        return f'$/GFX/Unit/{self.showroom_descriptor_name}'
     
     @property
     def deck_pack_descriptor_name(self: Self) -> str:

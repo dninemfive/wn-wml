@@ -18,6 +18,7 @@ class WeaponCreator(object):
     def __init__(self: Self, ndf: dict[str, List], unit: UnitMetadata, copy_of: str, parent_msg: Message | None = None, callback: Callable[[str], None] = None):
         self.ndf = ndf
         self.name = ensure.prefix(unit.name, 'WeaponDescriptor_')
+        # TODO: allow editing an already edited weapon
         self.copy_of = ensure.prefix(copy_of, 'WeaponDescriptor_')
         self.parent_msg = parent_msg
         self.callback = callback

@@ -18,7 +18,7 @@ MODULES_DESCRIPTORS = "ModulesDescriptors"
 UNIT_UI = "TUnitUIModuleDescriptor"
 TAGS = "TTagsModuleDescriptor"
 
-class UnitCreator(object):
+class ShowroomUnitCreator(object):
     def __init__(self: Self,
                  ndf: dict[str, List],
                  new_unit_metadata: NewUnitMetadata,

@@ -163,6 +163,9 @@ class UnitCreator(object):
     def append_module_from(self: Self, other_unit: Object, type_or_name: str, by_name: bool = False):
         return modules.append_from(self.unit_object, other_unit, type_or_name, by_name)
     
+    def edit_module_members(self: Self, module: str, by_name: bool = False, **changes: CellValue | None):
+        edit.members(self.get_module(module, by_name), **changes)
+    
     def get_other_unit(self: Self, unit: str) -> Object:
         return self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(ensure.unit_descriptor(unit)).value
     

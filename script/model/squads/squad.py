@@ -2,6 +2,7 @@ from typing import Self
 
 from model.squads.infantry_weapon_set import InfantryWeaponSet
 from creators.unit import UnitCreator
+from script.context.module_context import ModuleContext
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from constants import ndf_paths
@@ -177,16 +178,18 @@ class Squad(object):
     def apply(self: Self, ndf: dict[str, List], msg: Message | None) -> None:
         self.edit_generated_depiction_infantry(ndf, msg)
 
+    def _make_infantry_squad_module_descriptor(self: Self, guid_key: str) -> Object:
+        return ensure._object('TInfantrySquadModuleDescriptor',
+                              NbSoldatInGroupeCombat=self.total_soldiers,
+                              InfantryMimeticName=self.key,
+                              WeaponUnitFXKey=self.key,
+                              MimeticDescriptor=ensure._object('Descriptor_Unit_MimeticUnit', 
+                                                               DescriptorId=self.guids.generate(guid_key),
+                                                               MimeticName=self.key),
+                              BoundingBoxSize=f'{self.total_soldiers + 2} * Metre')
+
     def _edit_groupe_combat(self: Self, module: Object) -> None:
-        default = ensure._object('TInfantrySquadModuleDescriptor',
-                                 NbSoldatInGroupeCombat=self.total_soldiers,
-                                 InfantryMimeticName=self.key,
-                                 WeaponUnitFXKey=self.key,
-                                 MimeticDescriptor=ensure._object('Descriptor_Unit_MimeticUnit', 
-                                                                  DescriptorId=self.guids.generate(f'{self.metadata.descriptor_name}:GroupeCombat'),
-                                                                  MimeticName=self.key),
-                                 BoundingBoxSize=f'{self.total_soldiers + 2} * Metre')
-        edit.members(module, Default=default)
+        edit.members(module, Default=self._make_infantry_squad_module_descriptor(f'{self.metadata.descriptor_name}/ModulesDescriptors["GroupeCombat"]/Default/MimeticDescriptor'))
         
     def _create_infantry_squad_weapon_assignment(self: Self) -> Object:
         turret_map: dict[int, list[int]] = {}
@@ -195,8 +198,22 @@ class Squad(object):
         return ensure._object('TInfantrySquadWeaponAssignmentModuleDescriptor',
                               InitialSoldiersToTurretIndexMap=turret_map)
     
-    def edit_unit(self: Self, unit: Object | UnitCreator) -> None:
-        edit.members(module.get(unit, 'TBaseDamageModuleDescriptor'), MaxPhysicalDamages=self.total_soldiers)
-        self._edit_groupe_combat(module.get(unit, 'GroupeCombat', by_name=True))
-        module.replace_module(unit, self._create_infantry_squad_weapon_assignment(), 'TInfantrySquadWeaponAssignmentModuleDescriptor')
-        edit.members(module.get(unit, 'TTacticalLabelModuleDescriptor'), NbSoldiers=self.total_soldiers)
+    def _create_showroom_unit(self: Self, copy_of: UnitMetadata, ndf: dict[str, List], assignment_module: Object) -> Object:
+        showroom_units = ndf[ndf_paths.SHOWROOM_UNITS]
+        copy: Object = showroom_units.by_name(copy_of.showroom_descriptor_name).value.copy()
+        edit.members(copy,
+                     DescriptorId=self.guids.generate(copy_of.showroom_descriptor_name))
+        # TODO: find member pointing at a weapondescriptor and point it at ours instead
+        module.replace_module(copy,
+                              self._make_infantry_squad_module_descriptor(f'{copy_of.showroom_descriptor_name}/ModulesDescriptors[TInfantrySquadModuleDescriptor]/MimeticDescriptor'),
+                              'TInfantrySquadModuleDescriptor')
+        module.replace_module(copy,
+                              assignment_module.copy(),
+                              'TInfantrySquadWeaponAssignmentModuleDescriptor')
+        
+    
+    def edit_unit(self: Self, unit: UnitCreator) -> None:
+        unit.edit_module_members('TBaseDamageModuleDescriptor', MaxPhysicalDamages=self.total_soldiers)        
+        self._edit_groupe_combat(unit.get_module('GroupeCombat', by_name=True))
+        unit.replace_module(self._create_infantry_squad_weapon_assignment(), 'TInfantrySquadWeaponAssignmentModuleDescriptor')
+        unit.edit_module_members('TTacticalLabelModuleDescriptor', NbSoldiers=self.total_soldiers)
