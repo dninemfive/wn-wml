@@ -11,12 +11,11 @@ from units._weapons import M16A2, M249, DRAGON
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
-    # MOT. RIFLES.
+    # MOT. RIFLES (DRAGON)
     with ctx.create_unit("MOT. RIFLES (DRAGON)", "US", "Rifles_half_Dragon_US") as mot_rifles_dragon:
         squad: Squad = Squad.copy_parent(ctx.guids, mot_rifles_dragon, 'US', (M16A2, 7), (M249, 2), (DRAGON, 1))
         squad.apply(ctx.ndf, mot_rifles_dragon.msg)
         squad.edit_unit(mot_rifles_dragon)
-        # make custom showroom unit
-        mot_rifles_dragon.edit_ui_module(UpgradeFromUnit='Descriptor_Unit_d9_MOT_RIFLES_US')
+        mot_rifles_dragon.UpgradeFromUnit='d9_MOT_RIFLES_US'
         mot_rifles_dragon.CommandPointCost = 65
         return UnitRules(mot_rifles_dragon, 2, [0, 6, 4, 0])

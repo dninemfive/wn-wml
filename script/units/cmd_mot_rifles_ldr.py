@@ -5,17 +5,15 @@ from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List
 import utils.ndf.edit as edit
 from units._utils import edit_standard_squad
+from _weapons import M16A2, M240
+from model.squads.squad import Squad
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # CMD MOT. RIFLES LDR.
-    with ctx.create_unit("#CMD MOT. RIFLES LDR.", "US", "LightRifles_CMD_US") as mot_rifles_ldr:
-        # change squad count from 6 to 8
-        edit_standard_squad(mot_rifles_ldr, 6, 2, 26, 92)
-        #   change in models - make custom Gfx thing with custom AllWeaponsSubdepiction_xx_US
-        #       or maybe i can just steal it from a unit with the appropriate weapons? i.e. FIRE TEAM (AT-4)
-        with mot_rifles_ldr.module_context('ApparenceModel', by_name=True) as apparence_module:
-            apparence_module.edit_members(Depiction='~/Gfx_Rifles_half_AT4_US')
-        # make custom showroom unit
+    with ctx.create_unit("#CMD MOT. RIFLES LDR.", "US", "Rifles_CMD_US") as mot_rifles_ldr:
+        squad: Squad = Squad.copy_parent(ctx.guids, mot_rifles_ldr, 'US', (M16A2, 5), (M240, 1))
+        squad.apply(ctx.ndf, mot_rifles_ldr.msg)
+        squad.edit_unit(mot_rifles_ldr)
         return UnitRules(mot_rifles_ldr, 2, [0, 6, 4, 0])
         

@@ -6,16 +6,16 @@ from ndf_parse.model import List
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from units._utils import edit_standard_squad
+from _weapons import M16A2
+from model.squads.squad import Squad
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # FOLT
     with ctx.create_unit("#RECO2 FOLT", "US", "Scout_US") as folt:
-        # 2 guys
-        # both with M16s
-        # set MG to M249
-        with folt.edit_weapons() as weapons:
-            edit.members(weapons.get_turret_weapon(1, 0), Ammunition='$/GFX/Weapon/Ammo_SAW_M249_5_56mm', EffectTag="'FireEffect_SAW_M249_5_56mm'")
-        # make custom showroom unit
-        # upgradfe from... something
+        squad: Squad = Squad.copy_parent(ctx.guids, folt, 'US', (M16A2, 2))
+        squad.apply(ctx.ndf, folt.msg)
+        squad.edit_unit(folt)
+        # geez upgrade from something else this is dumb
+        folt.UpgradeFromUnit='Sniper_US'
         return UnitRules(folt, 3, [0, 6, 4, 0])
