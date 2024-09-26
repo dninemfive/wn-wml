@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Self
-from model.squads._utils import _0
+
+def _0(n: int) -> str:
+    return f'_{str(n).rjust(2, '0')}'
 
 @dataclass
 class TemplateInfantrySelectorTactic(object):

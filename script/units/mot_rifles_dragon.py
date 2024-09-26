@@ -14,7 +14,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     # MOT. RIFLES.
     with ctx.create_unit("MOT. RIFLES (DRAGON)", "US", "Rifles_half_Dragon_US") as mot_rifles_dragon:
         weapons = InfantryWeaponSet((M16A2, 7), (M249, 2), (DRAGON, 1))
-        squad: Squad = Squad.from_weapon_set(ctx.guids, mot_rifles_dragon.new, 'US', (0, 10), 'Rifles_US', weapons)
+        squad: Squad = Squad(ctx.guids, mot_rifles_dragon.new, 'US', weapons, 'Rifles_half_Dragon_US')
         squad.apply(ctx.ndf, mot_rifles_dragon.msg)
         squad.edit_unit(mot_rifles_dragon)
         # make custom showroom unit

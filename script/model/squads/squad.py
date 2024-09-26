@@ -9,31 +9,29 @@ import utils.ndf.unit_module as module
 from constants import ndf_paths
 from managers.guid import GuidManager
 from metadata.unit import UnitMetadata
-from model.squads._utils import (COUNTRY_CODE_TO_COUNTRY_SOUND_CODE,
-                                 mesh_alternative)
 from model.squads.template_infantry_selector_tactic import \
     TemplateInfantrySelectorTactic
-from script.model.squads.infantry_weapon import InfantryWeapon, WeaponWithIndex
 from ndf_parse.model import (List, ListRow, Map, MapRow, MemberRow, Object,
                              Template)
-from utils.collections import flatten, unique, with_indices
 from utils.ndf import ensure
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
 import constants.ndf_paths as ndf_paths
 
+def _mesh_alternative(index: int) -> str:
+    return f"'MeshAlternative_{index}'"
 
 class Squad(object):
     def __init__(self: Self,
                  guids: GuidManager,
-                 metadata: UnitMetadata,
+                 creator: UnitCreator,
                  country: str,
-                 copy_of: str,
-                 weapon_set: InfantryWeaponSet):
+                 weapon_set: InfantryWeaponSet,
+                 copy_of: str | None = None):
         self.guids = guids
-        self.metadata = metadata
+        self.metadata = creator.new
         self.country = country
-        self.copy_of = copy_of
+        self.copy_of = copy_of if copy_of is not None else creator.src.name
         self.weapon_set = weapon_set
 
     # properties
@@ -74,12 +72,12 @@ class Squad(object):
 
     def _gfx(self: Self) -> Object:
         return ensure._object('TemplateInfantryDepictionSquad',
-                              SoundOperator=f'$/GFX/Sound/DepictionOperator_MovementSound_SM_Infanterie_{COUNTRY_CODE_TO_COUNTRY_SOUND_CODE[self.country]}')    
+                              SoundOperator=f'$/GFX/Sound/DepictionOperator_MovementSound_SM_Infanterie_{ensure.country_sound_code[self.country]}')    
     
     def _all_weapon_alternatives(self: Self) -> List:
         result = List()
         for weapon in self.weapon_set:
-            result.add(ListRow(ensure._object(SelectorId=[mesh_alternative(weapon.index)],
+            result.add(ListRow(ensure._object(SelectorId=[_mesh_alternative(weapon.index)],
                                               MeshDescriptor=weapon.model_path)))
         result.add(ListRow(ensure._object(SelectorId="'none'", ReferenceMeshForSkeleton=self.weapon_set.last.model_path)))
         return result
@@ -104,7 +102,7 @@ class Squad(object):
         result = List()
         for weapon in self.weapon_set:
             if weapon.weapon_type is not None:
-                result.add(ensure.memberrow(weapon.type, mesh_alternative(weapon.index)))
+                result.add(ensure.memberrow(weapon.type, _mesh_alternative(weapon.index)))
         return result
 
     def _tactic_depiction_soldier(self: Self, selector_tactic: TemplateInfantrySelectorTactic) -> Template:

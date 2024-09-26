@@ -1,10 +1,9 @@
 from dataclasses import dataclass
-from typing import Literal, Self
+from typing import Self
 
+from constants.primitive_types import WeaponType
 from utils.ndf import ensure
 
-type InputWeaponType    = Literal['bazooka', 'grenade', 'mmg', 'smg']
-type WeaponType         = Literal["'bazooka'", "'grenade'", "'mmg'", "'smg'"]
 
 @dataclass
 class InfantryWeapon(object):
@@ -12,10 +11,10 @@ class InfantryWeapon(object):
     effect_tag: str
     model_path: str
     salvos_per: int
-    weapon_type: InputWeaponType | WeaponType | None = None
+    weapon_type: str | None = None
     is_secondary: bool = False
 
     # https://stackoverflow.com/a/51248309
     def __post_init__(self: Self) -> None:
         if self.weapon_type is not None:
-            self.weapon_type = ensure.quoted(self.weapon_type, "'")
+            self.weapon_type = ensure.literal(self.weapon_type, WeaponType)

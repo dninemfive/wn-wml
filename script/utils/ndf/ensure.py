@@ -1,8 +1,11 @@
 from enum import member
 from numbers import Number
-from typing import Type
+from typing import Iterable, Literal, Type
+from typing import get_args as literal_values
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object, Template
 from ndf_parse.model.abc import CellValue
+from constants.primitive_types import CountryCode, CountrySoundCode
+from constants.ndf import COUNTRY_CODE_TO_COUNTRY_SOUND_CODE
 
 def listrow(val: CellValue | ListRow) -> ListRow:
     if isinstance(val, ListRow):
@@ -126,3 +129,18 @@ def suffix(s: str, suffix: str) -> str:
 
 def prefix_and_suffix(s: str, _prefix: str, _suffix: str) -> str:
     return prefix(suffix(s, _suffix), _prefix)
+
+# type: Literal[str]
+def _including_unquoted(literal_type) -> Iterable[str]:
+    for s in literal_values(literal_type):
+        yield s
+        yield unquoted(s)
+
+def literal(s: str, literal_type, quote: str = "'"):
+    assert s in _including_unquoted(literal_type), f"{s} is not one of {literal_values(literal_type)}"
+    return quoted(s, quote) 
+
+def country_sound_code(country: str) -> CountrySoundCode:
+    if country in _including_unquoted(country, CountrySoundCode):
+        return quoted(country, "'")
+    return COUNTRY_CODE_TO_COUNTRY_SOUND_CODE[literal(country, CountrySoundCode)]
