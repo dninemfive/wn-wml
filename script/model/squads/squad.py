@@ -1,5 +1,7 @@
 from typing import Self
 
+import utils.ndf.edit as edit
+import utils.ndf.unit_module as module
 from constants import ndf_paths
 from managers.guid import GuidManager
 from metadata.unit import UnitMetadata
@@ -51,6 +53,10 @@ class Squad(object):
     @property
     def all_weapon_sub_depiction_backpack_key(self: Self) -> str:
         return ensure.prefix(self.metadata.name, 'AllWeaponSubDepictionBackpack_')
+    
+    @property
+    def key(self: Self) -> str:
+        return self.metadata.class_name_for_debug
 
     @property
     def tactic_depiction_alternatives_key(self: Self) -> str:
@@ -134,7 +140,31 @@ class Squad(object):
         ndf.add(ListRow(self.tactic_depiction.copy(), namespace=self.tactic_depiction_alternatives_key))
         ndf.add(ListRow(self._tactic_depiction_soldier(), self.tactic_depiction_soldier_key))
         ndf.add(ListRow(self._tactic_depiction_ghost(), self.tactic_depiction_ghost_key))
-        ndf.by_name('InfantryMimetic').value.add(MapRow(key=self.metadata.class_name_for_debug, value=self.tactic_depiction_soldier_key))
-        ndf.by_name('InfantryMimeticGhost').value.add(MapRow(key=self.metadata.class_name_for_debug, value=self.tactic_depiction_ghost_key))
-        ndf.by_name('TransportedInfantryAlternativesCount').value.add(ensure.maprow(self.metadata.class_name_for_debug,
+        ndf.by_name('InfantryMimetic').value.add(MapRow(key=self.key, value=self.tactic_depiction_soldier_key))
+        ndf.by_name('InfantryMimeticGhost').value.add(MapRow(key=self.key, value=self.tactic_depiction_ghost_key))
+        ndf.by_name('TransportedInfantryAlternativesCount').value.add(ensure.maprow(self.key,
                                                                                     self.infantry_selector_tactic.tuple))
+
+    def _edit_groupe_combat(self: Self, module: Object) -> None:
+        default = ensure._object('TInfantrySquadModuleDescriptor',
+                                 NbSoldatInGroupeCombat=self.total_soldiers,
+                                 InfantryMimeticName=self.key,
+                                 WeaponUnitFXKey=self.key,
+                                 MimeticDescriptor=ensure._object('Descriptor_Unit_MimeticUnit', 
+                                                                  DescriptorId=self.guids.generate(f'{self.metadata.descriptor_name}:GroupeCombat'),
+                                                                  MimeticName=self.key),
+                                 BoundingBoxSize=f'{self.total_soldiers + 2} * Metre')
+        edit.members(module, Default=default)
+        
+    def _create_infantry_squad_weapon_assignment(self: Self) -> Object:
+        turret_map: dict[int, list[int]] = {}
+        for i in range(len(self.loadout)):
+            turret_map[i] = [w.index for w in self.loadout[i]]
+        return ensure._object('TInfantrySquadWeaponAssignmentModuleDescriptor',
+                              InitialSoldiersToTurretIndexMap=turret_map)
+    
+    def edit_unit(self: Self, unit: Object) -> None:
+        edit.members(module.get(unit, 'TBaseDamageModuleDescriptor'), MaxPhysicalDamages=self.total_soldiers)
+        self._edit_groupe_combat(module.get(unit, 'GroupeCombat', by_name=True))
+        module.replace_module(unit, self._create_infantry_squad_weapon_assignment(), 'TInfantrySquadWeaponAssignmentModuleDescriptor')
+        edit.members(module.get(unit, 'TTacticalLabelModuleDescriptor'), NbSoldiers=self.total_soldiers)
