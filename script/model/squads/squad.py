@@ -122,7 +122,8 @@ class Squad(object):
                               BoundingBoxSize=f'{self.soldier_count + 2} * Metre')
 
     def _edit_groupe_combat(self: Self, module: Object) -> None:
-        edit.members(module, Default=self._make_infantry_squad_module_descriptor(f'{self.metadata.descriptor_name}/ModulesDescriptors["GroupeCombat"]/Default/MimeticDescriptor'))
+        edit.members(module,
+                     Default=self._make_infantry_squad_module_descriptor(f'{self.metadata.descriptor_name}/ModulesDescriptors["GroupeCombat"]/Default/MimeticDescriptor'))
         
     def _create_infantry_squad_weapon_assignment(self: Self) -> Object:
         turret_map: dict[int, list[int]] = {}
@@ -136,7 +137,6 @@ class Squad(object):
         copy: Object = showroom_units.by_name(copy_of.showroom_descriptor_name).value.copy()
         edit.members(copy,
                      DescriptorId=self.guids.generate(copy_of.showroom_descriptor_name))
-        # TODO: find member pointing at a weapondescriptor and point it at ours instead
         module.replace_where(copy, self.metadata.weapon_descriptor_path, lambda x: x.value.startswith('$/GFX/Weapon/'))
         module.replace_module(copy,
                               self._make_infantry_squad_module_descriptor(f'{copy_of.showroom_descriptor_name}/ModulesDescriptors[TInfantrySquadModuleDescriptor]/MimeticDescriptor'),
@@ -147,7 +147,7 @@ class Squad(object):
         
     @ndf_path(ndf_paths.WEAPON_DESCRIPTOR)
     def edit_weapon_descriptors(self: Self, ndf: List):
-        pass
+        ndf.add(ListRow(self.weapon_set.to_weapon_descriptor(), 'export', self.metadata.weapon_descriptor_name))
     
     def edit_unit(self: Self, unit: UnitCreator) -> None:
         unit.edit_module_members('TBaseDamageModuleDescriptor', MaxPhysicalDamages=self.soldier_count)        
