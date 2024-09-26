@@ -1,4 +1,4 @@
-from typing import Iterable, Self
+from typing import Iterable, Iterator, Self
 
 from model.squads.infantry_weapon import InfantryWeapon
 from model.squads.infantry_weapons import InfantryWeapons
@@ -13,6 +13,9 @@ class InfantryWeaponSet(object):
             self.weapons.append(InfantryWeapons(weapon, ct, index))
             index += 1
 
+    def __iter__(self: Self) -> Iterator[InfantryWeapons]:
+        yield from self.weapons
+
     @property
     def count(self: Self) -> int:
         return len(self.weapons)
@@ -20,6 +23,10 @@ class InfantryWeaponSet(object):
     @property
     def indices(self: Self) -> Iterable[int]:
         yield from range(self.count)
+
+    @property
+    def last(self: Self) -> InfantryWeapons:
+        return self.weapons[-1]
 
     def to_weapon_descriptor(self: Self) -> Object:
         return ensure._object('TWeaponManagerModuleDescriptor',

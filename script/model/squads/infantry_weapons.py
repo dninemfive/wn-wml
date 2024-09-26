@@ -2,7 +2,7 @@ from typing import Self
 
 import utils.ndf.ensure as ensure
 from constants.ndf import DISPERSION_COLOR, DISPERSION_THICKNESS
-from model.squads.infantry_weapon import InfantryWeapon
+from model.squads.infantry_weapon import InfantryWeapon, WeaponType
 from ndf_parse.model import Object
 
 
@@ -23,6 +23,18 @@ class InfantryWeapons(object):
     @property
     def art_index(self: Self) -> int:
         return self.index + 1
+    
+    @property
+    def model_path(self: Self) -> str:
+        return self.weapon.model_path
+    
+    @property
+    def effect_tag(self: Self) -> str:
+        return self.weapon.effect_tag
+    
+    @property
+    def type(self: Self) -> WeaponType:
+        return self.weapon.weapon_type
     
     def to_mounted_weapon_descriptor(self: Self) -> Object:
         return ensure._object('TMountedWeaponDescriptor',

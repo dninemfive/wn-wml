@@ -13,7 +13,7 @@ from model.squads._utils import (COUNTRY_CODE_TO_COUNTRY_SOUND_CODE,
                                  mesh_alternative)
 from model.squads.template_infantry_selector_tactic import \
     TemplateInfantrySelectorTactic
-from model.squads.weapon import InfantryWeapon, WeaponWithIndex
+from script.model.squads.infantry_weapon import InfantryWeapon, WeaponWithIndex
 from ndf_parse.model import (List, ListRow, Map, MapRow, MemberRow, Object,
                              Template)
 from utils.collections import flatten, unique, with_indices
@@ -35,28 +35,6 @@ class Squad(object):
         self.country = country
         self.copy_of = copy_of
         self.weapon_set = weapon_set
-
-    @staticmethod
-    def from_weapon_set(guids: GuidManager,
-                        metadata: UnitMetadata,
-                        country: str,
-                        infantry_selector_tactic: TemplateInfantrySelectorTactic | tuple[int, int],
-                        tactic_depiction: str | List,
-                        weapons: InfantryWeaponSet,
-                        has_at_weapon: bool = True) -> Self:
-        """ Assumes a standard infantry loadout. TODO: describe what that means """
-        loadout: list[tuple[int, list[WeaponWithIndex]]] = []
-        ct = len(weapons.count) if not has_at_weapon else len(weapons.count) - 1
-        order = [weapons.count - i - 1 for i in range(ct)]
-        if has_at_weapon: order.append(weapons.count - 1)
-        for i in order:
-            loadout.append((weapons.counts[i], weapons.weapons[i]))
-        return Squad(guids,
-                     metadata,
-                     country,
-                     infantry_selector_tactic,
-                     tactic_depiction,
-                     *loadout)
 
     # properties
 
@@ -89,12 +67,8 @@ class Squad(object):
         return f'TacticDepiction_{self.metadata.name}_Ghost'
 
     @property
-    def total_soldiers(self: Self) -> int:
-        return len(self.loadout)
-    
-    @property
-    def unique_weapons_with_indices(self: Self) -> list[tuple[int, InfantryWeapon]]:
-        return [with_indices([x for x in unique(flatten(self.loadout))], 1)]
+    def soldier_count(self: Self) -> int:
+        return sum(weapon.count for weapon in self.weapon_set if not weapon.is_secondary)
     
     # internal methods
 
@@ -104,21 +78,19 @@ class Squad(object):
     
     def _all_weapon_alternatives(self: Self) -> List:
         result = List()
-        unique_weapons = self.unique_weapons_with_indices
-        for index, item in unique_weapons:
-            result.add(ListRow(ensure._object(SelectorId=[mesh_alternative(index)],
-                                              MeshDescriptor=item.model_path)))
-        result.add(ListRow(ensure._object(SelectorId="'none'", ReferenceMeshForSkeleton=unique_weapons[-1][1].model_path)))
+        for weapon in self.weapon_set:
+            result.add(ListRow(ensure._object(SelectorId=[mesh_alternative(weapon.index)],
+                                              MeshDescriptor=weapon.model_path)))
+        result.add(ListRow(ensure._object(SelectorId="'none'", ReferenceMeshForSkeleton=self.weapon_set.last.model_path)))
         return result
     
     def _all_weapon_sub_depiction(self: Self):
         operators = List()
-        for index, item in self.unique_weapons_with_indices:
-            item: InfantryWeapon
+        for weapon in self.weapon_set:
             operators.add(ensure.listrow(ensure._object(
                 'DepictionOperator_WeaponInstantFireInfantry',
-                FireEffectTag=[item.effect_tag],
-                WeaponShootDataPropertyName=f'"WeaponShootData_0_{index}"'
+                FireEffectTag=[weapon.effect_tag],
+                WeaponShootDataPropertyName=f'"WeaponShootData_0_{weapon.index}"'
             )))
         return ensure._template('TemplateAllSubWeaponDepiction',
                                 Alternatives=self.all_weapon_sub_depiction_key,
@@ -130,9 +102,9 @@ class Squad(object):
 
     def _conditional_tags(self: Self) -> List:
         result = List()
-        for index, weapon in self.unique_weapons_with_indices:
+        for weapon in self.weapon_set:
             if weapon.weapon_type is not None:
-                result.add(ensure.memberrow(weapon.weapon_type, mesh_alternative(index)))
+                result.add(ensure.memberrow(weapon.type, mesh_alternative(weapon.index)))
         return result
 
     def _tactic_depiction_soldier(self: Self, selector_tactic: TemplateInfantrySelectorTactic) -> Template:
@@ -163,28 +135,28 @@ class Squad(object):
         ndf.by_name('InfantryMimetic').value.add(MapRow(key=self.key, value=self.tactic_depiction_soldier_key))
         ndf.by_name('InfantryMimeticGhost').value.add(MapRow(key=self.key, value=self.tactic_depiction_ghost_key))
         ndf.by_name('TransportedInfantryAlternativesCount').value.add(ensure.maprow(self.key,
-                                                                                    self.infantry_selector_tactic.tuple))
+                                                                                    selector_tactic.tuple))
         
     def apply(self: Self, ndf: dict[str, List], msg: Message | None) -> None:
         self.edit_generated_depiction_infantry(ndf, msg)
 
     def _make_infantry_squad_module_descriptor(self: Self, guid_key: str) -> Object:
         return ensure._object('TInfantrySquadModuleDescriptor',
-                              NbSoldatInGroupeCombat=self.total_soldiers,
+                              NbSoldatInGroupeCombat=self.soldier_count,
                               InfantryMimeticName=self.key,
                               WeaponUnitFXKey=self.key,
                               MimeticDescriptor=ensure._object('Descriptor_Unit_MimeticUnit', 
                                                                DescriptorId=self.guids.generate(guid_key),
                                                                MimeticName=self.key),
-                              BoundingBoxSize=f'{self.total_soldiers + 2} * Metre')
+                              BoundingBoxSize=f'{self.soldier_count + 2} * Metre')
 
     def _edit_groupe_combat(self: Self, module: Object) -> None:
         edit.members(module, Default=self._make_infantry_squad_module_descriptor(f'{self.metadata.descriptor_name}/ModulesDescriptors["GroupeCombat"]/Default/MimeticDescriptor'))
         
     def _create_infantry_squad_weapon_assignment(self: Self) -> Object:
         turret_map: dict[int, list[int]] = {}
-        for i in range(len(self.loadout)):
-            turret_map[i] = [w.index for w in self.loadout[i]]
+        for i in range(self.soldier_count):
+            raise NotImplemented # TODO: assign non-secondary weapons in reverse order, with the last [num_secondary] soldiers having the secondaries, if any
         return ensure._object('TInfantrySquadWeaponAssignmentModuleDescriptor',
                               InitialSoldiersToTurretIndexMap=turret_map)
     
@@ -207,8 +179,8 @@ class Squad(object):
         pass
     
     def edit_unit(self: Self, unit: UnitCreator) -> None:
-        unit.edit_module_members('TBaseDamageModuleDescriptor', MaxPhysicalDamages=self.total_soldiers)        
+        unit.edit_module_members('TBaseDamageModuleDescriptor', MaxPhysicalDamages=self.soldier_count)        
         self._edit_groupe_combat(unit.get_module('GroupeCombat', by_name=True))
         unit.replace_module(self._create_infantry_squad_weapon_assignment(), 'TInfantrySquadWeaponAssignmentModuleDescriptor')
-        unit.edit_module_members('TTacticalLabelModuleDescriptor', NbSoldiers=self.total_soldiers)
+        unit.edit_module_members('TTacticalLabelModuleDescriptor', NbSoldiers=self.soldier_count)
         unit.edit_module_members('WeaponManager', by_name=True, Default=self.metadata.weapon_descriptor_path)
