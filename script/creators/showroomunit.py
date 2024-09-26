@@ -68,7 +68,7 @@ class ShowroomUnitCreator(object):
         copy: Object = self.ndf[ndf_paths.SHOWROOM_UNITS].by_name(self.src.descriptor_name).value.copy()
         edit.members(copy,
                      DescriptorId=self.guid,
-                     ClassNameForDebug=self.new.quoted_name)
+                     ClassNameForDebug=self.new.class_name_for_debug)
         return copy
 
     @ndf_path(ndf_paths.SHOWROOM_UNITS)

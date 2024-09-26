@@ -27,19 +27,19 @@ class Squad(object):
                  guids: GuidManager,
                  creator: UnitCreator,
                  country: str,
-                 weapon_set: InfantryWeaponSet,
-                 copy_of: str | UnitMetadata | None = None):
+                 copy_of: str | UnitMetadata | None,
+                 *weapons: tuple[InfantryWeapon, int]):
         self.guids = guids
         self.metadata = creator.new
         self.country = country
         self.copy_of = UnitMetadata(copy_of if copy_of is not None else creator.src.name)
-        self.weapon_set = weapon_set
+        self.weapon_set = InfantryWeaponSet(*weapons)
         self._keys = _SquadKeys(self.metadata)
         self._cached_weapon_assignment: dict[int, list[int]] | None = None
 
     @staticmethod
     def copy_parent(guids: GuidManager, creator: UnitCreator, country: str, *weapons: tuple[InfantryWeapon, int]):
-        return Squad(guids, creator, country, InfantryWeaponSet(weapons))
+        return Squad(guids, creator, country, None, *weapons)
 
     # properties
 
@@ -58,17 +58,20 @@ class Squad(object):
 
     def _gfx(self: Self) -> Object:
         return ensure._object('TemplateInfantryDepictionSquad',
-                              SoundOperator=f'$/GFX/Sound/DepictionOperator_MovementSound_SM_Infanterie_{ensure.country_sound_code[self.country]}')    
+                              SoundOperator=f'$/GFX/Sound/DepictionOperator_MovementSound_SM_Infanterie_{ensure.unquoted(ensure.country_sound_code(self.country), "'")}')    
     
     def _all_weapon_alternatives(self: Self) -> List:
         result = List()
         for weapon in self.weapon_set:
-            result.add(ListRow(ensure._object(SelectorId=[_mesh_alternative(weapon.index)],
+            result.add(ListRow(ensure._object('TDepictionDescriptor',
+                                              SelectorId=[_mesh_alternative(weapon.index)],
                                               MeshDescriptor=weapon.model_path)))
-        result.add(ListRow(ensure._object(SelectorId="'none'", ReferenceMeshForSkeleton=self.weapon_set.last.model_path)))
+        result.add(ListRow(ensure._object('TMeshlessDepictionDescriptor',
+                                          SelectorId="'none'",
+                                          ReferenceMeshForSkeleton=self.weapon_set.last.model_path)))
         return result
     
-    def _all_weapon_sub_depiction(self: Self):
+    def _all_weapon_sub_depiction(self: Self) -> Object:
         operators = List()
         for weapon in self.weapon_set:
             operators.add(ensure.listrow(ensure._object(
@@ -76,30 +79,30 @@ class Squad(object):
                 FireEffectTag=[weapon.effect_tag],
                 WeaponShootDataPropertyName=f'"WeaponShootData_0_{weapon.index}"'
             )))
-        return ensure._template('TemplateAllSubWeaponDepiction',
+        return ensure._object('TemplateAllSubWeaponDepiction',
                                 Alternatives=self._keys._all_weapon_sub_depiction,
                                 Operators=operators)
     
-    def _all_weapon_sub_depiction_backpack(self: Self) -> Template:
-        return ensure._template('TemplateAllSubBackpackWeaponDepiction',
+    def _all_weapon_sub_depiction_backpack(self: Self) -> Object:
+        return ensure._object('TemplateAllSubBackpackWeaponDepiction',
                                 Alternatives=self._keys._all_weapon_sub_depiction)
 
     def _conditional_tags(self: Self) -> List:
         result = List()
         for weapon in self.weapon_set:
             if weapon.type is not None:
-                result.add(ensure.memberrow(weapon.type, _mesh_alternative(weapon.index)))
+                result.add(ensure.listrow((weapon.type, _mesh_alternative(weapon.index))))
         return result
 
-    def _tactic_depiction_soldier(self: Self, selector_tactic: TemplateInfantrySelectorTactic) -> Template:
-        return ensure._template('TemplateInfantryDepictionFactoryTactic',
+    def _tactic_depiction_soldier(self: Self, selector_tactic: TemplateInfantrySelectorTactic) -> Object:
+        return ensure._object('TemplateInfantryDepictionFactoryTactic',
                                 Selector=selector_tactic.name,
                                 Alternatives=self._keys._tactic_depiction_alternatives,
                                 SubDepictions=[self._keys._all_weapon_sub_depiction, self._keys._all_weapon_sub_depiction_backpack],
                                 Operators=ensure._object('DepictionOperator_SkeletalAnimation2_Default', ConditionalTags=self._conditional_tags()))
     
-    def _tactic_depiction_ghost(self: Self, selector_tactic: TemplateInfantrySelectorTactic) -> Template:
-        return ensure._template('TemplateInfantryDepictionFactoryGhost',
+    def _tactic_depiction_ghost(self: Self, selector_tactic: TemplateInfantrySelectorTactic) -> Object:
+        return ensure._object('TemplateInfantryDepictionFactoryGhost',
                                 Selector=selector_tactic.name,
                                 Alternatives=self._keys._tactic_depiction_alternatives)
 
@@ -109,13 +112,13 @@ class Squad(object):
         ndf.add(ListRow(self._all_weapon_alternatives(), namespace=self._keys._all_weapon_alternatives))
         ndf.add(ListRow(self._all_weapon_sub_depiction(), namespace=self._keys._all_weapon_sub_depiction))
         ndf.add(ListRow(self._all_weapon_sub_depiction_backpack(), namespace=self._keys._all_weapon_sub_depiction_backpack))
-        tactic_depiction: Object = ndf.by_name(ensure.prefix_and_suffix(self.copy_of.name, 'TacticDepiction_', '_Alternatives')).value
-        ndf.add(ListRow(tactic_depiction.copy(), namespace=self._keys._tactic_depiction_alternatives))
+        tactic_depiction: List = ndf.by_name(ensure.prefix_and_suffix(self.copy_of.name, 'TacticDepiction_', '_Alternatives')).value.copy()        
+        ndf.add(ListRow(tactic_depiction, namespace=self._keys._tactic_depiction_alternatives))
         selector_tactic: TemplateInfantrySelectorTactic\
             = TemplateInfantrySelectorTactic.from_tuple(ndf.by_name('TransportedInfantryAlternativesCount').value\
                                                            .by_key(self.copy_of.quoted_name).value)
-        ndf.add(ListRow(self._tactic_depiction_soldier(selector_tactic), self._keys._tactic_depiction_soldier))
-        ndf.add(ListRow(self._tactic_depiction_ghost(selector_tactic), self._keys._tactic_depiction_ghost))
+        ndf.add(ListRow(self._tactic_depiction_soldier(selector_tactic), namespace=self._keys._tactic_depiction_soldier))
+        ndf.add(ListRow(self._tactic_depiction_ghost(selector_tactic), namespace=self._keys._tactic_depiction_ghost))
         ndf.by_name('InfantryMimetic').value.add(MapRow(key=self._keys._unit, value=self._keys._tactic_depiction_soldier))
         ndf.by_name('InfantryMimeticGhost').value.add(MapRow(key=self._keys._unit, value=self._keys._tactic_depiction_ghost))
         ndf.by_name('TransportedInfantryAlternativesCount').value.add(ensure.maprow(self._keys._unit,
@@ -161,7 +164,7 @@ class Squad(object):
     def edit_unit(self: Self, unit: UnitCreator) -> None:
         unit.edit_module_members('TBaseDamageModuleDescriptor', MaxPhysicalDamages=self.soldier_count)        
         self._edit_groupe_combat(unit.get_module('GroupeCombat', by_name=True))
-        unit.replace_module(self._infantry_squad_weapon_assignment, 'TInfantrySquadWeaponAssignmentModuleDescriptor')
+        unit.replace_module('TInfantrySquadWeaponAssignmentModuleDescriptor', self._infantry_squad_weapon_assignment)
         unit.edit_module_members('TTacticalLabelModuleDescriptor', NbSoldiers=self.soldier_count)
         unit.edit_module_members('WeaponManager', by_name=True, Default=self.metadata.weapon_descriptor_path)
         # this should edit showroomequivalence when the unit is saved

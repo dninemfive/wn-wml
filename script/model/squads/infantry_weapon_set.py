@@ -7,7 +7,7 @@ import utils.ndf.ensure as ensure
 
 class InfantryWeaponSet(object):
     def __init__(self: Self, *weapons: tuple[InfantryWeapon, int]):
-        print(str(weapons))
+        # print(str(weapons))
         self.weapons: list[InfantryWeapons] = []
         index = 0
         for weapon, ct in weapons:
@@ -34,12 +34,12 @@ class InfantryWeaponSet(object):
         return self.weapons[-1]
     
     @property
-    def primaries(self: Self) -> Iterable[InfantryWeapons]:
-        yield from [x for x in self.weapons if not x.is_secondary]
+    def primaries(self: Self) -> list[InfantryWeapons]:
+        return [x for x in self.weapons if not x.is_secondary]
 
     @property
-    def secondaries(self: Self) -> Iterable[InfantryWeapons]:
-        yield from [x for x in self.weapons if x.is_secondary]
+    def secondaries(self: Self) -> list[InfantryWeapons]:
+        return [x for x in self.weapons if x.is_secondary]
 
     @property
     def primary_indices(self: Self) -> Iterable[tuple[int, int]]:

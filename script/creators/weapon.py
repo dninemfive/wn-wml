@@ -134,7 +134,7 @@ class WeaponCreator(object):
                     WeaponIgnoredPropertyName=f"'WeaponIgnored_{mesh_index}'",
                     WeaponShootDataPropertyName=weapon_shoot_datas,
                     **changes)
-        print("members:")
-        for member in copy:
-            print(str(member))
+        # print("members:")
+        # for member in copy:
+        #     print(str(member))
         self.get_turret_weapon_list(turret_index).add(ensure.listrow(copy))

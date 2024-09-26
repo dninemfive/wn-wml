@@ -17,6 +17,7 @@ def maprow(pair_or_key: tuple[str, CellValue] | MapRow | str, value_or_none: Cel
     if isinstance(pair_or_key, str):
         if value_or_none is None:
             raise ValueError("If first argument is not a tuple or MapRow, second argument must not be None!")
+        # print(value_or_none)
         return MapRow(pair_or_key, ndf_type(value_or_none))
     elif isinstance(pair_or_key, MapRow):
         return pair_or_key
@@ -48,7 +49,7 @@ def _add_from(map_or_object: Map | Object, items: dict[str, CellValue | None] | 
             k, v = item
             if v is None:
                 continue
-            map_or_object.add(row_fn(k, v))
+            map_or_object.add(row_fn(str(k), v))
 
 def _map(_dict: Map | dict = {}, *kvps: tuple[str, CellValue | None], **items: CellValue | None) -> Map:
     # TODO: remove None values from existing maps and/or add kvps, items to them
@@ -95,8 +96,8 @@ def ndf_type(value: dict | list | int | str, _type: str | None = None) -> Map | 
             return _object(_type, value)
     elif isinstance(value, list):
         return _list(value)
-    elif isinstance(value, tuple):
-        return (ndf_type(x) for x in value)
+    elif isinstance(value, tuple) and len(value) == 2:
+        return (ndf_type(value[0]), ndf_type(value[1]))
     elif isinstance(value, Number) or isinstance(value, bool):
         return str(value)
     elif isinstance(value, str)\

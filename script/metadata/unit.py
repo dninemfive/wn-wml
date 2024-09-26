@@ -10,8 +10,12 @@ class UnitMetadata(object):
 
     @property
     def quoted_name(self: Self) -> str:
-        return f"'Unit_{self.name}'"
+        return f"'{self.name}'"
     
+    @property
+    def class_name_for_debug(self: Self) -> str:
+        return f"'Unit_{self.name}'"
+
     @property
     def descriptor_name(self: Self) -> str:
         return f'Descriptor_Unit_{self.name}'
