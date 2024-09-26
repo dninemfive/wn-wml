@@ -8,6 +8,7 @@ from creators.unit import UnitCreator
 from managers.guid import GuidManager
 from metadata.unit import UnitMetadata
 from model.squads._squad_keys import _SquadKeys
+from model.squads.infantry_weapon import InfantryWeapon
 from model.squads.infantry_weapon_set import InfantryWeaponSet
 from model.squads.template_infantry_selector_tactic import \
     TemplateInfantrySelectorTactic
@@ -35,6 +36,10 @@ class Squad(object):
         self.weapon_set = weapon_set
         self._keys = _SquadKeys(self.metadata)
         self._cached_weapon_assignment: dict[int, list[int]] | None = None
+
+    @staticmethod
+    def copy_parent(guids: GuidManager, creator: UnitCreator, country: str, *weapons: tuple[InfantryWeapon, int]):
+        return Squad(guids, creator, country, InfantryWeaponSet(weapons))
 
     # properties
 

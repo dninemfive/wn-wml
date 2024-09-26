@@ -146,11 +146,12 @@ def no_prefix_or_suffix(s: str, _prefix: str, _suffix: str) -> str:
 
 # type: Literal[str]
 def _including_unquoted(*literal_types) -> list[str]:
-    result = set(str)
+    result: set[str] = set()
     for literal_type in literal_types:
-        for s in literal_values(literal_type):
+        for s in literal_values(literal_type.__value__):
+            # https://discuss.python.org/t/get-origin-get-args-typealiastype/56254/3 :thonk:
             result.add(s)
-            result.add(unquoted(s))
+            result.add(unquoted(s, "'"))
     return sorted(result)
 
 def literal(s: str, *literal_types):

@@ -7,6 +7,7 @@ import utils.ndf.ensure as ensure
 
 class InfantryWeaponSet(object):
     def __init__(self: Self, *weapons: tuple[InfantryWeapon, int]):
+        print(str(weapons))
         self.weapons: list[InfantryWeapons] = []
         index = 0
         for weapon, ct in weapons:
