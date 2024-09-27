@@ -16,5 +16,5 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         squad: Squad = Squad.copy_parent(ctx.guids, scat, 'US', (M16A2, 5), (M249, 1), (TOW_SCAT, 1))
         squad.apply(ctx.ndf, scat.msg)
         squad.edit_unit(scat)
-        scat.UpgradeFromUnit='d9_RECO2_FOLT_US'
+        scat.UpgradeFromUnit='d9_RECO2_IEW_TEAM_US'
         return UnitRules(scat, 3, [0, 6, 4, 0])

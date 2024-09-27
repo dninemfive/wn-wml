@@ -4,13 +4,16 @@ from datetime import datetime
 
 import constants.ndf_paths as ndf_paths
 import constants.paths as paths
+import units.ammo
+import units.ammo.fgr_17_viper
+import units.ammo.m60e3
 import units.cmd_m998_humvee_agl
 import units.cmd_m1010_tc3v
 import units.cmd_mot_rifles_ldr
 import units.e2c_hawkeye
 import units.fav
 import units.folt
-import units.fwd_support_ew
+import units.iew_team
 import units.joh58d_kiowa
 import units.m167a2_pivads_20mm
 import units.m198_155mm_clu
@@ -58,6 +61,8 @@ reset_source(mod_metadata, wn_metadata)
 
 with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as root_msg:
     with ModCreationContext(mod_metadata, root_msg, *ndf_paths.ALL) as mod_context:
+            units.ammo.fgr_17_viper.create(mod_context)
+            units.ammo.m60e3.create(mod_context)
             division_units: DivisionUnitRegistry
             with root_msg.nest("Creating units") as msg:
                 division_units = DivisionUnitRegistry(mod_context,
@@ -145,7 +150,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register(units.folt.create(mod_context), [FAV, REC_HUMVEE_AGL, BLACKHAWK])
                 division_units.register_vanilla("LRRP_US", 2, [M998_HUMVEE, "Descriptor_Unit_M151A2_scout_US"])
                 division_units.register(units.operational_support.create(mod_context), HEAVY_TRANSPORTS)
-                division_units.register(units.fwd_support_ew.create(mod_context), SMALL_RECON_TRANSPORTS)
+                division_units.register(units.iew_team.create(mod_context), SMALL_RECON_TRANSPORTS)
                 division_units.register(units.mot_scouts.create(mod_context), SMALL_RECON_TRANSPORTS)
                 division_units.register(units.scat.create(mod_context), SMALL_RECON_TRANSPORTS)
                 division_units.register_vanilla("OH58C_Scout_US", 1)

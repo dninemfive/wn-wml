@@ -14,7 +14,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     # OPERATIONAL SUPPORT
     with ctx.create_unit("#RECO1 OPERATIONAL SUPPORT", "US", "Scout_US") as op_support:
         # TODO: change weapon loadout
-        squad: Squad = Squad.copy_parent(ctx.guids, op_support, 'US', (M16A2, 15), (M249, 4), (AT4, 2))
+        squad: Squad = Squad.copy_parent(ctx.guids, op_support, 'US', (M16A2, 8), (M249, 4), (AT4, 2))
         squad.apply(ctx.ndf, op_support.msg)
         squad.edit_unit(op_support)
         # TODO: increase menace

@@ -16,7 +16,5 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         squad: Squad = Squad.copy_parent(ctx.guids, folt, 'US', (M16A2, 2))
         squad.apply(ctx.ndf, folt.msg)
         squad.edit_unit(folt)
-        # geez upgrade from something else this is dumb
-        folt.UpgradeFromUnit='Sniper_US'
         # TODO: GSR trait
         return UnitRules(folt, 3, [0, 6, 4, 0])
