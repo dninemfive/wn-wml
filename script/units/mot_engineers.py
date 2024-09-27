@@ -13,7 +13,7 @@ from model.squads.squad import Squad
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # MOT. RIFLES.
     with ctx.create_unit("MOT. ENGINEERS", "US", "Engineers_US") as mot_engineers:
-        squad: Squad = Squad.copy_parent(ctx.guids, mot_engineers, 'US', (M16A2, 7), (M249, 1))
+        squad: Squad = Squad.copy_parent(ctx.guids, mot_engineers, 'US', (M16A2, 7), (M249, 1), (SATCHEL_CHARGE, 1))
         squad.apply(ctx.ndf, mot_engineers.msg)
         squad.edit_unit(mot_engineers)
         # insert between engineers and engineers (FLASH)

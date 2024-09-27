@@ -32,6 +32,7 @@ import units.ranger_at_section
 import units.ranger_gunners
 import units.rangers_m203
 import units.rq_2_pioneer
+import units.scat
 import units.stinger_tdar
 import units.xm85_t_chaparral
 import units.xm119_imcs
@@ -144,7 +145,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("LRRP_US", 2, [M998_HUMVEE, "Descriptor_Unit_M151A2_scout_US"])
                 # 👓 FWD SUPPORT [EW]
                 division_units.register(units.mot_scouts.create(mod_context), SMALL_RECON_TRANSPORTS)
-                # [👓] SCAT
+                division_units.register(units.scat.create(mod_context), SMALL_RECON_TRANSPORTS)
                 division_units.register_vanilla("OH58C_Scout_US", 1)
                 division_units.register_vanilla("OH58D_Combat_Scout_US", 1)
                 division_units.register_vanilla("EH60A_EW_US", 1)

@@ -5,22 +5,14 @@ from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List
 import utils.ndf.edit as edit
 from units._utils import edit_standard_squad
-
+from units._weapons import M16A2, M60E3
+from model.squads.squad import Squad
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # RANGER GUNNERS
-    with ctx.create_unit("RANGER GUNNERS", "US", "Ranger_US") as rangers_m203:
-        # change squad count to 10
-        # weapons:
-        # - Colt Commando x7
-        # - M60E3
-        # - M60E3
-        # - M60E3
-        # create M60E3 def
-        # edit WeaponDescriptor:
-        #   replace slot 1 with M60E3
-        #   replace slot 2 with M60E3
-        #   append M60E3 to weapons
-        # make custom showroom unit
-        rangers_m203.edit_ui_module(UpgradeFromUnit='Descriptor_Unit_Airborne_HMG_US')
-        return UnitRules(rangers_m203, 2, [0, 6, 4, 0])
+    with ctx.create_unit("RANGER GUNNERS", "US", "Ranger_US") as ranger_gunners:
+        squad: Squad = Squad.copy_parent(ctx.guids, ranger_gunners, 'US', (M16A2, 7), (M60E3, 1), (M60E3, 1), (M60E3, 1))
+        squad.apply(ctx.ndf, ranger_gunners.msg)
+        squad.edit_unit(ranger_gunners)
+        ranger_gunners.edit_ui_module(UpgradeFromUnit='Descriptor_Unit_Airborne_HMG_US')
+        return UnitRules(ranger_gunners, 2, [0, 6, 4, 0])
