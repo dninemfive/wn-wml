@@ -6,7 +6,7 @@ from ndf_parse.model import List
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from units._utils import edit_standard_squad
-from _weapons import M16A2
+from units._weapons import M16A2
 from model.squads.squad import Squad
 
 

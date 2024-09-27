@@ -1,6 +1,6 @@
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
-from _weapons import M16A2, M249
+from units._weapons import M16A2, M249
 from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
 from creators.unit import UNIT_UI, UnitCreator
@@ -17,7 +17,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         squad.apply(ctx.ndf, mot_scouts.msg)
         squad.edit_unit(mot_scouts)
         # insert between scouts and ab scouts
-        mot_scouts.UpgradeFromUnit='Unit_Scout_US'
+        mot_scouts.UpgradeFromUnit='Scout_US'
         ab_scouts = mot_scouts.get_other_unit('Descriptor_Unit_Airborne_Scout_US')
         edit.members(module.get(ab_scouts, 'TUnitUIModuleDescriptor'), UpgradeFromUnit='Descriptor_Unit_d9_RECO2_MOT_SCOUTS_US')
         # TODO: have it automatically copy availability from parent if not specified

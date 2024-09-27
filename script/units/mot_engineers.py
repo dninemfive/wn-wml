@@ -6,7 +6,7 @@ from creators.unit import UNIT_UI, UnitCreator
 from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List
 from units._utils import edit_standard_squad
-from _weapons import M16A2, M249, SATCHEL_CHARGE
+from units._weapons import M16A2, M249, SATCHEL_CHARGE
 from model.squads.squad import Squad
 
 

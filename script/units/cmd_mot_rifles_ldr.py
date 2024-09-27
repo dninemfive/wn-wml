@@ -5,7 +5,7 @@ from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List
 import utils.ndf.edit as edit
 from units._utils import edit_standard_squad
-from _weapons import M16A2, M240
+from units._weapons import M16A2, M240
 from model.squads.squad import Squad
 
 
