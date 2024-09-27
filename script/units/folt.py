@@ -18,4 +18,5 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         squad.edit_unit(folt)
         # geez upgrade from something else this is dumb
         folt.UpgradeFromUnit='Sniper_US'
+        # TODO: GSR trait
         return UnitRules(folt, 3, [0, 6, 4, 0])

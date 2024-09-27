@@ -10,6 +10,7 @@ import units.cmd_mot_rifles_ldr
 import units.e2c_hawkeye
 import units.fav
 import units.folt
+import units.fwd_support_ew
 import units.joh58d_kiowa
 import units.m167a2_pivads_20mm
 import units.m198_155mm_clu
@@ -28,6 +29,7 @@ import units.mot_mp_patrol
 import units.mot_rifles
 import units.mot_rifles_dragon
 import units.mot_scouts
+import units.operational_support
 import units.ranger_at_section
 import units.ranger_gunners
 import units.rangers_m203
@@ -109,12 +111,12 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("Airborne_Dragon_US", 1, [M1038_HUMVEE])
                 division_units.register_vanilla("ATteam_TOW2_US", 1, SMALL_UNIT_TRANSPORTS)
                 division_units.register(units.mk19_40mm.create(mod_context), [M998_HUMVEE, M998_HUMVEE_AGL, BLACKHAWK])
-                division_units.register(units.m224_60mm.create(mod_context), SMALL_UNIT_TRANSPORTS)
+                division_units.register(units.m224_60mm.create(mod_context), [M998_HUMVEE, BLACKHAWK])
                 """ ART """
                 HEAVY_TRANSPORTS = ["Descriptor_Unit_M35_trans_US", CHINOOK]
-                division_units.register_vanilla("Mortier_107mm_US", 2, SMALL_UNIT_TRANSPORTS)
+                division_units.register_vanilla("Mortier_107mm_US", 2, [M998_HUMVEE, BLACKHAWK])
                 division_units.register(units.xm1100_120mm.create(mod_context))
-                division_units.register_vanilla("Howz_M102_105mm_US", 2, SMALL_UNIT_TRANSPORTS)
+                division_units.register_vanilla("Howz_M102_105mm_US", 2, [M998_HUMVEE, BLACKHAWK])
                 division_units.register(units.xm119_imcs.create(mod_context))
                 division_units.register_vanilla("Howz_M198_155mm_US", 2, HEAVY_TRANSPORTS)
                 division_units.register(units.m198_155mm_clu.create(mod_context), HEAVY_TRANSPORTS)
@@ -140,10 +142,10 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("M981_FISTV_US", 1)
                 # 👓 FAV AGL
                 # 👓 FAV TOW
-                # 👓 OPERATIONAL SUPPORT
-                division_units.register(units.folt.create(mod_context), FAV)
+                division_units.register(units.folt.create(mod_context), [FAV, REC_HUMVEE_AGL, BLACKHAWK])
                 division_units.register_vanilla("LRRP_US", 2, [M998_HUMVEE, "Descriptor_Unit_M151A2_scout_US"])
-                # 👓 FWD SUPPORT [EW]
+                division_units.register(units.operational_support.create(mod_context), HEAVY_TRANSPORTS)
+                division_units.register(units.fwd_support_ew.create(mod_context), SMALL_RECON_TRANSPORTS)
                 division_units.register(units.mot_scouts.create(mod_context), SMALL_RECON_TRANSPORTS)
                 division_units.register(units.scat.create(mod_context), SMALL_RECON_TRANSPORTS)
                 division_units.register_vanilla("OH58C_Scout_US", 1)

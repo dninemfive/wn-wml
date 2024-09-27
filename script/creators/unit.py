@@ -174,8 +174,12 @@ class UnitCreator(object):
         return self.get_module(UNIT_UI).by_member('UpgradeFromUnit').value
 
     @UpgradeFromUnit.setter
-    def UpgradeFromUnit(self: Self, val: str) -> None:
-        self.edit_ui_module(UpgradeFromUnit=ensure.prefix(val, 'Descriptor_Unit_'))
+    def UpgradeFromUnit(self: Self, val: str | None) -> None:
+        if val is None:
+            with self.module_context(UNIT_UI) as ctx:
+                ctx.remove_member('UpgradeFromUnit')
+        else: 
+            self.edit_ui_module(UpgradeFromUnit=ensure.prefix(val, 'Descriptor_Unit_'))
 
     @property
     def CommandPointCost(self: Self) -> int:

@@ -24,7 +24,8 @@ AT4         = InfantryWeapon('$/GFX/Weapon/Ammo_RocketInf_AT4_83mm',
                              "'FireEffect_RocketInf_AT4_83mm'",
                              '$/GFX/DepictionResources/Modele_AT_4',
                              4,
-                             'bazooka')
+                             'bazooka',
+                             is_secondary=True)
 SATCHEL_CHARGE = InfantryWeapon('$/GFX/Weapon/Ammo_Grenade_Satchel_Charge',
                                 "'FireEffect_Grenade_Satchel_Charge'",
                                 '$/GFX/DepictionResources/Modele_MainNue',
