@@ -58,5 +58,11 @@ VIPER           = InfantryWeapon('$/GFX/Weapon/Ammo_d9_FGR17_Viper',
                                  'bazooka',
                                  is_secondary=True)
 # TODO: make ammo for M203
+M203           = InfantryWeapon('$/GFX/Weapon/Ammo_d9_40mm_HEDP',
+                                 "'FireEffect_Lance_grenade_Mk19_40mm'",
+                                 '$/GFX/DepictionResources/Modele_M16A2',
+                                 36,
+                                 'bazooka',
+                                 is_secondary=True)
 # TODO: make ammo for M224
 # TODO: make ammo for VIPER

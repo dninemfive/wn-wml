@@ -6,6 +6,7 @@ import constants.ndf_paths as ndf_paths
 import constants.paths as paths
 import units.ammo
 import units.ammo.fgr_17_viper
+import units.ammo.m203
 import units.ammo.m60e3
 import units.cmd_m998_humvee_agl
 import units.cmd_m1010_tc3v
@@ -63,6 +64,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
     with ModCreationContext(mod_metadata, root_msg, *ndf_paths.ALL) as mod_context:
             units.ammo.fgr_17_viper.create(mod_context)
             units.ammo.m60e3.create(mod_context)
+            units.ammo.m203.create(mod_context)
             division_units: DivisionUnitRegistry
             with root_msg.nest("Creating units") as msg:
                 division_units = DivisionUnitRegistry(mod_context,

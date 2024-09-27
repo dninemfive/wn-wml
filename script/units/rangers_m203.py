@@ -5,7 +5,7 @@ from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List
 import utils.ndf.edit as edit
 from units._utils import edit_standard_squad
-from units._weapons import COLT_COMMANDO, M16A2, M249
+from units._weapons import COLT_COMMANDO, M16A2, M249, M203
 from model.squads.squad import Squad
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
@@ -21,7 +21,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         #   create M203 ammo
         #   append M203 to weapons
         # make custom showroom unit
-        squad: Squad = Squad.copy_parent(ctx.guids, rangers_m203, 'US', (COLT_COMMANDO, 4), (M16A2, 3), (M249, 2))
+        squad: Squad = Squad.copy_parent(ctx.guids, rangers_m203, 'US', (COLT_COMMANDO, 4), (M16A2, 3), (M249, 2), (M203, 2))
         squad.apply(ctx.ndf, rangers_m203.msg)
         squad.edit_unit(rangers_m203)
         rangers_m203.edit_ui_module(UpgradeFromUnit='Descriptor_Unit_Ranger_Dragon_US')
