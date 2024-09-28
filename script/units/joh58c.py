@@ -1,8 +1,8 @@
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 from constants.ndf_paths import AMMUNITION_MISSILES, MISSILE_CARRIAGE, WEAPON_DESCRIPTOR
-from context.mod_creation_context import ModCreationContext
-from context.module_context import ModuleContext
+from script.context.mod_creation import ModCreationContext
+from script.context.unit_module import UnitModuleContext
 from creators.unit import UNIT_UI
 from creators.weapon import WeaponCreator
 from metadata.division_unit_registry import UnitRules
@@ -17,7 +17,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         with joh58c.edit_weapons() as weapons:
             edit_weapons(weapons)
         joh58c.get_module('MissileCarriage', by_name=True).by_member('Connoisseur').value = generate_missile_carriages(ctx.ndf[MISSILE_CARRIAGE])
-        with ModuleContext(joh58c.get_other_unit('OH58_CS_US'), 'TUnitUIModuleDescriptor') as oh58cs_ui_module:
+        with UnitModuleContext(joh58c.get_other_unit('OH58_CS_US'), 'TUnitUIModuleDescriptor') as oh58cs_ui_module:
             oh58cs_ui_module.edit_members(UpgradeFromUnit=joh58c.new.descriptor_name)
         return UnitRules(joh58c, 1, [0, 4, 3, 0])
     

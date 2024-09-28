@@ -2,7 +2,8 @@ from typing import Self
 
 import utils.ndf.ensure as ensure
 from constants.ndf import DISPERSION_COLOR, DISPERSION_THICKNESS
-from model.squads.infantry_weapon import InfantryWeapon, WeaponType
+from constants.primitive_types import WeaponType
+from creators.unit.utils.infantry.weapon import InfantryWeapon
 from ndf_parse.model import Object
 
 

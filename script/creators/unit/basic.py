@@ -6,7 +6,7 @@ import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
 from constants.ndf_paths import (ALL_UNITS_TACTIC, DIVISION_PACKS,
                                  SHOWROOM_EQUIVALENCE, UNITE_DESCRIPTOR)
-from context.module_context import ModuleContext
+from script.context.unit_module import UnitModuleContext
 from creators.weapon import WeaponCreator
 from metadata.new_unit import NewUnitMetadata
 from metadata.unit import UnitMetadata
@@ -16,7 +16,7 @@ from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
 
 if TYPE_CHECKING:
-    from context.mod_creation_context import ModCreationContext
+    from script.context.mod_creation import ModCreationContext
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 UNIT_UI = "TUnitUIModuleDescriptor"
@@ -108,8 +108,8 @@ class UnitCreator(object):
                 ctx.edit_members(Default=ensure.prefix(descriptor_name, '$/GFX/Weapon/'))
         return WeaponCreator(self.ndf, self.new_unit, copy_of, self.msg, _set_weapon_descriptor)
 
-    def module_context(self: Self, type_or_name: str, by_name: bool = False) -> ModuleContext:
-        return ModuleContext(self.unit_object, type_or_name, by_name)
+    def module_context(self: Self, type_or_name: str, by_name: bool = False) -> UnitModuleContext:
+        return UnitModuleContext(self.unit_object, type_or_name, by_name)
     
     def edit_ui_module(self: Self, **changes: CellValue) -> None:
         with self.module_context(UNIT_UI) as ui_module:

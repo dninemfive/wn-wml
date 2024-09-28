@@ -1,4 +1,4 @@
-from context.mod_creation_context import ModCreationContext
+from script.context.mod_creation import ModCreationContext
 from metadata.unit_rules import UnitRules
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module

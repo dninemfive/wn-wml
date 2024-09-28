@@ -6,7 +6,7 @@ from typing import Self
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as unit_module
 
-class ModuleContext(object):
+class UnitModuleContext(object):
     def __init__(self: Self, unit: Object, module_type: str, by_name: bool = False):
         self.unit = unit
         self.module_type = module_type

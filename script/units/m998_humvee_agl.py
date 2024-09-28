@@ -1,6 +1,6 @@
 import constants.ndf_paths as ndf_paths
-from context.mod_creation_context import ModCreationContext
-from context.module_context import ModuleContext
+from script.context.mod_creation import ModCreationContext
+from script.context.unit_module import UnitModuleContext
 from creators.unit import UnitCreator
 from metadata.unit_rules import UnitRules
 from ndf_parse.model import List, ListRow, MemberRow, Object

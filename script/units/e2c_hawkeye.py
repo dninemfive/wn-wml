@@ -1,4 +1,4 @@
-from context.mod_creation_context import ModCreationContext
+from script.context.mod_creation import ModCreationContext
 from metadata.unit_rules import UnitRules
 from ndf_parse.model import Object
 from units._utils import METRE

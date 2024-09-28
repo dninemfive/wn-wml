@@ -1,21 +1,18 @@
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from units._weapons import M16A2, M249
-from context.mod_creation_context import ModCreationContext
-from context.module_context import ModuleContext
+from script.context.mod_creation import ModCreationContext
+from script.context.unit_module import UnitModuleContext
 from creators.unit import UNIT_UI, UnitCreator
 from metadata.division_unit_registry import UnitRules
-from model.squads.squad import InfantryUnitCreator
+from script.creators.unit.infantry import InfantryUnitCreator
 from ndf_parse.model import List
 from units._utils import edit_standard_squad
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # MOT. SCOUTS
-    with ctx.create_unit("#RECO2 MOT. SCOUTS", "US", "Scout_US") as mot_scouts:
-        squad: InfantryUnitCreator = InfantryUnitCreator.copy_parent(ctx.guids, mot_scouts, 'US', (M16A2, 3), (M249, 1))
-        squad.apply(ctx.ndf, mot_scouts.msg)
-        squad.edit_unit(mot_scouts)
+    with ctx.create_infantry_unit("#RECO2 MOT. SCOUTS", "US", "Scout_US", [(M16A2, 3), (M249, 1)]) as mot_scouts:
         # insert between scouts and ab scouts
         mot_scouts.UpgradeFromUnit='Scout_US'
         ab_scouts = mot_scouts.get_other_unit('Descriptor_Unit_Airborne_Scout_US')

@@ -1,5 +1,5 @@
-from context.mod_creation_context import ModCreationContext
-from context.module_context import ModuleContext
+from script.context.mod_creation import ModCreationContext
+from script.context.unit_module import UnitModuleContext
 from creators.unit import UNIT_UI, UnitCreator
 from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List
@@ -8,7 +8,7 @@ import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from units._utils import edit_standard_squad
 from units._weapons import M16A2, M21, VIPER
-from model.squads.squad import InfantryUnitCreator
+from script.creators.unit.infantry import InfantryUnitCreator
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:

@@ -5,7 +5,9 @@ from constants.ndf_paths import BUTTON_TEXTURES_UNITES, DIVISION_TEXTURES
 from constants.paths import CACHE_FOLDER
 from creators.ammo import AmmoCreator
 from creators.division import DivisionCreator
-from creators.unit import UnitCreator
+from creators.unit.basic import UnitCreator
+from creators.unit.infantry import InfantryUnitCreator
+from creators.unit.utils.infantry.weapon import InfantryWeapon
 from managers.guid import GuidManager
 from managers.localization import LocalizationManager
 from managers.unit_id import UnitIdManager
@@ -89,12 +91,31 @@ class ModCreationContext(object):
     def create_unit(self: Self, name: str, country: str, copy_of: str, showroom_src: str | None = None, button_texture_src_path: str | None = None) -> UnitCreator:
         # TODO: msg here
         metadata: NewUnitMetadata = NewUnitMetadata.from_(self.prefix, name, country, self.guids, self.localization)
-        return UnitCreator(self.ndf,
+        return UnitCreator(self,
                            metadata,
                            copy_of,
                            showroom_src,
                            self.try_add_button_texture(button_texture_src_path, metadata.unit_metadata),
                            self.root_msg)
+    
+    def create_infantry_unit(self: Self,
+                             name: str,
+                             country: str,
+                             copy_of: str,
+                             weapons: list[tuple[InfantryWeapon, int]],
+                             showroom_src: str | None = None,
+                             button_texture_src_path: str | None = None) -> InfantryUnitCreator:
+        metadata: UnitMetadata = UnitMetadata.from_localized_name(self.prefix, name, country)
+        return InfantryUnitCreator(self,
+                                   name,
+                                   metadata,
+                                   copy_of,
+                                   showroom_src,
+                                   self.try_add_button_texture(button_texture_src_path, metadata),
+                                   self.root_msg,
+                                   country,
+                                   *weapons)
+
     
     def add_division_emblem(self: Self, msg: Message | None, image_path: str, division: DivisionMetadata) -> str:
         with try_nest(msg, f"Adding division emblem from image at {image_path}") as _:

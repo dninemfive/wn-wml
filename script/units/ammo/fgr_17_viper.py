@@ -1,4 +1,4 @@
-from context.mod_creation_context import ModCreationContext
+from script.context.mod_creation import ModCreationContext
 
 
 def create(ctx: ModCreationContext) -> str:

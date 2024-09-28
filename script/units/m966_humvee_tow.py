@@ -1,6 +1,6 @@
 
-from context.mod_creation_context import ModCreationContext
-from context.module_context import ModuleContext
+from script.context.mod_creation import ModCreationContext
+from script.context.unit_module import UnitModuleContext
 from creators.unit import UNIT_UI
 from metadata.division_unit_registry import UnitRules
 from metadata.unit import UnitMetadata
@@ -17,6 +17,6 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             weapons.edit_members(Salves=[6,])
         m966_humvee_tow.edit_ui_module(UpgradeFromUnit='Descriptor_Unit_M274_Mule_ITOW_US')
         # insert before M1025 Humvee TOW
-        with ModuleContext(m966_humvee_tow.get_other_unit('M1025_Humvee_TOW_US'), 'TUnitUIModuleDescriptor') as m1025_ui_module:
+        with UnitModuleContext(m966_humvee_tow.get_other_unit('M1025_Humvee_TOW_US'), 'TUnitUIModuleDescriptor') as m1025_ui_module:
             m1025_ui_module.edit_members(UpgradeFromUnit='Descriptor_Unit_d9_M966_HUMVEE_TOW_US')
         return UnitRules(m966_humvee_tow, 3, [0, 4, 3, 0])

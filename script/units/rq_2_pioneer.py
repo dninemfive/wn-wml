@@ -1,6 +1,6 @@
-from context.mod_creation_context import ModCreationContext
+from script.context.mod_creation import ModCreationContext
 from metadata.unit_rules import UnitRules
-from context.module_context import ModuleContext
+from script.context.unit_module import UnitModuleContext
 from units._utils import METRE
 from utils.ndf import ensure
 
@@ -68,6 +68,6 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         rq_2_pioneer.replace_module_from(ef_111, 'TOrderConfigModuleDescriptor')
         rq_2_pioneer.replace_module_from(ef_111, 'TOrderableModuleDescriptor')
         # make OA-37B upgrade from this
-        with ModuleContext(rq_2_pioneer.get_other_unit(DRAGONFLY), 'TUnitUIModuleDescriptor') as dragonfly_ui:
+        with UnitModuleContext(rq_2_pioneer.get_other_unit(DRAGONFLY), 'TUnitUIModuleDescriptor') as dragonfly_ui:
             dragonfly_ui.edit_members(UpgradeFromUnit=ensure.unit_descriptor('d9_RECO1_RQ2_PIONEER_US'))
         return UnitRules(rq_2_pioneer, 1, [8, 0, 0, 0])

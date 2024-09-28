@@ -1,6 +1,6 @@
 from constants.ndf_paths import UNITE_DESCRIPTOR
-from context.mod_creation_context import ModCreationContext
-from context.module_context import ModuleContext
+from script.context.mod_creation import ModCreationContext
+from script.context.unit_module import UnitModuleContext
 from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List, Object
 
@@ -21,7 +21,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                                    # TODO: automate this as part of copying the appearance of another unit?
                                    ButtonTexture="'Texture_Button_Unit_M1038_Humvee_US'")
             # make M35 upgrade from this instead
-        with ModuleContext(m998_humvee_supply.get_other_unit('M35_supply_US'), 'TUnitUIModuleDescriptor') as m35_ui_module:
+        with UnitModuleContext(m998_humvee_supply.get_other_unit('M35_supply_US'), 'TUnitUIModuleDescriptor') as m35_ui_module:
             m35_ui_module.edit_members(UpgradeFromUnit='Descriptor_Unit_d9_M998_HUMVEE_SUPPLY_US')
         # TODO: make stealth mediocre? see M561 SUPPLY GOAT
         return UnitRules(m998_humvee_supply, 2, [10, 8, 6, 4])

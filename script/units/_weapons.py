@@ -1,4 +1,4 @@
-from model.squads.infantry_weapon import InfantryWeapon
+from creators.unit.utils.infantry.weapon import InfantryWeapon
 
 M16A2           = InfantryWeapon('$/GFX/Weapon/Ammo_FM_M16',
                                  "'FireEffect_FM_M16'",

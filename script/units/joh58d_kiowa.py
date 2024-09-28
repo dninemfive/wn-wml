@@ -1,8 +1,8 @@
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 from constants.ndf_paths import AMMUNITION_MISSILES, MISSILE_CARRIAGE, WEAPON_DESCRIPTOR
-from context.mod_creation_context import ModCreationContext
-from context.module_context import ModuleContext
+from script.context.mod_creation import ModCreationContext
+from script.context.unit_module import UnitModuleContext
 from creators.unit import UNIT_UI
 from creators.weapon import WeaponCreator
 from metadata.division_unit_registry import UnitRules
@@ -19,7 +19,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         joh58d_kiowa.get_module('MissileCarriage', by_name=True).by_member('Connoisseur').value = generate_missile_carriages(ctx.ndf[MISSILE_CARRIAGE])
         # insert after Kiowa and before Kiowa WR
         joh58d_kiowa.edit_ui_module(UpgradeFromUnit='Descriptor_Unit_OH58D_Combat_Scout_US')
-        with ModuleContext(joh58d_kiowa.get_other_unit('OH58D_Kiowa_Warrior_US'), 'TUnitUIModuleDescriptor') as kiowa_wr_ui_module:
+        with UnitModuleContext(joh58d_kiowa.get_other_unit('OH58D_Kiowa_Warrior_US'), 'TUnitUIModuleDescriptor') as kiowa_wr_ui_module:
             kiowa_wr_ui_module.edit_members(UpgradeFromUnit=joh58d_kiowa.new.descriptor_name)
         return UnitRules(joh58d_kiowa, 1, [0, 4, 3, 0])
     
