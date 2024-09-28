@@ -132,11 +132,16 @@ class InfantryUnitCreator(UnitCreator):
                                                                                     selector_tactic.tuple))
         
     def apply(self: Self) -> None:
-        self.edit_unit()
+        # hacky fix but fuck it
+        # should maybe make an abc idk
+        showroom_src = self.showroom_src
+        self.showroom_src = self.new_unit
         super().apply()
+        self.showroom_src = showroom_src
         self.edit_generated_depiction_infantry(self.ndf, self.msg)
         self.edit_showroom_units(self.ndf, self.msg)
         self.edit_weapon_descriptors(self.ndf, self.msg)
+        self.edit_unit()
 
     def _make_infantry_squad_module_descriptor(self: Self, guid_key: str) -> Object:
         return ensure._object('TInfantrySquadModuleDescriptor',
@@ -168,7 +173,6 @@ class InfantryUnitCreator(UnitCreator):
                               self._infantry_squad_weapon_assignment,
                               'TInfantrySquadWeaponAssignmentModuleDescriptor')
         ndf.add(ListRow(copy, 'export', self.new_unit.showroom_descriptor_name))
-        self.showroom_src = self.new_unit
         
     @ndf_path(ndf_paths.WEAPON_DESCRIPTOR)
     def edit_weapon_descriptors(self: Self, ndf: List):
