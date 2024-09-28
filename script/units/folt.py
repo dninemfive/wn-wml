@@ -7,13 +7,13 @@ import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from units._utils import edit_standard_squad
 from units._weapons import M16A2
-from model.squads.squad import Squad
+from model.squads.squad import InfantryUnitCreator
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # FOLT
     with ctx.create_unit("#RECO2 FOLT", "US", "Scout_US") as folt:
-        squad: Squad = Squad.copy_parent(ctx.guids, folt, 'US', (M16A2, 2))
+        squad: InfantryUnitCreator = InfantryUnitCreator.copy_parent(ctx.guids, folt, 'US', (M16A2, 2))
         squad.apply(ctx.ndf, folt.msg)
         squad.edit_unit(folt)
         # TODO: GSR trait

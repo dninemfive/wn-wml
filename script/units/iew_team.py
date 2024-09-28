@@ -8,14 +8,14 @@ import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from units._utils import edit_standard_squad
 from units._weapons import M16A2, M21, VIPER
-from model.squads.squad import Squad
+from model.squads.squad import InfantryUnitCreator
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # FWD SUPPORT [EW]
     with ctx.create_unit("#RECO2 IEW TEAM", "US", "Scout_US") as iew_team:
         # TODO: change weapon loadout
-        squad: Squad = Squad.copy_parent(ctx.guids, iew_team, 'US', (M16A2, 4), (M21, 1), (VIPER, 1))
+        squad: InfantryUnitCreator = InfantryUnitCreator.copy_parent(ctx.guids, iew_team, 'US', (M16A2, 4), (M21, 1), (VIPER, 1))
         squad.apply(ctx.ndf, iew_team.msg)
         squad.edit_unit(iew_team)
         # TODO: add traits: EW, GSR, direction finding?

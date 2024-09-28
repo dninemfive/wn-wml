@@ -1,18 +1,22 @@
-from typing import Callable, Self
+from typing import TYPE_CHECKING, Callable, Self
 
-from creators.weapon import WeaponCreator
+import constants.ndf_paths as ndf_paths
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
-from constants.ndf_paths import ALL_UNITS_TACTIC, DIVISION_PACKS, SHOWROOM_EQUIVALENCE, UNITE_DESCRIPTOR
+from constants.ndf_paths import (ALL_UNITS_TACTIC, DIVISION_PACKS,
+                                 SHOWROOM_EQUIVALENCE, UNITE_DESCRIPTOR)
 from context.module_context import ModuleContext
+from creators.weapon import WeaponCreator
 from metadata.new_unit import NewUnitMetadata
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, ListRow, Map, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
-import constants.ndf_paths as ndf_paths
+
+if TYPE_CHECKING:
+    from context.mod_creation_context import ModCreationContext
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 UNIT_UI = "TUnitUIModuleDescriptor"
@@ -20,37 +24,36 @@ TAGS = "TTagsModuleDescriptor"
 
 class UnitCreator(object):
     def __init__(self: Self,
-                 ndf: dict[str, List],
-                 new_unit_metadata: NewUnitMetadata,
-                 copy_of: str,
-                 showroom_src: str | None = None,
+                 ctx: ModCreationContext,
+                 localized_name: str,
+                 new_unit: str | UnitMetadata,
+                 src_unit: str | UnitMetadata,
+                 showroom_src: str | UnitMetadata | None = None,
                  button_texture_key: str | None = None,
                  msg: Message | None = None):
-        self.ndf = ndf
-        self.localized_name = new_unit_metadata.localized_name
-        self.name_token = new_unit_metadata.name_token
-        self.guid = new_unit_metadata.guid
-        self.new: UnitMetadata = new_unit_metadata.unit_metadata
-        self.src = UnitMetadata(copy_of)
-        self.showroom_src = UnitMetadata(showroom_src) if showroom_src is not None else self.src
+        self.ctx = ctx
+        self.localized_name = localized_name
+        self.new_unit: UnitMetadata = UnitMetadata.resolve(new_unit)
+        self.src_unit: UnitMetadata = UnitMetadata.resolve(src_unit)
+        self.showroom_src: UnitMetadata = UnitMetadata.try_resolve(showroom_src, src_unit)
         self.button_texture_key = button_texture_key
         self.msg = msg
 
     def __enter__(self: Self) -> Self:
         self.msg = self.msg.nest(f"Making {self.localized_name}")
         self.msg.__enter__()
-        with self.msg.nest(f"Copying {self.src.descriptor_name}") as _:
+        with self.msg.nest(f"Copying {self.src_unit.descriptor_name}") as _:
             self.unit_object = self.make_copy()
-        self.edit_ui_module(NameToken=self.name_token)
+        self.edit_ui_module(NameToken=self.ctx.localization.register(self.localized_name))
         if self.button_texture_key is not None:
             self.edit_ui_module(ButtonTexture=self.button_texture_key)
         with self.module_context("TTagsModuleDescriptor") as tags_module:
             tag_set: List = tags_module.object.by_member("TagSet").value
-            tag_set.remove(tag_set.find_by_cond(lambda x: x.value == self.src.tag))
-            tag_set.add(ListRow(self.new.tag))
+            tag_set.remove(tag_set.find_by_cond(lambda x: x.value == self.src_unit.tag))
+            tag_set.add(ListRow(self.new_unit.tag))
         try:
             with self.module_context("TTransportableModuleDescriptor") as transportable_module:
-                transportable_module.edit_members(TransportedSoldier=f'"{self.new.name}"')
+                transportable_module.edit_members(TransportedSoldier=f'"{self.new_unit.name}"')
         except:
             pass
         return self
@@ -60,46 +63,50 @@ class UnitCreator(object):
         self.msg.__exit__(exc_type, exc_value, traceback)
 
     def apply(self: Self):
-        with self.msg.nest(f"Saving {self.new.name}") as msg2:
+        with self.msg.nest(f"Saving {self.new_unit.name}") as msg2:
             self.edit_unite_descriptor(self.ndf, msg2)
             self.edit_division_packs(self.ndf, msg2)
             self.edit_showroom_equivalence(self.ndf, msg2)
             self.edit_all_units_tactic(self.ndf, msg2)
 
     def make_copy(self: Self) -> Object:
-        copy: Object = self.ndf[UNITE_DESCRIPTOR].by_name(self.src.descriptor_name).value.copy()
+        copy: Object = self.ndf[UNITE_DESCRIPTOR].by_name(self.src_unit.descriptor_name).value.copy()
         edit.members(copy,
-                     DescriptorId=self.guid,
-                     ClassNameForDebug=self.new.class_name_for_debug)
+                     DescriptorId=self.ctx.guids.generate(self.new_unit.descriptor_name),
+                     ClassNameForDebug=self.new_unit.class_name_for_debug)
         return copy
+    
+    @property
+    def ndf(self: Self) -> dict[str, List]:
+        return self.ctx.ndf
 
     @ndf_path(ndf_paths.UNITE_DESCRIPTOR)
     def edit_unite_descriptor(self: Self, ndf: List):
-        ndf.add(ListRow(self.unit_object, namespace=self.new.descriptor_name, visibility="export"))
+        ndf.add(ListRow(self.unit_object, namespace=self.new_unit.descriptor_name, visibility="export"))
 
     @ndf_path(ndf_paths.SHOWROOM_EQUIVALENCE)
     def edit_showroom_equivalence(self: Self, ndf: List):
         unit_to_showroom_equivalent: Map = ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
-        unit_to_showroom_equivalent.add(k=self.new.descriptor_path, v=self.showroom_src.showroom_descriptor_path)
+        unit_to_showroom_equivalent.add(k=self.new_unit.descriptor_path, v=self.showroom_src.showroom_descriptor_path)
 
     @ndf_path(ndf_paths.DIVISION_PACKS)
     def edit_division_packs(self: Self, ndf: List):
         deck_pack_descriptor = Object('DeckPackDescriptor')
-        deck_pack_descriptor.add(MemberRow(self.new.descriptor_path, "Unit"))
-        ndf.add(ListRow(deck_pack_descriptor, namespace=self.new.deck_pack_descriptor_name))
+        deck_pack_descriptor.add(MemberRow(self.new_unit.descriptor_path, "Unit"))
+        ndf.add(ListRow(deck_pack_descriptor, namespace=self.new_unit.deck_pack_descriptor_name))
 
     @ndf_path(ndf_paths.ALL_UNITS_TACTIC)
     def edit_all_units_tactic(self: Self, ndf: List):
         all_units_tactic = ndf.by_name("AllUnitsTactic").value
-        all_units_tactic.add(self.new.descriptor_path)
+        all_units_tactic.add(self.new_unit.descriptor_path)
 
     def edit_weapons(self: Self, copy_of: str | None = None) -> WeaponCreator:
         if copy_of is None:
-            copy_of = self.src.name
+            copy_of = self.src_unit.name
         def _set_weapon_descriptor(descriptor_name: str) -> None:
             with self.module_context('WeaponManager', by_name=True) as ctx:
                 ctx.edit_members(Default=ensure.prefix(descriptor_name, '$/GFX/Weapon/'))
-        return WeaponCreator(self.ndf, self.new, copy_of, self.msg, _set_weapon_descriptor)
+        return WeaponCreator(self.ndf, self.new_unit, copy_of, self.msg, _set_weapon_descriptor)
 
     def module_context(self: Self, type_or_name: str, by_name: bool = False) -> ModuleContext:
         return ModuleContext(self.unit_object, type_or_name, by_name)
@@ -109,7 +116,16 @@ class UnitCreator(object):
             ui_module.edit_members(**changes)
 
     def set_name(self: Self, name: str) -> None:
-        self.edit_ui_module(NameToken=self.ctx.ctx.register(name))
+        self.edit_ui_module(NameToken=self.ctx.localization.register(name))
+
+    @property
+    def LocalizedName(self: Self) -> str:
+        return self.localized_name
+    
+    @LocalizedName.setter
+    def LocalizedName(self: Self, val: str) -> None:
+        self.localized_name = val
+        self.edit_ui_module(NameToken=self.ctx.localization.register(val))
 
     def add_tag(self: Self, tag: str) -> None:
         tag = ensure.quoted(tag)

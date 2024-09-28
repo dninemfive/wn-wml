@@ -7,13 +7,13 @@ import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from units._utils import edit_standard_squad
 from units._weapons import M16A2, M249, TOW_SCAT
-from model.squads.squad import Squad
+from model.squads.squad import InfantryUnitCreator
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # SCAT
     with ctx.create_unit("#RECO2 SCAT", "US", "Scout_US") as scat:
-        squad: Squad = Squad.copy_parent(ctx.guids, scat, 'US', (M16A2, 5), (M249, 1), (TOW_SCAT, 1))
+        squad: InfantryUnitCreator = InfantryUnitCreator.copy_parent(ctx.guids, scat, 'US', (M16A2, 5), (M249, 1), (TOW_SCAT, 1))
         squad.apply(ctx.ndf, scat.msg)
         squad.edit_unit(scat)
         scat.UpgradeFromUnit='d9_RECO2_IEW_TEAM_US'

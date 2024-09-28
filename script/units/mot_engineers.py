@@ -7,13 +7,13 @@ from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List
 from units._utils import edit_standard_squad
 from units._weapons import M16A2, M249, SATCHEL_CHARGE
-from model.squads.squad import Squad
+from model.squads.squad import InfantryUnitCreator
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # MOT. RIFLES.
     with ctx.create_unit("MOT. ENGINEERS", "US", "Engineers_US") as mot_engineers:
-        squad: Squad = Squad.copy_parent(ctx.guids, mot_engineers, 'US', (M16A2, 7), (M249, 1), (SATCHEL_CHARGE, 1))
+        squad: InfantryUnitCreator = InfantryUnitCreator.copy_parent(ctx.guids, mot_engineers, 'US', (M16A2, 7), (M249, 1), (SATCHEL_CHARGE, 1))
         squad.apply(ctx.ndf, mot_engineers.msg)
         squad.edit_unit(mot_engineers)
         # insert between engineers and engineers (FLASH)

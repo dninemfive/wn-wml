@@ -5,7 +5,7 @@ from context.mod_creation_context import ModCreationContext
 from context.module_context import ModuleContext
 from creators.unit import UNIT_UI, UnitCreator
 from metadata.division_unit_registry import UnitRules
-from model.squads.squad import Squad
+from model.squads.squad import InfantryUnitCreator
 from ndf_parse.model import List
 from units._utils import edit_standard_squad
 
@@ -13,7 +13,7 @@ from units._utils import edit_standard_squad
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # MOT. SCOUTS
     with ctx.create_unit("#RECO2 MOT. SCOUTS", "US", "Scout_US") as mot_scouts:
-        squad: Squad = Squad.copy_parent(ctx.guids, mot_scouts, 'US', (M16A2, 3), (M249, 1))
+        squad: InfantryUnitCreator = InfantryUnitCreator.copy_parent(ctx.guids, mot_scouts, 'US', (M16A2, 3), (M249, 1))
         squad.apply(ctx.ndf, mot_scouts.msg)
         squad.edit_unit(mot_scouts)
         # insert between scouts and ab scouts

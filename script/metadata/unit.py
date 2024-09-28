@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Self
 
+from script.utils.ndf import ensure
 from utils.localization import delocalize
 
 
@@ -59,3 +60,17 @@ class UnitMetadata(object):
     @staticmethod
     def from_localized_name(prefix: str, localized_name: str, country: str) -> Self:
         return UnitMetadata(f"{prefix}_{delocalize(localized_name)}_{country}")
+    
+    @staticmethod
+    def resolve(val: str | Self) -> Self:
+        if isinstance(val, str):
+            return UnitMetadata(ensure.no_prefix(val, 'Descriptor_Unit_'))
+        if isinstance(val, UnitMetadata):
+            return val
+        raise TypeError(f'Cannot resolve an object of type {type(val).__name__} to UnitMetadata!')
+    
+    @staticmethod
+    def try_resolve(val: str | Self | None, backup: str | Self) -> Self:
+        if val is not None:
+            return UnitMetadata.resolve(val)
+        return UnitMetadata.resolve(backup)

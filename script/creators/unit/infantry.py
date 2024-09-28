@@ -4,7 +4,7 @@ import constants.ndf_paths as ndf_paths
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from constants import ndf_paths
-from creators.unit import UnitCreator
+from creators.unit.basic import UnitCreator
 from managers.guid import GuidManager
 from metadata.unit import UnitMetadata
 from model.squads._squad_keys import _SquadKeys
@@ -17,29 +17,31 @@ from ndf_parse.model import (List, ListRow, Map, MapRow, MemberRow, Object,
 from utils.ndf import ensure
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
+from metadata.new_unit import NewUnitMetadata
 
 
 def _mesh_alternative(index: int) -> str:
     return f"'MeshAlternative_{index}'"
 
-class Squad(object):
+class InfantryUnitCreator(UnitCreator):
     def __init__(self: Self,
-                 guids: GuidManager,
-                 creator: UnitCreator,
-                 country: str,
-                 copy_of: str | UnitMetadata | None,
+                 ndf: dict[str, List],
+                 new_metadata: str | UnitMetadata,
+                 src_metadata: str | UnitMetadata,
+                 showroom_src: str | UnitMetadata | None = None,
+                 button_texture_key: str | None = None,
+                 msg: Message | None = None,
+                 country: str | None = None,
                  *weapons: tuple[InfantryWeapon, int]):
-        self.guids = guids
-        self.metadata = creator.new
+        super().__init__(ndf, new_metadata, src_metadata, showroom_src, button_texture_key, msg)
         self.country = country
-        self.copy_of = UnitMetadata(copy_of if copy_of is not None else creator.src.name)
         self.weapon_set = InfantryWeaponSet(*weapons)
-        self._keys = _SquadKeys(self.metadata)
+        self._keys = _SquadKeys(self.new)
         self._cached_weapon_assignment: dict[int, list[int]] | None = None
 
     @staticmethod
     def copy_parent(guids: GuidManager, creator: UnitCreator, country: str, *weapons: tuple[InfantryWeapon, int]):
-        return Squad(guids, creator, country, None, *weapons)
+        return InfantryUnitCreator(guids, creator, country, None, *weapons)
 
     # properties
 

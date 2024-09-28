@@ -6,12 +6,12 @@ from ndf_parse.model import List
 import utils.ndf.edit as edit
 from units._utils import edit_standard_squad
 from units._weapons import M16A2, M60E3
-from model.squads.squad import Squad
+from model.squads.squad import InfantryUnitCreator
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # RANGER GUNNERS
     with ctx.create_unit("RANGER GUNNERS", "US", "Ranger_US") as ranger_gunners:
-        squad: Squad = Squad.copy_parent(ctx.guids, ranger_gunners, 'US', (M16A2, 7), (M60E3, 1), (M60E3, 1), (M60E3, 1))
+        squad: InfantryUnitCreator = InfantryUnitCreator.copy_parent(ctx.guids, ranger_gunners, 'US', (M16A2, 7), (M60E3, 1), (M60E3, 1), (M60E3, 1))
         squad.apply(ctx.ndf, ranger_gunners.msg)
         squad.edit_unit(ranger_gunners)
         ranger_gunners.edit_ui_module(UpgradeFromUnit='Descriptor_Unit_Airborne_HMG_US')
