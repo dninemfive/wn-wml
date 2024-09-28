@@ -1,5 +1,6 @@
 # 👓 FAV AGL
 # model: ILTIS MILAN
+#   replace turret model with AGL
 # range: custom
 # air transportable
 # stealth, vision: M151A2 M2HB

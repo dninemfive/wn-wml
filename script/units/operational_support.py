@@ -12,12 +12,8 @@ from script.creators.unit.infantry import InfantryUnitCreator
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # OPERATIONAL SUPPORT
-    with ctx.create_unit("#RECO1 OPERATIONAL SUPPORT", "US", "Scout_US") as op_support:
-        # TODO: change weapon loadout
-        squad: InfantryUnitCreator = InfantryUnitCreator.copy_parent(ctx.guids, op_support, 'US', (M16A2, 8), (M249, 4), (AT4, 2))
-        squad.apply(ctx.ndf, op_support.msg)
-        squad.edit_unit(op_support)
+    # TODO: change weapon loadout, maybe including M82?
+    with ctx.create_infantry_unit("#RECO1 OPERATIONAL SUPPORT", "US", "Scout_US", [(M16A2, 8), (M249, 4), (AT4, 2)]) as op_support:
         # TODO: increase menace
         # TODO: reduce vision
-        # op_support.UpgradeFromUnit=None
         return UnitRules(op_support, 3, [0, 6, 4, 0])

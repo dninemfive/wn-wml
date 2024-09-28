@@ -4,11 +4,8 @@ import constants.ndf_paths as ndf_paths
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
-from constants.ndf_paths import (ALL_UNITS_TACTIC, DIVISION_PACKS,
-                                 SHOWROOM_EQUIVALENCE, UNITE_DESCRIPTOR)
 from script.context.unit_module import UnitModuleContext
 from creators.weapon import WeaponCreator
-from metadata.new_unit import NewUnitMetadata
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, ListRow, Map, MemberRow, Object
 from ndf_parse.model.abc import CellValue
@@ -70,7 +67,7 @@ class UnitCreator(object):
             self.edit_all_units_tactic(self.ndf, msg2)
 
     def make_copy(self: Self) -> Object:
-        copy: Object = self.ndf[UNITE_DESCRIPTOR].by_name(self.src_unit.descriptor_name).value.copy()
+        copy: Object = self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(self.src_unit.descriptor_name).value.copy()
         edit.members(copy,
                      DescriptorId=self.ctx.guids.generate(self.new_unit.descriptor_name),
                      ClassNameForDebug=self.new_unit.class_name_for_debug)

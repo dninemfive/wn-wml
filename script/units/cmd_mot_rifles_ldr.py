@@ -11,9 +11,6 @@ from script.creators.unit.infantry import InfantryUnitCreator
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # CMD MOT. RIFLES LDR.
-    with ctx.create_unit("#CMD MOT. RIFLES LDR.", "US", "Rifles_CMD_US") as mot_rifles_ldr:
-        squad: InfantryUnitCreator = InfantryUnitCreator.copy_parent(ctx.guids, mot_rifles_ldr, 'US', (M16A2, 5), (M240, 1))
-        squad.apply(ctx.ndf, mot_rifles_ldr.msg)
-        squad.edit_unit(mot_rifles_ldr)
+    with ctx.create_infantry_unit("#CMD MOT. RIFLES LDR.", "US", "Rifles_CMD_US", [(M16A2, 5), (M240, 1)]) as mot_rifles_ldr:
         return UnitRules(mot_rifles_ldr, 2, [0, 6, 4, 0])
         

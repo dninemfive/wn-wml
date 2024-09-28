@@ -2,12 +2,7 @@ import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from units._weapons import M16A2, M249
 from script.context.mod_creation import ModCreationContext
-from script.context.unit_module import UnitModuleContext
-from creators.unit import UNIT_UI, UnitCreator
 from metadata.division_unit_registry import UnitRules
-from script.creators.unit.infantry import InfantryUnitCreator
-from ndf_parse.model import List
-from units._utils import edit_standard_squad
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
