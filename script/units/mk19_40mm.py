@@ -1,6 +1,6 @@
-from script.context.mod_creation import ModCreationContext
-from script.context.unit_module import UnitModuleContext
-from creators.unit import UNIT_UI
+from context.mod_creation import ModCreationContext
+from context.unit_module import UnitModuleContext
+from creators.unit.basic import UNIT_UI
 from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List
 

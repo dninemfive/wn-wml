@@ -1,21 +1,14 @@
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
-from script.context.mod_creation import ModCreationContext
-from script.context.unit_module import UnitModuleContext
-from creators.unit import UNIT_UI, UnitCreator
+from context.mod_creation import ModCreationContext
 from metadata.division_unit_registry import UnitRules
-from ndf_parse.model import List
-from units._utils import edit_standard_squad
 from units._weapons import M16A2, M249, SATCHEL_CHARGE
-from script.creators.unit.infantry import InfantryUnitCreator
+from creators.unit.infantry import InfantryUnitCreator
 
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # MOT. RIFLES.
-    with ctx.create_unit("MOT. ENGINEERS", "US", "Engineers_US") as mot_engineers:
-        squad: InfantryUnitCreator = InfantryUnitCreator.copy_parent(ctx.guids, mot_engineers, 'US', (M16A2, 7), (M249, 1), (SATCHEL_CHARGE, 1))
-        squad.apply(ctx.ndf, mot_engineers.msg)
-        squad.edit_unit(mot_engineers)
+    with ctx.create_unit("MOT. ENGINEERS", "US", "Engineers_US", [(M16A2, 7), (M249, 1), (SATCHEL_CHARGE, 1)]) as mot_engineers:
         # insert between engineers and engineers (FLASH)
         mot_engineers.UpgradeFromUnit = 'Engineers_US'
         engineers_flash = mot_engineers.get_other_unit('Engineers_Flash_US')

@@ -17,11 +17,11 @@ from utils.ndf import ensure
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
 
-from script.model.template_infantry_selector_tactic import \
+from model.template_infantry_selector_tactic import \
     TemplateInfantrySelectorTactic
 
 if TYPE_CHECKING:
-    from script.context.mod_creation import ModCreationContext
+    from context.mod_creation import ModCreationContext
 
 
 def _mesh_alternative(index: int) -> str:

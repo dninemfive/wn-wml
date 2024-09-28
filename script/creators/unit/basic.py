@@ -4,7 +4,7 @@ import constants.ndf_paths as ndf_paths
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
-from script.context.unit_module import UnitModuleContext
+from context.unit_module import UnitModuleContext
 from creators.weapon import WeaponCreator
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, ListRow, Map, MemberRow, Object
@@ -13,7 +13,7 @@ from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
 
 if TYPE_CHECKING:
-    from script.context.mod_creation import ModCreationContext
+    from context.mod_creation import ModCreationContext
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 UNIT_UI = "TUnitUIModuleDescriptor"

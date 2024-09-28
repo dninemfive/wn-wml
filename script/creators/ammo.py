@@ -5,7 +5,7 @@ from typing import Self
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 from constants.ndf_paths import AMMUNITION
-from script.context.unit_module import UnitModuleContext
+from context.unit_module import UnitModuleContext
 from managers.guid import GuidManager
 from metadata.unit import UnitMetadata
 from ndf_parse import Mod

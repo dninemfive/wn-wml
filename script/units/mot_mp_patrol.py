@@ -1,8 +1,7 @@
-from script.context.mod_creation import ModCreationContext
-from script.context.unit_module import UnitModuleContext
-from creators.unit import UNIT_UI
+from context.mod_creation import ModCreationContext
 from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List
+from creators.unit.basic import UNIT_UI
 import utils.ndf.unit_module as module
 import utils.ndf.edit as edit
 
@@ -14,18 +13,15 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             specialties: List = ui_module.object.by_member("SpecialtiesList").value
             specialties.remove(specialties.find_by_cond(lambda x: x.value == "'_para'"))
             ui_module.edit_members(SpecialtiesList=specialties,
-                                   ButtonTexture="'Texture_Button_Unit_MP_US'",
-                                   UpgradeFromUnit='Descriptor_Unit_MP_US')
+                                   ButtonTexture="'Texture_Button_Unit_MP_US'")
+        mp_patrol.UpgradeFromUnit = 'MP_US'
         mp_patrol.remove_module("TDeploymentShiftModuleDescriptor")
         mp_patrol_vanilla = mp_patrol.get_other_unit('MP_US')
         # same cost as normal MPs, not AB MPs
-        with mp_patrol.module_context('TProductionModuleDescriptor') as production_module:
-            production_module.object\
-                             .by_member('ProductionRessourcesNeeded').value\
-                             .by_key('$/GFX/Resources/Resource_CommandPoints').value\
-                = module.get(mp_patrol_vanilla, 'TProductionModuleDescriptor')\
-                             .by_member('ProductionRessourcesNeeded').value\
-                             .by_key('$/GFX/Resources/Resource_CommandPoints').value
+        mp_patrol.CommandPointCost = module.get(mp_patrol_vanilla, 'TProductionModuleDescriptor')\
+                                           .by_member('ProductionRessourcesNeeded').value\
+                                           .by_key('$/GFX/Resources/Resource_CommandPoints').value
+                
         mp_rcl = mp_patrol.get_other_unit('MP_RCL_US')
         edit.members(module.get(mp_rcl, 'TUnitUIModuleDescriptor'), UpgradeFromUnit='Descriptor_Unit_d9_MOT_MP_PATROL_US')
         return UnitRules(mp_patrol, 2, [0, 6, 4, 0], ["$/GFX/Unit/Descriptor_Unit_M1025_Humvee_MP_US"])

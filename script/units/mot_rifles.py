@@ -1,4 +1,4 @@
-from script.context.mod_creation import ModCreationContext
+from context.mod_creation import ModCreationContext
 from metadata.division_unit_registry import UnitRules
 from units._weapons import M16A2, M249, AT4
 

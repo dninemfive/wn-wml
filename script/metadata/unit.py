@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Self
 
-from script.utils.ndf import ensure
+from utils.ndf import ensure
 from utils.localization import delocalize
 
 

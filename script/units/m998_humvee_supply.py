@@ -1,6 +1,6 @@
 from constants.ndf_paths import UNITE_DESCRIPTOR
-from script.context.mod_creation import ModCreationContext
-from script.context.unit_module import UnitModuleContext
+from context.mod_creation import ModCreationContext
+from context.unit_module import UnitModuleContext
 from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List, Object
 

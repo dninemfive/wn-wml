@@ -1,6 +1,6 @@
-from script.context.mod_creation import ModCreationContext
+from context.mod_creation import ModCreationContext
 from metadata.unit_rules import UnitRules
-from script.context.unit_module import UnitModuleContext
+from context.unit_module import UnitModuleContext
 from units._utils import METRE
 from utils.ndf import ensure
 

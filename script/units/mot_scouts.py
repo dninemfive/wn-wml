@@ -1,7 +1,7 @@
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from units._weapons import M16A2, M249
-from script.context.mod_creation import ModCreationContext
+from context.mod_creation import ModCreationContext
 from metadata.division_unit_registry import UnitRules
 
 

@@ -45,7 +45,7 @@ import units.xm119_imcs
 import units.xm142_himars_clu
 import units.xm142_himars_he
 import units.xm1100_120mm
-from script.context.mod_creation import ModCreationContext
+from context.mod_creation import ModCreationContext
 from managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
 from metadata.division_unit_registry import DivisionUnitRegistry

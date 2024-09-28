@@ -5,7 +5,7 @@ from typing import Callable, Self
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 from constants.ndf_paths import WEAPON_DESCRIPTOR
-from script.context.unit_module import UnitModuleContext
+from context.unit_module import UnitModuleContext
 from metadata.unit import UnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object

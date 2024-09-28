@@ -1,8 +1,8 @@
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 from constants.ndf_paths import AMMUNITION_MISSILES, MISSILE_CARRIAGE, WEAPON_DESCRIPTOR
-from script.context.mod_creation import ModCreationContext
-from script.context.unit_module import UnitModuleContext
+from context.mod_creation import ModCreationContext
+from context.unit_module import UnitModuleContext
 from creators.unit import UNIT_UI
 from creators.weapon import WeaponCreator
 from metadata.division_unit_registry import UnitRules

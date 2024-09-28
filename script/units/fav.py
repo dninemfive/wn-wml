@@ -1,5 +1,5 @@
-from script.context.mod_creation import ModCreationContext
-from script.context.unit_module import UnitModuleContext
+from context.mod_creation import ModCreationContext
+from context.unit_module import UnitModuleContext
 from creators.unit import UNIT_UI
 from metadata.division_unit_registry import UnitRules
 from metadata.unit import UnitMetadata

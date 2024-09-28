@@ -1,24 +1,14 @@
-from script.context.mod_creation import ModCreationContext
-from script.context.unit_module import UnitModuleContext
-from creators.unit import UNIT_UI, UnitCreator
+from context.mod_creation import ModCreationContext
 from metadata.division_unit_registry import UnitRules
-from ndf_parse.model import List
-import utils.ndf.edit as edit
-from units._utils import edit_standard_squad
 from units._weapons import M16A2
-from script.creators.unit.infantry import InfantryUnitCreator
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # RANGER AT SECTION
-    with ctx.create_unit("RANGER AT SECTION", "US", "Ranger_US") as rangers_m67:
-        # change squad count to 10
-        # weapons:
-        # - M16A2 x10
-        # - M67 90mm
-        # - M67 90mm
-        # - M67 90mm
-        squad: InfantryUnitCreator = InfantryUnitCreator.copy_parent(ctx.guids, rangers_m67, 'US', (M16A2, 10))
-        squad.apply(ctx.ndf, rangers_m67.msg)
-        squad.edit_unit(rangers_m67)
-        rangers_m67.edit_ui_module(UpgradeFromUnit='Descriptor_Unit_d9_RANGERS_M203_US')
+    # weapons:
+    # - M16A2 x10
+    # - M67 90mm
+    # - M67 90mm
+    # - M67 90mm
+    with ctx.create_infantry_unit("RANGER AT SECTION", "US", "Ranger_US", [(M16A2, 10)]) as rangers_m67:
+        rangers_m67.UpgradeFromUnit = 'd9_RANGERS_M203_US'
         return UnitRules(rangers_m67, 2, [0, 6, 4, 0])

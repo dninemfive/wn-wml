@@ -1,6 +1,6 @@
-from script.context.mod_creation import ModCreationContext
+from context.mod_creation import ModCreationContext
 from metadata.division_unit_registry import UnitRules
-from script.creators.unit.infantry import InfantryUnitCreator
+from creators.unit.infantry import InfantryUnitCreator
 from units._weapons import M16A2, M249, DRAGON
 
 

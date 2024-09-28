@@ -1,4 +1,4 @@
-from script.context.mod_creation import ModCreationContext
+from context.mod_creation import ModCreationContext
 from utils.ndf import ensure
 
 

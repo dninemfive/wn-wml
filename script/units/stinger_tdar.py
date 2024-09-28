@@ -1,6 +1,5 @@
-from script.context.mod_creation import ModCreationContext
-from script.context.unit_module import UnitModuleContext
-from creators.unit import UNIT_UI
+from context.mod_creation import ModCreationContext
+from context.unit_module import UnitModuleContext
 from metadata.division_unit_registry import UnitRules
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, ListRow
@@ -9,9 +8,6 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     # M198 155mm COPPERHEAD
     # copy M198 155mm
     with ctx.create_unit("STINGER (TDAR)", "US", "MANPAD_Stinger_C_US") as stinger_tdar:
-        # update transportable
-        with stinger_tdar.module_context('TTransportableModuleDescriptor') as transportable_module:
-            transportable_module.edit_members(TransportedSoldier='"d9_STINGER_TDAR_US"')
         # increase air vision
         # from M167A2: 
         #    OpticalStrengthAltitude = 120
@@ -22,8 +18,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             scanner_module.edit_members(OpticalStrengthAltitude=100, 
                                         SpecializedDetectionsGRU={"EVisionUnitType/AlwaysInHighAltitude": str((8481.0 + 10601.0)/2)})
         # upgrade from AB Stinger C
-        with stinger_tdar.module_context('TUnitUIModuleDescriptor') as ui_module:
-            ui_module.edit_members(UpgradeFromUnit="Descriptor_Unit_MANPAD_Stinger_C_Aero_US")
+        stinger_tdar.UpgradeFromUnit = 'MANPAD_Stinger_C_Aero_US'
         # change unit dangerousness
         # change unit attack/defense value
         # change unit cost
