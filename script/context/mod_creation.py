@@ -90,12 +90,13 @@ class ModCreationContext(object):
     
     def create_unit(self: Self, name: str, country: str, copy_of: str, showroom_src: str | None = None, button_texture_src_path: str | None = None) -> UnitCreator:
         # TODO: msg here
-        metadata: NewUnitMetadata = NewUnitMetadata.from_(self.prefix, name, country, self.guids, self.localization)
+        metadata: UnitMetadata = UnitMetadata.from_localized_name(self.prefix, name, country)
         return UnitCreator(self,
+                           name,
                            metadata,
                            copy_of,
                            showroom_src,
-                           self.try_add_button_texture(button_texture_src_path, metadata.unit_metadata),
+                           self.try_add_button_texture(button_texture_src_path, metadata),
                            self.root_msg)
     
     def create_infantry_unit(self: Self,

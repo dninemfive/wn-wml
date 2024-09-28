@@ -4,7 +4,7 @@ from context.unit_module import UnitModuleContext
 from metadata.division_unit_registry import UnitRules
 from ndf_parse.model import List, Object
 
-from creators.unit import UnitCreator
+from creators.unit.basic import UnitCreator
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 

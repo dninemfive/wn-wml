@@ -1,7 +1,7 @@
 
 from context.mod_creation import ModCreationContext
 from context.unit_module import UnitModuleContext
-from creators.unit import UNIT_UI
+from creators.unit.basic import UNIT_UI
 from metadata.division_unit_registry import UnitRules
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, ListRow, Object

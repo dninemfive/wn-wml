@@ -21,7 +21,7 @@ TAGS = "TTagsModuleDescriptor"
 
 class UnitCreator(object):
     def __init__(self: Self,
-                 ctx: ModCreationContext,
+                 ctx,#: ModCreationContext, # are you fucking kidding me
                  localized_name: str,
                  new_unit: str | UnitMetadata,
                  src_unit: str | UnitMetadata,

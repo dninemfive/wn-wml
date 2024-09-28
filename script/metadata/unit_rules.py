@@ -1,6 +1,6 @@
 from typing import Self
 
-from creators.unit import UnitCreator
+from creators.unit.basic import UnitCreator
 from metadata.unit import UnitMetadata
 from model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import MapRow
@@ -14,7 +14,7 @@ class UnitRules(object):
                  transports: list[str] | None = None,
                  force_awt: bool | None = None):
         if isinstance(unit, UnitCreator):
-            unit = unit.new
+            unit = unit.new_unit
         self.unit: UnitMetadata = unit
         self.num_packs = num_packs
         self.rule: TDeckUniteRule = TDeckUniteRule.make(unit, units_per_pack, transports, force_awt)

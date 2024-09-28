@@ -29,7 +29,7 @@ def _mesh_alternative(index: int) -> str:
 
 class InfantryUnitCreator(UnitCreator):
     def __init__(self: Self,
-                 ctx: ModCreationContext,
+                 ctx,#: ModCreationContext,
                  localized_name: str,
                  new_unit: str | UnitMetadata,
                  src_unit: str | UnitMetadata,
@@ -168,6 +168,7 @@ class InfantryUnitCreator(UnitCreator):
                               self._infantry_squad_weapon_assignment,
                               'TInfantrySquadWeaponAssignmentModuleDescriptor')
         ndf.add(ListRow(copy, 'export', self.new_unit.showroom_descriptor_name))
+        self.showroom_src = self.new_unit
         
     @ndf_path(ndf_paths.WEAPON_DESCRIPTOR)
     def edit_weapon_descriptors(self: Self, ndf: List):
@@ -179,5 +180,3 @@ class InfantryUnitCreator(UnitCreator):
         self.replace_module('TInfantrySquadWeaponAssignmentModuleDescriptor', self._infantry_squad_weapon_assignment)
         self.edit_module_members('TTacticalLabelModuleDescriptor', NbSoldiers=self.soldier_count)
         self.edit_module_members('WeaponManager', by_name=True, Default=self.new_unit.weapon_descriptor_path)
-        # this should edit showroomequivalence when the unit is saved
-        self.showroom_src = self.new_unit
