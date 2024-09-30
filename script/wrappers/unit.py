@@ -1,6 +1,7 @@
 from curses import wrapper
 from typing import Any, Callable, Self, Type
 
+from script.wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
@@ -33,8 +34,12 @@ class UnitWrapper(object):
         return self._get_wrapper(TagsModuleWrapper)
     
     @property
-    def unit_type(self: Self) -> TypeUnitModuleWrapper:
+    def type(self: Self) -> TypeUnitModuleWrapper:
         return self._get_wrapper(TypeUnitModuleWrapper)
+    
+    @property
+    def ui(self: Self) -> UnitUiModuleWrapper:
+        return self._get_wrapper(UnitUiModuleWrapper)
 
     # modules
     

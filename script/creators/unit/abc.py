@@ -117,20 +117,6 @@ class UnitCreatorABC(ABC):
         with self.module_context('TUnitUIModuleDescriptor') as ui_module:
             ui_module.edit_members(CountryTexture=f"'CommonTexture_MotherCountryFlag_{ensure.unquoted(val, "'")}'")
 
-    @property
-    def UpgradeFromUnit(self: Self) -> str | None:
-        try:
-            return self.get_module(UNIT_UI).by_member('UpgradeFromUnit').value
-        except:
-            return None 
-
-    @UpgradeFromUnit.setter
-    def UpgradeFromUnit(self: Self, val: str | None) -> None:
-        if val is None:
-            with self.module_context(UNIT_UI) as ctx:
-                ctx.remove_member('UpgradeFromUnit')
-        else: 
-            self.edit_ui_module(UpgradeFromUnit=ensure.prefix(val, 'Descriptor_Unit_'))
 
     # abstract methods
 

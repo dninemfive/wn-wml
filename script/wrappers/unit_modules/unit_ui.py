@@ -1,9 +1,12 @@
 from typing import Self
-from wrappers.unit_modules._abc import UnitModuleWrapper
-from ndf_parse.model import Object
+from utils.ndf import ensure
+from wrappers.str_list import StrListWrapper
+from wrappers.unit_modules._abc import UnitModuleWrapper, unit_module
+from ndf_parse.model import List, Object
 from constants.primitive_types import UnitRole
 import utils.ndf.edit as edit
 
+@unit_module('TUnitUIModuleDescriptor')
 class UnitUiModuleWrapper(UnitModuleWrapper):
     def __init__(self: Self, ctx, obj: Object):
         self.ctx = ctx
@@ -66,11 +69,15 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
         edit.member(self.object, 'NameToken', value)
 
     @property
-    def SpecialtiesList(self: Self) -> list[str]:
-        return self.object.by_member('SpecialtiesList').value
+    def SpecialtiesList(self: Self) -> StrListWrapper:
+        if self._specialties_list is None:
+            self._specialties_list = StrListWrapper(self.object.by_member('SpecialtiesList').value)
+        return self._specialties_list
 
     @SpecialtiesList.setter
-    def SpecialtiesList(self: Self, value: list[str]) -> None:
+    def SpecialtiesList(self: Self, value: list[str] | List) -> None:
+        if self._specialties_list is not None:
+            self._specialties_list = None
         edit.member(self.object, 'SpecialtiesList', value)
 
     @property
@@ -91,8 +98,11 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @property
     def UpgradeFromUnit(self: Self) -> str | None:
-        return self.object.by_member('UpgradeFromUnit').value
+        try:
+            return self.object.by_member('UpgradeFromUnit').value
+        except:
+            return None
 
     @UpgradeFromUnit.setter
     def UpgradeFromUnit(self: Self, value: str | None) -> None:
-        edit.member(self.object, 'UpgradeFromUnit', value)
+        edit.member(self.object, 'UpgradeFromUnit', ensure.prefix(value, 'Descriptor_Unit_'))
