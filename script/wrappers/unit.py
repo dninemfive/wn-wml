@@ -1,6 +1,7 @@
 from typing import Callable, Self
 
-from wrappers.tags_module import TagsModuleWrapper
+from wrappers.unit_modules.tags import TagsModuleWrapper
+from wrappers.unit_modules.type_unit import TypeUnitModuleWrapper
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
@@ -15,11 +16,26 @@ class UnitWrapper(object):
         self.ctx = ctx
         self.object = object
 
+    def _get_wrapper(self: Self, member_name: str, attr_name: str, type: type):
+        attr_name = ensure.prefix('_', attr_name)
+        try:
+            return getattr(self, attr_name)
+        except:
+            module = self.get_module(member_name)
+            setattr(self, attr_name, type.__init__(self.ctx, module))
+            return module
+
     @property
     def tags(self: Self) -> TagsModuleWrapper:
         if self._tags_module is None:
-            self._tags_module = TagsModuleWrapper(self.ctx, self.get_module('TTagsModuleDescriptor').value)
+            self._tags_module = TagsModuleWrapper(self.ctx, self.get_module('TTagsModuleDescriptor'))
         return self._tags_module
+    
+    @property
+    def unit_type(self: Self) -> TypeUnitModuleWrapper:
+        if self._type_unit_module is None:
+            self._type_unit_module = TypeUnitModuleWrapper(self.ctx, self.get_module('TTypeUnitModuleDescriptor'))
+        return self._type_unit_module
 
     # modules
     
