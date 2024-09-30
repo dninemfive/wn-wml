@@ -16,8 +16,9 @@ class UnitWrapper(object):
         self.ctx = ctx
         self.object = object
 
-    def _get_wrapper(self: Self, member_name: str, attr_name: str, type: type):
-        attr_name = ensure.prefix('_', attr_name)
+    def _get_wrapper(self: Self, name: str, type: type):
+        member_name = ensure.prefix_and_suffix(name, 'T', 'ModuleDescriptor')
+        attr_name = ensure.prefix_and_suffix('_', name, '_module')
         try:
             return getattr(self, attr_name)
         except:
@@ -27,15 +28,11 @@ class UnitWrapper(object):
 
     @property
     def tags(self: Self) -> TagsModuleWrapper:
-        if self._tags_module is None:
-            self._tags_module = TagsModuleWrapper(self.ctx, self.get_module('TTagsModuleDescriptor'))
-        return self._tags_module
+        return self._get_wrapper('Tags', TagsModuleWrapper)
     
     @property
     def unit_type(self: Self) -> TypeUnitModuleWrapper:
-        if self._type_unit_module is None:
-            self._type_unit_module = TypeUnitModuleWrapper(self.ctx, self.get_module('TTypeUnitModuleDescriptor'))
-        return self._type_unit_module
+        return self._get_wrapper('TypeUnit', TypeUnitModuleWrapper)
 
     # modules
     
