@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Callable, Self
 
 import constants.ndf_paths as ndf_paths
+from script.wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
@@ -12,6 +13,7 @@ from ndf_parse.model import List, ListRow, Map, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
+from wrappers.unit import UnitWrapper
 
 if TYPE_CHECKING:
     from context.mod_creation import ModCreationContext
@@ -33,14 +35,14 @@ class UnitCreatorABC(ABC):
         self.new_unit: UnitMetadata = UnitMetadata.resolve(new_unit)
         self.src_unit: UnitMetadata = UnitMetadata.resolve(src_unit)
         self.button_texture_key = button_texture_key
-        self.msg = msg
+        self.parent_msg = msg
 
     def __enter__(self: Self) -> Self:
-        self.msg = self.msg.nest(f"Making {self.localized_name}")
+        self.msg = self.parent_msg.nest(f"Making {self.localized_name}")
         self.msg.__enter__()
         with self.msg.nest(f"Copying {self.src_unit.descriptor_name}") as _:
-            self.unit_object = self._make_copy()
-        self.edit_ui_module(NameToken=self.ctx.localization.register(self.localized_name))
+            self.unit = UnitWrapper(self._make_unit())
+        self.unit.modules.ui.localized_name = self.localized_name
         if self.button_texture_key is not None:
             self.edit_ui_module(ButtonTexture=self.button_texture_key)
         with self.module_context("TTagsModuleDescriptor") as tags_module:
@@ -66,33 +68,11 @@ class UnitCreatorABC(ABC):
             self._edit_all_units_tactic(self.ndf, msg2)
             self.apply(msg2)
 
-
     # properties
 
     @property
     def ndf(self: Self) -> dict[str, List]:
         return self.ctx.ndf
-    @property
-    def localized_name(self: Self) -> str:
-        return self.localized_name
-    
-    @localized_name.setter
-    def localized_name(self: Self, val: str) -> None:
-        self.localized_name = val
-        self.edit_ui_module(NameToken=self.ctx.localization.register(val))
-
-    @property
-    def MotherCountry(self: Self) -> str:
-        unit_type_module: Object = self.get_module('TTypeUnitModuleDescriptor')
-        return ensure.unquoted(unit_type_module.by_member('MotherCountry').value, "'")
-
-    @MotherCountry.setter
-    def MotherCountry(self: Self, val: str) -> None:
-        with self.module_context("TTypeUnitModuleDescriptor") as unit_type_module:
-            unit_type_module.edit_members(MotherCountry=ensure.quoted(val, "'"))
-        with self.module_context('TUnitUIModuleDescriptor') as ui_module:
-            ui_module.edit_members(CountryTexture=f"'CommonTexture_MotherCountryFlag_{ensure.unquoted(val, "'")}'")
-
 
     # abstract methods
 
@@ -118,19 +98,30 @@ class UnitCreatorABC(ABC):
 
     # "private" methods
 
-    def _make_copy(self: Self) -> Object:
+    def _make_unit(self: Self, localized_name: str, button_texture: str | None = None) -> Object:
         copy: Object = self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(self.src_unit.descriptor_name).value.copy()
         edit.members(copy,
                      DescriptorId=self.ctx.guids.generate(self.new_unit.descriptor_name),
                      ClassNameForDebug=self.new_unit.class_name_for_debug)
+        with self.msg.nest(f'Copying {self.src_unit.descriptor_name}') as msg:
+            self.unit = UnitWrapper(self.ctx, copy)
+        self.unit.modules.ui.localized_name = localized_name
+        if self.button_texture_key is not None:
+            self.unit.modules.ui.ButtonTexture = button_texture
+        self.unit.modules.tags.replace(self.src_unit.tag, self.new_unit.tag)
         return copy
+        try:
+            with self.module_context("TTransportableModuleDescriptor") as transportable_module:
+                transportable_module.edit_members(TransportedSoldier=f'"{self.new_unit.name}"')
+        except:
+            pass
+        return self
     
     # ndf edits
 
     @ndf_path(ndf_paths.UNITE_DESCRIPTOR)
     def _edit_unite_descriptor(self: Self, ndf: List):
-        ndf.add(ListRow(self.unit_object, namespace=self.new_unit.descriptor_name, visibility="export"))
-
+        ndf.add(ListRow(self.unit, namespace=self.new_unit.descriptor_name, visibility="export"))
 
     @ndf_path(ndf_paths.DIVISION_PACKS)
     def _edit_division_packs(self: Self, ndf: List):
@@ -142,13 +133,6 @@ class UnitCreatorABC(ABC):
     def _edit_all_units_tactic(self: Self, ndf: List):
         all_units_tactic = ndf.by_name("AllUnitsTactic").value
         all_units_tactic.add(self.new_unit.descriptor_path)
-
-    def module_context(self: Self, type_or_name: str, by_name: bool = False) -> UnitModuleContext:
-        return UnitModuleContext(self.unit_object, type_or_name, by_name)
-    
-    def edit_ui_module(self: Self, **changes: CellValue) -> None:
-        with self.module_context(UNIT_UI) as ui_module:
-            ui_module.edit_members(**changes)
 
 
     

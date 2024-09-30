@@ -6,69 +6,60 @@ from utils.ndf import ensure
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 
-def get_modules_descriptors(unit: Object) -> List:
-    return unit.by_member(MODULES_DESCRIPTORS).value
+def get_modules_descriptors(unit_or_modules: Object | List) -> List:
+    if isinstance(unit_or_modules, List):
+        return unit_or_modules
+    return unit_or_modules.by_member(MODULES_DESCRIPTORS).value
 
-def get_row(unit: Object, type_or_name: str, by_name: bool) -> ListRow:
+def get_row(unit_or_modules: Object | List, type_or_name: str, by_name: bool) -> ListRow:
     result: ListRow | None = None
+    modules = get_modules_descriptors(unit_or_modules)
     if by_name:
-        result = get_modules_descriptors(unit).by_name(type_or_name)
+        result = modules.by_name(type_or_name)
     else:
-        for module in get_modules_descriptors(unit).match_pattern(f'{type_or_name}()'):
+        for module in modules.match_pattern(f'{type_or_name}()'):
             result = module
             break
     if result is None:
-        raise KeyError(f"Could not find module {type_or_name}{" by name" if by_name else ""} on unit {unit.by_member("ClassNameForDebug").value}")
+        report = f"Could not find module {type_or_name}{" by name" if by_name else ""} on "
+        report += f"unit {unit_or_modules.by_member('ClassNameForDebug').value}" if isinstance(unit_or_modules, Object) else f'list {str(unit_or_modules[:32])}'
+        raise KeyError(report)
     return result
 
-def get(unit: Object, module_type: str) -> ListRow | None:
+def get(unit_or_modules: Object | List, module_type: str) -> ListRow | None:
     result: ListRow | None = None
-    for module in unit.by_member("ModulesDescriptors").value.match_pattern(f'{module_type}()'):
+    for module in get_modules_descriptors(unit_or_modules).match_pattern(f'{module_type}()'):
         result = module
         break
     return result
 
-def get_index(unit: Object, type_or_name: str, by_name: bool = False) -> int:
-    return get_row(unit, type_or_name, by_name).index
+def get_index(unit_or_modules: Object | List, type_or_name: str, by_name: bool = False) -> int:
+    return get_row(unit_or_modules, type_or_name, by_name).index
 
-def get(unit: Object, type_or_name: str, by_name: bool = False) -> Object:
-    return get_row(unit, type_or_name, by_name).value
+def get(unit_or_object: Object | List, type_or_name: str, by_name: bool = False) -> Object:
+    return get_row(unit_or_object, type_or_name, by_name).value
 
-def replace_module(unit: Object, value: CellValue, type_or_name: str, by_name: bool = False) -> None:
-    get_row(unit, type_or_name, by_name).value = value
+def replace(unit_or_modules: Object | List, value: CellValue, type_or_name: str, by_name: bool = False) -> None:
+    get_row(unit_or_modules, type_or_name, by_name).value = value
 
-def replace_where(unit: Object, value: CellValue, predicate: Callable[[ListRow], bool]) -> None:
-    modules: List = get_modules_descriptors(unit)
-    modules.find_by_cond(predicate).value = value
+def replace_where(unit_or_modules: Object | List, value: CellValue, predicate: Callable[[ListRow], bool]) -> None:
+    get_modules_descriptors(unit_or_modules).find_by_cond(predicate).value = value
 
-def replace_from(dest_unit: Object, src_unit: Object, type_or_name: str, by_name: bool = False):
-    replace_module(dest_unit, get(src_unit, type_or_name, by_name).copy(), type_or_name, by_name)
+def replace_from(dest_unit_or_modules: Object | List, src_unit: Object, type_or_name: str, by_name: bool = False):
+    replace(dest_unit_or_modules, get(src_unit, type_or_name, by_name).copy(), type_or_name, by_name)
 
-def append(dest_unit: Object, module: ListRow | Object):
-    get_modules_descriptors(dest_unit).add(ensure.listrow(module))
+def append(dest_unit_or_modules: Object | List, module: ListRow | Object):
+    get_modules_descriptors(dest_unit_or_modules).add(ensure.listrow(module))
 
-def append_from(dest_unit: Object, src_unit: Object, type_or_name: str, by_name: bool = False):
-    append(dest_unit, get_row(src_unit, type_or_name, by_name))
+def append_from(dest_unit_or_list: Object | List, src_unit: Object, type_or_name: str, by_name: bool = False):
+    append(dest_unit_or_list, get_row(src_unit, type_or_name, by_name))
 
-def remove(target_unit: Object, type_or_name: str, by_name: bool = False):
-    get_modules_descriptors(target_unit).remove(get_index(target_unit, type_or_name, by_name))
+def remove(target_unit_or_list: Object, type_or_name: str, by_name: bool = False):
+    get_modules_descriptors(target_unit_or_list).remove(get_index(target_unit_or_list, type_or_name, by_name))
 
-def remove_where(target_unit: Object, predicate: Callable[[ListRow], bool]):
-    modules: List = get_modules_descriptors(target_unit)
+def remove_where(target_unit_or_list: Object, predicate: Callable[[ListRow], bool]):
+    modules: List = get_modules_descriptors(target_unit_or_list)
     modules.remove(modules.find_by_cond(predicate).index)
-
-def collate_modules(ndf: List, primary_src: str, others: dict[str, list[str]]) -> List:
-    raise NotImplemented
-    result: List = List()
-    reverse_dict = {}
-    for k, l in others:
-        for s in l:
-            if s not in reverse_dict:
-                reverse_dict[s] = k
-    primary_obj = ndf.by_name(primary_src).value
-    key_list: list[str] = []
-    for module in get_modules_descriptors(primary_obj):
-        pass
 
 def _path(parent_name: str,
           module_path: str,

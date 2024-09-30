@@ -157,7 +157,7 @@ class UnitCreator(object):
         return modules.get_row(self.unit_object, type_or_name, by_name)
     
     def replace_module(self: Self, type_or_name: str, module: CellValue, by_name: bool = False):
-        return modules.replace_module(self.unit_object, module, type_or_name, by_name)
+        return modules.replace(self.unit_object, module, type_or_name, by_name)
     
     def replace_module_from(self: Self, other_unit: str | Object, type_or_name: str, by_name: bool = False) -> None:
         if isinstance(other_unit, str):

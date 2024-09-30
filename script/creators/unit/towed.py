@@ -127,13 +127,13 @@ class TowedUnitCreator(UnitCreator):
         edit.members(copy,
                      DescriptorId=self.ctx.guids.generate(self.src_unit.showroom_descriptor_name))
         module.replace_where(copy, self.new_unit.weapon_descriptor_path, lambda x: isinstance(x.value, str) and x.value.startswith('$/GFX/Weapon/'))
-        module.replace_module(copy,
+        module.replace(copy,
                               self._make_infantry_squad_module_descriptor(module.path_by_type(self.src_unit.showroom_descriptor_name,
                                                                                              'TInfantrySquadModuleDescriptor',
                                                                                              'MimeticDescriptor',
                                                                                              'DescriptorId')),
                               'TInfantrySquadModuleDescriptor')
-        module.replace_module(copy,
+        module.replace(copy,
                               self._infantry_squad_weapon_assignment,
                               'TInfantrySquadWeaponAssignmentModuleDescriptor')
         ndf.add(ListRow(copy, 'export', self.new_unit.showroom_descriptor_name))
