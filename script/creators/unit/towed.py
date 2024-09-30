@@ -5,7 +5,7 @@ import constants.ndf_paths as ndf_paths
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from constants import ndf_paths
-from creators.unit.basic import UnitCreator
+from creators.unit.basic import BasicUnitCreator
 from creators.unit.utils.infantry._squad_keys import _SquadKeys
 from creators.unit.utils.infantry.weapon import InfantryWeapon
 from creators.unit.utils.infantry.weapon_set import InfantryWeaponSet
@@ -28,7 +28,7 @@ if TYPE_CHECKING:
 def _mesh_alternative(index: int) -> str:
     return f"'MeshAlternative_{index}'"
 
-class TowedUnitCreator(UnitCreator):
+class TowedUnitCreator(BasicUnitCreator):
     def __init__(self: Self,
                  ctx,#: ModCreationContext,
                  localized_name: str,
@@ -46,7 +46,7 @@ class TowedUnitCreator(UnitCreator):
         self._cached_weapon_assignment: dict[int, list[int]] | None = None
 
     @staticmethod
-    def copy_parent(guids: GuidManager, creator: UnitCreator, country: str, *weapons: tuple[InfantryWeapon, int]):
+    def copy_parent(guids: GuidManager, creator: BasicUnitCreator, country: str, *weapons: tuple[InfantryWeapon, int]):
         return TowedUnitCreator(guids, creator, country, None, *weapons)
 
     def apply(self: Self) -> None:

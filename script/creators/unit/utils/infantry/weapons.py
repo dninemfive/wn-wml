@@ -34,7 +34,7 @@ class InfantryWeapons(object):
         return self.weapon.effect_tag
     
     @property
-    def type(self: Self) -> WeaponType:
+    def type(self: Self) -> str:
         return self.weapon.weapon_type
     
     def to_mounted_weapon_descriptor(self: Self) -> Object:

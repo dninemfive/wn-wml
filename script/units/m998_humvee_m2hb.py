@@ -1,7 +1,7 @@
 import constants.ndf_paths as ndf_paths
 from context.mod_creation import ModCreationContext
 from context.unit_module import UnitModuleContext
-from creators.unit.basic import UnitCreator
+from creators.unit.basic import BasicUnitCreator
 from metadata.unit_rules import UnitRules
 from ndf_parse.model import List, ListRow, MemberRow, Object
 from utils.ndf import ensure
@@ -34,7 +34,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         trans_m998_humvee_m2hb.remove_module('TDeploymentShiftModuleDescriptor')
         return None # transports don't get added separately
     
-def edit_with_m998(cmd_m998_humvee_agl: UnitCreator, m998_humvee: Object) -> None:
+def edit_with_m998(cmd_m998_humvee_agl: BasicUnitCreator, m998_humvee: Object) -> None:
     # copy scanner from M998 Humvee (regular)
     # if i were making the game i'd give all transports with MGs a slightly better scanner than unarmed ones
     # but that's out of scope for a mod just adding one division

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Self
 
-from creators.unit.basic import UnitCreator
+from creators.unit.basic import BasicUnitCreator
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, MemberRow, Object
 import utils.ndf.ensure as ensure
@@ -50,11 +50,11 @@ class TDeckUniteRule(object):
         })
     
     @staticmethod
-    def make(metadata: UnitMetadata | UnitCreator,
+    def make(metadata: UnitMetadata | BasicUnitCreator,
              num_per_xp: tuple[int, int, int, int],
              transports: list[str] | None = None,
              force_awt: bool | None = None) -> Self:
-        if isinstance(metadata, UnitCreator):
+        if isinstance(metadata, BasicUnitCreator):
             metadata = metadata.new
         num_per_pack = max(num_per_xp)
         xp_multipliers = [x / num_per_pack for x in num_per_xp]

@@ -5,7 +5,7 @@ from constants.misc import GUID, LOCALIZATION, UNIT_ID
 from constants.paths import CACHE_FOLDER
 from creators.ammo import AmmoCreator
 from creators.division import DivisionCreator
-from creators.unit.basic import UnitCreator
+from creators.unit.basic import BasicUnitCreator
 from creators.unit.infantry import InfantryUnitCreator
 from creators.unit.utils.infantry.weapon import InfantryWeapon
 from managers.guid import GuidManager
@@ -88,10 +88,10 @@ class ModCreationContext(object):
     def start_unit_ids_at(self: Self, initial_id: int) -> UnitIdManager:
         return UnitIdManager(self.unit_id_cache, initial_id)
     
-    def create_unit(self: Self, name: str, country: str, copy_of: str, showroom_src: str | None = None, button_texture_src_path: str | None = None) -> UnitCreator:
+    def create_unit(self: Self, name: str, country: str, copy_of: str, showroom_src: str | None = None, button_texture_src_path: str | None = None) -> BasicUnitCreator:
         # TODO: msg here
         metadata: UnitMetadata = UnitMetadata.from_localized_name(self.prefix, name, country)
-        return UnitCreator(self,
+        return BasicUnitCreator(self,
                            name,
                            metadata,
                            copy_of,

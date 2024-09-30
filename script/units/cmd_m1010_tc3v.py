@@ -1,7 +1,7 @@
 import constants.ndf_paths as ndf_paths
 from context.mod_creation import ModCreationContext
 from context.unit_module import UnitModuleContext
-from creators.unit.basic import UnitCreator
+from creators.unit.basic import BasicUnitCreator
 from metadata.unit_rules import UnitRules
 from ndf_parse.model import List, ListRow, MemberRow, Object
 from utils.ndf import ensure
@@ -69,13 +69,13 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                                   UpgradeFromUnit='Descriptor_Unit_d9_CMD_M998_HUMVEE_AGL_US')
         return UnitRules(m1010_tc3v, 1, [0, 3, 2, 0])
     
-def edit_with_vlra(m1010_tc3v: UnitCreator, vlra: Object) -> None:
+def edit_with_vlra(m1010_tc3v: BasicUnitCreator, vlra: Object) -> None:
     # model of VLRA
     m1010_tc3v.replace_module_from(vlra, 'ApparenceModel', by_name=True)
     m1010_tc3v.replace_module_from(vlra, 'TCadavreGeneratorModuleDescriptor')
     m1010_tc3v.replace_module_from(vlra, 'TBaseDamageModuleDescriptor')
     
-def edit_with_m1025(m1010_tc3v: UnitCreator, m1025_cmd: Object) -> None:
+def edit_with_m1025(m1010_tc3v: BasicUnitCreator, m1025_cmd: Object) -> None:
     # scanner from M1025 CMD
     m1010_tc3v.replace_module_from(m1025_cmd, 'TScannerConfigurationDescriptor')
     m1010_tc3v.replace_module_from(m1025_cmd, 'TemplateUnitCriticalModule')

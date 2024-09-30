@@ -22,38 +22,23 @@ MODULES_DESCRIPTORS = "ModulesDescriptors"
 UNIT_UI = "TUnitUIModuleDescriptor"
 TAGS = "TTagsModuleDescriptor"
 
-class UnitCreatorABC(ABC):
+class UnitCreator(ABC):
     def __init__(self: Self,
                  ctx,#: ModCreationContext, # are you fucking kidding me
                  localized_name: str,
                  new_unit: str | UnitMetadata,
                  src_unit: str | UnitMetadata,
-                 button_texture_key: str | None = None,
+                 button_texture: str | None = None,
                  msg: Message | None = None):
         self.ctx = ctx
-        self.localized_name = localized_name
         self.new_unit: UnitMetadata = UnitMetadata.resolve(new_unit)
         self.src_unit: UnitMetadata = UnitMetadata.resolve(src_unit)
-        self.button_texture_key = button_texture_key
         self.parent_msg = msg
+        self.unit = self._make_unit(localized_name, button_texture)
 
     def __enter__(self: Self) -> Self:
-        self.msg = self.parent_msg.nest(f"Making {self.localized_name}")
+        self.msg = self.parent_msg.nest(f"Editing {self.new_unit.descriptor_name}")
         self.msg.__enter__()
-        with self.msg.nest(f"Copying {self.src_unit.descriptor_name}") as _:
-            self.unit = UnitWrapper(self._make_unit())
-        self.unit.modules.ui.localized_name = self.localized_name
-        if self.button_texture_key is not None:
-            self.edit_ui_module(ButtonTexture=self.button_texture_key)
-        with self.module_context("TTagsModuleDescriptor") as tags_module:
-            tag_set: List = tags_module.object.by_member("TagSet").value
-            tag_set.remove(tag_set.find_by_cond(lambda x: x.value == self.src_unit.tag))
-            tag_set.add(ListRow(self.new_unit.tag))
-        try:
-            with self.module_context("TTransportableModuleDescriptor") as transportable_module:
-                transportable_module.edit_members(TransportedSoldier=f'"{self.new_unit.name}"')
-        except:
-            pass
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
@@ -79,8 +64,7 @@ class UnitCreatorABC(ABC):
     @abstractmethod
     def apply(self: Self, msg: Message) -> None:
         pass
-    
-    @ndf_path(ndf_paths.SHOWROOM_EQUIVALENCE)
+
     @abstractmethod
     def edit_showroom_equivalence(self: Self, ndf: List):
         pass
@@ -104,18 +88,13 @@ class UnitCreatorABC(ABC):
                      DescriptorId=self.ctx.guids.generate(self.new_unit.descriptor_name),
                      ClassNameForDebug=self.new_unit.class_name_for_debug)
         with self.msg.nest(f'Copying {self.src_unit.descriptor_name}') as msg:
-            self.unit = UnitWrapper(self.ctx, copy)
-        self.unit.modules.ui.localized_name = localized_name
+            unit = UnitWrapper(self.ctx, copy)
+        unit.modules.ui.localized_name = localized_name
         if self.button_texture_key is not None:
-            self.unit.modules.ui.ButtonTexture = button_texture
-        self.unit.modules.tags.replace(self.src_unit.tag, self.new_unit.tag)
-        return copy
-        try:
-            with self.module_context("TTransportableModuleDescriptor") as transportable_module:
-                transportable_module.edit_members(TransportedSoldier=f'"{self.new_unit.name}"')
-        except:
-            pass
-        return self
+            unit.modules.ui.ButtonTexture = button_texture
+        unit.modules.tags.replace(self.src_unit.tag, self.new_unit.tag)
+        unit.modules.edit_members('TTransportableModuleDescriptor', TransportedSoldier=f'"{self.new_unit.name}"')
+        return unit
     
     # ndf edits
 
@@ -133,6 +112,3 @@ class UnitCreatorABC(ABC):
     def _edit_all_units_tactic(self: Self, ndf: List):
         all_units_tactic = ndf.by_name("AllUnitsTactic").value
         all_units_tactic.add(self.new_unit.descriptor_path)
-
-
-    

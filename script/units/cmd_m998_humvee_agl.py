@@ -1,7 +1,7 @@
 import constants.ndf_paths as ndf_paths
 from context.mod_creation import ModCreationContext
 from context.unit_module import UnitModuleContext
-from creators.unit.basic import UnitCreator
+from creators.unit.basic import BasicUnitCreator
 from metadata.unit_rules import UnitRules
 from ndf_parse.model import List, ListRow, MemberRow, Object
 from units._utils import autonomy_to_fuel_move_duration as to_fmd
@@ -37,13 +37,13 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         cmd_m998_humvee_agl.remove_module('TDeploymentShiftModuleDescriptor')
         return UnitRules(cmd_m998_humvee_agl, 1, [0, 3, 2, 0])
     
-def edit_with_vbl_pc(cmd_m998_humvee_agl: UnitCreator, vbl_pc: Object) -> None:
+def edit_with_vbl_pc(cmd_m998_humvee_agl: BasicUnitCreator, vbl_pc: Object) -> None:
     # replace orderavailability with VBL PC (since that's an _armed_ command unit)                                       
     cmd_m998_humvee_agl.replace_module_from(vbl_pc, 'TCubeActionModuleDescriptor')
     cmd_m998_humvee_agl.replace_module_from(vbl_pc, 'TOrderConfigModuleDescriptor')
     cmd_m998_humvee_agl.replace_module_from(vbl_pc, 'TOrderableModuleDescriptor')
     
-def edit_with_m1025(cmd_m998_humvee_agl: UnitCreator, m1025_cmd: Object) -> None:
+def edit_with_m1025(cmd_m998_humvee_agl: BasicUnitCreator, m1025_cmd: Object) -> None:
     # scanner from M1025 CMD
     cmd_m998_humvee_agl.replace_module_from(m1025_cmd, 'TScannerConfigurationDescriptor')
     cmd_m998_humvee_agl.replace_module_from(m1025_cmd, 'TemplateUnitCriticalModule')
