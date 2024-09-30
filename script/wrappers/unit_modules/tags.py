@@ -1,8 +1,10 @@
 from typing import Self
 
 from ndf_parse.model import List, Object
+from ._decorator import module_type
 import utils.ndf.ensure as ensure
 
+@module_type('TTagsModuleDescriptor')
 class TagsModuleWrapper(object):
     def __init__(self: Self, ctx, obj: Object):
         self.ctx = ctx

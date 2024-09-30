@@ -1,4 +1,4 @@
-from typing import Callable, Self
+from typing import Any, Callable, Self
 
 from wrappers.unit_modules.tags import TagsModuleWrapper
 from wrappers.unit_modules.type_unit import TypeUnitModuleWrapper
@@ -15,16 +15,12 @@ class UnitWrapper(object):
     def __init__(self: Self, ctx, object: Object):
         self.ctx = ctx
         self.object = object
+        self._cached_module_wrappers: dict[str, Any] = {}
 
-    def _get_wrapper(self: Self, name: str, type: type):
-        member_name = ensure.prefix_and_suffix(name, 'T', 'ModuleDescriptor')
-        attr_name = ensure.prefix_and_suffix('_', name, '_module')
-        try:
-            return getattr(self, attr_name)
-        except:
-            module = self.get_module(member_name)
-            setattr(self, attr_name, type.__init__(self.ctx, module))
-            return module
+    def _get_wrapper(self: Self, type: type):
+        module_type = type._module_type
+        if module_type not in self._cached_module_wrappers:
+            self._cached_module_wrappers[module_type] = type.__init__(self.ctx, self.get_module(module_type))
 
     @property
     def tags(self: Self) -> TagsModuleWrapper:

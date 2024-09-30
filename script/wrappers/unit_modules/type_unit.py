@@ -1,9 +1,11 @@
 from typing import Self
 
 from ndf_parse.model import List, Object
+from ._decorator import module_type
 import utils.ndf.ensure as ensure
 from constants.primitive_types import CountryCode
 
+@module_type('TTypeUnitModuleDescriptor')
 class TypeUnitModuleWrapper(object):
     def __init__(self: Self, ctx, obj: Object):
         self.ctx = ctx
