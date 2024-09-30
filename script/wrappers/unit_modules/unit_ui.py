@@ -106,3 +106,12 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
     @UpgradeFromUnit.setter
     def UpgradeFromUnit(self: Self, value: str | None) -> None:
         edit.member(self.object, 'UpgradeFromUnit', ensure.prefix(value, 'Descriptor_Unit_'))
+
+    @property
+    def localized_name(self: Self) -> str:
+        """ This is expensive and won't always work. Mostly included so i can make a setter for it. """
+        return self.ctx.localization.reverse_lookup(self.NameToken)
+    
+    @localized_name.setter
+    def localized_name(self: Self, value: str) -> None:
+        return self.ctx.localization.register(value)

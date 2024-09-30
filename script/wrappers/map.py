@@ -21,6 +21,9 @@ class MapWrapper(object):
         else:
             self.add(key, value)
 
+    def __contains__(self: Self, key: str) -> bool:
+        return key in self.keys
+
     @property
     def keys(self: Self) -> Iterable[str]:
         yield from [row.key for row in self._map]

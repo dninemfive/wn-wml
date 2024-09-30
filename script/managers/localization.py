@@ -2,6 +2,7 @@ import random
 import string
 from typing import Self
 
+from script.utils.ndf import ensure
 from utils.types.cache import Cache
 from utils.types.message import Message, try_nest
 
@@ -38,3 +39,10 @@ class LocalizationManager(object):
                 with msg2.nest(f"{self._cache[k]}\t{k}") as _:
                     result += "\n" + f'"{self._cache[k]}";"{k}"'
         return result
+    
+    def reverse_lookup(self: Self, token: str) -> str | None:
+        token = ensure.unquoted(token, "'")
+        for k, v in self._cache.items:
+            if v == token:
+                return k
+        return None

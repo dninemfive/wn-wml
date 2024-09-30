@@ -72,30 +72,6 @@ class UnitCreatorABC(ABC):
     @property
     def ndf(self: Self) -> dict[str, List]:
         return self.ctx.ndf
-    
-    # properties which edit the underlying data
-
-
-    @property
-    def CommandPointCost(self: Self) -> int:
-        return int(self.get_module('TProductionModuleDescriptor')
-                       .by_member('ProductionRessourcesNeeded').value
-                       .by_key('$/GFX/Resources/Resource_CommandPoints').value)
-    
-    @CommandPointCost.setter
-    def CommandPointCost(self: Self, val: int) -> None:
-        with self.module_context('TProductionModuleDescriptor') as context:
-            context.object.by_member('ProductionRessourcesNeeded').value\
-                          .by_key('$/GFX/Resources/Resource_CommandPoints').value = val           
-
-    @property
-    def Factory(self: Self) -> str:
-        return self.get_module('TProductionModuleDescriptor').by_member('Factory').value
-    
-    @Factory.setter
-    def Factory(self: Self, val: str) -> None:
-        edit.members(self.get_module('TProductionModuleDescriptor'), Factory=ensure.prefix(val, 'EDefaultFactories/'))
-
     @property
     def localized_name(self: Self) -> str:
         return self.localized_name
