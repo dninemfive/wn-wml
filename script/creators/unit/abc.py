@@ -116,7 +116,7 @@ class UnitCreatorABC(ABC):
             unit_type_module.edit_members(MotherCountry=ensure.quoted(val, "'"))
         with self.module_context('TUnitUIModuleDescriptor') as ui_module:
             ui_module.edit_members(CountryTexture=f"'CommonTexture_MotherCountryFlag_{ensure.unquoted(val, "'")}'")
-            
+
     @property
     def UpgradeFromUnit(self: Self) -> str | None:
         try:
@@ -189,61 +189,4 @@ class UnitCreatorABC(ABC):
             ui_module.edit_members(**changes)
 
 
-    def add_tag(self: Self, tag: str) -> None:
-        tag = ensure.quoted(tag)
-        with self.module_context("TTagsModuleDescriptor") as tags_module:
-            tag_set: List = tags_module.object.by_member("TagSet").value
-            tag_set.add(tag)
-    
-    def add_tags(self: Self, *tags: str) -> None:
-        for tag in tags:
-            self.add_tag(tag)
-
-    def remove_tag(self: Self, tag: str) -> None:
-        tag = ensure.quoted(tag)
-        with self.module_context("TTagsModuleDescriptor") as tags_module:
-            tag_set: List = tags_module.object.by_member("TagSet").value
-            index = tag_set.find_by_cond(lambda x: x.value == tag)
-            tag_set.remove(index)
-
-    def remove_tags(self: Self, *tags: str) -> None:
-        for tag in tags:
-            self.remove_tag(tag)
-
-    # modules
-
-    def get_module_index(self: Self, type_or_name: str, by_name: bool = False) -> int:
-        return modules.get_index(self.unit_object, type_or_name, by_name)
-    
-    def get_module(self: Self, type_or_name: str, by_name: bool = False) -> Object:
-        return modules.get(self.unit_object, type_or_name, by_name)
-    
-    def get_module_row(self: Self, type_or_name: str, by_name: bool = False) -> ListRow:
-        return modules.get_row(self.unit_object, type_or_name, by_name)
-    
-    def replace_module(self: Self, type_or_name: str, module: CellValue, by_name: bool = False):
-        return modules.replace_module(self.unit_object, module, type_or_name, by_name)
-    
-    def replace_module_from(self: Self, other_unit: str | Object, type_or_name: str, by_name: bool = False) -> None:
-        if isinstance(other_unit, str):
-            other_unit = self.get_other_unit(ensure.unit_descriptor(other_unit))
-        return modules.replace_from(self.unit_object, other_unit, type_or_name, by_name)
-    
-    def append_module(self: Self, module: Object | ListRow):
-        return modules.append(self.unit_object, module)
-    
-    def remove_module(self: Self, type_or_name: str, by_name: bool = False):
-        return modules.remove(self.unit_object, type_or_name, by_name)
-    
-    def remove_module_where(self: Self, predicate: Callable[[ListRow], bool]):
-        return modules.remove_where(self.unit_object, predicate)
-    
-    def append_module_from(self: Self, other_unit: Object, type_or_name: str, by_name: bool = False):
-        return modules.append_from(self.unit_object, other_unit, type_or_name, by_name)
-    
-    def edit_module_members(self: Self, module: str, by_name: bool = False, **changes: CellValue | None):
-        edit.members(self.get_module(module, by_name), **changes)
-    
-    def get_other_unit(self: Self, unit: str) -> Object:
-        return self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(ensure.unit_descriptor(unit)).value
     

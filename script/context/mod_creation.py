@@ -1,7 +1,7 @@
 from typing import Any, Self
 
+import constants.ndf_paths as ndf_paths
 from constants.misc import GUID, LOCALIZATION, UNIT_ID
-from constants.ndf_paths import BUTTON_TEXTURES_UNITES, DIVISION_TEXTURES
 from constants.paths import CACHE_FOLDER
 from creators.ammo import AmmoCreator
 from creators.division import DivisionCreator
@@ -14,11 +14,11 @@ from managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
 from metadata.division_unit_registry import DivisionUnitRegistry
 from metadata.mod import ModMetadata
-from metadata.new_unit import NewUnitMetadata
 from metadata.unit import UnitMetadata
 from ndf_parse import Mod
-from ndf_parse.model import List
+from ndf_parse.model import List, Object
 from ndf_parse.model.abc import CellValue
+from script.wrappers.unit import UnitWrapper
 from utils.ndf import ensure
 from utils.ndf.files import add_image, add_image_literal
 from utils.types.cache import Cache
@@ -120,7 +120,7 @@ class ModCreationContext(object):
     
     def add_division_emblem(self: Self, msg: Message | None, image_path: str, division: DivisionMetadata) -> str:
         with try_nest(msg, f"Adding division emblem from image at {image_path}") as _:
-            return add_image(self.ndf[DIVISION_TEXTURES],
+            return add_image(self.ndf[ndf_paths.DIVISION_TEXTURES],
                              image_path,
                              self.metadata.folder_path,
                              "Assets/2D/Interface/UseOutGame/Division/Emblem",
@@ -134,7 +134,7 @@ class ModCreationContext(object):
     
     def add_button_texture(self: Self, msg: Message | None, image_path: str, unit: UnitMetadata) -> str:
         with try_nest(msg, f'Adding button texture from image at {image_path}') as _:
-            return add_image_literal(self.ndf[BUTTON_TEXTURES_UNITES],
+            return add_image_literal(self.ndf[ndf_paths.BUTTON_TEXTURES_UNITES],
                                      image_path,
                                      self.metadata.folder_path,
                                      'Assets/2D/Interface/Common/UnitsIcons',
@@ -158,3 +158,11 @@ class ModCreationContext(object):
 
     def create_ammo(self: Self, name: str, copy_of: str) -> AmmoCreator:
         return AmmoCreator(self.ndf, ensure.prefix(name, f'Ammo_{self.prefix}_'), copy_of, self.guids)
+    
+    def get_unit_object(self: Self, unit: str) -> Object:
+        return self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(ensure.unit_descriptor(unit)).value
+    
+    def get_unit(self: Self, unit: str | Object) -> UnitWrapper:
+        if not isinstance(unit, Object):
+            unit = self.get_unit_object(unit)
+        return UnitWrapper(self, unit)
