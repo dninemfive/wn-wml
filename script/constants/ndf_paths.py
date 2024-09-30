@@ -16,6 +16,7 @@ AMMUNITION_MISSILES             = rf'GameData\Generated\Gameplay\Gfx\AmmunitionM
 BUTTON_TEXTURES_UNITES          = rf'GameData\Generated\UserInterface\Textures\ButtonTexturesUnites.ndf'
 SHOWROOM_UNITS                  = rf'GameData\Generated\Gameplay\Gfx\ShowRoomUnits.ndf'
 GENERATED_DEPICTION_INFANTRY    = rf'GameData/Generated/Gameplay/Gfx/Infanterie/GeneratedDepictionInfantry.ndf'
+GENERATED_DEPICTION_HUMANS      = rf'GameData/Generated/Gameplay/Gfx/Depictions/GeneratedDepictionHumans.ndf'
 
 ALL = set([ALL_UNITS_TACTIC,
            DECK_SERIALIZER,
@@ -32,4 +33,5 @@ ALL = set([ALL_UNITS_TACTIC,
            MISSILE_CARRIAGE,
            AMMUNITION_MISSILES,
            SHOWROOM_UNITS,
-           GENERATED_DEPICTION_INFANTRY])
+           GENERATED_DEPICTION_INFANTRY,
+           GENERATED_DEPICTION_HUMANS])
