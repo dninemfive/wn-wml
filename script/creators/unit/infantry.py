@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Self
 
 import constants.ndf_paths as ndf_paths
+from script.creators.unit.abc import UnitCreator
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from constants import ndf_paths
@@ -27,26 +28,35 @@ if TYPE_CHECKING:
 def _mesh_alternative(index: int) -> str:
     return f"'MeshAlternative_{index}'"
 
-class InfantryUnitCreator(BasicUnitCreator):
+class InfantryUnitCreator(UnitCreator):
     def __init__(self: Self,
                  ctx,#: ModCreationContext,
                  localized_name: str,
                  new_unit: str | UnitMetadata,
                  src_unit: str | UnitMetadata,
-                 showroom_src: str | UnitMetadata | None = None,
-                 button_texture_key: str | None = None,
+                 button_texture: str | None = None,
                  msg: Message | None = None,
                  country: str | None = None,
                  *weapons: tuple[InfantryWeapon, int]):
-        super().__init__(ctx, localized_name, new_unit, src_unit, showroom_src, button_texture_key, msg)
+        super().__init__(ctx, localized_name, new_unit, src_unit, button_texture, msg)
         self.country = country
         self.weapon_set = InfantryWeaponSet(*weapons)
         self._keys = _SquadKeys(self.new_unit)
         self._cached_weapon_assignment: dict[int, list[int]] | None = None
 
-    @staticmethod
-    def copy_parent(guids: GuidManager, creator: BasicUnitCreator, country: str, *weapons: tuple[InfantryWeapon, int]):
-        return InfantryUnitCreator(guids, creator, country, None, *weapons)
+    # overrides
+    
+    @ndf_path(ndf_paths.SHOWROOM_EQUIVALENCE)
+    def edit_showroom_equivalence(self: Self, ndf: List):
+        unit_to_showroom_equivalent: Map = ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
+        unit_to_showroom_equivalent.add(k=self.new_unit.descriptor_path, v=self.new_unit.showroom_descriptor_path)
+
+    def apply(self: Self) -> None:
+        self.edit_generated_depiction_infantry(self.ndf, self.msg)
+        self._edit_showroom_units(self.ndf, self.msg)
+        self.edit_showroom_equivalence(self.ndf, self.msg)
+        self.edit_weapon_descriptors(self.ndf, self.msg)
+        self.edit_unit()
 
     # properties
 
@@ -130,18 +140,6 @@ class InfantryUnitCreator(BasicUnitCreator):
         ndf.by_name('InfantryMimeticGhost').value.add(MapRow(key=self._keys._unit, value=self._keys._tactic_depiction_ghost))
         ndf.by_name('TransportedInfantryAlternativesCount').value.add(ensure.maprow(self._keys._unit,
                                                                                     selector_tactic.tuple))
-        
-    def apply(self: Self) -> None:
-        # hacky fix but fuck it
-        # should maybe make an abc idk
-        showroom_src = self.showroom_src
-        self.showroom_src = self.new_unit
-        super().apply()
-        self.showroom_src = showroom_src
-        self.edit_generated_depiction_infantry(self.ndf, self.msg)
-        self.edit_showroom_units(self.ndf, self.msg)
-        self.edit_weapon_descriptors(self.ndf, self.msg)
-        self.edit_unit()
 
     def _make_infantry_squad_module_descriptor(self: Self, guid_key: str) -> Object:
         return ensure._object('TInfantrySquadModuleDescriptor',
@@ -158,8 +156,8 @@ class InfantryUnitCreator(BasicUnitCreator):
                      Default=self._make_infantry_squad_module_descriptor(f'{self.new_unit.descriptor_name}/ModulesDescriptors["GroupeCombat"]/Default/MimeticDescriptor'))
         
     @ndf_path(ndf_paths.SHOWROOM_UNITS)
-    def edit_showroom_units(self: Self, ndf: List):
-        copy: Object = ndf.by_name(self.showroom_src.showroom_descriptor_name).value.copy()
+    def _edit_showroom_units(self: Self, ndf: List):
+        copy: Object = ndf.by_name(self.src_unit.showroom_descriptor_name).value.copy()
         edit.members(copy,
                      DescriptorId=self.ctx.guids.generate(self.src_unit.showroom_descriptor_name))
         module.replace_where(copy, self.new_unit.weapon_descriptor_path, lambda x: isinstance(x.value, str) and x.value.startswith('$/GFX/Weapon/'))
@@ -179,8 +177,8 @@ class InfantryUnitCreator(BasicUnitCreator):
         ndf.add(ListRow(self.weapon_set.to_weapon_descriptor(), 'export', self.new_unit.weapon_descriptor_name))
     
     def edit_unit(self: Self) -> None:
-        self.edit_module_members('TBaseDamageModuleDescriptor', MaxPhysicalDamages=self.soldier_count)        
-        self._edit_groupe_combat(self.get_module('GroupeCombat', by_name=True))
-        self.replace_module('TInfantrySquadWeaponAssignmentModuleDescriptor', self._infantry_squad_weapon_assignment)
-        self.edit_module_members('TTacticalLabelModuleDescriptor', NbSoldiers=self.soldier_count)
-        self.edit_module_members('WeaponManager', by_name=True, Default=self.new_unit.weapon_descriptor_path)
+        self.modules.edit_members('TBaseDamageModuleDescriptor', MaxPhysicalDamages=self.soldier_count)        
+        self._edit_groupe_combat(self.unit.modules.get('GroupeCombat', by_name=True))
+        self.modules.replace('TInfantrySquadWeaponAssignmentModuleDescriptor', self._infantry_squad_weapon_assignment)
+        self.modules.edit_members('TTacticalLabelModuleDescriptor', NbSoldiers=self.soldier_count)
+        self.modules.edit_members('WeaponManager', by_name=True, Default=self.new_unit.weapon_descriptor_path)

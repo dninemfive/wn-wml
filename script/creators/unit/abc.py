@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Callable, Self
 
 import constants.ndf_paths as ndf_paths
-from script.wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
+from wrappers.unit_modules._modules import UnitModulesWrapper
+from wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
@@ -56,6 +57,10 @@ class UnitCreator(ABC):
     # properties
 
     @property
+    def modules(self: Self) -> UnitModulesWrapper:
+        return self.unit.modules
+
+    @property
     def ndf(self: Self) -> dict[str, List]:
         return self.ctx.ndf
 
@@ -82,7 +87,7 @@ class UnitCreator(ABC):
 
     # "private" methods
 
-    def _make_unit(self: Self, localized_name: str, button_texture: str | None = None) -> Object:
+    def _make_unit(self: Self, localized_name: str, button_texture: str | None = None) -> UnitWrapper:
         copy: Object = self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(self.src_unit.descriptor_name).value.copy()
         edit.members(copy,
                      DescriptorId=self.ctx.guids.generate(self.new_unit.descriptor_name),
