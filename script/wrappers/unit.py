@@ -1,13 +1,16 @@
-from typing import Any, Callable, Self
+from curses import wrapper
+from typing import Any, Callable, Self, Type
 
-from wrappers.unit_modules.tags import TagsModuleWrapper
-from wrappers.unit_modules.type_unit import TypeUnitModuleWrapper
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
 # from context.mod_creation import ModCreationContext
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
+from wrappers.unit_modules.tags import TagsModuleWrapper
+from wrappers.unit_modules.type_unit import TypeUnitModuleWrapper
+
+from wrappers.unit_modules._abc import UnitModuleWrapper, UnitModuleKey
 
 
 class UnitWrapper(object):
@@ -15,20 +18,23 @@ class UnitWrapper(object):
     def __init__(self: Self, ctx, object: Object):
         self.ctx = ctx
         self.object = object
-        self._cached_module_wrappers: dict[str, Any] = {}
+        self._cached_module_wrappers: dict[UnitModuleKey, UnitModuleWrapper] = {}
 
-    def _get_wrapper(self: Self, type: type):
-        module_type = type._module_type
-        if module_type not in self._cached_module_wrappers:
-            self._cached_module_wrappers[module_type] = type.__init__(self.ctx, self.get_module(module_type))
+    def _get_wrapper(self: Self, wrapper_type: Type[UnitModuleWrapper]):
+        if wrapper_type._module_key not in self._cached_module_wrappers:
+            type, name = wrapper_type._module_key
+            type_or_name = type if name is None else name
+            by_name: bool = name is not None
+            self._cached_module_wrappers[wrapper_type._module_key] = wrapper_type(self.ctx, self.get_module(type_or_name, by_name))
+        return self._cached_module_wrappers[wrapper_type._module_key]
 
     @property
     def tags(self: Self) -> TagsModuleWrapper:
-        return self._get_wrapper('Tags', TagsModuleWrapper)
+        return self._get_wrapper(TagsModuleWrapper)
     
     @property
     def unit_type(self: Self) -> TypeUnitModuleWrapper:
-        return self._get_wrapper('TypeUnit', TypeUnitModuleWrapper)
+        return self._get_wrapper(TypeUnitModuleWrapper)
 
     # modules
     
