@@ -16,4 +16,8 @@ def unit_module(type: str, name: str | None = None):
     return decorate
 
 def edit_members(self: Self, **changes: CellValue) -> None:
-    edit.members(self._obj, **changes)
+    for k, v in changes:
+        if hasattr(self, k):
+            setattr(self, k, v)
+        else:
+            edit.member(self.object, k, v)

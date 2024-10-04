@@ -23,7 +23,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                            MenuIconTexture="'Texture_RTS_H_RECO_veh'",
                            TypeStrategicCount='ETypeStrategicDetailedCount/Reco_Veh')
         # stealth, vision: M151A2 M2HB
-        m151a2_scout = fav.get_other_unit('M151A2_scout_US')
+        m151a2_scout = ctx.get_unit('M151A2_scout_US')
         fav.replace_module_from(m151a2_scout, 'TVisibilityModuleDescriptor')
         fav.replace_module_from(m151a2_scout, 'TScannerConfigurationDescriptor')
         fav.replace_module_from(m151a2_scout, 'TReverseScannerWithIdentificationDescriptor')

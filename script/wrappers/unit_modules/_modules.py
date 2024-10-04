@@ -1,5 +1,6 @@
 from typing import Callable, Iterable, Self, SupportsIndex, Type
 
+from script.wrappers.unit_modules.production import ProductionModuleWrapper
 import utils.ndf.unit_module as modules
 import utils.ndf.edit as edit
 from ndf_parse.model import List, ListRow, Object
@@ -21,7 +22,7 @@ class UnitModulesWrapper(object):
     def __iter__(self: Self) -> Iterable[CellValue]:
         yield from [x.value for x in self._ndf]
 
-    def _get_wrapper(self: Self, wrapper_type: Type[UnitModuleWrapper]):
+    def _get_wrapper(self: Self, wrapper_type: Type[UnitModuleWrapper]) -> UnitModuleWrapper:
         if wrapper_type._module_key not in self._cached_module_wrappers:
             type, name = wrapper_type._module_key
             type_or_name = type if name is None else name
@@ -40,6 +41,10 @@ class UnitModulesWrapper(object):
     @property
     def ui(self: Self) -> UnitUiModuleWrapper:
         return self._get_wrapper(UnitUiModuleWrapper)
+    
+    @property
+    def production(self: Self) -> ProductionModuleWrapper:
+        return self._get_wrapper(ProductionModuleWrapper)
 
     # modules
     
