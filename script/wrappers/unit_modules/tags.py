@@ -1,19 +1,16 @@
 from typing import Self
 
-from ndf_parse.model import List, Object
-
-from wrappers.str_list import StrListWrapper
-
-from ._abc import UnitModuleWrapper, unit_module
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
+from ndf_parse.model import List, Object
+from wrappers.str_list import StrListWrapper
+
+from ._abc import UnitModuleWrapper
+from ._decorator import unit_module
+
 
 @unit_module('TTagsModuleDescriptor')
 class TagsModuleWrapper(UnitModuleWrapper):
-    def __init__(self: Self, ctx, obj: Object):
-        self.ctx = ctx
-        self.object = obj
-
     def __iter__(self: Self):
         yield from self.TagSet
 

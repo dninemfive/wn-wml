@@ -1,9 +1,12 @@
 from typing import Self
 
-from ndf_parse.model import List, Object
-from ._abc import UnitModuleWrapper, unit_module
 import utils.ndf.ensure as ensure
-from constants.primitive_types import CountryCode
+from constants.primitive_types import MotherCountry
+from ndf_parse.model import List, Object
+
+from ._abc import UnitModuleWrapper
+from ._decorator import unit_module
+
 
 @unit_module('TTypeUnitModuleDescriptor')
 class TypeUnitModuleWrapper(UnitModuleWrapper):
@@ -24,12 +27,12 @@ class TypeUnitModuleWrapper(UnitModuleWrapper):
         self.object.by_member('Nationalite').value = ensure.prefix(value, 'ENationalite/')
 
     @property
-    def MotherCountry(self: Self) -> CountryCode:
+    def MotherCountry(self: Self) -> str:
         return self.object.by_member('MotherCountry').value
     
     @MotherCountry.setter
     def MotherCountry(self: Self, val: str) -> None:
-        self.object.by_member('MotherCountry').value = ensure.literal(val, CountryCode)
+        self.object.by_member('MotherCountry').value = MotherCountry.ensure_valid(val)
 
     @property
     def AcknowUnitType(self: Self) -> str:

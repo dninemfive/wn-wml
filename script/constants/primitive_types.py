@@ -1,4 +1,4 @@
-from typing import Literal, Self
+from typing import Literal, LiteralString, Self, Type
 
 import utils.ndf.ensure as ensure
 

@@ -11,3 +11,14 @@ UnitModuleKey = tuple[str, str | None]
 
 class UnitModuleWrapper(ABC):
     _module_key: UnitModuleKey = None
+
+    def __init__(self: Self, ctx, obj: Object):
+        self.ctx = ctx
+        self.object = obj
+
+    def edit_members(self: Self, **changes: CellValue) -> None:
+        for k, v in changes:
+            if hasattr(self, k):
+                setattr(self, k, v)
+            else:
+                edit.member(self.object, k, v)
