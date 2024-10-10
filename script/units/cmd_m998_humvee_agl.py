@@ -11,10 +11,9 @@ from utils.ndf import ensure
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # ✪ M998 HUMVEE AGL
     with ctx.create_unit("#CMD M998 HUMVEE AGL", "US", "M1025_Humvee_AGL_US") as cmd_m998_humvee_agl:
-        # acknow type = cmd
-        with cmd_m998_humvee_agl.module_context("TTypeUnitModuleDescriptor") as unit_type_module:
-            unit_type_module.edit_members(AcknowUnitType="~/TAcknowUnitType_Command",
-                                          TypeUnitFormation="'Supply'")
+        cmd_m998_humvee_agl.modules.edit_members('TTypeUnitModuleDescriptor',
+                                                 AcknowUnitType="~/TAcknowUnitType_Command",
+                                                 TypeUnitFormation="'Supply'")
         cmd_m998_humvee_agl.unit.modules.edit_members('TTypeUnitModuleDescriptor',
                                                       AcknowUnitType="~/TAcknowUnitType_Command",
                                                       TypeUnitFormation="'Supply'")

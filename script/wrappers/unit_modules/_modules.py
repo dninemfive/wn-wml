@@ -1,4 +1,4 @@
-from typing import Callable, Iterable, Self, SupportsIndex, Type
+from typing import Callable, Iterable, Self, SupportsIndex, Type, TypeVar
 
 from script.wrappers.unit_modules.production import ProductionModuleWrapper
 import utils.ndf.unit_module as modules
@@ -14,15 +14,18 @@ from script.wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
 from ._abc import UnitModuleKey, UnitModuleWrapper
 
 
+T = TypeVar('T', covariant=True, bound=UnitModuleWrapper)
+
 class UnitModulesWrapper(object):
     def __init__(self: Self, ndf: List):
         self._ndf = ndf
         self._cached_module_wrappers: dict[UnitModuleKey, UnitModuleWrapper] = {}
+        self.fuck_you_mypy: TagsModuleWrapper = TagsModuleWrapper()
 
     def __iter__(self: Self) -> Iterable[CellValue]:
         yield from [x.value for x in self._ndf]
 
-    def _get_wrapper(self: Self, wrapper_type: Type[UnitModuleWrapper]) -> UnitModuleWrapper:
+    def _get_wrapper(self: Self, wrapper_type: Type[T]) -> T:
         if wrapper_type._module_key not in self._cached_module_wrappers:
             type, name = wrapper_type._module_key
             type_or_name = type if name is None else name
