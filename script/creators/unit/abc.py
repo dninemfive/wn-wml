@@ -2,8 +2,6 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Callable, Self
 
 import constants.ndf_paths as ndf_paths
-from wrappers.unit_modules._modules import UnitModulesWrapper
-from wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
@@ -15,6 +13,9 @@ from ndf_parse.model.abc import CellValue
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
 from wrappers.unit import UnitWrapper
+from wrappers.unit_modules._modules import UnitModulesWrapper
+from wrappers.unit_modules.tags import TagsModuleWrapper
+from wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
 
 if TYPE_CHECKING:
     from context.mod_creation import ModCreationContext
@@ -63,6 +64,10 @@ class UnitCreator(ABC):
     @property
     def ndf(self: Self) -> dict[str, List]:
         return self.ctx.ndf
+    
+    @property
+    def tags(self: Self) -> TagsModuleWrapper:
+        return self.modules.tags
 
     # abstract methods
 

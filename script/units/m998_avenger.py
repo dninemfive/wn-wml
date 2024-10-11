@@ -12,10 +12,11 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     # copy AB M998 AVENGER
     with ctx.create_unit("M998 Avenger", "US", "M998_Avenger_US") as m998_avenger:
         # remove forward deploy
-        m998_avenger.remove_module("TDeploymentShiftModuleDescriptor")
+        m998_avenger.modules.remove("TDeploymentShiftModuleDescriptor")
         # remove para trait
-        m998_avenger.edit_ui_module(SpecialtiesList=ensure._list("'AA'"))
+        m998_avenger.modules.ui.SpecialtiesList.remove('_para')
         # make AB M998 AVENGER upgrade from M998 AVENGER
+        ctx.get_unit('M998_Avenger_US').modules.ui.UpgradeFromUnit = m998_avenger
         # TODO: maybe allow deployment via CH-47D?
         return UnitRules(m998_avenger, 2, [0, 4, 3, 0])
         

@@ -24,13 +24,11 @@ class TagsModuleWrapper(UnitModuleWrapper):
     def TagSet(self: Self, value: list[str] | List) -> None:
         if self._tag_set is not None:
             self._tag_set = None
-        if isinstance(value, list[str]):
-            value = [ensure.quoted(x, "'") for x in value]
-        edit.member(self.object, 'TagSet', value)
+        edit.member(self.object, 'TagSet', ensure.all(value, lambda x: ensure.quoted(x, '"')))
 
     def add(self: Self, *values: str) -> None:
         for value in values:
-            self.TagSet.add(ensure.quoted(value))
+            self.TagSet.add(ensure.quoted(value, '"'))
 
     def remove(self: Self, *values: str) -> None:
         for value in values:

@@ -8,7 +8,7 @@ import utils.ndf.ensure as ensure
 #      BaseTraitDef: abstract edit()
 class TraitDef(object):
     def __init__(self: Self, icon_tag: str, *capacites: str):
-        self.icon_tag = ensure.quoted(ensure.prefix(icon_tag, '_'), "'")
+        self.icon_tag = ensure.quoted(ensure.prefix(icon_tag, '_'))
         self.capacites = [ensure.prefix(x, '$/GFX/EffectCapacity/Capacite_') for x in capacites]
 
     def edit_capacite_module(self: Self, capacite_module: Object) -> None:

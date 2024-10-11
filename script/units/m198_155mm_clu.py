@@ -25,12 +25,9 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             edit.members(weapons.get_turret_weapon(0),
                          Ammunition=f'$/GFX/Weapon/{ammo_name}')
         # reduce HP by 1
-        with m198_clu.module_context('TBaseDamageModuleDescriptor') as damage_module:
-            # TODO: dynamically adjust this from M198 
-            damage_module.edit_members(MaxPhysicalDamages=7)
+        m198_clu.modules.base_damage.MaxPhysicalDamages -= 1
         # upgrade from vanilla unit
-        with m198_clu.module_context('TUnitUIModuleDescriptor') as ui_module:
-            ui_module.edit_members(UpgradeFromUnit="Descriptor_Unit_Howz_M198_155mm_US")
+        m198_clu.modules.ui.UpgradeFromUnit='Howz_M198_155mm_US'
         # change unit dangerousness (see M240 CLU vs regular)
         # change unit attack/defense value (see M240 CLU vs regular)
         # change unit cost (see M240 CLU vs regular) -> about 50% higher

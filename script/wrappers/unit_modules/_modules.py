@@ -1,5 +1,6 @@
 from typing import Callable, Iterable, Self, SupportsIndex, Type, TypeVar
 
+from script.wrappers.unit_modules.damage import BaseDamageModuleWrapper
 from script.wrappers.unit_modules.production import ProductionModuleWrapper
 import utils.ndf.unit_module as modules
 import utils.ndf.edit as edit
@@ -20,7 +21,6 @@ class UnitModulesWrapper(object):
     def __init__(self: Self, ndf: List):
         self._ndf = ndf
         self._cached_module_wrappers: dict[UnitModuleKey, UnitModuleWrapper] = {}
-        self.fuck_you_mypy: TagsModuleWrapper = TagsModuleWrapper()
 
     def __iter__(self: Self) -> Iterable[CellValue]:
         yield from [x.value for x in self._ndf]
@@ -48,6 +48,10 @@ class UnitModulesWrapper(object):
     @property
     def production(self: Self) -> ProductionModuleWrapper:
         return self._get_wrapper(ProductionModuleWrapper)
+    
+    @property
+    def base_damage(self: Self) -> BaseDamageModuleWrapper:
+        return self._get_wrapper(BaseDamageModuleWrapper)
 
     # modules
     

@@ -16,10 +16,10 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     with ctx.create_unit("#RECO3 JOH-58D KIOWA", "US", "OH58D_Combat_Scout_US") as joh58d_kiowa:
         with joh58d_kiowa.edit_weapons() as weapons:
             edit_weapons(weapons)
-        joh58d_kiowa.get_module('MissileCarriage', by_name=True).by_member('Connoisseur').value = generate_missile_carriages(ctx.ndf[MISSILE_CARRIAGE])
+        joh58d_kiowa.modules.get('MissileCarriage', by_name=True).by_member('Connoisseur').value = generate_missile_carriages(ctx.ndf[MISSILE_CARRIAGE])
         # insert after Kiowa and before Kiowa WR
-        joh58d_kiowa.edit_ui_module(UpgradeFromUnit='Descriptor_Unit_OH58D_Combat_Scout_US')
-        with UnitModuleContext(joh58d_kiowa.get_other_unit('OH58D_Kiowa_Warrior_US'), 'TUnitUIModuleDescriptor') as kiowa_wr_ui_module:
+        joh58d_kiowa.modules.ui.edit_members(UpgradeFromUnit='Descriptor_Unit_OH58D_Combat_Scout_US')
+        with UnitModuleContext(ctx.get_unit('OH58D_Kiowa_Warrior_US'), 'TUnitUIModuleDescriptor') as kiowa_wr_ui_module:
             kiowa_wr_ui_module.edit_members(UpgradeFromUnit=joh58d_kiowa.new_unit.descriptor_name)
         return UnitRules(joh58d_kiowa, 1, [0, 4, 3, 0])
     

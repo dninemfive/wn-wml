@@ -24,14 +24,16 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                          Ammunition=f'$/GFX/Weapon/{ammo_name}',
                          EffectTag="'FireEffect_RocketArt_M26_227mm_Cluster'")
         # change nationalite
-        with xm142_himars_clu.module_context("TTypeUnitModuleDescriptor") as unit_type_module:
-            unit_type_module.edit_members(Nationalite="ENationalite/Allied",
-                                          MotherCountry="'US'")
+        xm142_himars_clu.modules.type.edit_members(
+            Nationalite='Allied',
+            MotherCountry='US'
+        )
         # update speed, fuel capacity
         # change upgradefromunit, countrytexture
-        with xm142_himars_clu.module_context('TUnitUIModuleDescriptor') as ui_module:
-            # ui_module.remove_member('UpgradeFromUnit')
-            ui_module.edit_members(CountryTexture="'CommonTexture_MotherCountryFlag_US'", UpgradeFromUnit='Descriptor_Unit_d9_XM142_HIMARS_HE_US')
+        xm142_himars_clu.modules.ui.edit_members(
+            UpgradeFromUnit=None,
+            CountryTexture='US'
+        )
         # change unit dangerousness
         # change unit attack/defense value
         # change unit cost

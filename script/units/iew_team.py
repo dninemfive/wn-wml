@@ -7,12 +7,13 @@ from units._weapons import M16A2, M21, VIPER
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # FWD SUPPORT [EW]
     with ctx.create_infantry_unit("#RECO2 IEW TEAM", "US", "Scout_US", [(M16A2, 4), (M21, 1), (VIPER, 1)]) as iew_team:
-        iew_team.UpgradeFromUnit='d9_RECO2_FOLT_US'
-        iew_team.CommandPointCost=80
+        iew_team.modules.ui.edit_members(
+            UpgradeFromUnit='d9_RECO2_FOLT_US',
+            SpecialtiesList=['reco', '_gsr', '_jammer']
+        )
+        iew_team.modules.production.command_point_cost=80
         # add traits: EW, GSR, direction finding?
-        with iew_team.module_context('TUnitUIModuleDescriptor') as ui_module:
-            ui_module.edit_members(SpecialtiesList=["'reco'", "'_gsr'", "'_jammer'"])
-        iew_team.append_module(ensure._object('TModuleSelector',
+        iew_team.modules.append(ensure._object('TModuleSelector',
             Default=ensure._object('TCapaciteModuleDescriptor',
                                    DefaultSkillList=[
                                        '$/GFX/EffectCapacity/Capacite_GSR',

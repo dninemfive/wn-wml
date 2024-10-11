@@ -10,5 +10,5 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     # - SAW x2
     # - M203 x2 w/ 36rd each
     with ctx.create_infantry_unit("RANGERS (M203)", "US", "Ranger_US", [(COLT_COMMANDO, 4), (M16A2, 3), (M249, 2), (M203, 2)]) as rangers_m203:
-        rangers_m203.UpgradeFromUnit = 'Ranger_Dragon_US'
+        rangers_m203.modules.ui.UpgradeFromUnit = 'Ranger_Dragon_US'
         return UnitRules(rangers_m203, 2, [0, 6, 4, 0])

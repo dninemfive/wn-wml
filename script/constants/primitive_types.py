@@ -19,6 +19,8 @@ class NdfEnum(object):
     
     def with_path(self: Self, path: str, *values: str) -> Self:
         return NdfEnum(path, '', [ensure.prefix(x, path) for x in values])
+    
+    # TODO: way to alias enums (e.g. Factory: REC = 'Recons')
 
 WeaponType: NdfEnum = NdfEnum.literals('bazooka', 'grenade', 'mmg', 'smg')
 CountrySoundCode: NdfEnum = NdfEnum.literals('GER', 'SOVIET', 'UK', 'US')

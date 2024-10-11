@@ -48,4 +48,4 @@ class TypeUnitModuleWrapper(UnitModuleWrapper):
     
     @TypeUnitFormation.setter
     def TypeUnitFormation(self: Self, val: str) -> None:
-        self.object.by_member('TypeUnitFormation').value = ensure.quoted(val, "'")
+        self.object.by_member('TypeUnitFormation').value = ensure.quoted(val)

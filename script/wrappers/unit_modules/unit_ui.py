@@ -1,4 +1,7 @@
 from typing import Self
+from script.creators.unit.abc import UnitCreator
+from script.metadata.unit import UnitMetadata
+from script.wrappers.unit import UnitWrapper
 from utils.ndf import ensure
 from wrappers.str_list import StrListWrapper
 from wrappers.unit_modules._abc import UnitModuleWrapper, unit_module
@@ -18,7 +21,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @ButtonTexture.setter
     def ButtonTexture(self: Self, value: str) -> None:
-        edit.member(self.object, 'ButtonTexture', value)
+        edit.member(self.object, 'ButtonTexture', ensure.quoted(ensure.prefix('Texture_Button_Unit_')))
 
     @property
     def CountryTexture(self: Self) -> str:
@@ -26,7 +29,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @CountryTexture.setter
     def CountryTexture(self: Self, value: str) -> None:
-        edit.member(self.object, 'CountryTexture', value)
+        edit.member(self.object, 'CountryTexture', ensure.quoted(ensure.prefix(value, 'CommonTexture_MotherCountryFlag_')))
 
     @property
     def DisplayRoadSpeedInKmph(self: Self) -> float:
@@ -50,7 +53,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @InfoPanelConfigurationToken.setter
     def InfoPanelConfigurationToken(self: Self, value: str) -> None:
-        edit.member(self.object, 'InfoPanelConfigurationToken', value)
+        edit.member(self.object, 'InfoPanelConfigurationToken', ensure.quoted(value))
 
     @property
     def MenuIconTexture(self: Self) -> str:
@@ -58,7 +61,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @MenuIconTexture.setter
     def MenuIconTexture(self: Self, value: str) -> None:
-        edit.member(self.object, 'MenuIconTexture', value)
+        edit.member(self.object, 'MenuIconTexture', ensure.quoted(ensure.prefix(value, 'Texture_RTS_H_')))
 
     @property
     def NameToken(self: Self) -> str:
@@ -71,14 +74,15 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
     @property
     def SpecialtiesList(self: Self) -> StrListWrapper:
         if self._specialties_list is None:
-            self._specialties_list = StrListWrapper(self.object.by_member('SpecialtiesList').value)
+            self._specialties_list = StrListWrapper(self.object.by_member('SpecialtiesList').value,
+                                                    (ensure.quoted, ensure.unquoted))
         return self._specialties_list
 
     @SpecialtiesList.setter
     def SpecialtiesList(self: Self, value: list[str] | List) -> None:
         if self._specialties_list is not None:
             self._specialties_list = None
-        edit.member(self.object, 'SpecialtiesList', value)
+        edit.member(self.object, 'SpecialtiesList', ensure.all(value, ensure.quoted))
 
     @property
     def TypeStrategicCount(self: Self) -> str:
@@ -86,7 +90,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @TypeStrategicCount.setter
     def TypeStrategicCount(self: Self, value: str) -> None:
-        edit.member(self.object, 'TypeStrategicCount', value)
+        edit.member(self.object, 'TypeStrategicCount', ensure.prefix(value, 'ETypeStrategicDetailedCount/'))
 
     @property
     def UnitRole(self: Self) -> str:
@@ -104,7 +108,11 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
             return None
 
     @UpgradeFromUnit.setter
-    def UpgradeFromUnit(self: Self, value: str | None) -> None:
+    def UpgradeFromUnit(self: Self, value: str | UnitMetadata | UnitCreator | None) -> None:
+        if isinstance(value, UnitCreator):
+            value = value.new_unit.descriptor_name
+        elif isinstance(value, UnitMetadata):
+            value = value.descriptor_name
         edit.member(self.object, 'UpgradeFromUnit', ensure.prefix(value, 'Descriptor_Unit_'))
 
     @property

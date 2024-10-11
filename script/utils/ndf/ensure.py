@@ -1,6 +1,6 @@
 from enum import member
 from numbers import Number
-from typing import Iterable, Literal, Type
+from typing import Callable, Iterable, Literal, Type
 from typing import get_args as literal_values
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object, Template
 from ndf_parse.model.abc import CellValue
@@ -116,10 +116,10 @@ def unit_descriptor(name_or_descriptor: str) -> str:
 def unit_path(descriptor_or_path: str) -> str:
     return prefix(descriptor_or_path, "$/GFX/Unit/")
 
-def quoted(s: str, quote: str = '"') -> str:
+def quoted(s: str, quote: str = "'") -> str:
     return prefix_and_suffix(s, quote, quote)
 
-def unquoted(s: str, quote: str = '"') -> str:
+def unquoted(s: str, quote: str = "'") -> str:
     if s.startswith(quote):
         s = s[len(quote):]
     if s.endswith(quote):
@@ -165,3 +165,8 @@ def country_sound_code(country: str) -> str:
     if country in COUNTRY_CODE_TO_COUNTRY_SOUND_CODE:
         return COUNTRY_CODE_TO_COUNTRY_SOUND_CODE[country]
     return country
+
+def all(list: list[str] | List, f: Callable[[str], str]) -> list[str]:
+    if isinstance(list, List):
+        list = [x.value for x in list]
+    return [f(x) for x in list]

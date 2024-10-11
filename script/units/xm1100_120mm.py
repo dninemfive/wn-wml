@@ -13,11 +13,14 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     # XM119 IMCS
     # copy VLRA mortar
     with ctx.create_unit("XM1100 120mm", "US", "VLRA_Mortier81_FR") as xm1100_120mm:
-        xm1100_120mm.edit_ui_module(SpecialtiesList=["'mortar'"],
-                                  UpgradeFromUnit='Descriptor_Unit_Mortier_107mm_US')
+        xm1100_120mm.modules.ui.edit_members(
+            SpecialtiesList=['mortar'],
+            UpgradeFromUnit='Mortier_107mm_US',
+            CountryTexture='US'
+        )
         # change main weapon to a somewhat improved version of the M30 (or maybe the Tampella?)
         # change country (+flag) to US
-        xm1100_120mm.MotherCountry = 'US'
-        xm1100_120mm.remove_module('TDeploymentShiftModuleDescriptor')
+        xm1100_120mm.modules.type.MotherCountry = 'US'
+        xm1100_120mm.modules.remove('TDeploymentShiftModuleDescriptor')
         return UnitRules(xm1100_120mm, 2, [0, 4, 3, 0])
         
