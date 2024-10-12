@@ -4,8 +4,6 @@ from typing import Callable, Iterable, Literal, Type
 from typing import get_args as literal_values
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object, Template
 from ndf_parse.model.abc import CellValue
-from constants.primitive_types import MotherCountry
-from constants.ndf import COUNTRY_CODE_TO_COUNTRY_SOUND_CODE
 
 def listrow(val: CellValue | ListRow) -> ListRow:
     if isinstance(val, ListRow):
@@ -159,12 +157,6 @@ def literal(s: str, *literal_types):
     valid_values = _including_unquoted(*literal_types)
     assert s in valid_values, f"{s} is not one of {valid_values}"
     return quoted(s, "'")
-
-def country_sound_code(country: str) -> str:
-    country = MotherCountry.ensure_valid(country)
-    if country in COUNTRY_CODE_TO_COUNTRY_SOUND_CODE:
-        return COUNTRY_CODE_TO_COUNTRY_SOUND_CODE[country]
-    return country
 
 def all(list: list[str] | List, f: Callable[[str], str]) -> list[str]:
     if isinstance(list, List):

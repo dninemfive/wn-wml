@@ -32,7 +32,7 @@ class TypeUnitModuleWrapper(UnitModuleWrapper):
     
     @MotherCountry.setter
     def MotherCountry(self: Self, val: str) -> None:
-        self.object.by_member('MotherCountry').value = MotherCountry.ensure_valid(val)
+        self.object.by_member('MotherCountry').value = ensure.quoted(val)
 
     @property
     def AcknowUnitType(self: Self) -> str:

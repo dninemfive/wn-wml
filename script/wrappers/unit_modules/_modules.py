@@ -1,16 +1,16 @@
 from typing import Callable, Iterable, Self, SupportsIndex, Type, TypeVar
 
-from script.wrappers.unit_modules.damage import BaseDamageModuleWrapper
-from script.wrappers.unit_modules.production import ProductionModuleWrapper
+from wrappers.unit_modules.damage import BaseDamageModuleWrapper
+from wrappers.unit_modules.production import ProductionModuleWrapper
 import utils.ndf.unit_module as modules
 import utils.ndf.edit as edit
 from ndf_parse.model import List, ListRow, Object
 from ndf_parse.model.abc import CellValue
 from utils.ndf import ensure
 
-from script.wrappers.unit_modules.tags import TagsModuleWrapper
-from script.wrappers.unit_modules.type_unit import TypeUnitModuleWrapper
-from script.wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
+from wrappers.unit_modules.tags import TagsModuleWrapper
+from wrappers.unit_modules.type_unit import TypeUnitModuleWrapper
+from wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
 
 from ._abc import UnitModuleKey, UnitModuleWrapper
 

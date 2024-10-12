@@ -1,6 +1,8 @@
 from typing import Literal, LiteralString, Self, Type
 
-import utils.ndf.ensure as ensure
+import utils.ndf.ensure
+from constants.ndf import COUNTRY_CODE_TO_COUNTRY_SOUND_CODE
+
 
 # TODO: generate these from source
 class NdfEnum(object):
@@ -10,19 +12,19 @@ class NdfEnum(object):
         self.values = values
 
     def ensure_valid(self: Self, s: str) -> str:
-        s = ensure.prefix_and_suffix(s, self.prefix, self.suffix)
+        s = utils.ndf.ensure.prefix_and_suffix(s, self.prefix, self.suffix)
         assert s in self.values, f'{s} is not one of the valid values: {str(self.values)}'
         return s
 
     def literals(self: Self, *values: str) -> Self:
-        return NdfEnum("'", "'", [ensure.quoted(x, "'") for x in values])
+        return NdfEnum("'", "'", *[utils.ndf.ensure.quoted(x, "'") for x in values])
     
     def with_path(self: Self, path: str, *values: str) -> Self:
-        return NdfEnum(path, '', [ensure.prefix(x, path) for x in values])
+        return NdfEnum(path, '', *[utils.ndf.ensure.prefix(x, path) for x in values])
     
     # TODO: way to alias enums (e.g. Factory: REC = 'Recons')
 
-WeaponType: NdfEnum = NdfEnum.literals('bazooka', 'grenade', 'mmg', 'smg')
+WeaponType: NdfEnum = NdfEnum.literals('bazooka', 'grenade', 'mmg', 'smg', 'bazooka')
 CountrySoundCode: NdfEnum = NdfEnum.literals('GER', 'SOVIET', 'UK', 'US')
 
 AcknowUnitType                          = NdfEnum.with_path('~/TAcknowUnitType_',
@@ -137,3 +139,9 @@ UnitRole                                =  NdfEnum.literals('tank_A',
                                                             'tank_B',
                                                             'tank_C',
                                                             'tank_D')
+
+def country_sound_code(country: str) -> str:
+    country = MotherCountry.ensure_valid(country)
+    if country in COUNTRY_CODE_TO_COUNTRY_SOUND_CODE:
+        return COUNTRY_CODE_TO_COUNTRY_SOUND_CODE[country]
+    return country

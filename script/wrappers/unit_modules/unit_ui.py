@@ -1,13 +1,17 @@
+from __future__ import annotations
+
 from typing import Self
-from script.creators.unit.abc import UnitCreator
-from script.metadata.unit import UnitMetadata
-from script.wrappers.unit import UnitWrapper
+
+# from creators.unit.abc import UnitCreator
+import creators.unit.abc
+import utils.ndf.edit as edit
+from metadata.unit import UnitMetadata
+from ndf_parse.model import List, Object
 from utils.ndf import ensure
 from wrappers.str_list import StrListWrapper
-from wrappers.unit_modules._abc import UnitModuleWrapper, unit_module
-from ndf_parse.model import List, Object
-from constants.primitive_types import UnitRole
-import utils.ndf.edit as edit
+from wrappers.unit_modules._abc import UnitModuleWrapper
+from wrappers.unit_modules._decorator import unit_module
+
 
 @unit_module('TUnitUIModuleDescriptor')
 class UnitUiModuleWrapper(UnitModuleWrapper):
@@ -21,7 +25,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @ButtonTexture.setter
     def ButtonTexture(self: Self, value: str) -> None:
-        edit.member(self.object, 'ButtonTexture', ensure.quoted(ensure.prefix('Texture_Button_Unit_')))
+        edit.member(self.object, 'ButtonTexture', ensure.quoted(ensure.prefix(value, 'Texture_Button_Unit_')))
 
     @property
     def CountryTexture(self: Self) -> str:
@@ -108,8 +112,8 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
             return None
 
     @UpgradeFromUnit.setter
-    def UpgradeFromUnit(self: Self, value: str | UnitMetadata | UnitCreator | None) -> None:
-        if isinstance(value, UnitCreator):
+    def UpgradeFromUnit(self: Self, value: str | UnitMetadata | creators.unit.abc.UnitCreator | None) -> None:
+        if isinstance(value, creators.unit.abc.UnitCreator):
             value = value.new_unit.descriptor_name
         elif isinstance(value, UnitMetadata):
             value = value.descriptor_name

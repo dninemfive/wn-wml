@@ -2,7 +2,7 @@ import random
 import string
 from typing import Self
 
-from script.utils.ndf import ensure
+from utils.ndf import ensure
 from utils.types.cache import Cache
 from utils.types.message import Message, try_nest
 

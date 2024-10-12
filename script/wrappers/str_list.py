@@ -2,7 +2,7 @@ from typing import Callable, Iterable, Self, SupportsIndex
 
 from ndf_parse.model import List, ListRow
 
-from script.utils.ndf import ensure
+from utils.ndf import ensure
 
 StrNormalizer = Callable[[str], str]
 

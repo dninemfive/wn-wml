@@ -18,7 +18,7 @@ from metadata.unit import UnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, Object
 from ndf_parse.model.abc import CellValue
-from script.wrappers.unit import UnitWrapper
+from wrappers.unit import UnitWrapper
 from utils.ndf import ensure
 from utils.ndf.files import add_image, add_image_literal
 from utils.types.cache import Cache

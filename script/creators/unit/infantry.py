@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING, Self
 
 import constants.ndf_paths as ndf_paths
-from script.creators.unit.abc import UnitCreator
 import utils.ndf.edit as edit
 import utils.ndf.unit_module as module
 from constants import ndf_paths
+from constants.primitive_types import country_sound_code
 from creators.unit.basic import BasicUnitCreator
 from creators.unit.utils.infantry._squad_keys import _SquadKeys
 from creators.unit.utils.infantry.weapon import InfantryWeapon
@@ -12,14 +12,15 @@ from creators.unit.utils.infantry.weapon_set import InfantryWeaponSet
 from managers.guid import GuidManager
 from metadata.new_unit import NewUnitMetadata
 from metadata.unit import UnitMetadata
+from model.template_infantry_selector_tactic import \
+    TemplateInfantrySelectorTactic
 from ndf_parse.model import (List, ListRow, Map, MapRow, MemberRow, Object,
                              Template)
 from utils.ndf import ensure
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
 
-from model.template_infantry_selector_tactic import \
-    TemplateInfantrySelectorTactic
+from creators.unit.abc import UnitCreator
 
 if TYPE_CHECKING:
     from context.mod_creation import ModCreationContext
@@ -75,7 +76,7 @@ class InfantryUnitCreator(UnitCreator):
 
     def _gfx(self: Self) -> Object:
         return ensure._object('TemplateInfantryDepictionSquad',
-                              SoundOperator=f'$/GFX/Sound/DepictionOperator_MovementSound_SM_Infanterie_{ensure.unquoted(ensure.country_sound_code(self.country), "'")}')    
+                              SoundOperator=f'$/GFX/Sound/DepictionOperator_MovementSound_SM_Infanterie_{ensure.unquoted(country_sound_code(self.country), "'")}')    
     
     def _all_weapon_alternatives(self: Self) -> List:
         result = List()

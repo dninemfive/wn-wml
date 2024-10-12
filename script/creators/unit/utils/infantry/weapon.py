@@ -17,4 +17,4 @@ class InfantryWeapon(object):
     # https://stackoverflow.com/a/51248309
     def __post_init__(self: Self) -> None:
         if self.weapon_type is not None:
-            self.weapon_type = ensure.literal(self.weapon_type, WeaponType)
+            self.weapon_type = WeaponType.ensure_valid(self.weapon_type)
