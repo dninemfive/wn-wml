@@ -12,7 +12,7 @@ from ndf_parse.model.abc import CellValue
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
 
-
+# todo: corresponding wrapper
 class DivisionCreator(object):
     def __init__(self: Self,
                  guid: str,

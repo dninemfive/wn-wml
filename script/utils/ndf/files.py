@@ -17,7 +17,7 @@ def add_image(ndf_file: List,
                                  image_name,
                                  image_type)
     ndf_file.add(ListRow(texture_obj, namespace=image_name))
-    add_texture_to_texture_bank(ndf_file.by_name(texture_bank_name).value, f'"{image_name}"', f'~/{image_name}')
+    add_texture_to_texture_bank(ndf_file.by_name(texture_bank_name).value, f'{image_name}', f'~/{image_name}')
     return f'"{image_name}"'
 
 def add_image_literal(ndf_file: List,
@@ -32,8 +32,8 @@ def add_image_literal(ndf_file: List,
                                  folder_relative_to_gamedata,
                                  image_name,
                                  image_type)
-    add_texture_to_texture_bank(ndf_file.by_name(texture_bank_name).value, f'"{image_name}"', texture_obj)
-    return f'"{image_name}"'
+    add_texture_to_texture_bank(ndf_file.by_name(texture_bank_name).value, f'{image_name}', texture_obj)
+    return f'{image_name}'
 
 def copy_image_to_mod_folder(src_file_path: str, mod_output_path: str, folder_relative_to_gamedata: str, image_name: str) -> str:
     destination_folder = os.path.join(mod_output_path, "GameData", folder_relative_to_gamedata)
