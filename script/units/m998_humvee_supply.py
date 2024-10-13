@@ -13,7 +13,7 @@ MODULES_DESCRIPTORS = "ModulesDescriptors"
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # M998 HUMVEE SUPPLY
     #   copy of: M35 Supply
-    with ctx.create_unit("M998 HUMVEE SUPPLY", "US", "M35_supply_US") as m998_humvee_supply:
+    with ctx.create_unit("M998 HUMVEE SUPPLY", "US", "M35_supply_US", "M1038_Humvee_US") as m998_humvee_supply:
         # TODO: will need to replace showroom unit somehow. Maybe set the M1038 Humvee as the base and then add supply module to it?
         # need to have a way to just do (unit).MakeSupply, (unit).MakeNotTransport, &c
         edit_with_m1038(m998_humvee_supply, ctx.get_unit("M1038_Humvee_US"))

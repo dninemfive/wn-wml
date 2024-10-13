@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from typing import Any, Callable, Iterable, Self, Type
 
-from script.wrappers.list import ListWrapper
+from wrappers._abc import NdfObjectWrapper
+from wrappers.list import ListWrapper
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
@@ -12,7 +13,7 @@ from ndf_parse.model import Object
 import wrappers._modules
 
 
-class WeaponManagerWrapper(object):
+class WeaponManagerWrapper(NdfObjectWrapper):
     # ctx: ModCreationContext
     def __init__(self: Self, ctx, object: Object):
         self.ctx = ctx
@@ -31,10 +32,10 @@ class WeaponManagerWrapper(object):
 
     @property
     def AlwaysOrientArmorTowardsThreat(self: Self) -> bool:
-        return bool(self.object.by_member('AlwaysOrientArmorTowardsThreat').value)
+        return bool(self._get('AlwaysOrientArmorTowardsThreat'))
     
     @AlwaysOrientArmorTowardsThreat.setter
     def AlwaysOrientArmorTowardsThreat(self: Self, value: bool) -> None:
-        edit.members(self.object, AlwaysOrientArmorTowardsThreat=value)
+        self._set('AlwaysOrientArmorTowardsThreat', value)
 
     

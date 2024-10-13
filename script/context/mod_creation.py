@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Self
+from typing import Any, Literal, Self
 
 import constants.ndf_paths as ndf_paths
 from constants.misc import GUID, LOCALIZATION, UNIT_ID
@@ -90,13 +90,14 @@ class ModCreationContext(object):
     def start_unit_ids_at(self: Self, initial_id: int) -> UnitIdManager:
         return UnitIdManager(self.unit_id_cache, initial_id)
     
-    def create_unit(self: Self, name: str, country: str, copy_of: str, button_texture_src_path: str | None = None) -> BasicUnitCreator:
+    def create_unit(self: Self, name: str, country: str, copy_of: str, showroom_src: str | None = None, button_texture_src_path: str | None = None) -> BasicUnitCreator:
         # TODO: msg here
         metadata: UnitMetadata = UnitMetadata.from_localized_name(self.prefix, name, country)
         return BasicUnitCreator(self,
                            name,
                            metadata,
                            copy_of,
+                           showroom_src,
                            self.try_add_button_texture(button_texture_src_path, metadata),
                            self.root_msg)
     
@@ -159,10 +160,10 @@ class ModCreationContext(object):
     def create_ammo(self: Self, name: str, copy_of: str) -> AmmoCreator:
         return AmmoCreator(self.ndf, ensure.prefix(name, f'Ammo_{self.prefix}_'), copy_of, self.guids)
     
-    def get_unit_object(self: Self, unit: str) -> Object:
-        return self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(ensure.unit_descriptor(unit)).value
+    def get_unit_object(self: Self, unit: str, showroom: bool = False) -> Object:
+        return self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(ensure.unit_descriptor(unit, showroom)).value
     
-    def get_unit(self: Self, unit: str | Object) -> UnitWrapper:
+    def get_unit(self: Self, unit: str | Object, showroom: bool = False) -> UnitWrapper:
         if not isinstance(unit, Object):
-            unit = self.get_unit_object(unit)
+            unit = self.get_unit_object(unit, showroom)
         return UnitWrapper(self, unit)

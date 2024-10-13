@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Callable, Self
 
 import constants.ndf_paths as ndf_paths
+from script.wrappers.unit import UnitWrapper
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
@@ -24,7 +25,7 @@ TAGS = "TTagsModuleDescriptor"
 
 class BasicUnitCreator(UnitCreator):
     def __init__(self: Self,
-                 ctx,#: ModCreationContext, # are you fucking kidding me
+                 ctx: ModCreationContext, # are you fucking kidding me
                  localized_name: str,
                  new_unit: str | UnitMetadata,
                  src_unit: str | UnitMetadata,
@@ -43,10 +44,11 @@ class BasicUnitCreator(UnitCreator):
 
     @ndf_path(ndf_paths.SHOWROOM_UNITS)
     def edit_showroom_equivalence(self: Self, ndf: List):
-        copy: Object = ndf.by_name(self.showroom_unit.showroom_descriptor_name).value.copy()
-        copy.by_member('DescriptorId').value = self.ctx.guids.generate(self.new_unit.showroom_descriptor_name)
-        # replace type module descriptor
-        # replace weapon descriptor
+        copy: UnitWrapper = self.ctx.get_unit(self.showroom_unit.name, showroom=True)
+        copy.DescriptorId = self.ctx.guids.generate(self.new_unit.showroom_descriptor_name)
+        copy.modules.type.copy(self.unit.modules.type.object)
+        copy.modules.remove_where(lambda x: isinstance(x.value, str) and x.value.startswith('$/GFX/Weapon/WeaponDescriptor_'))
+        copy.modules.append(self.new_unit.weapon_descriptor_path)
         # for vehicles with replaced turret models, will have to make a new TacticVehicleDepictionTemplate and add it to GeneratedDepictionVehicles.ndf
         # and then set the depiction path here
         ndf.add(ListRow(copy, visibility='export', namespace=self.new_unit.showroom_descriptor_name))

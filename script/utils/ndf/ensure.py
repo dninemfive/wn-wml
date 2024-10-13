@@ -108,8 +108,9 @@ def ndf_type(value: dict | list | int | str, _type: str | None = None) -> Map | 
 def prefix(s: str, prefix: str) -> str:
     return s if s.startswith(prefix) else f'{prefix}{s}'
 
-def unit_descriptor(name_or_descriptor: str) -> str:
-    return prefix(name_or_descriptor, 'Descriptor_Unit_')
+def unit_descriptor(name_or_descriptor: str, showroom: bool = False) -> str:
+    _prefix = 'Descriptor_Unit_' if not showroom else 'Descriptor_ShowRoomUnit_'
+    return prefix(name_or_descriptor, _prefix)
 
 def unit_path(descriptor_or_path: str) -> str:
     return prefix(descriptor_or_path, "$/GFX/Unit/")
@@ -117,11 +118,14 @@ def unit_path(descriptor_or_path: str) -> str:
 def quoted(s: str, quote: str = "'") -> str:
     return prefix_and_suffix(s, quote, quote)
 
-def unquoted(s: str, quote: str = "'") -> str:
-    if s.startswith(quote):
-        s = s[len(quote):]
-    if s.endswith(quote):
-        s = s[:-len(quote)]
+def unquoted(s: str, *quotes: str) -> str:
+    if not any(quotes):
+        quotes = ["'", '"']
+    for quote in quotes:
+        if s.startswith(quote):
+            s = s[len(quote):]
+        if s.endswith(quote):
+            s = s[:-len(quote)]
     return s
 
 def suffix(s: str, suffix: str) -> str:
@@ -162,3 +166,6 @@ def all(list: list[str] | List, f: Callable[[str], str]) -> list[str]:
     if isinstance(list, List):
         list = [x.value for x in list]
     return [f(x) for x in list]
+
+def guid(id: str) -> str:
+    return prefix_and_suffix(id, 'GUID:{', '}')

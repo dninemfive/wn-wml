@@ -27,3 +27,8 @@ class UnitModuleWrapper(ABC):
                 setattr(self, k, v)
             else:
                 edit.member(self.object, k, v)
+
+    def copy(self: Self, to_copy: Object | Self) -> None:
+        if not isinstance(to_copy, Object):
+            to_copy = to_copy.object
+        self.object = to_copy.copy()
