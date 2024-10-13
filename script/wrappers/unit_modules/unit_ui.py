@@ -10,6 +10,7 @@ from ndf_parse.model import List, Object
 from utils.ndf import ensure
 from wrappers.str_list import StrListWrapper
 from wrappers.unit_modules._abc import UnitModuleKey, UnitModuleWrapper
+from constants.primitive_types import UnitRole
 
 class UnitUiModuleWrapper(UnitModuleWrapper):
     _module_key = UnitModuleKey('TUnitUIModuleDescriptor')
@@ -20,7 +21,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @ButtonTexture.setter
     def ButtonTexture(self: Self, value: str) -> None:
-        edit.member(self.object, 'ButtonTexture', ensure.quoted(ensure.prefix(value, 'Texture_Button_Unit_')))
+        edit.member(self.object, 'ButtonTexture', ensure.quoted(ensure.prefix(ensure.unquoted(value), 'Texture_Button_Unit_')))
 
     @property
     def CountryTexture(self: Self) -> str:
@@ -28,7 +29,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @CountryTexture.setter
     def CountryTexture(self: Self, value: str) -> None:
-        edit.member(self.object, 'CountryTexture', ensure.quoted(ensure.prefix(value, 'CommonTexture_MotherCountryFlag_')))
+        edit.member(self.object, 'CountryTexture', ensure.quoted(ensure.prefix(ensure.unquoted(value), 'CommonTexture_MotherCountryFlag_')))
 
     @property
     def DisplayRoadSpeedInKmph(self: Self) -> float:
@@ -60,7 +61,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @MenuIconTexture.setter
     def MenuIconTexture(self: Self, value: str) -> None:
-        edit.member(self.object, 'MenuIconTexture', ensure.quoted(ensure.prefix(value, 'Texture_RTS_H_')))
+        edit.member(self.object, 'MenuIconTexture', ensure.quoted(ensure.prefix(ensure.unquoted(value), 'Texture_RTS_H_')))
 
     @property
     def NameToken(self: Self) -> str:
@@ -97,7 +98,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @UnitRole.setter
     def UnitRole(self: Self, value: str) -> None:
-        edit.member(self.object, 'UnitRole', value)
+        edit.member(self.object, 'UnitRole', UnitRole.ensure_valid(value))
 
     @property
     def UpgradeFromUnit(self: Self) -> str | None:

@@ -34,7 +34,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             UnitRole="'tank_B'",
             SpecialtiesList=["'hq_veh'", "'_leader'"],
             InfoPanelConfigurationToken="'Default'",
-            MenuIconTexture="'Texture_RTS_H_CMD_veh'",
+            MenuIconTexture="Texture_RTS_H_CMD_veh",
             TypeStrategicCount='ETypeStrategicDetailedCount/CMD_Veh')
         cmd_m998_humvee_agl.modules.remove('TDeploymentShiftModuleDescriptor')
         return UnitRules(cmd_m998_humvee_agl, 1, [0, 3, 2, 0])

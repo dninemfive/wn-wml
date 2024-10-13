@@ -15,19 +15,25 @@ class NdfEnum(object):
         s = utils.ndf.ensure.prefix_and_suffix(s, self.prefix, self.suffix)
         assert s in self.values, f'{s} is not one of the valid values: {str(self.values)}'
         return s
-
-    def literals(self: Self, *values: str) -> Self:
-        return NdfEnum("'", "'", *[utils.ndf.ensure.quoted(x, "'") for x in values])
-    
-    def with_path(self: Self, path: str, *values: str) -> Self:
-        return NdfEnum(path, '', *[utils.ndf.ensure.prefix(x, path) for x in values])
     
     # TODO: way to alias enums (e.g. Factory: REC = 'Recons')
 
-WeaponType: NdfEnum = NdfEnum.literals('bazooka', 'grenade', 'mmg', 'smg', 'bazooka')
-CountrySoundCode: NdfEnum = NdfEnum.literals('GER', 'SOVIET', 'UK', 'US')
+# not staticmethod because that doesn't preserve type hints???
+def NdfEnum_literals(*values: str) -> NdfEnum:
+    return NdfEnum("'", "'", *[utils.ndf.ensure.quoted(x, "'") for x in values])
 
-AcknowUnitType                          = NdfEnum.with_path('~/TAcknowUnitType_',
+def NdfEnum_with_path(path: str, *values: str) -> NdfEnum:
+    return NdfEnum(path, '', *[utils.ndf.ensure.prefix(x, path) for x in values])
+
+WeaponType: NdfEnum                     = NdfEnum_literals('bazooka',
+                                                           'grenade',
+                                                           'mmg',
+                                                           'smg')
+CountrySoundCode: NdfEnum               = NdfEnum_literals('GER',
+                                                           'SOVIET',
+                                                           'UK',
+                                                           'US')
+AcknowUnitType                          = NdfEnum_with_path('~/TAcknowUnitType_',
                                                             'AirSup',
                                                             'Air_CAS',
                                                             'ArtShell',
@@ -60,7 +66,7 @@ AcknowUnitType                          = NdfEnum.with_path('~/TAcknowUnitType_'
 
 # TODO: automate defining custom countries
 #   needs sound code, flag, name, idk what else
-MotherCountry                           =  NdfEnum.literals('BEL',
+MotherCountry                           =  NdfEnum_literals('BEL',
                                                             'DDR',
                                                             'FR',
                                                             'POL',
@@ -70,17 +76,17 @@ MotherCountry                           =  NdfEnum.literals('BEL',
                                                             'UK',
                                                             'US')
 
-Nationalite                             = NdfEnum.with_path('ENationalite/',
+Nationalite                             = NdfEnum_with_path('ENationalite/',
                                                             'Allied',
                                                             'Axis')
 
-TypeUnitFormation                       =  NdfEnum.literals('Artillerie',
+TypeUnitFormation                       =  NdfEnum_literals('Artillerie',
                                                             'Char',
                                                             'None',
                                                             'Reconnaissance',
                                                             'Supply')
 
-Factory                                 = NdfEnum.with_path('EDefaultFactories/',
+Factory                                 = NdfEnum_with_path('EDefaultFactories/',
                                                             'Art',
                                                             'DCA',
                                                             'Helis',
@@ -90,7 +96,7 @@ Factory                                 = NdfEnum.with_path('EDefaultFactories/'
                                                             'Recons',
                                                             'Tanks')
 
-InfoPanelConfigurationToken             =  NdfEnum.literals('Default',
+InfoPanelConfigurationToken             =  NdfEnum_literals('Default',
                                                             'HelicoDefault',
                                                             'HelicoSupplier',
                                                             'HelicoTransporter',
@@ -99,7 +105,7 @@ InfoPanelConfigurationToken             =  NdfEnum.literals('Default',
                                                             'VehiculeTransporter',
                                                             'avion')
 
-TypeStrategicCount                      = NdfEnum.with_path('ETypeStrategicDetailedCount/',
+TypeStrategicCount                      = NdfEnum_with_path('ETypeStrategicDetailedCount/',
                                                             'AA',
                                                             'AA_Hel',
                                                             'AA_Veh',
@@ -135,7 +141,7 @@ TypeStrategicCount                      = NdfEnum.with_path('ETypeStrategicDetai
                                                             'Support',
                                                             'Transport')
 
-UnitRole                                =  NdfEnum.literals('tank_A',
+UnitRole                                =  NdfEnum_literals('tank_A',
                                                             'tank_B',
                                                             'tank_C',
                                                             'tank_D')
