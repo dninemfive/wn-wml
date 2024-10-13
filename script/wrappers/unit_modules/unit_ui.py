@@ -124,4 +124,4 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
     
     @localized_name.setter
     def localized_name(self: Self, value: str) -> None:
-        return self.ctx.localization.register(value)
+        self.NameToken = self.ctx.localization.register(value)
