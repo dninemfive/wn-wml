@@ -10,7 +10,8 @@ from units._utils import autonomy_to_fuel_move_duration as to_fmd
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # ✪ M1010 TC3V
-    with ctx.create_unit("#CMD M1010 TC3V", "US", "M35_trans_US", "VLRA_trans_FR") as m1010_tc3v: # 🏳️‍⚧️
+    with ctx.create_unit("#CMD M1010 TC3V", "US", "M35_trans_US") as m1010_tc3v: # 🏳️‍⚧️
+        # TODO: make model VLRA_trans again
         # acknow type = cmd
         m1010_tc3v.modules.type.AcknowUnitType = 'Command'
         m1010_tc3v.modules.type.TypeUnitFormation = 'Supply'

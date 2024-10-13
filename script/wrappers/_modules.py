@@ -17,7 +17,7 @@ import context.mod_creation
 
 from .unit_modules._abc import UnitModuleKey, UnitModuleWrapper
 
-UnitRef = str | Object | wrappers.unit.UnitWrapper
+UnitRef = str | Object | object # wrappers.unit.UnitWrapper
 
 T = TypeVar('T', covariant=True, bound=UnitModuleWrapper)
 
@@ -62,7 +62,7 @@ class UnitModulesWrapper(object):
 
     def _deref(self: Self, unit_ref: UnitRef) -> Object:
         if isinstance(unit_ref, str):
-            return self.ctx.get_unit(ensure.unit_descriptor(unit_ref))
+            return self.ctx.get_unit(ensure.unit_descriptor(unit_ref)).object
         elif isinstance(unit_ref, wrappers.unit.UnitWrapper):
             return unit_ref.object
         return unit_ref

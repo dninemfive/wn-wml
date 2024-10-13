@@ -22,7 +22,7 @@ class UnitModuleWrapper(ABC):
         self.object = obj
 
     def edit_members(self: Self, **changes: CellValue) -> None:
-        for k, v in changes:
+        for k, v in changes.items():
             if hasattr(self, k):
                 setattr(self, k, v)
             else:

@@ -1,6 +1,6 @@
 from typing import Self
 
-from creators.unit.basic import BasicUnitCreator
+from creators.unit.abc import UnitCreator
 from metadata.unit import UnitMetadata
 from model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import MapRow
@@ -8,12 +8,12 @@ from ndf_parse.model import MapRow
 
 class UnitRules(object):
     def __init__(self: Self,
-                 unit: UnitMetadata | BasicUnitCreator,
+                 unit: UnitMetadata | UnitCreator,
                  num_packs: int,
                  units_per_pack: tuple[int, int, int, int],
                  transports: list[str] | None = None,
                  force_awt: bool | None = None):
-        if isinstance(unit, BasicUnitCreator):
+        if isinstance(unit, UnitCreator):
             unit = unit.new_unit
         self.unit: UnitMetadata = unit
         self.num_packs = num_packs

@@ -16,7 +16,7 @@ class TagsModuleWrapper(UnitModuleWrapper):
     @property
     def TagSet(self: Self) -> StrListWrapper:
         if not hasattr(self, '_tag_set'):
-            self._tag_set = StrListWrapper(self.object.by_member('TagSet').value)
+            self._tag_set = StrListWrapper(self.object.by_member('TagSet').value, (lambda x: ensure.quoted(x, '"'), lambda x: ensure.unquoted(x, '"')))
         return self._tag_set
     
     @TagSet.setter

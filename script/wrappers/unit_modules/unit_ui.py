@@ -112,7 +112,9 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
             value = value.new_unit.descriptor_name
         elif isinstance(value, UnitMetadata):
             value = value.descriptor_name
-        edit.member(self.object, 'UpgradeFromUnit', ensure.prefix(value, 'Descriptor_Unit_'))
+        if value is not None:
+            value = ensure.prefix(value, 'Descriptor_Unit_')
+        edit.member(self.object, 'UpgradeFromUnit', value)
 
     @property
     def localized_name(self: Self) -> str:

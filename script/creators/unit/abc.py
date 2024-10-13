@@ -15,7 +15,7 @@ from ndf_parse.model.abc import CellValue
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
 from wrappers.unit import UnitWrapper
-from wrappers.unit_modules._modules import UnitModulesWrapper
+from wrappers._modules import UnitModulesWrapper
 from wrappers.unit_modules.tags import TagsModuleWrapper
 from wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
 
@@ -88,8 +88,7 @@ class UnitCreator(ABC):
         if copy_of is None:
             copy_of = self.src_unit.name
         def _set_weapon_descriptor(descriptor_name: str) -> None:
-            with self.module_context('WeaponManager', by_name=True) as ctx:
-                ctx.edit_members(Default=ensure.prefix(descriptor_name, '$/GFX/Weapon/'))
+            self.modules.edit_members('WeaponManager', by_name=True, Default=ensure.prefix(descriptor_name, '$/GFX/Weapon/'))
         return WeaponCreator(self.ndf, self.new_unit, copy_of, self.msg, _set_weapon_descriptor)
 
     # "private" methods

@@ -21,6 +21,7 @@ class StrListWrapper(object):
         self._list.add(ensure.listrow(self._pre_add(val)))
 
     def remove(self: Self, val: str) -> None:
+        # print(f'{val} -> {self._pre_add(val)}')
         self._list.remove(self._list.find_by_cond(lambda x: x.value == self._pre_add(val)))
 
     def replace(self: Self, to_replace: str, value: str) -> None:

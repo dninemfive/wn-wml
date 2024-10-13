@@ -52,11 +52,11 @@ class InfantryUnitCreator(UnitCreator):
         unit_to_showroom_equivalent: Map = ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
         unit_to_showroom_equivalent.add(k=self.new_unit.descriptor_path, v=self.new_unit.showroom_descriptor_path)
 
-    def apply(self: Self) -> None:
-        self.edit_generated_depiction_infantry(self.ndf, self.msg)
-        self._edit_showroom_units(self.ndf, self.msg)
-        self.edit_showroom_equivalence(self.ndf, self.msg)
-        self.edit_weapon_descriptors(self.ndf, self.msg)
+    def apply(self: Self, msg: Message) -> None:
+        self.edit_generated_depiction_infantry(self.ndf, msg)
+        self._edit_showroom_units(self.ndf, msg)
+        self.edit_showroom_equivalence(self.ndf, msg)
+        self.edit_weapon_descriptors(self.ndf, msg)
         self.edit_unit()
 
     # properties

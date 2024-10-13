@@ -112,7 +112,6 @@ class ModCreationContext(object):
                                    name,
                                    metadata,
                                    copy_of,
-                                   showroom_src,
                                    self.try_add_button_texture(button_texture_src_path, metadata),
                                    self.root_msg,
                                    country,

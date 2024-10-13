@@ -19,7 +19,7 @@ class ProductionModuleWrapper(UnitModuleWrapper):
     
     @Factory.setter
     def Factory(self: Self, value: str) -> None:
-        edit.members(Factory=Factory.ensure_valid(value))
+        edit.members(self.object, Factory=Factory.ensure_valid(value))
 
     @property
     def ProductionTime(self: Self) -> int:

@@ -12,9 +12,6 @@ import utils.ndf.unit_module as module
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # 👓 FAV
     with ctx.create_unit("#RECO1 FAV", "US", "Iltis_trans_RFA") as fav:
-        with fav.module_context('TTypeUnitModuleDescriptor') as type_module:
-            type_module.edit_members(AcknowUnitType='~/TAcknowUnitType_Reco',
-                                     TypeUnitFormation="'Reconnaissance'")
         fav.modules.type.edit_members(
             AcknowUnitType='Reco',
             TypeUnitFormation='Reconnaissance',

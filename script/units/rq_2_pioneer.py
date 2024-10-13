@@ -34,17 +34,16 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                                           # remove air detection
                                           OpticalStrengthAltitude=0,
                                           SpecializedDetectionsGRU=None)
-        with rq_2_pioneer.module_context('TReverseScannerWithIdentificationDescriptor') as reverse_scanner_module:
-            visiblity_roll_rule = ensure._object('TModernWarfareVisibilityRollRule',
-                                                 # EF-111A: 0.6, Dragonfly: 1.0, Kiowa: 0.73
-                                                 IdentifyBaseProbability=0.73)
-            reverse_scanner_module.edit_members(VisibilityRollRule=visiblity_roll_rule)
-        with rq_2_pioneer.module_context('TProductionModuleDescriptor') as production_module:
-            production_module.object.by_member('ProductionRessourcesNeeded').value.by_key('$/GFX/Resources/Resource_CommandPoints').value = 60
+        rq_2_pioneer.modules.edit_members('TReverseScannerWithIdentificationDescriptor',
+                                          VisibilityRollRule=ensure._object('TModernWarfareVisibilityRollRule',
+                                                                            # EF-111A: 0.6, Dragonfly: 1.0, Kiowa: 0.73
+                                                                            IdentifyBaseProbability=0.73))
+        rq_2_pioneer.modules.production.command_point_cost = 60
         # fast to arrive and evac since it's theoretically deployed on the battlefield
-        rq_2_pioneer.replace_module('TAirplaneModuleDescriptor', ensure._object('TAirplaneModuleDescriptor',
-                                                                               EvacuationTime=5,
-                                                                               TravelDuration=5))
+        rq_2_pioneer.modules.replace('TAirplaneModuleDescriptor',
+                                     ensure._object('TAirplaneModuleDescriptor',
+                                                    EvacuationTime=5,
+                                                    TravelDuration=5))
         # remove weapons
         rq_2_pioneer.modules.remove('WeaponManager', by_name=True)
         rq_2_pioneer.modules.remove('MissileCarriage', by_name=True)
