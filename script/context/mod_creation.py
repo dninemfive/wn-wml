@@ -161,7 +161,8 @@ class ModCreationContext(object):
         return AmmoCreator(self.ndf, ensure.prefix(name, f'Ammo_{self.prefix}_'), copy_of, self.guids)
     
     def get_unit_object(self: Self, unit: str, showroom: bool = False) -> Object:
-        return self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(ensure.unit_descriptor(unit, showroom)).value
+        path = ndf_paths.UNITE_DESCRIPTOR if not showroom else ndf_paths.SHOWROOM_UNITS
+        return self.ndf[path].by_name(ensure.unit_descriptor(unit, showroom)).value
     
     def get_unit(self: Self, unit: str | Object, showroom: bool = False) -> UnitWrapper:
         if not isinstance(unit, Object):

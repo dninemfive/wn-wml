@@ -3,14 +3,13 @@ from __future__ import annotations
 from abc import ABC
 from typing import Any, Callable, Iterable, Self, Type
 
-from script.wrappers.list import ListWrapper
+from wrappers.list import ListWrapper
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
 from constants.primitive_types import MotherCountry
 # from context.mod_creation import ModCreationContext
 from ndf_parse.model import Object
-import wrappers._modules
 
 
 class TurretWrapper(ABC):

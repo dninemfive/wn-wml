@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Callable, Self
 
 import constants.ndf_paths as ndf_paths
-from script.wrappers.unit import UnitWrapper
+from wrappers.unit import UnitWrapper
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
@@ -40,18 +40,23 @@ class BasicUnitCreator(UnitCreator):
         self.unit = self._make_unit(localized_name, button_texture)
 
     def apply(self: Self, msg: Message) -> None:
+        self.edit_showroom_units(self.ndf, msg)
         self.edit_showroom_equivalence(self.ndf, msg)
 
     @ndf_path(ndf_paths.SHOWROOM_UNITS)
-    def edit_showroom_equivalence(self: Self, ndf: List):
+    def edit_showroom_units(self: Self, ndf: List):
         copy: UnitWrapper = self.ctx.get_unit(self.showroom_unit.name, showroom=True)
         copy.DescriptorId = self.ctx.guids.generate(self.new_unit.showroom_descriptor_name)
         copy.modules.type.copy(self.unit.modules.type.object)
-        copy.modules.remove_where(lambda x: isinstance(x.value, str) and x.value.startswith('$/GFX/Weapon/WeaponDescriptor_'))
-        copy.modules.append(self.new_unit.weapon_descriptor_path)
+        # TODO: check if the unit actually has a weapon descriptor to reference
+        # try:
+        #     copy.modules.remove_where(lambda x: isinstance(x.value, str) and x.value.startswith('$/GFX/Weapon/WeaponDescriptor_'))
+        #     copy.modules.append(self.new_unit.weapon_descriptor_path)
+        # except:
+        #     pass
         # for vehicles with replaced turret models, will have to make a new TacticVehicleDepictionTemplate and add it to GeneratedDepictionVehicles.ndf
         # and then set the depiction path here
-        ndf.add(ListRow(copy, visibility='export', namespace=self.new_unit.showroom_descriptor_name))
+        ndf.add(ListRow(copy.object, visibility='export', namespace=self.new_unit.showroom_descriptor_name))
 
     @ndf_path(ndf_paths.SHOWROOM_EQUIVALENCE)
     def edit_showroom_equivalence(self: Self, ndf: List):

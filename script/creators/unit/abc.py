@@ -4,9 +4,13 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Callable, Self
 
 import constants.ndf_paths as ndf_paths
+import context.mod_creation
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
+import wrappers._modules
+import wrappers.unit
+import wrappers.unit_modules.tags
 from context.unit_module import UnitModuleContext
 from creators.weapon import WeaponCreator
 from metadata.unit import UnitMetadata
@@ -14,13 +18,6 @@ from ndf_parse.model import List, ListRow, Map, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message
-from wrappers.unit import UnitWrapper
-from wrappers._modules import UnitModulesWrapper
-from wrappers.unit_modules.tags import TagsModuleWrapper
-from wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
-
-if TYPE_CHECKING:
-    from context.mod_creation import ModCreationContext
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 UNIT_UI = "TUnitUIModuleDescriptor"
@@ -28,7 +25,7 @@ TAGS = "TTagsModuleDescriptor"
 
 class UnitCreator(ABC):
     def __init__(self: Self,
-                 ctx,#: ModCreationContext, # are you fucking kidding me
+                 ctx: context.mod_creation.ModCreationContext,
                  localized_name: str,
                  new_unit: str | UnitMetadata,
                  src_unit: str | UnitMetadata,
@@ -60,7 +57,7 @@ class UnitCreator(ABC):
     # properties
 
     @property
-    def modules(self: Self) -> UnitModulesWrapper:
+    def modules(self: Self) -> wrappers._modules.UnitModulesWrapper:
         return self.unit.modules
 
     @property
@@ -68,7 +65,7 @@ class UnitCreator(ABC):
         return self.ctx.ndf
     
     @property
-    def tags(self: Self) -> TagsModuleWrapper:
+    def tags(self: Self) -> wrappers.unit_modules.tags.TagsModuleWrapper:
         return self.modules.tags
 
     # abstract methods
@@ -93,13 +90,13 @@ class UnitCreator(ABC):
 
     # "private" methods
 
-    def _make_unit(self: Self, localized_name: str, button_texture: str | None = None) -> UnitWrapper:
+    def _make_unit(self: Self, localized_name: str, button_texture: str | None = None) -> wrappers.unit.UnitWrapper:
         copy: Object = self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(self.src_unit.descriptor_name).value.copy()
         edit.members(copy,
                      DescriptorId=self.ctx.guids.generate(self.new_unit.descriptor_name),
                      ClassNameForDebug=self.new_unit.class_name_for_debug)
         with self.parent_msg.nest(f'Copying {self.src_unit.descriptor_name}') as _:
-            unit = UnitWrapper(self.ctx, copy)
+            unit = wrappers.unit.UnitWrapper(self.ctx, copy)
         unit.modules.ui.localized_name = localized_name
         if button_texture is not None:
             unit.modules.ui.ButtonTexture = button_texture
