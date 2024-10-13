@@ -4,12 +4,11 @@ import utils.ndf.ensure as ensure
 from constants.primitive_types import MotherCountry
 from ndf_parse.model import List, Object
 
-from ._abc import UnitModuleWrapper
-from ._decorator import unit_module
+from ._abc import UnitModuleKey, UnitModuleWrapper
 
 
-@unit_module('TTypeUnitModuleDescriptor')
 class TypeUnitModuleWrapper(UnitModuleWrapper):
+    _module_key = UnitModuleKey('TTypeUnitModuleDescriptor')
     def __init__(self: Self, ctx, obj: Object):
         self.ctx = ctx
         self.object = obj

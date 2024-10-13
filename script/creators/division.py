@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 from typing import Self
 
 import utils.ndf.edit as edit
-from constants.ndf_paths import DECK_SERIALIZER, DIVISION_LIST, DIVISION_RULES, DIVISIONS
+from constants.ndf_paths import (DECK_SERIALIZER, DIVISION_LIST,
+                                 DIVISION_RULES, DIVISIONS)
 from metadata.division import DivisionMetadata
 from metadata.division_unit_registry import DivisionUnitRegistry
 from ndf_parse.model import List, ListRow, Map, MapRow

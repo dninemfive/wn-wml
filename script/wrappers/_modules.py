@@ -1,29 +1,34 @@
+from __future__ import annotations
+
 from typing import Callable, Iterable, Self, SupportsIndex, Type, TypeVar
 
-from wrappers.unit_modules.damage import BaseDamageModuleWrapper
-from wrappers.unit_modules.production import ProductionModuleWrapper
-import utils.ndf.unit_module as modules
+import wrappers.unit
 import utils.ndf.edit as edit
+import utils.ndf.unit_module as modules
 from ndf_parse.model import List, ListRow, Object
 from ndf_parse.model.abc import CellValue
 from utils.ndf import ensure
-
+from wrappers.unit_modules.damage import BaseDamageModuleWrapper
+from wrappers.unit_modules.production import ProductionModuleWrapper
 from wrappers.unit_modules.tags import TagsModuleWrapper
 from wrappers.unit_modules.type_unit import TypeUnitModuleWrapper
 from wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
+import context.mod_creation
 
-from ._abc import UnitModuleKey, UnitModuleWrapper
+from .unit_modules._abc import UnitModuleKey, UnitModuleWrapper
 
+UnitRef = str | Object | wrappers.unit.UnitWrapper
 
 T = TypeVar('T', covariant=True, bound=UnitModuleWrapper)
 
 class UnitModulesWrapper(object):
-    def __init__(self: Self, ndf: List):
-        self._ndf = ndf
+    def __init__(self: Self, ctx: context.mod_creation.ModCreationContext, modules_ndf: List):
+        self.ctx = ctx
+        self._modules_ndf = modules_ndf
         self._cached_module_wrappers: dict[UnitModuleKey, UnitModuleWrapper] = {}
 
     def __iter__(self: Self) -> Iterable[CellValue]:
-        yield from [x.value for x in self._ndf]
+        yield from [x.value for x in self._modules_ndf]
 
     def _get_wrapper(self: Self, wrapper_type: Type[T]) -> T:
         if wrapper_type._module_key not in self._cached_module_wrappers:
@@ -54,35 +59,46 @@ class UnitModulesWrapper(object):
         return self._get_wrapper(BaseDamageModuleWrapper)
 
     # modules
+
+    def _deref(self: Self, unit_ref: UnitRef) -> Object:
+        if isinstance(unit_ref, str):
+            return self.ctx.get_unit(ensure.unit_descriptor(unit_ref))
+        elif isinstance(unit_ref, wrappers.unit.UnitWrapper):
+            return unit_ref.object
+        return unit_ref
     
     def append(self: Self, module: str | Object | ListRow):
-        return modules.append(self._ndf, module)
+        return modules.append(self._modules_ndf, module)
     
-    def append_from(self: Self, other_unit: Object, type_or_name: str, by_name: bool = False):
-        return modules.append_from(self._ndf, other_unit, type_or_name, by_name)
+    def append_from(self: Self, other_unit: UnitRef, type_or_name: str, by_name: bool = False):
+        return modules.append_from(self._modules_ndf, self._deref(other_unit), type_or_name, by_name)
     
     def edit_members(self: Self, module: str, by_name: bool = False, **changes: CellValue | None):
         edit.members(self.get(module, by_name), **changes)
+
+    def try_edit_members(self: Self, module: str, by_name: bool = False, **changes: CellValue | None):
+        try:
+            self.edit_members(module, by_name, **changes)
+        except:
+            pass
     
     def get(self: Self, type_or_name: str, by_name: bool = False) -> Object:
-        return modules.get(self._ndf, type_or_name, by_name)
+        return modules.get(self._modules_ndf, type_or_name, by_name)
     
     def get_index(self: Self, type_or_name: str, by_name: bool = False) -> int:
-        return modules.get_index(self._ndf, type_or_name, by_name)
+        return modules.get_index(self._modules_ndf, type_or_name, by_name)
     
     def get_row(self: Self, type_or_name: str, by_name: bool = False) -> ListRow:
-        return modules.get_row(self._ndf, type_or_name, by_name)
+        return modules.get_row(self._modules_ndf, type_or_name, by_name)
     
     def replace(self: Self, type_or_name: str, module: CellValue, by_name: bool = False):
-        return modules.replace(self._ndf, module, type_or_name, by_name)
+        return modules.replace(self._modules_ndf, module, type_or_name, by_name)
     
-    def replace_from(self: Self, other_unit: str | Object, type_or_name: str, by_name: bool = False) -> None:
-        if isinstance(other_unit, str):
-            other_unit = self.ctx.get_unit(ensure.unit_descriptor(other_unit))
-        return modules.replace_from(self._ndf, other_unit, type_or_name, by_name)
+    def replace_from(self: Self, other_unit: UnitRef, type_or_name: str, by_name: bool = False) -> None:
+        return modules.replace_from(self._modules_ndf, self._deref(other_unit), type_or_name, by_name)
     
     def remove(self: Self, type_or_name: str, by_name: bool = False):
-        return modules.remove(self._ndf, type_or_name, by_name)
+        return modules.remove(self._modules_ndf, type_or_name, by_name)
     
     def remove_where(self: Self, predicate: Callable[[ListRow], bool]):
-        return modules.remove_where(self._ndf, predicate)
+        return modules.remove_where(self._modules_ndf, predicate)

@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Self
 
+import utils.ndf.ensure as ensure
 from creators.unit.basic import BasicUnitCreator
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, MemberRow, Object
-import utils.ndf.ensure as ensure
 
 UNITE_RULE = 'TDeckUniteRule'
 KEY_AVAILABLE_TRANSPORT_LIST = 'AvailableTransportList'

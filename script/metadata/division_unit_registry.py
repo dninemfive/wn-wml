@@ -1,8 +1,9 @@
+from __future__ import annotations
+
 from typing import Self
 
 import utils.ndf.ensure as ensure
 from constants.ndf_paths import DECK_SERIALIZER, DIVISION_RULES
-# from context.mod_creation_context import ModCreationContext
 from managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
 from metadata.division_rule_lookup import DivisionRuleLookup

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Callable, Self
 
@@ -97,20 +99,20 @@ class UnitCreator(ABC):
         edit.members(copy,
                      DescriptorId=self.ctx.guids.generate(self.new_unit.descriptor_name),
                      ClassNameForDebug=self.new_unit.class_name_for_debug)
-        with self.msg.nest(f'Copying {self.src_unit.descriptor_name}') as msg:
+        with self.parent_msg.nest(f'Copying {self.src_unit.descriptor_name}') as _:
             unit = UnitWrapper(self.ctx, copy)
         unit.modules.ui.localized_name = localized_name
-        if self.button_texture_key is not None:
+        if button_texture is not None:
             unit.modules.ui.ButtonTexture = button_texture
         unit.modules.tags.replace(self.src_unit.tag, self.new_unit.tag)
-        unit.modules.edit_members('TTransportableModuleDescriptor', TransportedSoldier=f'"{self.new_unit.name}"')
+        unit.modules.try_edit_members('TTransportableModuleDescriptor', TransportedSoldier=f'"{self.new_unit.name}"')
         return unit
     
     # ndf edits
 
     @ndf_path(ndf_paths.UNITE_DESCRIPTOR)
     def _edit_unite_descriptor(self: Self, ndf: List):
-        ndf.add(ListRow(self.unit, namespace=self.new_unit.descriptor_name, visibility="export"))
+        ndf.add(ListRow(self.unit.object, namespace=self.new_unit.descriptor_name, visibility="export"))
 
     @ndf_path(ndf_paths.DIVISION_PACKS)
     def _edit_division_packs(self: Self, ndf: List):

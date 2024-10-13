@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any, Callable, Self, Type
 
 import utils.ndf.edit as edit
@@ -6,7 +8,7 @@ import utils.ndf.unit_module as modules
 from constants.primitive_types import MotherCountry
 # from context.mod_creation import ModCreationContext
 from ndf_parse.model import Object
-from wrappers.unit_modules._modules import UnitModulesWrapper
+import wrappers._modules
 
 
 class UnitWrapper(object):
@@ -14,11 +16,12 @@ class UnitWrapper(object):
     def __init__(self: Self, ctx, object: Object):
         self.ctx = ctx
         self.object = object
+        self._modules_descriptors = None
 
     @property
-    def modules(self: Self) -> UnitModulesWrapper:
+    def modules(self: Self) -> wrappers._modules.UnitModulesWrapper:
         if self._modules_descriptors is None:
-            self._modules_descriptors = UnitModulesWrapper(self.object.by_member('ModulesDescriptors').value)
+            self._modules_descriptors = wrappers._modules.UnitModulesWrapper(self.ctx, self.object.by_member('ModulesDescriptors').value)
         return self._modules_descriptors
     
     def set_country(self: Self, country: str):

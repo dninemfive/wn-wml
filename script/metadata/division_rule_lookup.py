@@ -1,8 +1,9 @@
+from __future__ import annotations
+
 from typing import Self
 
 from model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
-
 from utils.types.message import Message, try_nest
 
 

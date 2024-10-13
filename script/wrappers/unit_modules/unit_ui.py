@@ -9,15 +9,10 @@ from metadata.unit import UnitMetadata
 from ndf_parse.model import List, Object
 from utils.ndf import ensure
 from wrappers.str_list import StrListWrapper
-from wrappers.unit_modules._abc import UnitModuleWrapper
-from wrappers.unit_modules._decorator import unit_module
+from wrappers.unit_modules._abc import UnitModuleKey, UnitModuleWrapper
 
-
-@unit_module('TUnitUIModuleDescriptor')
 class UnitUiModuleWrapper(UnitModuleWrapper):
-    def __init__(self: Self, ctx, obj: Object):
-        self.ctx = ctx
-        self.object = obj
+    _module_key = UnitModuleKey('TUnitUIModuleDescriptor')
 
     @property
     def ButtonTexture(self: Self) -> str:
@@ -77,15 +72,15 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @property
     def SpecialtiesList(self: Self) -> StrListWrapper:
-        if self._specialties_list is None:
+        if not hasattr(self, '_specialties_list'):
             self._specialties_list = StrListWrapper(self.object.by_member('SpecialtiesList').value,
                                                     (ensure.quoted, ensure.unquoted))
         return self._specialties_list
 
     @SpecialtiesList.setter
     def SpecialtiesList(self: Self, value: list[str] | List) -> None:
-        if self._specialties_list is not None:
-            self._specialties_list = None
+        if hasattr(self, '_specialties_list'):
+            delattr(self, '_specialties_list')
         edit.member(self.object, 'SpecialtiesList', ensure.all(value, ensure.quoted))
 
     @property

@@ -5,12 +5,10 @@ import utils.ndf.ensure as ensure
 from ndf_parse.model import List, Object
 from wrappers.str_list import StrListWrapper
 
-from ._abc import UnitModuleWrapper
-from ._decorator import unit_module
+from ._abc import UnitModuleKey, UnitModuleWrapper
 
-
-@unit_module('TBaseDamageModuleDescriptor')
 class BaseDamageModuleWrapper(UnitModuleWrapper):
+    _module_key = UnitModuleKey('TBaseDamageModuleDescriptor')
     @property
     def MaxPhysicalDamages(self: Self) -> int:
         return int(self.object.by_member('MaxPhysicalDamages').value)

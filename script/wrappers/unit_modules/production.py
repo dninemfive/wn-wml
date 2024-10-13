@@ -7,13 +7,12 @@ from constants.primitive_types import Factory
 from ndf_parse.model import List, Object
 from wrappers.map import MapWrapper
 
-from ._abc import UnitModuleWrapper
-from ._decorator import unit_module
+from ._abc import UnitModuleKey, UnitModuleWrapper
 
 COMMAND_POINTS_KEY = '$/GFX/Resources/Resource_CommandPoints'
 
-@unit_module('TProductionModuleDescriptor')
 class ProductionModuleWrapper(UnitModuleWrapper):
+    _module_key = UnitModuleKey('TProductionModuleDescriptor')
     @property
     def Factory(self: Self) -> str:
         return self.object.by_member('Factory').value
@@ -32,7 +31,7 @@ class ProductionModuleWrapper(UnitModuleWrapper):
 
     @property
     def ProductionRessourcesNeeded(self: Self) -> MapWrapper:
-        if self._production_ressources_needed is None:
+        if not hasattr(self, '_production_ressources_needed'):
             self._production_ressources_needed = MapWrapper(self.object.by_member('ProductionRessourcesNeeded').value)
         return self._production_ressources_needed
     

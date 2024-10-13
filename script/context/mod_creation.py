@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any, Self
 
 import constants.ndf_paths as ndf_paths
@@ -18,11 +20,11 @@ from metadata.unit import UnitMetadata
 from ndf_parse import Mod
 from ndf_parse.model import List, Object
 from ndf_parse.model.abc import CellValue
-from wrappers.unit import UnitWrapper
 from utils.ndf import ensure
 from utils.ndf.files import add_image, add_image_literal
 from utils.types.cache import Cache
 from utils.types.message import Message, try_nest
+from wrappers.unit import UnitWrapper
 
 CACHES: list[tuple[str, type]] = [(GUID, str), (LOCALIZATION, str), (UNIT_ID, int)]
 

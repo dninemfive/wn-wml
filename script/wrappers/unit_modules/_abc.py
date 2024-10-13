@@ -1,18 +1,23 @@
+from __future__ import annotations
+
 from abc import ABC
 from ast import TypeVar
-from typing import Self
+from typing import Any, Self, Type
 
+import context.mod_creation
 import utils.ndf.edit as edit
 from ndf_parse.model import Object
 from ndf_parse.model.abc import CellValue
 
-UnitModuleKey = tuple[str, str | None]
 
+class UnitModuleKey(tuple):
+    # https://stackoverflow.com/a/13094796
+    def __new__(cls: Type, type: str, name: str | None = None):
+        return super(UnitModuleKey, cls).__new__(cls, (type, name))
 
 class UnitModuleWrapper(ABC):
     _module_key: UnitModuleKey = None
-
-    def __init__(self: Self, ctx, obj: Object):
+    def __init__(self: Self, ctx: context.mod_creation.ModCreationContext, obj: Object):
         self.ctx = ctx
         self.object = obj
 

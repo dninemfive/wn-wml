@@ -1,11 +1,13 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Callable, Self
 
 import constants.ndf_paths as ndf_paths
-from creators.unit.abc import UnitCreator
 import utils.ndf.edit as edit
 import utils.ndf.ensure as ensure
 import utils.ndf.unit_module as modules
 from context.unit_module import UnitModuleContext
+from creators.unit.abc import UnitCreator
 from creators.weapon import WeaponCreator
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, ListRow, Map, MemberRow, Object
