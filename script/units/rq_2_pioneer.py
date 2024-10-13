@@ -47,6 +47,13 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         # remove weapons
         rq_2_pioneer.modules.remove('WeaponManager', by_name=True)
         rq_2_pioneer.modules.remove('MissileCarriage', by_name=True)
+        # TODO: update depiction and showroom unit
+        # - remove Operators:
+        #   - DepictionOperator_Turret1_Aim
+        #   - Op_A37B_Dragonfly_US_Weapon*
+        #   - flares?
+        # - remove Actions:
+        #   - ones with weapon effet tags
         # make stealthy
         # F117: 3.0
         rq_2_pioneer.modules.edit_members('TVisibilityModuleDescriptor', UnitConcealmentBonus=3.5)
