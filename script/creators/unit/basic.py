@@ -47,6 +47,8 @@ class BasicUnitCreator(UnitCreator):
         copy.by_member('DescriptorId').value = self.ctx.guids.generate(self.new_unit.showroom_descriptor_name)
         # replace type module descriptor
         # replace weapon descriptor
+        # for vehicles with replaced turret models, will have to make a new TacticVehicleDepictionTemplate and add it to GeneratedDepictionVehicles.ndf
+        # and then set the depiction path here
         ndf.add(ListRow(copy, visibility='export', namespace=self.new_unit.showroom_descriptor_name))
 
     @ndf_path(ndf_paths.SHOWROOM_EQUIVALENCE)
