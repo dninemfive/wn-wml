@@ -12,13 +12,13 @@ from ndf_parse.model import Object
 import wrappers._modules
 
 
-class WeaponWrapper(object):
+class WeaponManagerWrapper(object):
     # ctx: ModCreationContext
     def __init__(self: Self, ctx, object: Object):
         self.ctx = ctx
         self.object = object
         self._salves: ListWrapper[int] = ListWrapper(self.object.by_member('Salves').value)
-        self._salvo_is_main_salvo = None
+        self._salvo_is_main_salvo: ListWrapper[bool] = ListWrapper(self.object.by_member('SalvoIsMainSalvo').value)
 
     @property
     def Salves(self: Self) -> Iterable[int]:
