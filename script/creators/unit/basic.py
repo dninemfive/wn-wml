@@ -32,12 +32,8 @@ class BasicUnitCreator(UnitCreator):
                  showroom_unit: str | UnitMetadata | None = None,
                  button_texture: str | None = None,
                  msg: Message | None = None):
-        self.ctx = ctx
-        self.new_unit: UnitMetadata = UnitMetadata.resolve(new_unit)
-        self.src_unit: UnitMetadata = UnitMetadata.resolve(src_unit)
+        super().__init__(ctx, localized_name, new_unit, src_unit, button_texture, msg)
         self.showroom_unit = UnitMetadata.resolve(showroom_unit) if showroom_unit is not None else self.src_unit
-        self.parent_msg = msg
-        self.unit = self._make_unit(localized_name, button_texture)
 
     def apply(self: Self, msg: Message) -> None:
         self.edit_showroom_units(self.ndf, msg)
