@@ -12,7 +12,7 @@ class DepictionOperator_WeaponContinuousFire(WeaponDepictionOperator):
             'DepictionOperator_WeaponContinuousFire',
             Anchors=self.anchors,
             FireEffectTag = ensure.quoted(f"weapon_effet_tag{self.index}"),
-            NbFx=self.count,
+            NbFX=self.count,
             WeaponActiveAndCanShootPropertyName=ensure.quoted(f'WeaponActiveAndCanShoot_{self.index}'),
             WeaponShootDataPropertyName=ensure.quoted(f'WeaponShootData_0_{self.index}')
         )
