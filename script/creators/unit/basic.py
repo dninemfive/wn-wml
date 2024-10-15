@@ -29,19 +29,22 @@ class BasicUnitCreator(UnitCreator):
                  localized_name: str,
                  new_unit: str | UnitMetadata,
                  src_unit: str | UnitMetadata,
-                 showroom_unit: str | UnitMetadata | None = None,
+                 gfx_unit: str | UnitMetadata | None = None,
                  button_texture: str | None = None,
                  msg: Message | None = None):
         super().__init__(ctx, localized_name, new_unit, src_unit, button_texture, msg)
-        self.showroom_unit = UnitMetadata.resolve(showroom_unit) if showroom_unit is not None else self.src_unit
+        self.gfx_unit = UnitMetadata.resolve(gfx_unit) if gfx_unit is not None else self.src_unit
 
-    def apply(self: Self, msg: Message) -> None:
+    def pre_apply(self: Self, msg: Message) -> None:
+        self.unit.modules.replace_from(self.ctx.get_unit(self.gfx_unit.descriptor_name), 'ApparenceModel', by_name=True)
+
+    def post_apply(self: Self, msg: Message) -> None:
         self.edit_showroom_units(self.ndf, msg)
         self.edit_showroom_equivalence(self.ndf, msg)
 
     @ndf_path(ndf_paths.SHOWROOM_UNITS)
     def edit_showroom_units(self: Self, ndf: List):
-        copy: UnitWrapper = self.ctx.get_unit(self.showroom_unit.name, showroom=True)
+        copy: UnitWrapper = self.ctx.get_unit(self.gfx_unit.name, showroom=True)
         copy.DescriptorId = self.ctx.guids.generate(self.new_unit.showroom_descriptor_name)
         copy.modules.type.copy(self.unit.modules.type.object)
         # TODO: check if the unit actually has a weapon descriptor to reference

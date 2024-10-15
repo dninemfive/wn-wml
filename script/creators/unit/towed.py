@@ -37,7 +37,7 @@ class TowedUnitCreator(UnitCreator):
         super().__init__(ctx, localized_name, new_unit, src_unit, button_texture, msg)
         self.weapons = weapons
 
-    def apply(self: Self, msg: Message) -> None:
+    def post_apply(self: Self, msg: Message) -> None:
         self.edit_generated_depiction_vehicles(self.ndf, msg)
         self.edit_showroom_equivalence(self.ndf, msg)
 

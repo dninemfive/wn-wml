@@ -43,16 +43,17 @@ class UnitCreator(ABC):
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
-        self._apply_all()
+        self._apply()
         self.msg.__exit__(exc_type, exc_value, traceback)
 
-    def _apply_all(self: Self):
+    def _apply(self: Self):
         with self.msg.nest(f"Saving {self.new_unit.name}") as msg2:
+            self.pre_apply(msg2)
             self._edit_unite_descriptor(self.ndf, msg2)
             self._edit_division_packs(self.ndf, msg2)
             self.edit_showroom_equivalence(self.ndf, msg2)
             self._edit_all_units_tactic(self.ndf, msg2)
-            self.apply(msg2)
+            self.post_apply(msg2)
 
     # properties
 
@@ -71,7 +72,11 @@ class UnitCreator(ABC):
     # abstract methods
 
     @abstractmethod
-    def apply(self: Self, msg: Message) -> None:
+    def pre_apply(self: Self, msg: Message) -> None:
+        pass
+
+    @abstractmethod
+    def post_apply(self: Self, msg: Message) -> None:
         pass
 
     @abstractmethod
