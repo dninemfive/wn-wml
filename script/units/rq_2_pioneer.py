@@ -10,7 +10,7 @@ DRAGONFLY = 'A37B_Dragonfly_US'
 
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # E-2C HAWKEYE
-    with ctx.create_unit("#RECO1 RQ-2 PIONEER", "US", DRAGONFLY, button_texture_src_path='img/units/rq_2_pioneer/icon.png') as rq_2_pioneer:
+    with ctx.create_unit("#RECO1 MQM-10 AQUILA", "US", DRAGONFLY, button_texture_src_path='img/units/rq_2_pioneer/icon.png') as rq_2_pioneer:
         # TODO: something to edit plane flight speed and altitude all in one go
         rq_2_pioneer.modules.edit_members('AirplanePositionModuleDescriptor', LowAltitudeFlyingAltitude=FLIGHT_ALTITUDE)
         rq_2_pioneer.modules.get('GenericMovement', True).by_member('Default').value.by_member('MaxSpeedInKmph').value = FLIGHT_SPEED

@@ -108,7 +108,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register(units.cmd_mot_rifles_ldr.create(mod_context), [M1038_HUMVEE, M998_HUMVEE_M2HB, M998_HUMVEE_AGL, BLACKHAWK])
                 division_units.register(units.mot_rifles.create(mod_context), [M998_HUMVEE, M998_HUMVEE_AGL, BLACKHAWK])
                 division_units.register(units.mot_rifles_dragon.create(mod_context), [M998_HUMVEE, M998_HUMVEE_M2HB, BLACKHAWK])
-                division_units.register_vanilla("Rifles_Cavalry_US", 1, [M998_HUMVEE, M998_HUMVEE_AGL, BLACKHAWK])
+                division_units.register_vanilla("Rifles_Cavalry_US", 1, [M998_HUMVEE_M2HB, M998_HUMVEE_AGL, BLACKHAWK])
                 division_units.register_vanilla("Rifles_HMG_US", 1, [M1038_HUMVEE, M998_HUMVEE_M2HB, BLACKHAWK])
                 division_units.register(units.rangers_m203.create(mod_context), LARGE_UNIT_TRANSPORTS)
                 division_units.register(units.ranger_at_section.create(mod_context), LARGE_UNIT_TRANSPORTS)
@@ -194,8 +194,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                                         division_units,
                                         "Descriptor_Deck_Division_US_8th_Inf_multi",
                                         root_msg,
-                                        DivisionName=mod_context.localization.register("9TH INFANTRY DIVISION (MTZ.)"),
-                                        DescriptionHintTitleToken=mod_context.localization.register("9TH INFANTRY DIVISION (MOTORIZED)"),
+                                        DivisionName=mod_context.localization.register("9TH INFANTRY DIVISION (HTTB)"),
+                                        DescriptionHintTitleToken=mod_context.localization.register("9TH INFANTRY DIVISION (HIGH-TECH. TESTBED)"),
                                         EmblemTexture = division_texture_name)
             # add a default deck to Decks.ndf (not required)
     
