@@ -15,17 +15,13 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     # model: ILTIS HMG
     # range: custom
     # air transportable
-    # weapon: Mk.19 Mod III 40mm
-    with ctx.create_unit("#RECO1 FAV AGL", "US", "Iltis_HMG_BEL") as fav:
+    with ctx.create_unit("#RECO1 FAV M2HB", "US", "Iltis_HMG_BEL") as fav:
         fav.modules.type.edit_members(
             MotherCountry='US'                             # TODO: set this, icon flag, &c with one item
         )
         fav.command_point_cost = 45
         fav.modules.ui.edit_members(
-            SpecialtiesList=['reco', 'air_transportable'],
-            UpgradeFromUnit='d9_RECO1_FAV_M2HB_US'
+            SpecialtiesList=['reco', 'air_transportable']
         )
         fav.modules.remove('Transporter', by_name=True)
-        with fav.edit_weapons('M1025_Humvee_AGL_nonPara_US') as _:
-            pass
         return UnitRules(fav, 2, [0, 4, 3, 0], 'UH60A_Black_Hawk_US', True)

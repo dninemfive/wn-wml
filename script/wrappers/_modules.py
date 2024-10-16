@@ -99,6 +99,8 @@ class UnitModulesWrapper(object):
         return modules.replace_from(self._modules_ndf, self._deref(other_unit), type_or_name, by_name)
     
     def replace_from_many(self: Self, other_unit: UnitRef, *modules: ModuleRef) -> None:
+        # dereferencing here avoids duplicate work in each replace_from call
+        other_unit = self._deref(other_unit)
         for module in modules:
             if isinstance(module, str):
                 module = (module, False)
