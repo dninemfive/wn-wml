@@ -50,3 +50,6 @@ class UnitWrapper(NdfObjectWrapper):
         self.modules.ui.CountryTexture = country
         self.modules.type.MotherCountry = country
         self.modules.type.Nationalite = ... # TODO: make a country database with members (country code, sound code, nationalite)
+
+    def copy(self: Self) -> Self:
+        return UnitWrapper(self.ctx, self.object.copy())

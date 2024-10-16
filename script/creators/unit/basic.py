@@ -44,7 +44,7 @@ class BasicUnitCreator(UnitCreator):
 
     @ndf_path(ndf_paths.SHOWROOM_UNITS)
     def edit_showroom_units(self: Self, ndf: List):
-        copy: UnitWrapper = self.ctx.get_unit(self.gfx_unit.name, showroom=True)
+        copy: UnitWrapper = self.ctx.get_unit(self.gfx_unit.name, showroom=True).copy()
         copy.DescriptorId = self.ctx.guids.generate(self.new_unit.showroom_descriptor_name)
         copy.modules.type.copy(self.unit.modules.type.object)
         # TODO: check if the unit actually has a weapon descriptor to reference
