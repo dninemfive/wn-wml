@@ -18,6 +18,7 @@ import context.mod_creation
 from .unit_modules._abc import UnitModuleKey, UnitModuleWrapper
 
 UnitRef = str | Object | object # wrappers.unit.UnitWrapper
+ModuleRef = str | tuple[str, bool]
 
 T = TypeVar('T', covariant=True, bound=UnitModuleWrapper)
 
@@ -96,6 +97,13 @@ class UnitModulesWrapper(object):
     
     def replace_from(self: Self, other_unit: UnitRef, type_or_name: str, by_name: bool = False) -> None:
         return modules.replace_from(self._modules_ndf, self._deref(other_unit), type_or_name, by_name)
+    
+    def replace_from_many(self: Self, other_unit: UnitRef, *modules: ModuleRef) -> None:
+        for module in modules:
+            if isinstance(module, str):
+                module = (module, False)
+            type_or_name, by_name = module
+            self.replace_from(other_unit, type_or_name, by_name)
     
     def remove(self: Self, type_or_name: str, by_name: bool = False):
         return modules.remove(self._modules_ndf, type_or_name, by_name)

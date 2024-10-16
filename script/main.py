@@ -10,7 +10,7 @@ import units.ammo.fgr_17_viper
 import units.ammo.m60e3
 import units.ammo.m203
 import units.cmd_m998_humvee_agl
-import units.cmd_m1010_tc3v
+import units.cmd_m997_tc3v
 import units.cmd_mot_rifles_ldr
 import units.fav
 import units.folt
@@ -91,8 +91,9 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("M577_US", 1)
                 
                 division_units.register_vanilla("M1025_Humvee_CMD_US", 1)
-                division_units.register(units.cmd_m998_humvee_agl.create(mod_context))
-                division_units.register(units.cmd_m1010_tc3v.create(mod_context))
+                # needs big rework
+                # division_units.register(units.cmd_m998_humvee_agl.create(mod_context))
+                division_units.register(units.cmd_m997_tc3v.create(mod_context))
                 """ INF """
                 M998_HUMVEE, M1038_HUMVEE = "Descriptor_Unit_M998_Humvee_US", "Descriptor_Unit_M1038_Humvee_US"
                 M998_HUMVEE_M2HB, M998_HUMVEE_AGL = "Descriptor_Unit_d9_M998_HUMVEE_M2HB_US", "Descriptor_Unit_d9_M998_HUMVEE_AGL_US"
