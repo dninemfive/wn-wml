@@ -40,7 +40,7 @@ import units.operational_support
 import units.ranger_at_section
 import units.ranger_gunners
 import units.rangers_m203
-import units.scat
+import units.scoutat_team
 import units.stinger_tdar
 import units.xm85_t_chaparral
 import units.xm119_imcs
@@ -155,7 +155,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register(units.operational_support.create(mod_context), HEAVY_TRANSPORTS)
                 division_units.register(units.iew_team.create(mod_context), SMALL_RECON_TRANSPORTS)
                 division_units.register(units.mot_scouts.create(mod_context), SMALL_RECON_TRANSPORTS)
-                division_units.register(units.scat.create(mod_context), SMALL_RECON_TRANSPORTS)
+                division_units.register(units.scoutat_team.create(mod_context), SMALL_RECON_TRANSPORTS)
                 division_units.register_vanilla("OH58C_Scout_US", 1)
                 division_units.register_vanilla("OH58D_Combat_Scout_US", 1)
                 division_units.register_vanilla("EH60A_EW_US", 1)

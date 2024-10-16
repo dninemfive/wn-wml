@@ -13,7 +13,7 @@ from ndf_parse.model import List, ListRow, Object
 def create(ctx: ModCreationContext) -> UnitRules | None:
     # JOH-58C
     # 1 minigun, 2 stingers
-    with ctx.create_unit("JOH-58C", "US", "OH58_CS_US") as joh58c:
+    with ctx.create_unit("JOH-58C/S", "US", "OH58_CS_US") as joh58c:
         with joh58c.edit_weapons() as weapons:
             edit_weapons(weapons)
         joh58c.modules.get('MissileCarriage', by_name=True).by_member('Connoisseur').value = generate_missile_carriages(ctx.ndf[MISSILE_CARRIAGE])
@@ -21,6 +21,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             oh58cs_ui_module.edit_members(UpgradeFromUnit=joh58c.new_unit.descriptor_name)
         return UnitRules(joh58c, 1, [0, 4, 3, 0])
     
+# TODO: AmmoCreator
 def generate_ammo_descriptor(ctx: ModCreationContext) -> str:
     ammo_name = 'Ammo_AGM_BGM71D_TOW_2A_x4'
     copy: Object = ctx.ndf[AMMUNITION_MISSILES].by_name('Ammo_ATGM_BGM71D_TOW_2A_x2').value.copy()
@@ -74,4 +75,4 @@ def generate_missile_carriages(missile_carriage_ndf: List) -> str:
     showroom_copy = copy.copy()
     edit.members(showroom_copy, PylonSet='~/DepictionPylonSet_Helico_Default_Showroom')
     missile_carriage_ndf.add(value=showroom_copy, namespace='MissileCarriage_d9_JOH58D_KIOWA_US_Showroom')
-    return 'MissileCarriage_d9_JOH58D_KIOWA_US'
+    return 'MissileCarriage_d9_JOH58CS_US'
