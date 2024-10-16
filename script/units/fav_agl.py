@@ -28,4 +28,5 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         fav.modules.remove('Transporter', by_name=True)
         with fav.edit_weapons('M1025_Humvee_AGL_nonPara_US') as _:
             pass
-        return UnitRules(fav, 2, [0, 4, 3, 0], 'UH60A_Black_Hawk_US', True)
+        # TODO: instead of override_awt, including None in the list specifies allowing without transport
+        return UnitRules(fav, 2, [0, 4, 3, 0])

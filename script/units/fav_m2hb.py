@@ -24,4 +24,4 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             SpecialtiesList=['reco', 'air_transportable']
         )
         fav.modules.remove('Transporter', by_name=True)
-        return UnitRules(fav, 2, [0, 4, 3, 0], 'UH60A_Black_Hawk_US', True)
+        return UnitRules(fav, 2, [0, 4, 3, 0])
