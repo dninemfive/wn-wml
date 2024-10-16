@@ -30,6 +30,9 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         # note to self: make sure to set custom cadavre in addition to custom showroom unit
         # also nts: some way of creating a "base unit" e.g. base XM142, F-14, to avoid duplicating effort
         # oh also create the ammo and missile and stuff ofc
+        # also also nts: stop returning UnitRules for this sort of thing, just return the unit; # of packs is always specified in .register(),
+        # counts per pack can either be specified or looked up using the lookup class using the base unit
+        # idea: .variant method on unit creators which creates a new unit which upgrades from the specified one and has specified changes 
         apache_sead.modules.production.command_point_cost = 250
         apache_sead.modules.ui.SpecialtiesList = ['sead']
         apache_sead.modules.ui.UpgradeFromUnit = 'AH64_Apache_emp1_US'

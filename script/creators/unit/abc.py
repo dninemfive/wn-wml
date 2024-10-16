@@ -67,7 +67,15 @@ class UnitCreator(ABC):
     
     @property
     def tags(self: Self) -> wrappers.unit_modules.tags.TagsModuleWrapper:
-        return self.modules.tags
+        return self.modules.tags    
+    
+    @property
+    def command_point_cost(self: Self) -> int:
+        return self.modules.production.command_point_cost
+    
+    @command_point_cost.setter
+    def command_point_cost(self: Self, value: int) -> None:
+        self.modules.production.command_point_cost = value
 
     # abstract methods
 

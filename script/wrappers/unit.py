@@ -46,6 +46,7 @@ class UnitWrapper(NdfObjectWrapper):
         return self._modules_descriptors
     
     def set_country(self: Self, country: str):
+        raise NotImplemented
         country = MotherCountry.ensure_valid(country)
         self.modules.ui.CountryTexture = country
         self.modules.type.MotherCountry = country
