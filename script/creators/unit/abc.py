@@ -71,7 +71,8 @@ class UnitCreator(ABC):
 
     # abstract methods
 
-    @abstractmethod
+    # virtual/abstract methods
+    # virtual
     def pre_apply(self: Self, msg: Message) -> None:
         pass
 

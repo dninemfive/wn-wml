@@ -76,7 +76,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                                                       "US_8th_Inf",
                                                       "US_11ACR",
                                                       "US_3rd_Arm",
-                                                      "NATO_Garnison_Berlin")
+                                                      "NATO_Garnison_Berlin",
+                                                      "US_101st_Airmobile")
                 # make new units              
                 # TODO: maybe default unit country?
                 # TODO: target module changes with like TModuleType:path/to/property ?
