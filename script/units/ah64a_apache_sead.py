@@ -28,6 +28,9 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         # new missilecarriagedepiction
         # maybe use the ATGM Apache model and do MissileCount=1 ProjectileModelResource=AIM-9 or smth?
         # note to self: make sure to set custom cadavre in addition to custom showroom unit
+        # also nts: some way of creating a "base unit" e.g. base XM142, F-14, to avoid duplicating effort
+        # oh also create the ammo and missile and stuff ofc
         apache_sead.modules.production.command_point_cost = 250
         apache_sead.modules.ui.SpecialtiesList = ['sead']
-        return UnitRules(apache_sead, 1, [0, 3, 2, 0])
+        apache_sead.modules.ui.UpgradeFromUnit = 'AH64_Apache_emp1_US'
+        return UnitRules(apache_sead, 1, [0, 1, 0, 0])

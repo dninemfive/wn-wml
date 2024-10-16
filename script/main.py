@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-import os
-import shutil
 from datetime import datetime
 
 import constants.ndf_paths as ndf_paths
 import constants.paths as paths
+import units.ah64a_apache_sead
 import units.ammo
 import units.ammo.fgr_17_viper
 import units.ammo.m60e3
@@ -13,7 +12,6 @@ import units.ammo.m203
 import units.cmd_m998_humvee_agl
 import units.cmd_m1010_tc3v
 import units.cmd_mot_rifles_ldr
-import units.e2c_hawkeye
 import units.fav
 import units.folt
 import units.iew_team
@@ -35,11 +33,11 @@ import units.mot_mp_patrol
 import units.mot_rifles
 import units.mot_rifles_dragon
 import units.mot_scouts
+import units.mqm10_aquila
 import units.operational_support
 import units.ranger_at_section
 import units.ranger_gunners
 import units.rangers_m203
-import units.rq_2_pioneer
 import units.scat
 import units.stinger_tdar
 import units.xm85_t_chaparral
@@ -48,7 +46,6 @@ import units.xm142_himars_clu
 import units.xm142_himars_he
 import units.xm1100_120mm
 from context.mod_creation import ModCreationContext
-from managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
 from metadata.division_unit_registry import DivisionUnitRegistry
 from metadata.mod import ModMetadata
@@ -160,7 +157,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units.register_vanilla("OH58D_Combat_Scout_US", 1)
                 division_units.register_vanilla("EH60A_EW_US", 1)
                 division_units.register(units.joh58d_kiowa.create(mod_context))
-                division_units.register(units.rq_2_pioneer.create(mod_context))
+                division_units.register(units.mqm10_aquila.create(mod_context))
                 # [[👓]] F-14B TOMCAT TARPS
                 """ AA """
                 # JOH-58C KIOWA
@@ -173,9 +170,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 """ HEL """
                 division_units.register_vanilla("AH64_Apache_US", 2)
                 division_units.register_vanilla("AH64_Apache_emp1_US", 2)
-                division_units.register_vanilla("AH64_Apache_emp2_US", 2)
                 division_units.register_vanilla("AH64_Apache_ATAS_US", 1)
-                # AH-64A APACHE [SEAD]
+                division_units.register(units.ah64a_apache_sead.create)
                 """ AIR """
                 # A-6E INTRUDER [HE]
                 # A-6E INTRUDER [CLU]

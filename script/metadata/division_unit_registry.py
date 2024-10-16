@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from typing import Self
+from typing import Callable, Self
 
+import context.mod_creation
 import utils.ndf.ensure as ensure
 from constants.ndf_paths import DECK_SERIALIZER, DIVISION_RULES
 from managers.unit_id import UnitIdManager
@@ -23,7 +24,8 @@ def ensure_unit_path_list(transports: str | list[str] | None) -> list[str] | Non
 
 class DivisionUnitRegistry(object):
     # ctx: ModCreationContext
-    def __init__(self: Self, ctx, metadata: DivisionMetadata, parent_msg: Message | None = None, *division_priorities: str):
+    def __init__(self: Self, ctx: context.mod_creation.ModCreationContext, metadata: DivisionMetadata, parent_msg: Message | None = None, *division_priorities: str):
+        self.ctx = ctx
         self.metadata = metadata
         self.units: list[UnitRules] = []
         self.parent_msg = parent_msg
@@ -36,7 +38,9 @@ class DivisionUnitRegistry(object):
         for k, v in self.unit_ids.items:
             unit_ids.add(k=k, v=str(v))
 
-    def register(self: Self, rules: UnitRules, override_transports: str | list[str] | None = None):
+    def register(self: Self, rules: UnitRules | Callable[[context.mod_creation.ModCreationContext], UnitRules], override_transports: str | list[str] | None = None):
+        if not isinstance(rules, UnitRules):
+            rules = rules(self.ctx)
         override_transports = ensure_unit_path_list(override_transports)
         if override_transports is not None:
             rules.rule.AvailableTransportList = override_transports
