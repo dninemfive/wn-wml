@@ -16,25 +16,11 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         add_weapon_descriptor(ctx.ndf[ndf_paths.WEAPON_DESCRIPTOR], apache_sead)
         # new MissileCarriage
         # same one for both in-game and showroom
-        missile_carriage_name = f'MissileCarriage_{apache_sead.new_unit.name}'
-        missile_carriage = ensure._object('TMissileCarriageConnoisseur',
-            MeshDescriptor='$/GFX/DepictionResources/Modele_AH64_Apache_ATAS_US',
-            PylonSet='~/DepictionPylonSet_Helico_Default',
-            WeaponInfos=[
-                ensure._object('TMissileCarriageWeaponInfo',
-                               Count=2,
-                               MissileType='eAGM',
-                               WeaponIndex=2),
-                ensure._object('TMissileCarriageWeaponInfo',
-                               Count=8,
-                               MissileType='eAGM',
-                               WeaponIndex=3)                               
-            ]
-        )
-        missile_carriage_showroom = missile_carriage.copy()
-        edit.members(missile_carriage_showroom, PylonSet='~/DepictionPylonSet_Helico_Default_Showroom')
-        ctx.ndf[ndf_paths.MISSILE_CARRIAGE].add(ListRow(missile_carriage, namespace=missile_carriage_name))
-        ctx.ndf[ndf_paths.MISSILE_CARRIAGE].add(ListRow(missile_carriage_showroom, namespace=f'{missile_carriage_name}_Showroom'))
+        apache_sead.unit.modules.edit_members(
+            'MissileCarriage',
+            True,
+            Connoisseur=add_missile_carriage(ctx.ndf[ndf_paths.MISSILE_CARRIAGE],
+                                             apache_sead))
         subgenerators_name, subgenerators_showroom_name = 'SubGenerators_d9_AH64A_APACHE_SEAD_US', 'SubGenerators_Showroom_d9_AH64A_APACHE_SEAD_US'
         gfx_autogen_showroom = ctx.ndf[ndf_paths.GENERATED_DEPICTION_AERIAL_UNITS_SHOWROOM].by_name('Gfx_AH64_Apache_US_Showroom_Autogen').value.copy()
         edit.members(gfx_autogen_showroom, SubDepictionGenerators=[subgenerators_showroom_name])
@@ -82,5 +68,25 @@ def add_weapon_descriptor(ndf: List, creator: UnitCreator) -> None:
     ndf.add(ListRow(weapon_descriptor, namespace=creator.new_unit.weapon_descriptor_name))
     creator.modules.edit_members('WeaponManager', True, Default=creator.new_unit.weapon_descriptor_path)
 
-def add_missile_carriage(ndf: List, creator: UnitCreator, showroom: bool = False) -> None:
-    ...
+def add_missile_carriage(ndf: List, creator: UnitCreator, showroom: bool = False) -> str:
+    missile_carriage = ensure._object(
+        'TMissileCarriageConnoisseur',
+        MeshDescriptor='$/GFX/DepictionResources/Modele_AH64_Apache_ATAS_US',
+        PylonSet=f'~/DepictionPylonSet_Helico_Default{'_Showroom' if showroom else ''}',
+        WeaponInfos=[
+            ensure._object('TMissileCarriageWeaponInfo',
+                            Count=2,
+                            MissileType='eAGM',
+                            WeaponIndex=2),
+            ensure._object('TMissileCarriageWeaponInfo',
+                            Count=8,
+                            MissileType='eAGM',
+                            WeaponIndex=3)                               
+        ]
+    )
+    name: str = creator.new_unit.missile_carriage.showroom.name if showroom else creator.new_unit.missile_carriage.name
+    ndf.add(ListRow(missile_carriage, namespace=name))
+    return name
+
+def add_subgenerators(ndf: List, creator: UnitCreator) -> str:
+    pass

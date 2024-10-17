@@ -65,23 +65,25 @@ class UnitMetadata(object):
     def tag(self: Self) -> str:
         return f'"UNITE_{self.name}"'
     
-    @property
-    def weapon_descriptor(self: Self) -> NamePathPair:
-        return NamePathPair('$/GFX/Weapon/', 'WeaponDescriptor', self.name)
-    
-    # paired properties
-    # paired properties with showroom equivalents
+    # paired properties    
     @property
     def deck_pack_descriptor(self: Self) -> NamePathPair:
         return NamePathPair('~/', 'Descriptor_Deck_Pack_', self.name)
     
     @property
+    def weapon_descriptor(self: Self) -> NamePathPair:
+        return NamePathPair('$/GFX/Weapon/', 'WeaponDescriptor', self.name)
+    
+    # paired properties with showroom equivalents    
+    @property
     def descriptor(self: Self) -> NamePathPair:
-        return NamePathPairWithShowroomEquivalent('$/GFX/Unit/',
-                                                  'Descriptor_',
-                                                  f'Unit_{self.name}',
-                                                  _showroom='ShowRoom',
-                                                  _showroom_position=('After', 'Prefix'))
+        return NamePathPairWithShowroomEquivalent(
+            '$/GFX/Unit/',
+            'Descriptor_',
+            f'Unit_{self.name}',
+            _showroom='ShowRoom',
+            _showroom_position=('After', 'Prefix')
+        )
     
     @property
     def gfx_autogen(self: Self) -> NamePathPairWithShowroomEquivalent:
@@ -90,6 +92,24 @@ class UnitMetadata(object):
             'Gfx_',
             self.name,
             '_Autogen'
+        )
+    
+    @property
+    def missile_carriage(self: Self) -> NamePathPairWithShowroomEquivalent:
+        return NamePathPairWithShowroomEquivalent(
+            '',
+            'MissileCarriage_',
+            self.name,
+            _showroom_position = ('After', 'Suffix')
+        )
+    
+    @property
+    def subgenerators(self: Self) -> NamePathPairWithShowroomEquivalent:
+        return NamePathPairWithShowroomEquivalent(
+            '',
+            'SubGenerators_',
+            self.name,
+            _showroom_position=('After', 'Prefix')
         )
     
     # static methods
