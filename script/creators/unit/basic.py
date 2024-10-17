@@ -44,9 +44,14 @@ class BasicUnitCreator(UnitCreator):
 
     @ndf_path(ndf_paths.SHOWROOM_UNITS)
     def edit_showroom_units(self: Self, ndf: List):
-        copy: UnitWrapper = self.ctx.get_unit(self.gfx_unit.name, showroom=True).copy()
-        copy.DescriptorId = self.ctx.guids.generate(self.new_unit.showroom_descriptor_name)
-        copy.modules.type.copy(self.unit.modules.type.object)
+        showroom_unit: Object
+        if hasattr(self, '_showroom_unit'):
+            showroom_unit = self._showroom_unit
+        else:
+            copy: UnitWrapper = self.ctx.get_unit(self.gfx_unit.name, showroom=True).copy()
+            copy.DescriptorId = self.ctx.guids.generate(self.new_unit.showroom_descriptor_name)
+            copy.modules.type.copy(self.unit.modules.type.object)
+            showroom_unit = copy.object
         # TODO: check if the unit actually has a weapon descriptor to reference
         # try:
         #     copy.modules.remove_where(lambda x: isinstance(x.value, str) and x.value.startswith('$/GFX/Weapon/WeaponDescriptor_'))
@@ -55,7 +60,7 @@ class BasicUnitCreator(UnitCreator):
         #     pass
         # for vehicles with replaced turret models, will have to make a new TacticVehicleDepictionTemplate and add it to GeneratedDepictionVehicles.ndf
         # and then set the depiction path here
-        ndf.add(ListRow(copy.object, visibility='export', namespace=self.new_unit.showroom_descriptor_name))
+        ndf.add(ListRow(showroom_unit, visibility='export', namespace=self.new_unit.showroom_descriptor_name))
 
     @ndf_path(ndf_paths.SHOWROOM_EQUIVALENCE)
     def edit_showroom_equivalence(self: Self, ndf: List):
