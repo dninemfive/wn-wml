@@ -149,8 +149,7 @@ class InfantryUnitCreator(UnitCreator):
                               WeaponUnitFXKey=self._keys._unit,
                               MimeticDescriptor=ensure._object('Descriptor_Unit_MimeticUnit', 
                                                                DescriptorId=self.ctx.guids.generate(guid_key),
-                                                               MimeticName=self._keys._unit),
-                              BoundingBoxSize=f'{self.soldier_count + 2} * Metre')
+                                                               MimeticName=self._keys._unit))
 
     def _edit_groupe_combat(self: Self, module: Object) -> None:
         edit.members(module,

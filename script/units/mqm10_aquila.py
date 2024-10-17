@@ -4,7 +4,8 @@ from context.unit_module import UnitModuleContext
 from units._utils import METRE
 from utils.ndf import ensure
 
-FLIGHT_ALTITUDE = 3000 / 3.2 * METRE
+FLIGHT_ALTITUDE = 706 # = 3000 / 3.2 * METRE TODO: Recalculate to GRU
+                     # weird discrepancy: 706 for LowAltitudeFlyingAltitude, but 494 for Altitude
 FLIGHT_SPEED = 200
 DRAGONFLY = 'A37B_Dragonfly_US'
 
@@ -12,13 +13,12 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     # E-2C HAWKEYE
     with ctx.create_unit("#RECO1 MQM-10 AQUILA", "US", DRAGONFLY, button_texture_src_path='img/units/rq_2_pioneer/icon.png') as mqm_10_aquila:
         # TODO: something to edit plane flight speed and altitude all in one go
-        mqm_10_aquila.modules.edit_members('AirplanePositionModuleDescriptor', LowAltitudeFlyingAltitude=FLIGHT_ALTITUDE)
+        # mqm_10_aquila.modules.edit_members('AirplanePositionModuleDescriptor', LowAltitudeFlyingAltitudeGRU=FLIGHT_ALTITUDE)
         mqm_10_aquila.modules.get('GenericMovement', True).by_member('Default').value.by_member('MaxSpeedInKmph').value = FLIGHT_SPEED
         # copy MiG-27M airplane module for maneuverability (worst maneuverability in the game, apparently)
-        mqm_10_aquila.modules.replace_from('MiG_27M_bombe_SOV', 'AirplaneMovement', True)
-        
+        mqm_10_aquila.modules.replace_from('MiG_27M_bombe_SOV', 'AirplaneMovement', True)        
         mqm_10_aquila.modules.edit_members('AirplaneMovement', True,
-            Altitude=FLIGHT_ALTITUDE,
+            AltitudeGRU=494,
             SpeedInKmph=FLIGHT_SPEED,
             OrderedAttackStrategies=['DogfightAttackStrategyDescriptor']
         )

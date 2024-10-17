@@ -17,8 +17,8 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             ammo.edit_members(Name=ctx.localization.register('M712 Copperhead'),
                               TraitsToken=ensure._list("'STAT'", "'cluster'", "'CLGP'"),
                               PorteeMaximaleGRU=17650, # ~ same ratio to the base M198 as the real-life M712 to its counterpart
-                              DispersionAtMaxRange=Metre(500),
-                              DispersionAtMinRange=Metre(500),
+                              DispersionAtMaxRangeGRU=177,
+                              DispersionAtMinRangeGRU=177,
                               CorrectedShotDispersionMultiplier=0.25,
                               CorrectedShotAimtimeMultiplier=0.7,
                               SupplyCost=200, # TODO: figure out the relative supply cost
