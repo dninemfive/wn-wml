@@ -1,4 +1,6 @@
 from constants import ndf_paths
+from script.creators.unit.abc import UnitCreator
+from script.metadata.unit import UnitMetadata
 import utils.ndf.ensure as ensure
 from context.mod_creation import ModCreationContext
 from context.unit_module import UnitModuleContext
@@ -11,14 +13,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     with ctx.create_unit("AH-64A APACHE [SEAD]", "US", "AH64_Apache_US") as apache_sead:
         # upgrade from Apache ATAS or whatever is at the end of the apache upgrades list
         apache_sead.modules.ui.UpgradeFromUnit = 'AH64_Apache_emp1_US'
-        # new weapondescriptor
-        weapon_descriptor: Object = ctx.ndf[ndf_paths.WEAPON_DESCRIPTOR].by_name('WeaponDescriptor_AH64_Apache_US').value.copy()
-        turrets: List = weapon_descriptor.by_member('TurretDescriptorList').value
-        turret_2: Object = turrets[1].value
-        mounted_weapon: Object = turret_2.by_member('MountedWeaponDescriptorList').value[0].value
-        mounted_weapon.by_member('Ammunition').value = '$/GFX/Weapon/Ammo_AA_AIM9J_Sidewinder'
-        ctx.ndf[ndf_paths.WEAPON_DESCRIPTOR].add(ListRow(weapon_descriptor, namespace='WeaponDescriptor_d9_AH64A_APACHE_SEAD_US'))
-        apache_sead.modules.edit_members('WeaponManager', True, Default=f'$/GFX/Weapon/WeaponDescriptor_d9_AH64A_APACHE_SEAD_US')
+        add_weapon_descriptor(ctx.ndf[ndf_paths.WEAPON_DESCRIPTOR], apache_sead)
         # new MissileCarriage
         # same one for both in-game and showroom
         missile_carriage_name = f'MissileCarriage_{apache_sead.new_unit.name}'
@@ -77,3 +72,15 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         apache_sead.modules.ui.SpecialtiesList = ['sead']
         apache_sead.modules.ui.UpgradeFromUnit = 'AH64_Apache_emp1_US'
         return UnitRules(apache_sead, 1, [0, 1, 0, 0])
+    
+def add_weapon_descriptor(ndf: List, creator: UnitCreator) -> None:    
+    weapon_descriptor: Object = ndf.by_name(creator.src_unit.weapon_descriptor_name).value.copy()
+    turrets: List = weapon_descriptor.by_member('TurretDescriptorList').value
+    turret_2: Object = turrets[1].value
+    mounted_weapon: Object = turret_2.by_member('MountedWeaponDescriptorList').value[0].value
+    mounted_weapon.by_member('Ammunition').value = '$/GFX/Weapon/Ammo_AA_AIM9J_Sidewinder'
+    ndf.add(ListRow(weapon_descriptor, namespace=creator.new_unit.weapon_descriptor_name))
+    creator.modules.edit_members('WeaponManager', True, Default=creator.new_unit.weapon_descriptor_path)
+
+def add_missile_carriage(ndf: List, creator: UnitCreator, showroom: bool = False) -> None:
+    ...

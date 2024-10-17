@@ -1,66 +1,98 @@
 from dataclasses import dataclass
-from typing import Self
+from typing import Literal, Self
 
 from utils.ndf import ensure
 from utils.localization import delocalize
 
+@dataclass(frozen=True)
+class NamePathPair(object):
+    _path: str
+    _prefix: str
+    _base_name: str
+    _suffix: str = ""
 
-@dataclass
+    @property
+    def name(self: Self) -> str:
+        return f'{self._prefix}{self._base_name}{self._suffix}'
+    
+    @property
+    def path(self: Self) -> str:
+        return f'{self._path}{self.name}'
+    
+_pos_t = Literal['Before', 'After']
+_fix_t = Literal['Prefix', 'Suffix']
+ShowroomPosition = tuple[_pos_t, _fix_t]
+
+@dataclass(frozen=True)
+class NamePathPairWithShowroomEquivalent(NamePathPair):
+    _showroom: str = 'Showroom'
+    _showroom_position: ShowroomPosition = ('Before', 'Suffix')
+    
+    @property
+    def _showroom_name(self: Self) -> str:
+        def sia(pos: _pos_t, fix: _fix_t) -> str:
+            """ showroom if appropriate """
+            return self._showroom if self._showroom_position == (pos, fix) else ''
+        def fix(value: str,
+                key: _fix_t) -> str:
+            return f'{sia('Before', key)}{value}{sia('After', key)}'
+        prefix = fix(self._prefix, 'Prefix')
+        suffix = fix(self._suffix, 'Suffix')
+        return f'{prefix}{self._base_name}{suffix}'
+
+    @property
+    def showroom(self: Self) -> NamePathPair:
+        return NamePathPair('', self._showroom_name, self._path)
+
+@dataclass(frozen=True)
 class UnitMetadata(object):
     name: str
 
+    # unpaired properties    
     @property
-    def quoted_name(self: Self) -> str:
-        return f"'{self.name}'"
+    def button_texture_name(self: Self) -> str:
+        return f'Texture_Button_Unit_{self.name}'
     
     @property
     def class_name_for_debug(self: Self) -> str:
         return f"'Unit_{self.name}'"
-
-    @property
-    def descriptor_name(self: Self) -> str:
-        return f'Descriptor_Unit_{self.name}'
     
     @property
-    def descriptor_path(self: Self) -> str:
-        return f'$/GFX/Unit/{self.descriptor_name}'
-    
-    @property
-    def showroom_descriptor_name(self: Self) -> str:
-        return f'Descriptor_ShowRoomUnit_{self.name}'
-
-    @property
-    def showroom_descriptor_path(self: Self) -> str:
-        return f'$/GFX/Unit/{self.showroom_descriptor_name}'
-    
-    @property
-    def deck_pack_descriptor_name(self: Self) -> str:
-        return f"Descriptor_Deck_Pack_{self.name}"
-    
-    @property
-    def deck_pack_descriptor_path(self: Self) -> str:
-        return f"~/{self.deck_pack_descriptor_name}"
+    def quoted_name(self: Self) -> str:
+        return f"'{self.name}'"
     
     @property
     def tag(self: Self) -> str:
         return f'"UNITE_{self.name}"'
     
     @property
-    def button_texture_name(self: Self) -> str:
-        return f'Texture_Button_Unit_{self.name}'
+    def weapon_descriptor(self: Self) -> NamePathPair:
+        return NamePathPair('$/GFX/Weapon/', 'WeaponDescriptor', self.name)
+    
+    # paired properties
+    # paired properties with showroom equivalents
+    @property
+    def deck_pack_descriptor(self: Self) -> NamePathPair:
+        return NamePathPair('~/', 'Descriptor_Deck_Pack_', self.name)
     
     @property
-    def weapon_descriptor_name(self: Self) -> str:
-        return f'WeaponDescriptor_{self.name}'
+    def descriptor(self: Self) -> NamePathPair:
+        return NamePathPairWithShowroomEquivalent('$/GFX/Unit/',
+                                                  'Descriptor_',
+                                                  f'Unit_{self.name}',
+                                                  _showroom='ShowRoom',
+                                                  _showroom_position=('After', 'Prefix'))
     
     @property
-    def weapon_descriptor_path(self: Self) -> str:
-        return f'$/GFX/Weapon/{self.weapon_descriptor_name}'
+    def gfx_autogen(self: Self) -> NamePathPairWithShowroomEquivalent:
+        return NamePathPairWithShowroomEquivalent(
+            '~/',
+            'Gfx_',
+            self.name,
+            '_Autogen'
+        )
     
-    @property
-    def gfx_autogen_name(self: Self) -> str:
-        return f'Gfx_{self.name}_Autogen'
-    
+    # static methods
     @staticmethod
     def from_localized_name(prefix: str, localized_name: str, country: str) -> Self:
         return UnitMetadata(f"{prefix}_{delocalize(localized_name)}_{country}")
