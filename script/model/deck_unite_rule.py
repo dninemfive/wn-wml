@@ -68,3 +68,6 @@ class TDeckUniteRule(object):
             num_per_pack,
             xp_multipliers
         )
+    
+    @property
+    def units_per_xp(self: Self) -> 

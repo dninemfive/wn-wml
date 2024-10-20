@@ -5,12 +5,13 @@ from metadata.unit import UnitMetadata
 from model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import MapRow
 
+UnitsPerXp = tuple[int, int, int, int]
 
 class UnitRules(object):
     def __init__(self: Self,
                  unit: UnitMetadata | UnitCreator,
                  num_packs: int,
-                 units_per_pack: tuple[int, int, int, int],
+                 units_per_pack: UnitsPerXp,
                  transports: list[str] | None = None,
                  force_awt: bool | None = None):
         if isinstance(unit, UnitCreator):
@@ -21,7 +22,7 @@ class UnitRules(object):
 
     @property
     def pack(self: Self) -> MapRow:
-        return MapRow(key=self.unit.deck_pack_descriptor_path, value=str(self.num_packs))
+        return MapRow(key=self.unit.deck_pack_descriptor.path, value=str(self.num_packs))
 
     @staticmethod
     def from_deck_unite_rule(unit: UnitMetadata, num_packs: int, rule: TDeckUniteRule) -> Self:
