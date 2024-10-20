@@ -54,3 +54,4 @@ env.bak/
 venv.bak/
 
 docker-compose.debug.yml
+art/3d/
