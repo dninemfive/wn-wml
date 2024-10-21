@@ -6,7 +6,7 @@ from typing import Callable
 import mw2.constants.ndf_paths as ndf_paths
 import mw2.constants.paths as paths
 from div_9id import ammo
-from div_9id.units import AA, ART, HEL, INF, LOG, REC, TNK
+from div_9id.units import transports, AA, ART, HEL, INF, LOG, REC, TNK
 from mw2.context.mod_creation import ModCreationContext
 from mw2.metadata.division import DivisionMetadata
 from mw2.metadata.mod import ModMetadata
@@ -40,7 +40,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                                                       "US_101st_Airmobile")
                 # make new units              
                 # TODO: maybe default unit country?
-                # TODO: target module changes with like TModuleType:path/to/property ?       
+                # TODO: target module changes with like TModuleType:path/to/property ?      
+                transports.init(mod_context)
                 for category in [LOG, INF, ART, TNK, REC, AA, HEL]:
                     group: Callable[[DivisionUnitRegistry, Message], UnitGroup] = getattr(category, 'group')
                     group(division_units, msg).register_all()

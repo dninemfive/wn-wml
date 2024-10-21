@@ -1,17 +1,17 @@
-from div_9id.units.transports import (BLACKHAWK,
-                                      CHINOOK,
-                                      M151A2_M2HB,
-                                      M35,
-                                      M998_HUMVEE,
-                                      REC_HUMVEE_AGL,
-                                      REC_HUMVEE_M2HB)
+from ..transports import (BLACKHAWK,
+                          CHINOOK,
+                          FAV,
+                          M151A2_M2HB,
+                          M35,
+                          M998_HUMVEE,
+                          REC_HUMVEE_AGL,
+                          REC_HUMVEE_M2HB)
 from mw2.unit_registration.division_unit_registry import DivisionUnitRegistry
 from mw2.unit_registration.unit_group import UnitGroup
 from mw2.unit_registration.unit_registration_info import \
     UnitRegistrationInfo as u
 from mw2.utils.types.message import Message
 
-from fav                    import create as fav
 from fav_agl                import create as fav_agl
 from fav_m2hb               import create as fav_m2hb
 from folt                   import create as folt
@@ -25,7 +25,6 @@ from scoutat_team           import create as scout_at_team
 FAV_TRANSPORTS = [None, CHINOOK]
 
 def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> UnitGroup:
-    FAV = fav(registry.ctx).new_unit.descriptor.name
     return UnitGroup(
         'REC',
         registry,
