@@ -12,6 +12,7 @@ from metadata.division import DivisionMetadata
 from metadata.unit import UnitMetadata
 from model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
+from unit_registration.new_src_unit_pair import NewSrcUnitPair
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message, try_nest
 
@@ -76,8 +77,8 @@ class DivisionUnitRegistry(object):
             unit: UnitMetadata = UnitMetadata(unit)
             self._register(unit, None, packs, units_per_xp, transports)
         elif isinstance(unit, UnitDelegate):
-            unit: UnitCreator = unit(self.ctx)            
-            self._register(unit.new_unit, unit.src_unit, packs, units_per_xp, transports)
+            src_unit, new_unit = NewSrcUnitPair(unit(self.ctx)).to_tuple            
+            self._register(new_unit, src_unit, packs, units_per_xp, transports)
 
     def _look_up_rule_items(self: Self,
                       unit: UnitMetadata,

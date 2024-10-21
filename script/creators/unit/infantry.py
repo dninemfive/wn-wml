@@ -10,7 +10,6 @@ from creators.unit.utils.infantry._squad_keys import _SquadKeys
 from creators.unit.utils.infantry.weapon import InfantryWeapon
 from creators.unit.utils.infantry.weapon_set import InfantryWeaponSet
 from managers.guid import GuidManager
-from metadata.new_unit import NewUnitMetadata
 from metadata.unit import UnitMetadata
 from model.template_infantry_selector_tactic import \
     TemplateInfantrySelectorTactic

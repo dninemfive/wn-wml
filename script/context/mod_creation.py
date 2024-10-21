@@ -14,7 +14,7 @@ from managers.guid import GuidManager
 from managers.localization import LocalizationManager
 from managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
-from metadata.division_unit_registry import DivisionUnitRegistry
+from unit_registration.division_unit_registry import DivisionUnitRegistry
 from metadata.mod import ModMetadata
 from metadata.unit import UnitMetadata
 from ndf_parse import Mod
