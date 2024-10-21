@@ -4,45 +4,45 @@ from datetime import datetime
 
 import constants.ndf_paths as ndf_paths
 import constants.paths as paths
-import units.ah64a_apache_sead
-import units.ammo
+import script.units.HEL.ah64a_apache_sead
+import units._ammo
 import units.ammo.fgr_17_viper
 import units.ammo.m60e3
 import units.ammo.m203
 import units.cmd_m998_humvee_agl
 import units.cmd_m997_tc3v
-import units.cmd_mot_rifles_ldr
-import units.fav
+import script.units.INF.cmd_mot_rifles_ldr
+import script.units.REC.fav
 import units.fav_agl
 import units.fav_m2hb
 import units.folt
 import units.iew_team
-import units.joh58d_kiowa
-import units.m167a2_pivads_20mm
+import script.units.HEL.joh58d_kiowa
+import script.units.AA.m167a2_pivads_20mm
 import units.m198_155mm_clu
 import units.m198_copperhead
-import units.m224_60mm
-import units.m966_humvee_tow
-import units.m998_avenger
+import script.units.INF.m224_60mm
+import script.units.TNK.m966_humvee_tow
+import script.units.AA.m998_avenger
 import units.m998_humvee_agl
 import units.m998_humvee_glhl
 import units.m998_humvee_m2hb
 import units.m998_humvee_supply
 import units.m1075_pls
-import units.mk19_40mm
+import script.units.INF.mk19_40mm
 import units.mot_engineers
 import units.mot_mp_patrol
 import units.mot_rifles
 import units.mot_rifles_dragon
-import units.mot_scouts
+import script.units.REC.mot_scouts
 import units.mqm10_aquila
 import units.operational_support
 import units.ranger_at_section
 import units.ranger_gunners
 import units.rangers_m203
-import units.scoutat_team
-import units.stinger_tdar
-import units.xm85_t_chaparral
+import script.units.REC.scoutat_team
+import script.units.AA.stinger_tdar
+import script.units.AA.xm85_t_chaparral
 import units.xm119_imcs
 import units.xm142_himars_clu
 import units.xm142_himars_he
@@ -63,9 +63,9 @@ reset_source(mod_metadata, wn_metadata)
 
 with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as root_msg:
     with ModCreationContext(mod_metadata, root_msg, *ndf_paths.ALL) as mod_context:
-            units.ammo.fgr_17_viper.create(mod_context)
-            units.ammo.m60e3.create(mod_context)
-            units.ammo.m203.create(mod_context)
+            units._ammo.fgr_17_viper.create(mod_context)
+            units._ammo.m60e3.create(mod_context)
+            units._ammo.m203.create(mod_context)
             division_units: DivisionUnitRegistry
             with root_msg.nest("Creating units") as msg:
                 division_units = DivisionUnitRegistry(mod_context,
@@ -80,19 +80,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # make new units              
                 # TODO: maybe default unit country?
                 # TODO: target module changes with like TModuleType:path/to/property ?
-                """ LOG """
-                division_units._register_vanilla("FOB_US", 1)
-                division_units._register_modded(units.m998_humvee_supply.create(mod_context))
-                division_units._register_vanilla("M35_supply_US", 1)
-                division_units._register_modded(units.m1075_pls.create(mod_context))
-                division_units._register_vanilla("CH47_Super_Chinook_US", 1)
-
-                division_units._register_vanilla("OH58C_CMD_US", 1)
-                division_units._register_vanilla("UH60A_CO_US", 1)
                 
-                # M966 HMMWV SGT
-                division_units._register_vanilla("M1025_Humvee_CMD_US", 1)
-                division_units._register_modded(units.cmd_m997_tc3v.create(mod_context))
                 """ INF """
                 M998_HUMVEE, M1038_HUMVEE = "Descriptor_Unit_M998_Humvee_US", "Descriptor_Unit_M1038_Humvee_US"
                 M998_HUMVEE_M2HB, M998_HUMVEE_AGL = "Descriptor_Unit_d9_M998_HUMVEE_M2HB_US", "Descriptor_Unit_d9_M998_HUMVEE_AGL_US"
@@ -103,7 +91,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 HEAVY_TRANSPORTS = [M35, CHINOOK]
                 # TODO: variant of the mod which doesn't reference the MP Humvee because it's a DLC unit
                 division_units.register(units.mot_mp_patrol.create(mod_context), [M998_HUMVEE, "Descriptor_Unit_M1025_Humvee_MP_US"])
-                division_units.register(units.cmd_mot_rifles_ldr.create(mod_context), [M1038_HUMVEE, M998_HUMVEE_M2HB, M998_HUMVEE_AGL, BLACKHAWK])
+                division_units.register(script.units.INF.cmd_mot_rifles_ldr.create(mod_context), [M1038_HUMVEE, M998_HUMVEE_M2HB, M998_HUMVEE_AGL, BLACKHAWK])
                 division_units.register(units.mot_rifles.create(mod_context), [M998_HUMVEE, M998_HUMVEE_AGL, BLACKHAWK])
                 division_units.register(units.mot_rifles_dragon.create(mod_context), [M998_HUMVEE, M998_HUMVEE_M2HB, BLACKHAWK])
                 division_units.register("Rifles_Cavalry_US", 1, [M998_HUMVEE_M2HB, M998_HUMVEE_AGL, BLACKHAWK])
@@ -116,8 +104,8 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 division_units._register_vanilla("Airborne_CMD_US", 1, [M1038_HUMVEE])
                 division_units._register_vanilla("Airborne_Dragon_US", 1, [M1038_HUMVEE])
                 division_units._register_vanilla("ATteam_TOW2_US", 1, [M998_HUMVEE, M998_HUMVEE_AGL])
-                division_units._register_modded(units.mk19_40mm.create(mod_context), [M998_HUMVEE, M998_HUMVEE_AGL, BLACKHAWK])
-                division_units._register_modded(units.m224_60mm.create(mod_context), [M998_HUMVEE, BLACKHAWK])
+                division_units._register_modded(script.units.INF.mk19_40mm.create(mod_context), [M998_HUMVEE, M998_HUMVEE_AGL, BLACKHAWK])
+                division_units._register_modded(script.units.INF.m224_60mm.create(mod_context), [M998_HUMVEE, BLACKHAWK])
                 """ ART """
                 division_units._register_vanilla("Mortier_107mm_US", 2, [M998_HUMVEE, BLACKHAWK])
                 division_units._register_modded(units.xm1100_120mm.create(mod_context))
@@ -134,7 +122,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # XM4 SLAMMER
                 # XM4 SLAMMER AGL
                 # RDF/LT
-                division_units._register_modded(units.m966_humvee_tow.create(mod_context))
+                division_units._register_modded(script.units.TNK.m966_humvee_tow.create(mod_context))
                 division_units._register_vanilla('M1025_Humvee_TOW_US', 3)
                 division_units._register_modded(units.m998_humvee_glhl.create(mod_context))
                 # M1025 HUMVEE AGL
@@ -145,7 +133,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 """ REC """
                 REC_HUMVEE_M2HB, REC_HUMVEE_AGL = "Descriptor_Unit_M1025_Humvee_scout_US", "Descriptor_Unit_M1025_Humvee_AGL_nonPara_US"
                 SMALL_RECON_TRANSPORTS = [M998_HUMVEE, REC_HUMVEE_M2HB, REC_HUMVEE_AGL, BLACKHAWK]
-                FAV = units.fav.create(mod_context).unit.descriptor_name
+                FAV = script.units.REC.fav.create(mod_context).unit.descriptor_name
                 division_units._register_modded(units.fav_agl.create)
                 division_units._register_modded(units.fav_m2hb.create)
                 # 👓 FAV TOW
@@ -156,28 +144,28 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # M998 HUMVEE G/VLLD
                 division_units._register_modded(units.operational_support.create(mod_context), HEAVY_TRANSPORTS)
                 division_units._register_modded(units.iew_team.create(mod_context), SMALL_RECON_TRANSPORTS)
-                division_units._register_modded(units.mot_scouts.create(mod_context), SMALL_RECON_TRANSPORTS)
-                division_units._register_modded(units.scoutat_team.create(mod_context), SMALL_RECON_TRANSPORTS)
+                division_units._register_modded(script.units.REC.mot_scouts.create(mod_context), SMALL_RECON_TRANSPORTS)
+                division_units._register_modded(script.units.REC.scoutat_team.create(mod_context), SMALL_RECON_TRANSPORTS)
                 division_units._register_vanilla("OH58C_Scout_US", 1)
                 division_units._register_vanilla("OH58D_Combat_Scout_US", 1)
                 division_units._register_vanilla("EH60A_EW_US", 1)
-                division_units._register_modded(units.joh58d_kiowa.create(mod_context))
+                division_units._register_modded(script.units.HEL.joh58d_kiowa.create(mod_context))
                 division_units._register_modded(units.mqm10_aquila.create(mod_context))
                 # [[👓]] F-14D TOMCAT TARPS
                 """ AA """
                 # JOH-58C KIOWA
-                division_units._register_modded(units.m167a2_pivads_20mm.create(mod_context), [M998_HUMVEE, CHINOOK])
+                division_units._register_modded(script.units.AA.m167a2_pivads_20mm.create(mod_context), [M998_HUMVEE, CHINOOK])
                 # EXCALIBUR VWC
-                division_units._register_modded(units.m998_avenger.create(mod_context))
+                division_units._register_modded(script.units.AA.m998_avenger.create(mod_context))
                 # M998 SETTER?
-                division_units._register_modded(units.xm85_t_chaparral.create(mod_context), [M35])
+                division_units._register_modded(script.units.AA.xm85_t_chaparral.create(mod_context), [M35])
                 division_units._register_vanilla("MANPAD_Stinger_C_US", 1, [M998_HUMVEE, M998_HUMVEE_AGL, BLACKHAWK])
-                division_units._register_modded(units.stinger_tdar.create(mod_context), [M998_HUMVEE, M998_HUMVEE_M2HB, BLACKHAWK])
+                division_units._register_modded(script.units.AA.stinger_tdar.create(mod_context), [M998_HUMVEE, M998_HUMVEE_M2HB, BLACKHAWK])
                 """ HEL """
                 division_units._register_vanilla("AH64_Apache_US", 2)
                 division_units._register_vanilla("AH64_Apache_emp1_US", 2)
                 division_units._register_vanilla("AH64_Apache_ATAS_US", 1)
-                division_units._register_modded(units.ah64a_apache_sead.create)
+                division_units._register_modded(script.units.HEL.ah64a_apache_sead.create)
                 """ AIR """
                 # A-6E INTRUDER [HE]
                 # A-6E INTRUDER [CLU]
