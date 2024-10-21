@@ -14,5 +14,5 @@ def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> 
         u('AH64_Apache_US',         2),
         u('AH64_Apache_emp1_US',    2),
         u('AH64_Apache_ATAS_US',    1),
-        u(apache_sead,              1)
+        # u(apache_sead,              1)
     )

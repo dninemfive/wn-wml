@@ -79,7 +79,8 @@ def _list(_list: List | list[CellValue] = [], *items: CellValue) -> List:
     result = List()
     if isinstance(_list, list):
         for item in _list:
-            result.add(listrow(ndf_type(item)))
+            if item is not None:
+                result.add(listrow(ndf_type(item)))
     else:
         result.add(listrow(ndf_type(_list)))
     for item in items:

@@ -84,7 +84,7 @@ class DivisionUnitRegistry(object):
                       transports: Iterable[_types.Transport] | None,
                       msg: Message)\
                         -> tuple[_types.UnitsPerXp, list[_types.Transport] | None]:
-        if units_per_xp is not None and transports is not None:
+        if units_per_xp is not None:
             return (units_per_xp, transports)
         rule: TDeckUniteRule = self.lookup.look_up(unit, msg)
         if units_per_xp is None:

@@ -20,4 +20,4 @@ def create(ctx: ModCreationContext) -> NewSrcUnitPair:
         fav_agl.modules.remove('Transporter', by_name=True)
         with fav_agl.edit_weapons('M1025_Humvee_AGL_nonPara_US') as _:
             pass
-        return fav_agl
+        return (fav_agl, 'Ferret_Mk2_UK')

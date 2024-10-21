@@ -16,4 +16,4 @@ def create(ctx: ModCreationContext) -> NewSrcUnitPair:
             SpecialtiesList=['reco', 'air_transportable']
         )
         fav_m2hb.modules.remove('Transporter', by_name=True)
-        return fav_m2hb
+        return (fav_m2hb, 'Ferret_Mk2_UK')

@@ -42,7 +42,7 @@ class NamePathPairWithShowroomEquivalent(NamePathPair):
 
     @property
     def showroom(self: Self) -> NamePathPair:
-        return NamePathPair('', self._showroom_name, self._path)
+        return NamePathPair(self._path, '', self._showroom_name)
 
 @dataclass(frozen=True)
 class UnitMetadata(object):
@@ -72,7 +72,7 @@ class UnitMetadata(object):
     
     @property
     def weapon_descriptor(self: Self) -> NamePathPair:
-        return NamePathPair('$/GFX/Weapon/', 'WeaponDescriptor', self.name)
+        return NamePathPair('$/GFX/Weapon/', 'WeaponDescriptor_', self.name)
     
     # paired properties with showroom equivalents    
     @property
