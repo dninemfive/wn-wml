@@ -3,17 +3,20 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Callable
 
+import div_9id.ammo
+import div_9id.ammo.fgr_17_viper
+import div_9id.ammo.m60e3
+import div_9id.ammo.m203
 import mw2.constants.ndf_paths as ndf_paths
 import mw2.constants.paths as paths
-from div_9id import ammo
-from div_9id.units import transports, AA, ART, HEL, INF, LOG, REC, TNK
+from div_9id.units import AA, ART, HEL, INF, LOG, REC, TNK, transports
 from mw2.context.mod_creation import ModCreationContext
 from mw2.metadata.division import DivisionMetadata
 from mw2.metadata.mod import ModMetadata
 from mw2.metadata.warno import WarnoMetadata
 from mw2.unit_registration.division_unit_registry import DivisionUnitRegistry
 from mw2.unit_registration.unit_group import UnitGroup
-from mw2.utils.bat import reset_source, generate_mod
+from mw2.utils.bat import generate_mod, reset_source
 from mw2.utils.types.message import Message
 
 wn_metadata = WarnoMetadata(paths.WARNO_DIRECTORY)
@@ -24,9 +27,9 @@ reset_source(mod_metadata, wn_metadata)
 
 with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as root_msg:
     with ModCreationContext(mod_metadata, root_msg, *ndf_paths.ALL) as mod_context:
-            ammo.fgr_17_viper.create(mod_context)
-            ammo.m60e3.create(mod_context)
-            ammo.m203.create(mod_context)
+            div_9id.ammo.fgr_17_viper.create(mod_context)
+            div_9id.ammo.m60e3.create(mod_context)
+            div_9id.ammo.m203.create(mod_context)
             division_units: DivisionUnitRegistry
             with root_msg.nest("Creating units") as msg:
                 division_units = DivisionUnitRegistry(mod_context,
