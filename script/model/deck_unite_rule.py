@@ -7,7 +7,7 @@ import utils.ndf.ensure as ensure
 from creators.unit.basic import BasicUnitCreator
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, MemberRow, Object
-from unit_registry.types import UnitsPerXp
+from unit_registration.types import UnitsPerXp
 
 UNITE_RULE = 'TDeckUniteRule'
 KEY_AVAILABLE_TRANSPORT_LIST = 'AvailableTransportList'
@@ -55,7 +55,7 @@ class TDeckUniteRule(object):
         xp_multipliers = [x / num_per_pack for x in num_per_xp]
         available_without_transport = force_awt if force_awt is not None else (transports is None)
         return TDeckUniteRule(
-            metadata.descriptor_path,
+            metadata.descriptor.path,
             available_without_transport,
             transports,
             num_per_pack,

@@ -6,7 +6,7 @@ import utils.ndf.edit as edit
 from constants.ndf_paths import (DECK_SERIALIZER, DIVISION_LIST,
                                  DIVISION_RULES, DIVISIONS)
 from metadata.division import DivisionMetadata
-from metadata.division_unit_registry import DivisionUnitRegistry
+from unit_registration.division_unit_registry import DivisionUnitRegistry
 from ndf_parse.model import List, ListRow, Map, MapRow
 from ndf_parse.model.abc import CellValue
 from utils.ndf.decorators import ndf_path

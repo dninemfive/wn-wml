@@ -49,7 +49,7 @@ import units.xm142_himars_he
 import units.xm1100_120mm
 from context.mod_creation import ModCreationContext
 from metadata.division import DivisionMetadata
-from metadata.division_unit_registry import DivisionUnitRegistry
+from unit_registration.division_unit_registry import DivisionUnitRegistry
 from metadata.mod import ModMetadata
 from metadata.warno import WarnoMetadata
 from utils.bat import generate_mod, reset_source
@@ -102,14 +102,14 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 LARGE_UNIT_TRANSPORTS = [M1038_HUMVEE, BLACKHAWK]
                 HEAVY_TRANSPORTS = [M35, CHINOOK]
                 # TODO: variant of the mod which doesn't reference the MP Humvee because it's a DLC unit
-                division_units._register_modded(units.mot_mp_patrol.create(mod_context), [M998_HUMVEE, "Descriptor_Unit_M1025_Humvee_MP_US"])
-                division_units._register_modded(units.cmd_mot_rifles_ldr.create(mod_context), [M1038_HUMVEE, M998_HUMVEE_M2HB, M998_HUMVEE_AGL, BLACKHAWK])
-                division_units._register_modded(units.mot_rifles.create(mod_context), [M998_HUMVEE, M998_HUMVEE_AGL, BLACKHAWK])
-                division_units._register_modded(units.mot_rifles_dragon.create(mod_context), [M998_HUMVEE, M998_HUMVEE_M2HB, BLACKHAWK])
-                division_units._register_vanilla("Rifles_Cavalry_US", 1, [M998_HUMVEE_M2HB, M998_HUMVEE_AGL, BLACKHAWK])
-                division_units._register_vanilla("Rifles_HMG_US", 1, [M1038_HUMVEE, M998_HUMVEE_M2HB, BLACKHAWK])
-                division_units._register_modded(units.rangers_m203.create(mod_context), LARGE_UNIT_TRANSPORTS)
-                division_units._register_modded(units.ranger_at_section.create(mod_context), LARGE_UNIT_TRANSPORTS)
+                division_units.register(units.mot_mp_patrol.create(mod_context), [M998_HUMVEE, "Descriptor_Unit_M1025_Humvee_MP_US"])
+                division_units.register(units.cmd_mot_rifles_ldr.create(mod_context), [M1038_HUMVEE, M998_HUMVEE_M2HB, M998_HUMVEE_AGL, BLACKHAWK])
+                division_units.register(units.mot_rifles.create(mod_context), [M998_HUMVEE, M998_HUMVEE_AGL, BLACKHAWK])
+                division_units.register(units.mot_rifles_dragon.create(mod_context), [M998_HUMVEE, M998_HUMVEE_M2HB, BLACKHAWK])
+                division_units.register("Rifles_Cavalry_US", 1, [M998_HUMVEE_M2HB, M998_HUMVEE_AGL, BLACKHAWK])
+                division_units.register("Rifles_HMG_US", 1, [M1038_HUMVEE, M998_HUMVEE_M2HB, BLACKHAWK])
+                division_units.register(units.rangers_m203.create(mod_context), LARGE_UNIT_TRANSPORTS)
+                division_units.register(units.ranger_at_section.create(mod_context), LARGE_UNIT_TRANSPORTS)
                 division_units._register_modded(units.ranger_gunners.create(mod_context), HEAVY_TRANSPORTS)
                 division_units._register_vanilla("Engineer_CMD_US", 1, [M998_HUMVEE, M998_HUMVEE_AGL])
                 division_units._register_modded(units.mot_engineers.create(mod_context), [M998_HUMVEE, M998_HUMVEE_AGL])
