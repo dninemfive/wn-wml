@@ -14,8 +14,12 @@ from mot_rifles import create as mot_rifles
 from ranger_at_section import create as rangers_at
 from ranger_gunners import create as rangers_mg
 from rangers_m203 import create as rangers_m203
+from m998_humvee_m2hb    import create as m998_m2hb
+from m998_humvee_agl    import create as m998_agl
 
 def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> UnitGroup:
+    M998_HUMVEE_M2HB = m998_m2hb(registry.ctx).new_unit.descriptor.name
+    M998_HUMVEE_AGL  =  m998_agl(registry.ctx).new_unit.descriptor.name
     return UnitGroup(
         'INF',
         registry,

@@ -1,14 +1,10 @@
-import constants.ndf_paths as ndf_paths
-from context.mod_creation import ModCreationContext
-from context.unit_module import UnitModuleContext
-from creators.unit.basic import BasicUnitCreator
-from metadata.unit_rules import UnitRules
+from mw2.context.mod_creation import ModCreationContext
+from mw2.creators.unit.basic import BasicUnitCreator
 from ndf_parse.model import List, ListRow, MemberRow, Object
-from utils.ndf import ensure
-from units._utils import autonomy_to_fuel_move_duration as to_fmd
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
     # M998 HUMVEE M2HB
     with ctx.create_unit("M998 HUMVEE M2HB", "US", "M1025_Humvee_scout_US") as trans_m998_humvee_m2hb:
         trans_m998_humvee_m2hb.modules.type.edit_members(

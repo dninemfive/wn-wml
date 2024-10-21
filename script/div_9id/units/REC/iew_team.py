@@ -1,11 +1,11 @@
-from context.mod_creation import ModCreationContext
-from metadata.division_unit_registry import UnitRules
-from utils.ndf import ensure
-from units._weapons import M16A2, M21, VIPER
+from mw2.context.mod_creation import ModCreationContext
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
+from mw2.utils.ndf import ensure
+from ..infantry_weapons import M16A2, M21, VIPER
 
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
-    # FWD SUPPORT [EW]
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
+    # IEW TEAM
     with ctx.create_infantry_unit("#RECO2 IEW TEAM", "US", "Scout_US", [(M16A2, 4), (M21, 1), (VIPER, 1)]) as iew_team:
         iew_team.modules.ui.edit_members(
             UpgradeFromUnit='d9_RECO2_FOLT_US',
@@ -23,4 +23,4 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
                                    ]),
             Selection=['~/NilDescriptorIfCadavre']
         ))
-        return UnitRules(iew_team, 3, [0, 6, 4, 0])
+        return iew_team

@@ -1,6 +1,3 @@
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-from creators.unit.basic import BasicUnitCreator
 from ndf_parse.model import ListRow, Map, MapRow, MemberRow, Object
 
 # from CommonData\Gameplay\Constantes\InitialisationGameDistanceUnits.ndf

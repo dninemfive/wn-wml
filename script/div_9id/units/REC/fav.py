@@ -1,15 +1,8 @@
-from context.mod_creation import ModCreationContext
-from context.unit_module import UnitModuleContext
-from creators.unit.basic import UNIT_UI
-from metadata.division_unit_registry import UnitRules
-from metadata.unit import UnitMetadata
-from ndf_parse.model import List, ListRow
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-import utils.ndf.unit_module as module
+from mw2.context.mod_creation import ModCreationContext
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
     # 👓 FAV
     with ctx.create_unit("#RECO1 FAV", "US", "Iltis_trans_RFA") as fav:
         fav.modules.type.edit_members(
@@ -32,4 +25,4 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         fav.modules.replace_from(m151a2_scout, 'TTacticalLabelModuleDescriptor')
         fav.modules.append_from( m151a2_scout, 'TDeploymentShiftModuleDescriptor')
         # add a little bit of ECM to represent being a very small target?
-        return UnitRules(fav, 2, [0, 4, 3, 0])
+        return fav

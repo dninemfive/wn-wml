@@ -1,15 +1,14 @@
-from context.mod_creation import ModCreationContext
-from metadata.unit_rules import UnitRules
-from context.unit_module import UnitModuleContext
+from mw2.context.mod_creation import ModCreationContext
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 from units._utils import METRE
-from utils.ndf import ensure
+from mw2.utils.ndf import ensure
 
 FLIGHT_ALTITUDE = 706 # = 3000 / 3.2 * METRE TODO: Recalculate to GRU
                      # weird discrepancy: 706 for LowAltitudeFlyingAltitude, but 494 for Altitude
 FLIGHT_SPEED = 200
 DRAGONFLY = 'A37B_Dragonfly_US'
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
     # E-2C HAWKEYE
     with ctx.create_unit("#RECO1 MQM-10 AQUILA", "US", DRAGONFLY, button_texture_src_path='img/units/rq_2_pioneer/icon.png') as mqm_10_aquila:
         # TODO: something to edit plane flight speed and altitude all in one go
@@ -70,4 +69,4 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         mqm_10_aquila.modules.replace_from(ef_111, 'TOrderableModuleDescriptor')
         # make OA-37B upgrade from this
         ctx.get_unit(DRAGONFLY).modules.ui.UpgradeFromUnit = mqm_10_aquila
-        return UnitRules(mqm_10_aquila, 1, [8, 0, 0, 0])
+        return mqm_10_aquila

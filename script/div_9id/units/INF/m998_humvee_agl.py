@@ -1,14 +1,10 @@
-import constants.ndf_paths as ndf_paths
-from context.mod_creation import ModCreationContext
-from context.unit_module import UnitModuleContext
-from creators.unit.basic import BasicUnitCreator
-from metadata.unit_rules import UnitRules
+from mw2.context.mod_creation import ModCreationContext
+from mw2.creators.unit.basic import BasicUnitCreator
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 from ndf_parse.model import List, ListRow, MemberRow, Object
-from utils.ndf import ensure
-from units._utils import autonomy_to_fuel_move_duration as to_fmd
 
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
     # M998 HUMVEE AGL
     with ctx.create_unit("M998 HUMVEE AGL", "US", "M1025_Humvee_AGL_nonPara_US") as trans_m998_humvee_agl:
         trans_m998_humvee_agl.modules.type.edit_members(
@@ -33,7 +29,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             MenuIconTexture='appui',
             TypeStrategicCount='Transport')
         trans_m998_humvee_agl.modules.remove('TDeploymentShiftModuleDescriptor')
-        return None # transports don't get added separately
+        return trans_m998_humvee_agl
     
 def edit_with_m998(cmd_m998_humvee_agl: BasicUnitCreator, m998_humvee: Object) -> None:
     # copy scanner from M998 Humvee (regular)

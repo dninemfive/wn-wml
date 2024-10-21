@@ -1,12 +1,13 @@
-from context.mod_creation import ModCreationContext
-from metadata.unit_rules import UnitRules
-import utils.ndf.edit as edit
-import utils.ndf.unit_module as module
+from mw2.context.mod_creation import ModCreationContext
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
+from mw2.utils.ndf import edit
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
-    # MIM-72A T-CHAPARRAL
+
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
+    # XM-85 T-CHAPARRAL
     # copy RAPIER FSA
-    with ctx.create_unit("XM-85 T-CHAPARRAL", "US", "DCA_Rapier_FSA_UK", button_texture_src_path='img/units/xm85_t_chaparral/icon.png') as t_chap:
+    with ctx.create_unit("XM-85 T-CHAPARRAL", "US", "DCA_Rapier_FSA_UK",
+                         button_texture_src_path='img/units/xm85_t_chaparral/icon.png') as t_chap:
         # replace weapon with M48A1 CHAPARRAL
         t_chap.modules.replace_from('M48_Chaparral_MIM72F_US', 'WeaponManager', by_name=True)
         with t_chap.edit_weapons() as weapons:
@@ -20,4 +21,4 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
             CountryTexture='US'    
         )
         # advanced: replace british dude models with US dude models
-        return UnitRules(t_chap, 2, [0, 4, 3, 0])
+        return t_chap

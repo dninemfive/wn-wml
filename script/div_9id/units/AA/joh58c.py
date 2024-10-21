@@ -1,25 +1,25 @@
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-from constants.ndf_paths import AMMUNITION_MISSILES, MISSILE_CARRIAGE, WEAPON_DESCRIPTOR
-from context.mod_creation import ModCreationContext
-from context.unit_module import UnitModuleContext
-from creators.unit.basic import UNIT_UI
-from creators.weapon import WeaponCreator
-from metadata.division_unit_registry import UnitRules
-from metadata.unit import UnitMetadata
+import mw2.utils.ndf.edit as edit
+import mw2.utils.ndf.ensure as ensure
+from mw2.constants.ndf_paths import (AMMUNITION_MISSILES, MISSILE_CARRIAGE,
+                                     WEAPON_DESCRIPTOR)
+from mw2.context.mod_creation import ModCreationContext
+from mw2.context.unit_module import UnitModuleContext
+from mw2.creators.unit.basic import UNIT_UI
+from mw2.creators.weapon import WeaponCreator
+from mw2.metadata.unit import UnitMetadata
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 from ndf_parse.model import List, ListRow, Object
 
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
     # JOH-58C
     # 1 minigun, 2 stingers
     with ctx.create_unit("JOH-58C/S", "US", "OH58_CS_US") as joh58c:
         with joh58c.edit_weapons() as weapons:
             edit_weapons(weapons)
         joh58c.modules.get('MissileCarriage', by_name=True).by_member('Connoisseur').value = generate_missile_carriages(ctx.ndf[MISSILE_CARRIAGE])
-        with UnitModuleContext(ctx.get_unit('OH58_CS_US'), 'TUnitUIModuleDescriptor') as oh58cs_ui_module:
-            oh58cs_ui_module.edit_members(UpgradeFromUnit=joh58c.new_unit.descriptor_name)
-        return UnitRules(joh58c, 1, [0, 4, 3, 0])
+        ctx.get_unit('OH58_CS_US').modules.ui.UpgradeFromUnit = joh58c
+        return joh58c
     
 # TODO: AmmoCreator
 def generate_ammo_descriptor(ctx: ModCreationContext) -> str:

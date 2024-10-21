@@ -1,16 +1,12 @@
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-from constants.ndf_paths import AMMUNITION_MISSILES, MISSILE_CARRIAGE, WEAPON_DESCRIPTOR
-from context.mod_creation import ModCreationContext
-from context.unit_module import UnitModuleContext
-from creators.unit.basic import UNIT_UI
-from creators.weapon import WeaponCreator
-from metadata.division_unit_registry import UnitRules
-from metadata.unit import UnitMetadata
+from mw2.constants.ndf_paths import AMMUNITION_MISSILES, MISSILE_CARRIAGE
+from mw2.context.mod_creation import ModCreationContext
+from mw2.creators.weapon import WeaponCreator
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
+from mw2.utils.ndf import edit, ensure
 from ndf_parse.model import List, ListRow, Object
 
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
     # JOH-58D KIOWA
     # like a mix of the other Kiowas, with 4 TOW 2A and 19 Hydra 70
     with ctx.create_unit("#RECO3 JOH-58D KIOWA", "US", "OH58D_Combat_Scout_US") as joh58d_kiowa:
@@ -20,7 +16,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         # insert after Kiowa and before Kiowa WR
         joh58d_kiowa.modules.ui.edit_members(UpgradeFromUnit='Descriptor_Unit_OH58D_Combat_Scout_US')
         ctx.get_unit('OH58D_Kiowa_Warrior_US').modules.ui.UpgradeFromUnit = joh58d_kiowa
-        return UnitRules(joh58d_kiowa, 1, [0, 4, 3, 0])
+        return joh58d_kiowa
     
 def generate_ammo_descriptor(ctx: ModCreationContext) -> str:
     ammo_name = 'Ammo_AGM_BGM71D_TOW_2A_x4'

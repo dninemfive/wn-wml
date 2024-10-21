@@ -1,15 +1,11 @@
-from context.mod_creation import ModCreationContext
-from context.unit_module import UnitModuleContext
-from metadata.division_unit_registry import UnitRules
+from mw2.context.mod_creation import ModCreationContext
 from ndf_parse.model import List
-import utils.ndf.edit as edit
-import utils.ndf.unit_module as module
-from units._weapons import M16A2
-from creators.unit.infantry import InfantryUnitCreator
+from ..infantry_weapons import M16A2
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
     # FOLT
     with ctx.create_infantry_unit("#RECO2 FOLT", "US", "Scout_US", [(M16A2, 2)]) as folt:
         # TODO: GSR trait
-        return UnitRules(folt, 3, [0, 6, 4, 0])
+        return folt
