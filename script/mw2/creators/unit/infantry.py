@@ -154,7 +154,7 @@ class InfantryUnitCreator(UnitCreator):
     def _edit_showroom_units(self: Self, ndf: List):
         copy: Object = ndf.by_name(self.src_unit.descriptor.showroom.name).value.copy()
         edit.members(copy,
-                     DescriptorId=self.ctx.guids.generate(self.src_unit.showroom_descriptor_name))
+                     DescriptorId=self.ctx.guids.generate(self.src_unit.descriptor.showroom.name))
         module.replace_where(copy, self.new_unit.weapon_descriptor.path, lambda x: isinstance(x.value, str) and x.value.startswith('$/GFX/Weapon/'))
         module.replace(copy,
                               self._make_infantry_squad_module_descriptor(module.path_by_type(self.src_unit.descriptor.showroom.name,

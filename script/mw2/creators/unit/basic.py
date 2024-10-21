@@ -30,7 +30,7 @@ class BasicUnitCreator(UnitCreator):
         self.gfx_unit = UnitMetadata.resolve(gfx_unit) if gfx_unit is not None else self.src_unit
 
     def pre_apply(self: Self, msg: Message) -> None:
-        self.unit.modules.replace_from(self.ctx.get_unit(self.gfx_unit.descriptor_name), 'ApparenceModel', by_name=True)
+        self.unit.modules.replace_from(self.ctx.get_unit(self.gfx_unit.descriptor.name), 'ApparenceModel', by_name=True)
 
     def post_apply(self: Self, msg: Message) -> None:
         self.edit_showroom_units(self.ndf, msg)
@@ -43,7 +43,7 @@ class BasicUnitCreator(UnitCreator):
             showroom_unit = self._showroom_unit
         else:
             copy: UnitWrapper = self.ctx.get_unit(self.gfx_unit.name, showroom=True).copy()
-            copy.DescriptorId = self.ctx.guids.generate(self.new_unit.showroom_descriptor_name)
+            copy.DescriptorId = self.ctx.guids.generate(self.new_unit.descriptor.showroom.name)
             copy.modules.type.copy(self.unit.modules.type.object)
             showroom_unit = copy.object
         # TODO: check if the unit actually has a weapon descriptor to reference
@@ -54,9 +54,9 @@ class BasicUnitCreator(UnitCreator):
         #     pass
         # for vehicles with replaced turret models, will have to make a new TacticVehicleDepictionTemplate and add it to GeneratedDepictionVehicles.ndf
         # and then set the depiction path here
-        ndf.add(ListRow(showroom_unit, visibility='export', namespace=self.new_unit.showroom_descriptor_name))
+        ndf.add(ListRow(showroom_unit, visibility='export', namespace=self.new_unit.descriptor.showroom.name))
 
     @ndf_path(ndf_paths.SHOWROOM_EQUIVALENCE)
     def edit_showroom_equivalence(self: Self, ndf: List):
         unit_to_showroom_equivalent: Map = ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
-        unit_to_showroom_equivalent.add(k=self.new_unit.descriptor_path, v=self.new_unit.showroom_descriptor_path)
+        unit_to_showroom_equivalent.add(k=self.new_unit.descriptor.path, v=self.new_unit.descriptor.showroom.path)

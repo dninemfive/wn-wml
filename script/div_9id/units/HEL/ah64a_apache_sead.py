@@ -60,13 +60,13 @@ def create(ctx: ModCreationContext) -> NewSrcUnitPair:
         return apache_sead
     
 def add_weapon_descriptor(ndf: List, creator: UnitCreator) -> None:    
-    weapon_descriptor: Object = ndf.by_name(creator.src_unit.weapon_descriptor_name).value.copy()
+    weapon_descriptor: Object = ndf.by_name(creator.src_unit.weapon_descriptor.name).value.copy()
     turrets: List = weapon_descriptor.by_member('TurretDescriptorList').value
     turret_2: Object = turrets[1].value
     mounted_weapon: Object = turret_2.by_member('MountedWeaponDescriptorList').value[0].value
     mounted_weapon.by_member('Ammunition').value = '$/GFX/Weapon/Ammo_AA_AIM9J_Sidewinder'
-    ndf.add(ListRow(weapon_descriptor, namespace=creator.new_unit.weapon_descriptor_name))
-    creator.modules.edit_members('WeaponManager', True, Default=creator.new_unit.weapon_descriptor_path)
+    ndf.add(ListRow(weapon_descriptor, namespace=creator.new_unit.weapon_descriptor.name))
+    creator.modules.edit_members('WeaponManager', True, Default=creator.new_unit.weapon_descriptor.path)
 
 def add_missile_carriage(ndf: List, creator: UnitCreator, showroom: bool = False) -> str:
     missile_carriage = ensure._object(
