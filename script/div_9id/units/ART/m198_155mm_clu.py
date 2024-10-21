@@ -1,4 +1,4 @@
-from context.mod_creation import ModCreationContext
+from mw2.context.mod_creation import ModCreationContext
 from context.unit_module import UnitModuleContext
 from metadata.division_unit_registry import UnitRules
 from metadata.unit import UnitMetadata

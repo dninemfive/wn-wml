@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from context.mod_creation import ModCreationContext
+from mw2.context.mod_creation import ModCreationContext
 
 
 def create(ctx: ModCreationContext) -> str:

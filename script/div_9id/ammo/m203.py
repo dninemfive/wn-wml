@@ -1,5 +1,5 @@
-from context.mod_creation import ModCreationContext
-from utils.ndf import ensure
+from mw2.context.mod_creation import ModCreationContext
+from mw2.utils.ndf import ensure
 
 
 def create(ctx: ModCreationContext) -> str:

@@ -2,58 +2,16 @@ from __future__ import annotations
 
 from datetime import datetime
 
-import constants.ndf_paths as ndf_paths
-import constants.paths as paths
-import script.units.HEL.ah64a_apache_sead
-import units._ammo
-import units.ammo.fgr_17_viper
-import units.ammo.m60e3
-import units.ammo.m203
-import units.cmd_m998_humvee_agl
-import units.cmd_m997_tc3v
-import script.units.INF.cmd_mot_rifles_ldr
-import script.units.REC.fav
-import units.fav_agl
-import units.fav_m2hb
-import units.folt
-import units.iew_team
-import script.units.HEL.joh58d_kiowa
-import script.units.AA.m167a2_pivads_20mm
-import units.m198_155mm_clu
-import units.m198_copperhead
-import script.units.INF.m224_60mm
-import script.units.TNK.m966_humvee_tow
-import script.units.AA.m998_avenger
-import units.m998_humvee_agl
-import units.m998_humvee_glhl
-import units.m998_humvee_m2hb
-import units.m998_humvee_supply
-import units.m1075_pls
-import script.units.INF.mk19_40mm
-import units.mot_engineers
-import units.mot_mp_patrol
-import units.mot_rifles
-import units.mot_rifles_dragon
-import script.units.REC.mot_scouts
-import units.mqm10_aquila
-import units.operational_support
-import units.ranger_at_section
-import units.ranger_gunners
-import units.rangers_m203
-import script.units.REC.scoutat_team
-import script.units.AA.stinger_tdar
-import script.units.AA.xm85_t_chaparral
-import units.xm119_imcs
-import units.xm142_himars_clu
-import units.xm142_himars_he
-import units.xm1100_120mm
-from context.mod_creation import ModCreationContext
-from metadata.division import DivisionMetadata
-from unit_registration.division_unit_registry import DivisionUnitRegistry
-from metadata.mod import ModMetadata
-from metadata.warno import WarnoMetadata
-from utils.bat import generate_mod, reset_source
-from utils.types.message import Message
+import mw2.constants.ndf_paths as ndf_paths
+import mw2.constants.paths as paths
+from div_9id import ammo
+from mw2.context.mod_creation import ModCreationContext
+from mw2.metadata.division import DivisionMetadata
+from mw2.metadata.mod import ModMetadata
+from mw2.metadata.warno import WarnoMetadata
+from mw2.unit_registration.division_unit_registry import DivisionUnitRegistry
+from mw2.utils.bat import reset_source
+from mw2.utils.types.message import Message
 
 wn_metadata = WarnoMetadata(paths.WARNO_DIRECTORY)
 mod_metadata = ModMetadata('dninemfive', '9th Infantry Division (Motorized)', wn_metadata, "0.0.0", 'd9', 'd99ID')
@@ -63,9 +21,9 @@ reset_source(mod_metadata, wn_metadata)
 
 with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as root_msg:
     with ModCreationContext(mod_metadata, root_msg, *ndf_paths.ALL) as mod_context:
-            units._ammo.fgr_17_viper.create(mod_context)
-            units._ammo.m60e3.create(mod_context)
-            units._ammo.m203.create(mod_context)
+            ammo.fgr_17_viper.create(mod_context)
+            ammo.m60e3.create(mod_context)
+            ammo.m203.create(mod_context)
             division_units: DivisionUnitRegistry
             with root_msg.nest("Creating units") as msg:
                 division_units = DivisionUnitRegistry(mod_context,
@@ -89,6 +47,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 SMALL_UNIT_TRANSPORTS = [M998_HUMVEE, M998_HUMVEE_M2HB, M998_HUMVEE_AGL, BLACKHAWK]
                 LARGE_UNIT_TRANSPORTS = [M1038_HUMVEE, BLACKHAWK]
                 HEAVY_TRANSPORTS = [M35, CHINOOK]
+                
                 # TODO: variant of the mod which doesn't reference the MP Humvee because it's a DLC unit
                 division_units.register(units.mot_mp_patrol.create(mod_context), [M998_HUMVEE, "Descriptor_Unit_M1025_Humvee_MP_US"])
                 division_units.register(script.units.INF.cmd_mot_rifles_ldr.create(mod_context), [M1038_HUMVEE, M998_HUMVEE_M2HB, M998_HUMVEE_AGL, BLACKHAWK])

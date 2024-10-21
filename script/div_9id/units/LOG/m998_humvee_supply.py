@@ -1,12 +1,11 @@
-from constants.ndf_paths import UNITE_DESCRIPTOR
-from context.mod_creation import ModCreationContext
-from context.unit_module import UnitModuleContext
+from mw2.constants.ndf_paths import UNITE_DESCRIPTOR
+from mw2.context.mod_creation import ModCreationContext
+from mw2.context.unit_module import UnitModuleContext
+from mw2.creators.unit.basic import BasicUnitCreator
+from mw2.metadata.unit import UnitMetadata
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
+from mw2.wrappers.unit import UnitWrapper
 from ndf_parse.model import List, Object
-
-from creators.unit.basic import BasicUnitCreator
-from script.metadata.unit import UnitMetadata
-from script.unit_registration.new_src_unit_pair import NewSrcUnitPair
-from wrappers.unit import UnitWrapper
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 
