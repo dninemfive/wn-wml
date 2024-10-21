@@ -4,7 +4,6 @@ from mw2.context.mod_creation import ModCreationContext
 from mw2.context.unit_module import UnitModuleContext
 from mw2.metadata.unit import UnitMetadata
 from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
-from units._utils import Metre
 
 
 def create(ctx: ModCreationContext) -> NewSrcUnitPair:

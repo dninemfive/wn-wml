@@ -6,7 +6,6 @@ from mw2.creators.unit.basic import BasicUnitCreator
 from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 from mw2.utils.ndf import ensure
 from ndf_parse.model import List, ListRow, MemberRow, Object
-from units._utils import autonomy_to_fuel_move_duration as to_fmd
 
 
 def create(ctx: ModCreationContext) -> NewSrcUnitPair:

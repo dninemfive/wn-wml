@@ -1,7 +1,7 @@
 from mw2.context.mod_creation import ModCreationContext
 from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 
-from ._weapons import DRAGON, M16A2, M249
+from ..infantry_weapons import DRAGON, M16A2, M249
 
 
 def create(ctx: ModCreationContext) -> NewSrcUnitPair:

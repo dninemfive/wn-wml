@@ -1,12 +1,13 @@
-from metadata.mod import ModMetadata
-from metadata.warno import WarnoMetadata
-# https://stackoverflow.com/a/5469427
-from subprocess import PIPE, Popen
-from utils.types.message import Message, try_nest
 import os
 # https://stackoverflow.com/a/1557364
 import shutil
-import sys
+# https://stackoverflow.com/a/5469427
+from subprocess import PIPE, Popen
+
+from mw2.metadata.mod import ModMetadata
+from mw2.metadata.warno import WarnoMetadata
+from mw2.utils.types.message import Message, try_nest
+
 
 def run_bat(msg: Message | None, folder: str, name: str, *args):
     path = os.path.join(folder, f'{name}.bat')

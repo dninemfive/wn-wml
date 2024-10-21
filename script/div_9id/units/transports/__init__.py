@@ -5,9 +5,9 @@ from mw2.unit_registration.unit_registration_info import \
 from mw2.utils.types.message import Message
 from mw2.context.mod_creation import ModCreationContext
 
-from fav                import create as fav
-from m998_humvee_agl    import create as m998_humvee_agl
-from m998_humvee_m2hb   import create as m998_humvee_m2hb
+from .fav                import create as fav
+from .m998_humvee_agl    import create as m998_humvee_agl
+from .m998_humvee_m2hb   import create as m998_humvee_m2hb
 
 # vanilla transports
 BLACKHAWK           = "Descriptor_Unit_UH60A_Black_Hawk_US"

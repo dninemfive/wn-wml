@@ -5,11 +5,11 @@ from mw2.unit_registration.unit_registration_info import \
     UnitRegistrationInfo as u
 from mw2.utils.types.message import Message
 
-from joh58c             import create as joh58c
-from m167a2_pivads_20mm import create as m167a2
-from m998_avenger       import create as avenger
-from stinger_tdar       import create as stinger_tdar
-from xm85_t_chaparral   import create as t_chap
+from .joh58c             import create as joh58c
+from .m167a2_pivads_20mm import create as m167a2
+from .m998_avenger       import create as avenger
+from .stinger_tdar       import create as stinger_tdar
+from .xm85_t_chaparral   import create as t_chap
 
 MANPADS_TRANSPORTS = [M998_HUMVEE_AGL, BLACKHAWK]
 

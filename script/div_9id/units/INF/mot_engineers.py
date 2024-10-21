@@ -1,7 +1,7 @@
 from mw2.context.mod_creation import ModCreationContext
 from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 
-from ._weapons import M16A2, M249, SATCHEL_CHARGE
+from ..infantry_weapons import M16A2, M249, SATCHEL_CHARGE
 
 
 def create(ctx: ModCreationContext) -> NewSrcUnitPair:

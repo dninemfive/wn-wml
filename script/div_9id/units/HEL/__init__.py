@@ -3,7 +3,8 @@ from mw2.unit_registration.unit_group import UnitGroup
 from mw2.unit_registration.unit_registration_info import \
     UnitRegistrationInfo as u
 from mw2.utils.types.message import Message
-from ah64a_apache_sead import create as apache_sead
+
+from .ah64a_apache_sead import create as apache_sead
 
 def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> UnitGroup:
     return UnitGroup(

@@ -1,7 +1,7 @@
 from mw2.context.mod_creation import ModCreationContext
 from ndf_parse.model import List, ListRow
 
-from script.mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 
 
 def create(ctx: ModCreationContext) -> NewSrcUnitPair:

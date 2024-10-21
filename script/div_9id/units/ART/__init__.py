@@ -1,15 +1,16 @@
 from div_9id.units.transports import BLACKHAWK, M35, M998_HUMVEE
-from m198_155mm_clu import create as m198_clu
-from m198_copperhead import create as m198_copperhead
 from mw2.unit_registration.division_unit_registry import DivisionUnitRegistry
 from mw2.unit_registration.unit_group import UnitGroup
 from mw2.unit_registration.unit_registration_info import \
     UnitRegistrationInfo as u
 from mw2.utils.types.message import Message
-from xm119_imcs import create as xm119_imcs
-from xm142_himars_clu import create as xm142_clu
-from xm142_himars_he import create as xm142_he
-from xm1100_120mm import create as xm1100
+
+from .m198_155mm_clu    import create as m198_clu
+from .m198_copperhead   import create as m198_copperhead
+from .xm119_imcs        import create as xm119
+from .xm142_himars_clu  import create as xm142_clu
+from .xm142_himars_he   import create as xm142_he
+from .xm1100_120mm      import create as xm1100
 
 LIGHT_TRANSPORTS = [M998_HUMVEE, BLACKHAWK]
 

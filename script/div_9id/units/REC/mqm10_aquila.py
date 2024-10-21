@@ -1,6 +1,5 @@
 from mw2.context.mod_creation import ModCreationContext
 from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
-from units._utils import METRE
 from mw2.utils.ndf import ensure
 
 FLIGHT_ALTITUDE = 706 # = 3000 / 3.2 * METRE TODO: Recalculate to GRU
