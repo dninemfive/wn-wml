@@ -7,6 +7,7 @@ import utils.ndf.ensure as ensure
 from creators.unit.basic import BasicUnitCreator
 from metadata.unit import UnitMetadata
 from ndf_parse.model import List, MemberRow, Object
+from unit_registry.types import UnitsPerXp
 
 UNITE_RULE = 'TDeckUniteRule'
 KEY_AVAILABLE_TRANSPORT_LIST = 'AvailableTransportList'
@@ -24,19 +25,11 @@ class TDeckUniteRule(object):
     NumberOfUnitInPackXPMultiplier: tuple[float, float, float, float]
 
     @staticmethod
-    def from_ndf(ndf: Object, override_transports: list[str] | None = None) -> Self:
-        transports: List | None = None
-        if override_transports is not None:
-            transports = ensure._list(override_transports)
-        else:
-            try:
-                transports = ndf.by_member(KEY_AVAILABLE_TRANSPORT_LIST).value
-            except:
-                pass
+    def from_ndf(ndf: Object) -> Self:
         return TDeckUniteRule(
             ndf.by_member(KEY_UNIT_DESCRIPTOR).value,
             ndf.by_member(KEY_AVAILABLE_WITHOUT_TRANSPORT).value,
-            transports,
+            [x.value for x in ndf.by_member(KEY_AVAILABLE_TRANSPORT_LIST).value],
             ndf.by_member(KEY_NUMBER_OF_UNIT_IN_PACK).value,
             [float(x) for x in ndf.by_member(KEY_NUMBER_OF_UNIT_IN_PACK_XP_MULTIPLIER).value]
         )
@@ -70,4 +63,5 @@ class TDeckUniteRule(object):
         )
     
     @property
-    def units_per_xp(self: Self) -> 
+    def units_per_xp(self: Self) -> UnitsPerXp:
+        return (int(x * self.NumberOfUnitInPack) for x in self.NumberOfUnitInPackXPMultiplier)

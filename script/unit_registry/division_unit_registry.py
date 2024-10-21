@@ -1,20 +1,23 @@
 from __future__ import annotations
 
+from asyncio import Transport
 from typing import Callable, Iterable, Self
 
 import context.mod_creation
-from creators.unit.abc import UnitCreator
-from script.metadata import division_rule_lookup
 import utils.ndf.ensure as ensure
 from constants.ndf_paths import DECK_SERIALIZER, DIVISION_RULES
+from creators.unit.abc import UnitCreator
 from managers.unit_id import UnitIdManager
 from metadata.division import DivisionMetadata
-from metadata.division_rule_lookup import DivisionRuleLookup
 from metadata.unit import UnitMetadata
-from metadata.unit_rules import UnitRules, UnitsPerXp
+from model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from utils.ndf.decorators import ndf_path
 from utils.types.message import Message, try_nest
+
+from .division_rule_lookup import DivisionRuleLookup
+from .types import UnitDelegate, UnitsPerXp
+from .unit_rules import UnitRules
 
 
 def ensure_unit_path_list(transports: str | list[str | None] | None) -> list[str | None] | None:
@@ -24,7 +27,6 @@ def ensure_unit_path_list(transports: str | list[str | None] | None) -> list[str
             transports = [transports]
         return [ensure.unit_path(x) if x is not None else None for x in transports]
 
-UnitDelegate = Callable[[context.mod_creation.ModCreationContext], UnitCreator]
 
 class DivisionUnitRegistry(object):
     # ctx: ModCreationContext
@@ -46,7 +48,7 @@ class DivisionUnitRegistry(object):
                  unit: str | UnitDelegate,
                  packs: int,
                  units_per_xp: UnitsPerXp | None = None,
-                 transports: str | Iterable[str | None] | None = None) -> None:
+                 transports: str | Iterable[Transport] | None = None) -> None:
         """Adds a unit to the registry.
 
         Parameters
@@ -70,39 +72,45 @@ class DivisionUnitRegistry(object):
             If Iterable, the unit will be available with the specified transports; it will also be available without transport iff None is in the iterable.
         """
         transports = ensure_unit_path_list(transports)
-        
         if isinstance(unit, str):
-            units_per_xp = self.lookup.look_up(unit, transports, self.parent_msg)
-            self._register_vanilla(unit, packs, units_per_xp, transports)
+            unit: UnitMetadata = UnitMetadata(unit)
+            self._register(unit, None, packs, units_per_xp, transports)
         elif isinstance(unit, UnitDelegate):
-            unit: UnitCreator = unit(self.ctx)
-            if units_per_xp is None:
-                units_per_xp = self.lookup.look_up(unit.src_unit.descriptor.path, transports, self.parent_msg)
-            self._register_modded(unit(self.ctx), packs, units_per_xp, )
+            unit: UnitCreator = unit(self.ctx)            
+            self._register(unit.new_unit, unit.src_unit, packs, units_per_xp, transports)
 
+    def _look_up_rule_items(self: Self,
+                      unit: UnitMetadata,
+                      units_per_xp: UnitsPerXp | None,
+                      transports: Iterable[Transport] | None,
+                      msg: Message)\
+                        -> tuple[UnitsPerXp, list[Transport] | None]:
+        if units_per_xp is not None and transports is not None:
+            return (units_per_xp, transports)
+        rule: TDeckUniteRule = self.lookup.look_up(unit, msg)
+        if units_per_xp is None:
+            units_per_xp = rule.units_per_xp
+        if transports is None and isinstance(rule.AvailableTransportList, list[str]):
+            transports: list[str | None] = rule.AvailableTransportList
+            if rule.AvailableWithoutTransport:
+                transports.append(None)
+        return (units_per_xp, transports)
 
-    def _register_modded(self: Self, unit: UnitCreator,
-                         packs: int,
-                         units_per_xp: UnitsPerXp,
-                         override_transports: str | list[str] | None = None):
-        override_transports = ensure_unit_path_list(override_transports)
-        with try_nest(self.parent_msg, f"Registering {rules.unit.name}") as _:
-            self.units.append(UnitRules(unit, packs, units_per_pack, transports))
-            self.unit_ids.register(rules.unit.descriptor_path)
-
-    def _register_vanilla(self: Self,
-                          unit: str,
-                          packs: int,
-                          transports: str | list[str] | None = None):
-        unit = UnitMetadata(unit)
-        transports = ensure_unit_path_list(transports)
-        with try_nest(self.parent_msg, f"Registering vanilla unit {unit}") as msg:
-            unite_rule = self.lookup.look_up(unit.descriptor_path, transports, msg)
-            if unite_rule is not None:
-                self.units.append(UnitRules.from_deck_unite_rule(unit, packs, unite_rule))
-            else:
-                with msg.nest("Failed: could not find unit in any division rule") as _:
-                    pass
+    def _register(self: Self,
+                  unit: UnitMetadata,
+                  src: UnitMetadata | None,
+                  packs: int,
+                  units_per_xp: UnitsPerXp,
+                  transports: str | list[str] | None) -> None:
+        modded: bool = src is not None
+        with try_nest(self.parent_msg, f'Registering {'modded' if modded else 'vanilla'} unit {unit.name}') as msg:
+            units_per_xp, transports = self._look_up_rule_items(src if modded else unit,
+                                                                units_per_xp,
+                                                                transports,
+                                                                msg)
+            self.units.append(UnitRules(unit, packs, units_per_xp, transports))
+            if modded:
+                self.unit_ids.register(unit.descriptor.path)
 
     def pack_list(self: Self) -> Map:
         return ensure._map(x.pack for x in self.units)
