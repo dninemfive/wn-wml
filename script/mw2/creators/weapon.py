@@ -2,16 +2,16 @@
 # from context.unit_creation_context import UnitCreationContext
 from typing import Callable, Self
 
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-from constants.ndf_paths import WEAPON_DESCRIPTOR
-from context.unit_module import UnitModuleContext
-from metadata.unit import UnitMetadata
+import mw2.utils.ndf.edit as edit
+import mw2.utils.ndf.ensure as ensure
+from mw2.constants.ndf_paths import WEAPON_DESCRIPTOR
+from mw2.context.unit_module import UnitModuleContext
+from mw2.metadata.unit import UnitMetadata
+from mw2.utils.ndf.decorators import ndf_path
+from mw2.utils.types.message import Message, try_nest
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from utils.ndf.decorators import ndf_path
-from utils.types.message import Message, try_nest
 
 
 class WeaponCreator(object):

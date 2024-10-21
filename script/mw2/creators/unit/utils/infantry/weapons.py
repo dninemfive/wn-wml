@@ -1,9 +1,8 @@
 from typing import Self
 
-import utils.ndf.ensure as ensure
-from constants.ndf import DISPERSION_COLOR, DISPERSION_THICKNESS
-from constants.primitive_types import WeaponType
-from creators.unit.utils.infantry.weapon import InfantryWeapon
+import mw2.utils.ndf.ensure as ensure
+from mw2.constants.ndf import DISPERSION_COLOR, DISPERSION_THICKNESS
+from mw2.creators.unit.utils.infantry.weapon import InfantryWeapon
 from ndf_parse.model import Object
 
 

@@ -1,7 +1,7 @@
 from typing import Literal, LiteralString, Self, Type
 
-import utils.ndf.ensure
-from constants.ndf import COUNTRY_CODE_TO_COUNTRY_SOUND_CODE
+import mw2.utils.ndf.ensure as ensure
+from mw2.constants.ndf import COUNTRY_CODE_TO_COUNTRY_SOUND_CODE
 
 
 # TODO: generate these from source
@@ -12,7 +12,7 @@ class NdfEnum(object):
         self.values = values
 
     def ensure_valid(self: Self, s: str) -> str:
-        s = utils.ndf.ensure.prefix_and_suffix(s, self.prefix, self.suffix)
+        s = ensure.prefix_and_suffix(s, self.prefix, self.suffix)
         assert s in self.values, f'{s} is not one of the valid values: {str(self.values)}'
         return s
     
@@ -20,10 +20,10 @@ class NdfEnum(object):
 
 # not staticmethod because that doesn't preserve type hints???
 def NdfEnum_literals(*values: str) -> NdfEnum:
-    return NdfEnum("'", "'", *[utils.ndf.ensure.quoted(x, "'") for x in values])
+    return NdfEnum("'", "'", *[ensure.quoted(x, "'") for x in values])
 
 def NdfEnum_with_path(path: str, *values: str) -> NdfEnum:
-    return NdfEnum(path, '', *[utils.ndf.ensure.prefix(x, path) for x in values])
+    return NdfEnum(path, '', *[ensure.prefix(x, path) for x in values])
 
 WeaponType: NdfEnum                     = NdfEnum_literals('bazooka',
                                                            'grenade',

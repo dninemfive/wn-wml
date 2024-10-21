@@ -1,7 +1,7 @@
 from typing import Self
 
-from creators.unit.abc import UnitCreator
-from metadata.unit import UnitMetadata
+from mw2.creators.unit.abc import UnitCreator
+from mw2.metadata.unit import UnitMetadata
 
 _UnitPair = tuple[UnitMetadata, UnitMetadata | str]
 

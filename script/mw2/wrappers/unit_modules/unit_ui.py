@@ -2,15 +2,15 @@ from __future__ import annotations
 
 from typing import Self
 
-# from creators.unit.abc import UnitCreator
-import creators.unit.abc
-import utils.ndf.edit as edit
-from metadata.unit import UnitMetadata
+import mw2.creators.unit.abc as abc
+import mw2.utils.ndf.edit as edit
+from mw2.constants.primitive_types import UnitRole
+from mw2.metadata.unit import UnitMetadata
+from mw2.utils.ndf import ensure
+from mw2.wrappers.str_list import StrListWrapper
+from mw2.wrappers.unit_modules._abc import UnitModuleKey, UnitModuleWrapper
 from ndf_parse.model import List, Object
-from utils.ndf import ensure
-from wrappers.str_list import StrListWrapper
-from wrappers.unit_modules._abc import UnitModuleKey, UnitModuleWrapper
-from constants.primitive_types import UnitRole
+
 
 class UnitUiModuleWrapper(UnitModuleWrapper):
     _module_key = UnitModuleKey('TUnitUIModuleDescriptor')
@@ -108,11 +108,11 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
             return None
 
     @UpgradeFromUnit.setter
-    def UpgradeFromUnit(self: Self, value: str | UnitMetadata | creators.unit.abc.UnitCreator | None) -> None:
-        if isinstance(value, creators.unit.abc.UnitCreator):
-            value = value.new_unit.descriptor_name
+    def UpgradeFromUnit(self: Self, value: str | UnitMetadata | abc.UnitCreator | None) -> None:
+        if isinstance(value, abc.UnitCreator):
+            value = value.new_unit.descriptor.name
         elif isinstance(value, UnitMetadata):
-            value = value.descriptor_name
+            value = value.descriptor.name
         if value is not None:
             value = ensure.prefix(value, 'Descriptor_Unit_')
         edit.member(self.object, 'UpgradeFromUnit', value)

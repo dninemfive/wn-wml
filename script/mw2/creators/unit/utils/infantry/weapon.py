@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 from typing import Self
 
-from constants.primitive_types import WeaponType
-from utils.ndf import ensure
+from mw2.constants.primitive_types import WeaponType
 
 
 @dataclass

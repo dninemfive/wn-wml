@@ -1,28 +1,24 @@
-from typing import TYPE_CHECKING, Self
+from typing import Self
 
-import constants.ndf_paths as ndf_paths
-import utils.ndf.edit as edit
-import utils.ndf.unit_module as module
-from constants import ndf_paths
-from constants.primitive_types import country_sound_code
-from creators.unit.basic import BasicUnitCreator
-from creators.unit.utils.infantry._squad_keys import _SquadKeys
-from creators.unit.utils.infantry.weapon import InfantryWeapon
-from creators.unit.utils.infantry.weapon_set import InfantryWeaponSet
-from managers.guid import GuidManager
-from metadata.unit import UnitMetadata
-from model.template_infantry_selector_tactic import \
+import mw2.constants.ndf_paths as ndf_paths
+# import mw2.context.mod_creation as ctx
+import mw2.utils.ndf.edit as edit
+import mw2.utils.ndf.unit_module as module
+from mw2.constants import ndf_paths
+from mw2.constants.primitive_types import country_sound_code
+from mw2.creators.unit.abc import UnitCreator
+from mw2.creators.unit.basic import BasicUnitCreator
+from mw2.creators.unit.utils.infantry._squad_keys import _SquadKeys
+from mw2.creators.unit.utils.infantry.weapon import InfantryWeapon
+from mw2.creators.unit.utils.infantry.weapon_set import InfantryWeaponSet
+from mw2.managers.guid import GuidManager
+from mw2.metadata.unit import UnitMetadata
+from mw2.model.template_infantry_selector_tactic import \
     TemplateInfantrySelectorTactic
-from ndf_parse.model import (List, ListRow, Map, MapRow, MemberRow, Object,
-                             Template)
-from utils.ndf import ensure
-from utils.ndf.decorators import ndf_path
-from utils.types.message import Message
-
-from creators.unit.abc import UnitCreator
-
-if TYPE_CHECKING:
-    from context.mod_creation import ModCreationContext
+from mw2.utils.ndf import ensure
+from mw2.utils.ndf.decorators import ndf_path
+from mw2.utils.types.message import Message
+from ndf_parse.model import List, ListRow, Map, MapRow, Object
 
 
 def _mesh_alternative(index: int) -> str:
@@ -30,7 +26,7 @@ def _mesh_alternative(index: int) -> str:
 
 class InfantryUnitCreator(UnitCreator):
     def __init__(self: Self,
-                 ctx,#: ModCreationContext,
+                 ctx,# : ctx.ModCreationContext,
                  localized_name: str,
                  new_unit: str | UnitMetadata,
                  src_unit: str | UnitMetadata,
@@ -49,7 +45,7 @@ class InfantryUnitCreator(UnitCreator):
     @ndf_path(ndf_paths.SHOWROOM_EQUIVALENCE)
     def edit_showroom_equivalence(self: Self, ndf: List):
         unit_to_showroom_equivalent: Map = ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
-        unit_to_showroom_equivalent.add(k=self.new_unit.descriptor_path, v=self.new_unit.showroom_descriptor_path)
+        unit_to_showroom_equivalent.add(k=self.new_unit.descriptor.path, v=self.new_unit.descriptor.showroom.path)
 
     def post_apply(self: Self, msg: Message) -> None:
         self.edit_generated_depiction_infantry(self.ndf, msg)
@@ -152,16 +148,16 @@ class InfantryUnitCreator(UnitCreator):
 
     def _edit_groupe_combat(self: Self, module: Object) -> None:
         edit.members(module,
-                     Default=self._make_infantry_squad_module_descriptor(f'{self.new_unit.descriptor_name}/ModulesDescriptors["GroupeCombat"]/Default/MimeticDescriptor'))
+                     Default=self._make_infantry_squad_module_descriptor(f'{self.new_unit.descriptor.name}/ModulesDescriptors["GroupeCombat"]/Default/MimeticDescriptor'))
         
     @ndf_path(ndf_paths.SHOWROOM_UNITS)
     def _edit_showroom_units(self: Self, ndf: List):
-        copy: Object = ndf.by_name(self.src_unit.showroom_descriptor_name).value.copy()
+        copy: Object = ndf.by_name(self.src_unit.descriptor.showroom.name).value.copy()
         edit.members(copy,
                      DescriptorId=self.ctx.guids.generate(self.src_unit.showroom_descriptor_name))
-        module.replace_where(copy, self.new_unit.weapon_descriptor_path, lambda x: isinstance(x.value, str) and x.value.startswith('$/GFX/Weapon/'))
+        module.replace_where(copy, self.new_unit.weapon_descriptor.path, lambda x: isinstance(x.value, str) and x.value.startswith('$/GFX/Weapon/'))
         module.replace(copy,
-                              self._make_infantry_squad_module_descriptor(module.path_by_type(self.src_unit.showroom_descriptor_name,
+                              self._make_infantry_squad_module_descriptor(module.path_by_type(self.src_unit.descriptor.showroom.name,
                                                                                              'TInfantrySquadModuleDescriptor',
                                                                                              'MimeticDescriptor',
                                                                                              'DescriptorId')),
@@ -169,15 +165,15 @@ class InfantryUnitCreator(UnitCreator):
         module.replace(copy,
                               self._infantry_squad_weapon_assignment,
                               'TInfantrySquadWeaponAssignmentModuleDescriptor')
-        ndf.add(ListRow(copy, 'export', self.new_unit.showroom_descriptor_name))
+        ndf.add(ListRow(copy, 'export', self.new_unit.descriptor.showroom.name))
         
     @ndf_path(ndf_paths.WEAPON_DESCRIPTOR)
     def edit_weapon_descriptors(self: Self, ndf: List):
-        ndf.add(ListRow(self.weapon_set.to_weapon_descriptor(), 'export', self.new_unit.weapon_descriptor_name))
+        ndf.add(ListRow(self.weapon_set.to_weapon_descriptor(), 'export', self.new_unit.weapon_descriptor.name))
     
     def edit_unit(self: Self) -> None:
         self.modules.edit_members('TBaseDamageModuleDescriptor', MaxPhysicalDamages=self.soldier_count)        
         self._edit_groupe_combat(self.unit.modules.get('GroupeCombat', by_name=True))
         self.modules.replace('TInfantrySquadWeaponAssignmentModuleDescriptor', self._infantry_squad_weapon_assignment)
         self.modules.edit_members('TTacticalLabelModuleDescriptor', NbSoldiers=self.soldier_count)
-        self.modules.edit_members('WeaponManager', by_name=True, Default=self.new_unit.weapon_descriptor_path)
+        self.modules.edit_members('WeaponManager', by_name=True, Default=self.new_unit.weapon_descriptor.path)

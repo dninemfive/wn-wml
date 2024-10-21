@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Literal, Self
 
-from utils.ndf import ensure
-from utils.localization import delocalize
+from mw2.utils.ndf import ensure
+from mw2.utils.localization import delocalize
 
 @dataclass(frozen=True)
 class NamePathPair(object):
@@ -76,7 +76,7 @@ class UnitMetadata(object):
     
     # paired properties with showroom equivalents    
     @property
-    def descriptor(self: Self) -> NamePathPair:
+    def descriptor(self: Self) -> NamePathPairWithShowroomEquivalent:
         return NamePathPairWithShowroomEquivalent(
             '$/GFX/Unit/',
             'Descriptor_',

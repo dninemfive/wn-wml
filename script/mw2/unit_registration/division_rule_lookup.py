@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import Self
 
-from model.deck_unite_rule import TDeckUniteRule
+from mw2.metadata.unit import UnitMetadata
+from mw2.model.deck_unite_rule import TDeckUniteRule
+from mw2.utils.types.message import Message, try_nest
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
-from metadata.unit import UnitMetadata
-from utils.types.message import Message, try_nest
 
 
 class DivisionRuleLookup(object):

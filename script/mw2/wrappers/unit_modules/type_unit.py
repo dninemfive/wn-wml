@@ -1,7 +1,6 @@
 from typing import Self
 
-import utils.ndf.ensure as ensure
-from constants.primitive_types import MotherCountry
+import mw2.utils.ndf.ensure as ensure
 from ndf_parse.model import List, Object
 
 from ._abc import UnitModuleKey, UnitModuleWrapper
@@ -19,6 +18,7 @@ class TypeUnitModuleWrapper(UnitModuleWrapper):
     
     @Nationalite.setter
     def Nationalite(self: Self, value: str) -> None:
+        # TODO: enum aliases. Also, auto-generate Literal equivalents
         if value == 'NATO':
             value = 'Allies'
         if value == 'PACT':

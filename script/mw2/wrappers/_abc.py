@@ -1,16 +1,16 @@
 from __future__ import annotations
 
 from abc import ABC
-from ast import TypeVar
 from typing import Any, Self, Type
 
-import context.mod_creation
-import utils.ndf.edit as edit
+import mw2.context.mod_creation as ctx
+import mw2.utils.ndf.edit as edit
 from ndf_parse.model import Object
 from ndf_parse.model.abc import CellValue
 
+
 class NdfObjectWrapper(ABC):
-    def __init__(self: Self, ctx: context.mod_creation.ModCreationContext, obj: Object):
+    def __init__(self: Self, ctx: ctx.ModCreationContext, obj: Object):
         self.ctx = ctx
         self.object = obj
 

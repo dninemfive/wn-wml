@@ -2,29 +2,29 @@ from __future__ import annotations
 
 from typing import Any, Literal, Self
 
-import constants.ndf_paths as ndf_paths
-from constants.misc import GUID, LOCALIZATION, UNIT_ID
-from constants.paths import CACHE_FOLDER
-from creators.ammo import AmmoCreator
-from creators.division import DivisionCreator
-from creators.unit.basic import BasicUnitCreator
-from creators.unit.infantry import InfantryUnitCreator
-from creators.unit.utils.infantry.weapon import InfantryWeapon
-from managers.guid import GuidManager
-from managers.localization import LocalizationManager
-from managers.unit_id import UnitIdManager
-from metadata.division import DivisionMetadata
-from unit_registration.division_unit_registry import DivisionUnitRegistry
-from metadata.mod import ModMetadata
-from metadata.unit import UnitMetadata
+import mw2.constants.ndf_paths as ndf_paths
+from mw2.constants.misc import GUID, LOCALIZATION, UNIT_ID
+from mw2.constants.paths import CACHE_FOLDER
+from mw2.creators.ammo import AmmoCreator
+from mw2.creators.division import DivisionCreator
+from mw2.creators.unit.basic import BasicUnitCreator
+from mw2.creators.unit.infantry import InfantryUnitCreator
+from mw2.creators.unit.utils.infantry.weapon import InfantryWeapon
+from mw2.managers.guid import GuidManager
+from mw2.managers.localization import LocalizationManager
+from mw2.managers.unit_id import UnitIdManager
+from mw2.metadata.division import DivisionMetadata
+from mw2.metadata.mod import ModMetadata
+from mw2.metadata.unit import UnitMetadata
+import mw2.unit_registration.division_unit_registry as reg
+from mw2.utils.ndf import ensure
+from mw2.utils.ndf.files import add_image, add_image_literal
+from mw2.utils.types.cache import Cache
+from mw2.utils.types.message import Message, try_nest
+from mw2.wrappers.unit import UnitWrapper
 from ndf_parse import Mod
 from ndf_parse.model import List, Object
 from ndf_parse.model.abc import CellValue
-from utils.ndf import ensure
-from utils.ndf.files import add_image, add_image_literal
-from utils.types.cache import Cache
-from utils.types.message import Message, try_nest
-from wrappers.unit import UnitWrapper
 
 CACHES: list[tuple[str, type]] = [(GUID, str), (LOCALIZATION, str), (UNIT_ID, int)]
 
@@ -80,7 +80,7 @@ class ModCreationContext(object):
     def create_division(self: Self,
                         division: DivisionMetadata,
                         copy_of: str,
-                        units: DivisionUnitRegistry,
+                        units: reg.DivisionUnitRegistry,
                         insert_after: str | None = None,
                         root_msg: Message | None = None,
                         **changes: CellValue | None) -> None:
@@ -106,7 +106,6 @@ class ModCreationContext(object):
                              country: str,
                              copy_of: str,
                              weapons: list[tuple[InfantryWeapon, int]],
-                             showroom_src: str | None = None,
                              button_texture_src_path: str | None = None) -> InfantryUnitCreator:
         metadata: UnitMetadata = UnitMetadata.from_localized_name(self.prefix, name, country)
         return InfantryUnitCreator(self,

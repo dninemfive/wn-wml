@@ -1,7 +1,7 @@
 from typing import Self
 from uuid import uuid4
 
-from utils.types.cache import Cache
+from mw2.utils.types.cache import Cache
 
 
 class GuidManager(object):

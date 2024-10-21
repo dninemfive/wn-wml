@@ -2,15 +2,15 @@ from __future__ import annotations
 
 from typing import Any, Callable, Self, Type
 
-from metadata.unit import UnitMetadata
-from wrappers._abc import NdfObjectWrapper
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-import utils.ndf.unit_module as modules
-from constants.primitive_types import MotherCountry
+import mw2.utils.ndf.edit as edit
+import mw2.utils.ndf.ensure as ensure
+import mw2.utils.ndf.unit_module as modules
+import mw2.wrappers._modules as mw
+from mw2.constants.primitive_types import MotherCountry
+from mw2.metadata.unit import UnitMetadata
+from mw2.wrappers._abc import NdfObjectWrapper
 # from context.mod_creation import ModCreationContext
 from ndf_parse.model import Object
-import wrappers._modules
 
 
 class UnitWrapper(NdfObjectWrapper):
@@ -40,9 +40,9 @@ class UnitWrapper(NdfObjectWrapper):
                      ClassNameForDebug=ensure.quoted(value))
 
     @property
-    def modules(self: Self) -> wrappers._modules.UnitModulesWrapper:
+    def modules(self: Self) -> mw.UnitModulesWrapper:
         if self._modules_descriptors is None:
-            self._modules_descriptors = wrappers._modules.UnitModulesWrapper(self.ctx, self.object.by_member('ModulesDescriptors').value)
+            self._modules_descriptors = mw.UnitModulesWrapper(self.ctx, self.object.by_member('ModulesDescriptors').value)
         return self._modules_descriptors
     
     def set_country(self: Self, country: str):

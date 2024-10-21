@@ -1,6 +1,6 @@
-from typing import Generator, Self
+from typing import Iterator, Self
 
-from utils.types.cache import Cache
+from mw2.utils.types.cache import Cache
 
 
 class UnitIdManager(object):
@@ -9,7 +9,7 @@ class UnitIdManager(object):
         self.current_id = max(cache.values) if cache.any else initial_id
 
     @property
-    def items(self: Self): # -> Generator[tuple[str, str]]:
+    def items(self: Self) -> Iterator[tuple[str, str]]:
         yield from sorted(self._cache.accessed_items, key=lambda x: x[1])
 
     def register(self: Self, descriptor_path: str) -> int:

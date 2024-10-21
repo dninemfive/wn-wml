@@ -1,11 +1,11 @@
 from numbers import Number
 from typing import Self
 
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-from constants.primitive_types import Factory
+import mw2.utils.ndf.edit as edit
+import mw2.utils.ndf.ensure as ensure
+from mw2.constants.primitive_types import Factory
+from mw2.wrappers.map import MapWrapper
 from ndf_parse.model import List, Object
-from wrappers.map import MapWrapper
 
 from ._abc import UnitModuleKey, UnitModuleWrapper
 

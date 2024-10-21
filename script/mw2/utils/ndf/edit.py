@@ -1,6 +1,7 @@
+import mw2.utils.ndf.ensure as ensure
 from ndf_parse.model import MemberRow, Object
 from ndf_parse.model.abc import CellValue
-import utils.ndf.ensure as ensure
+
 
 def member(obj: Object, name: str, value: CellValue | None):
     if value is None:

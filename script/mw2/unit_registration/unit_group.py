@@ -1,6 +1,6 @@
 from typing import Iterable, Self
 
-from utils.types.message import Message, try_nest
+from mw2.utils.types.message import Message, try_nest
 
 from .division_unit_registry import DivisionUnitRegistry
 from .unit_registration_info import UnitRegistrationInfo

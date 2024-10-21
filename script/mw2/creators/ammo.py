@@ -1,19 +1,17 @@
-# right, python is stupid so i can't use type hints for this
-# from context.unit_creation_context import UnitCreationContext
 from typing import Self
 
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-from constants.ndf_paths import AMMUNITION
-from context.unit_module import UnitModuleContext
-from managers.guid import GuidManager
-from metadata.unit import UnitMetadata
+import mw2.utils.ndf.edit as edit
+import mw2.utils.ndf.ensure as ensure
+from mw2.constants import ndf_paths
+from mw2.context.unit_module import UnitModuleContext
+from mw2.managers.guid import GuidManager
+from mw2.metadata.unit import UnitMetadata
+from mw2.utils.ndf.decorators import ndf_path
+from mw2.utils.ndf.unit_module import get, remove
+from mw2.utils.types.message import Message, try_nest
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from utils.ndf.decorators import ndf_path
-from utils.ndf.unit_module import get, remove
-from utils.types.message import Message, try_nest
 
 
 class AmmoCreator(object):
@@ -29,7 +27,7 @@ class AmmoCreator(object):
         self.msg = try_nest(self.parent_msg, f"Making {self.name}")
         self.msg.__enter__()
         with self.msg.nest(f"Copying {self.copy_of}") as _:
-            self.object = self.make_copy(self.ndf[AMMUNITION])
+            self.object = self.make_copy(self.ndf[ndf_paths.AMMUNITION])
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
@@ -49,7 +47,7 @@ class AmmoCreator(object):
         return copy
 
     # TODO: copy of this but for the missile file?
-    @ndf_path(AMMUNITION)
+    @ndf_path(ndf_paths.AMMUNITION)
     def edit_ammunition(self: Self, ndf: List):
         ndf.add(ListRow(self.object, namespace=self.name))
 

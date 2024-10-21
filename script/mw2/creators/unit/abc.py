@@ -3,21 +3,21 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Callable, Self
 
-import constants.ndf_paths as ndf_paths
-import context.mod_creation
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-import utils.ndf.unit_module as modules
-import wrappers._modules
-import wrappers.unit
-import wrappers.unit_modules.tags
-from context.unit_module import UnitModuleContext
-from creators.weapon import WeaponCreator
-from metadata.unit import UnitMetadata
+import mw2.constants.ndf_paths as ndf_paths
+import mw2.context.mod_creation as ctx
+import mw2.utils.ndf.edit as edit
+import mw2.utils.ndf.ensure as ensure
+import mw2.utils.ndf.unit_module as modules
+import mw2.wrappers._modules as modules
+import mw2.wrappers.unit as unit_wrapper
+import mw2.wrappers.unit_modules.tags as tags
+from mw2.context.unit_module import UnitModuleContext
+from mw2.creators.weapon import WeaponCreator
+from mw2.metadata.unit import UnitMetadata
+from mw2.utils.ndf.decorators import ndf_path
+from mw2.utils.types.message import Message
 from ndf_parse.model import List, ListRow, Map, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from utils.ndf.decorators import ndf_path
-from utils.types.message import Message
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 UNIT_UI = "TUnitUIModuleDescriptor"
@@ -25,7 +25,7 @@ TAGS = "TTagsModuleDescriptor"
 
 class UnitCreator(ABC):
     def __init__(self: Self,
-                 ctx: context.mod_creation.ModCreationContext,
+                 ctx: ctx.ModCreationContext,
                  localized_name: str,
                  new_unit: str | UnitMetadata,
                  src_unit: str | UnitMetadata,
@@ -38,7 +38,7 @@ class UnitCreator(ABC):
         self.unit = self._make_unit(localized_name, button_texture)
 
     def __enter__(self: Self) -> Self:
-        self.msg = self.parent_msg.nest(f"Editing {self.new_unit.descriptor_name}")
+        self.msg = self.parent_msg.nest(f"Editing {self.new_unit.descriptor.name}")
         self.msg.__enter__()
         return self
     
@@ -58,7 +58,7 @@ class UnitCreator(ABC):
     # properties
 
     @property
-    def modules(self: Self) -> wrappers._modules.UnitModulesWrapper:
+    def modules(self: Self) -> modules.UnitModulesWrapper:
         return self.unit.modules
 
     @property
@@ -66,7 +66,7 @@ class UnitCreator(ABC):
         return self.ctx.ndf
     
     @property
-    def tags(self: Self) -> wrappers.unit_modules.tags.TagsModuleWrapper:
+    def tags(self: Self) -> tags.TagsModuleWrapper:
         return self.modules.tags    
     
     @property
@@ -104,13 +104,13 @@ class UnitCreator(ABC):
 
     # "private" methods
 
-    def _make_unit(self: Self, localized_name: str, button_texture: str | None = None) -> wrappers.unit.UnitWrapper:
-        copy: Object = self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(self.src_unit.descriptor_name).value.copy()
+    def _make_unit(self: Self, localized_name: str, button_texture: str | None = None) -> unit_wrapper.UnitWrapper:
+        copy: Object = self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(self.src_unit.descriptor.name).value.copy()
         edit.members(copy,
-                     DescriptorId=self.ctx.guids.generate(self.new_unit.descriptor_name),
+                     DescriptorId=self.ctx.guids.generate(self.new_unit.descriptor.name),
                      ClassNameForDebug=self.new_unit.class_name_for_debug)
-        with self.parent_msg.nest(f'Copying {self.src_unit.descriptor_name}') as _:
-            unit = wrappers.unit.UnitWrapper(self.ctx, copy)
+        with self.parent_msg.nest(f'Copying {self.src_unit.descriptor.name}') as _:
+            unit = unit_wrapper.UnitWrapper(self.ctx, copy)
         unit.modules.ui.localized_name = localized_name
         if button_texture is not None:
             unit.modules.ui.ButtonTexture = button_texture
@@ -122,15 +122,15 @@ class UnitCreator(ABC):
 
     @ndf_path(ndf_paths.UNITE_DESCRIPTOR)
     def _edit_unite_descriptor(self: Self, ndf: List):
-        ndf.add(ListRow(self.unit.object, namespace=self.new_unit.descriptor_name, visibility="export"))
+        ndf.add(ListRow(self.unit.object, namespace=self.new_unit.descriptor.name, visibility="export"))
 
     @ndf_path(ndf_paths.DIVISION_PACKS)
     def _edit_division_packs(self: Self, ndf: List):
         deck_pack_descriptor = Object('DeckPackDescriptor')
-        deck_pack_descriptor.add(MemberRow(self.new_unit.descriptor_path, "Unit"))
-        ndf.add(ListRow(deck_pack_descriptor, namespace=self.new_unit.deck_pack_descriptor_name))
+        deck_pack_descriptor.add(MemberRow(self.new_unit.descriptor.path, "Unit"))
+        ndf.add(ListRow(deck_pack_descriptor, namespace=self.new_unit.deck_pack_descriptor.name))
 
     @ndf_path(ndf_paths.ALL_UNITS_TACTIC)
     def _edit_all_units_tactic(self: Self, ndf: List):
         all_units_tactic = ndf.by_name("AllUnitsTactic").value
-        all_units_tactic.add(self.new_unit.descriptor_path)
+        all_units_tactic.add(self.new_unit.descriptor.path)

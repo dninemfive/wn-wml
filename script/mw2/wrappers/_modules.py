@@ -2,18 +2,18 @@ from __future__ import annotations
 
 from typing import Callable, Iterable, Self, SupportsIndex, Type, TypeVar
 
-import wrappers.unit
-import utils.ndf.edit as edit
-import utils.ndf.unit_module as modules
+import mw2.context.mod_creation as ctx
+import mw2.utils.ndf.edit as edit
+import mw2.utils.ndf.unit_module as modules
+import mw2.wrappers.unit as uw
+from mw2.utils.ndf import ensure
+from mw2.wrappers.unit_modules.damage import BaseDamageModuleWrapper
+from mw2.wrappers.unit_modules.production import ProductionModuleWrapper
+from mw2.wrappers.unit_modules.tags import TagsModuleWrapper
+from mw2.wrappers.unit_modules.type_unit import TypeUnitModuleWrapper
+from mw2.wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
 from ndf_parse.model import List, ListRow, Object
 from ndf_parse.model.abc import CellValue
-from utils.ndf import ensure
-from wrappers.unit_modules.damage import BaseDamageModuleWrapper
-from wrappers.unit_modules.production import ProductionModuleWrapper
-from wrappers.unit_modules.tags import TagsModuleWrapper
-from wrappers.unit_modules.type_unit import TypeUnitModuleWrapper
-from wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
-import context.mod_creation
 
 from .unit_modules._abc import UnitModuleKey, UnitModuleWrapper
 
@@ -23,7 +23,7 @@ ModuleRef = str | tuple[str, bool]
 T = TypeVar('T', covariant=True, bound=UnitModuleWrapper)
 
 class UnitModulesWrapper(object):
-    def __init__(self: Self, ctx: context.mod_creation.ModCreationContext, modules_ndf: List):
+    def __init__(self: Self, ctx: ctx.ModCreationContext, modules_ndf: List):
         self.ctx = ctx
         self._modules_ndf = modules_ndf
         self._cached_module_wrappers: dict[UnitModuleKey, UnitModuleWrapper] = {}
@@ -64,7 +64,7 @@ class UnitModulesWrapper(object):
     def _deref(self: Self, unit_ref: UnitRef) -> Object:
         if isinstance(unit_ref, str):
             return self.ctx.get_unit(ensure.unit_descriptor(unit_ref)).object
-        elif isinstance(unit_ref, wrappers.unit.UnitWrapper):
+        elif isinstance(unit_ref, uw.UnitWrapper):
             return unit_ref.object
         return unit_ref
     

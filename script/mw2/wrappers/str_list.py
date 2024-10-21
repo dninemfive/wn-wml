@@ -1,8 +1,7 @@
 from typing import Callable, Iterable, Self, SupportsIndex
 
+from mw2.utils.ndf import ensure
 from ndf_parse.model import List, ListRow
-
-from utils.ndf import ensure
 
 StrNormalizer = Callable[[str], str]
 

@@ -2,15 +2,16 @@ from __future__ import annotations
 
 from typing import Self
 
-import utils.ndf.edit as edit
-from constants.ndf_paths import (DECK_SERIALIZER, DIVISION_LIST,
-                                 DIVISION_RULES, DIVISIONS)
-from metadata.division import DivisionMetadata
-from unit_registration.division_unit_registry import DivisionUnitRegistry
+import mw2.utils.ndf.edit as edit
+from mw2.constants.ndf_paths import (DECK_SERIALIZER, DIVISION_LIST,
+                                     DIVISION_RULES, DIVISIONS)
+from mw2.metadata.division import DivisionMetadata
+import mw2.unit_registration.division_unit_registry as ur_dur
+from mw2.utils.ndf.decorators import ndf_path
+from mw2.utils.types.message import Message
 from ndf_parse.model import List, ListRow, Map, MapRow
 from ndf_parse.model.abc import CellValue
-from utils.ndf.decorators import ndf_path
-from utils.types.message import Message
+
 
 # todo: corresponding wrapper
 class DivisionCreator(object):
@@ -19,7 +20,7 @@ class DivisionCreator(object):
                  copy_of: str,
                  insert_after: str | None,
                  division: DivisionMetadata,
-                 units: DivisionUnitRegistry,
+                 units: ur_dur.DivisionUnitRegistry,
                  **changes: CellValue | None):
         self.guid = guid
         self.copy_of = copy_of

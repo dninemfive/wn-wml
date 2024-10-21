@@ -1,9 +1,9 @@
 from typing import Iterable, Self, SupportsIndex
 
+from mw2.utils.ndf import ensure
 from ndf_parse.model import List, ListRow, Map, MapRow
 from ndf_parse.model.abc import CellValue
 
-from utils.ndf import ensure
 
 class MapWrapper(object):
     def __init__(self: Self, map: Map):

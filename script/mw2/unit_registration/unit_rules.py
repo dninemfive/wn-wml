@@ -1,10 +1,11 @@
 from typing import Self
 
-from creators.unit.abc import UnitCreator
-from metadata.unit import UnitMetadata
-from model.deck_unite_rule import TDeckUniteRule
+from mw2.creators.unit.abc import UnitCreator
+from mw2.metadata.unit import UnitMetadata
+from mw2.model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import MapRow
-from .types import UnitsPerXp, Transport
+
+from .types import Transport, UnitsPerXp
 
 
 class UnitRules(object):

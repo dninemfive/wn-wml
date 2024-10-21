@@ -1,23 +1,21 @@
 from __future__ import annotations
 
-from asyncio import Transport
 from typing import Callable, Iterable, Self
 
-import context.mod_creation
-import utils.ndf.ensure as ensure
-from constants.ndf_paths import DECK_SERIALIZER, DIVISION_RULES
-from creators.unit.abc import UnitCreator
-from managers.unit_id import UnitIdManager
-from metadata.division import DivisionMetadata
-from metadata.unit import UnitMetadata
-from model.deck_unite_rule import TDeckUniteRule
+import mw2.context.mod_creation
+import mw2.utils.ndf.ensure as ensure
+from mw2.constants.ndf_paths import DECK_SERIALIZER, DIVISION_RULES
+from mw2.managers.unit_id import UnitIdManager
+from mw2.metadata.division import DivisionMetadata
+from mw2.metadata.unit import UnitMetadata
+from mw2.model.deck_unite_rule import TDeckUniteRule
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
+from mw2.utils.ndf.decorators import ndf_path
+from mw2.utils.types.message import Message, try_nest
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
-from unit_registration.new_src_unit_pair import NewSrcUnitPair
-from utils.ndf.decorators import ndf_path
-from utils.types.message import Message, try_nest
 
 from .division_rule_lookup import DivisionRuleLookup
-from .types import UnitDelegate, UnitsPerXp
+from .types import UnitDelegate, UnitsPerXp, Transport
 from .unit_rules import UnitRules
 
 
@@ -31,7 +29,7 @@ def ensure_unit_path_list(transports: str | list[str | None] | None) -> list[str
 
 class DivisionUnitRegistry(object):
     # ctx: ModCreationContext
-    def __init__(self: Self, ctx: context.mod_creation.ModCreationContext, metadata: DivisionMetadata, parent_msg: Message | None = None, *division_priorities: str):
+    def __init__(self: Self, ctx: mw2.context.mod_creation.ModCreationContext, metadata: DivisionMetadata, parent_msg: Message | None = None, *division_priorities: str):
         self.ctx = ctx
         self.metadata = metadata
         self.units: list[UnitRules] = []

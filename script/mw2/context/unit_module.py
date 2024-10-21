@@ -1,10 +1,10 @@
 from typing import Self
 
+import mw2.utils.ndf.edit as edit
+import mw2.utils.ndf.unit_module as unit_module
 from ndf_parse.model import Object
 from ndf_parse.model.abc import CellValue
-from typing import Self
-import utils.ndf.edit as edit
-import utils.ndf.unit_module as unit_module
+
 
 class UnitModuleContext(object):
     def __init__(self: Self, unit: Object, module_type: str, by_name: bool = False):

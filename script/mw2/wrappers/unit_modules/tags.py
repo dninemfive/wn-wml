@@ -1,11 +1,12 @@
 from typing import Self
 
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
+import mw2.utils.ndf.edit as edit
+import mw2.utils.ndf.ensure as ensure
+from mw2.wrappers.str_list import StrListWrapper
 from ndf_parse.model import List, Object
-from wrappers.str_list import StrListWrapper
 
 from ._abc import UnitModuleKey, UnitModuleWrapper
+
 
 class TagsModuleWrapper(UnitModuleWrapper):
     _module_key = UnitModuleKey('TTagsModuleDescriptor')

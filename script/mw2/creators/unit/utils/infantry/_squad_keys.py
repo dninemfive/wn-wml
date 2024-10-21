@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Self
 
-import utils.ndf.ensure as ensure
-from metadata.unit import UnitMetadata
+import mw2.utils.ndf.ensure as ensure
+from mw2.metadata.unit import UnitMetadata
 
 
 @dataclass

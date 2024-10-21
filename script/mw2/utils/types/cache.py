@@ -1,8 +1,9 @@
 # Iterator instead of Generator: https://stackoverflow.com/a/63237329
 import os
 from typing import Generic, Iterator, Self, TypeVar
-from utils.io import load, write
-from utils.types.message import Message, try_nest
+
+from mw2.utils.io import load, write
+from mw2.utils.types.message import Message, try_nest
 
 V = TypeVar('V')
 
