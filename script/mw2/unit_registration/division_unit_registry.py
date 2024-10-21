@@ -15,7 +15,7 @@ from mw2.utils.types.message import Message, try_nest
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 
 from .division_rule_lookup import DivisionRuleLookup
-from .types import UnitDelegate, UnitsPerXp, Transport
+import _types
 from .unit_rules import UnitRules
 
 
@@ -44,10 +44,10 @@ class DivisionUnitRegistry(object):
             unit_ids.add(k=k, v=str(v))
 
     def register(self: Self,
-                 unit: str | UnitDelegate,
+                 unit: str | _types.UnitDelegate,
                  packs: int,
-                 units_per_xp: UnitsPerXp | None = None,
-                 transports: str | Iterable[Transport] | None = None) -> None:
+                 units_per_xp: _types.UnitsPerXp | None = None,
+                 transports: str | Iterable[_types.Transport] | None = None) -> None:
         """Adds a unit to the registry.
 
         Parameters
@@ -74,16 +74,16 @@ class DivisionUnitRegistry(object):
         if isinstance(unit, str):
             unit: UnitMetadata = UnitMetadata(unit)
             self._register(unit, None, packs, units_per_xp, transports)
-        elif isinstance(unit, UnitDelegate):
+        elif isinstance(unit, _types.UnitDelegate):
             src_unit, new_unit = NewSrcUnitPair(unit(self.ctx)).to_tuple            
             self._register(new_unit, src_unit, packs, units_per_xp, transports)
 
     def _look_up_rule_items(self: Self,
                       unit: UnitMetadata,
-                      units_per_xp: UnitsPerXp | None,
-                      transports: Iterable[Transport] | None,
+                      units_per_xp: _types.UnitsPerXp | None,
+                      transports: Iterable[_types.Transport] | None,
                       msg: Message)\
-                        -> tuple[UnitsPerXp, list[Transport] | None]:
+                        -> tuple[_types.UnitsPerXp, list[_types.Transport] | None]:
         if units_per_xp is not None and transports is not None:
             return (units_per_xp, transports)
         rule: TDeckUniteRule = self.lookup.look_up(unit, msg)
@@ -99,7 +99,7 @@ class DivisionUnitRegistry(object):
                   unit: UnitMetadata,
                   src: UnitMetadata | None,
                   packs: int,
-                  units_per_xp: UnitsPerXp,
+                  units_per_xp: _types.UnitsPerXp,
                   transports: str | list[str] | None) -> None:
         modded: bool = src is not None
         with try_nest(self.parent_msg, f'Registering {'modded' if modded else 'vanilla'} unit {unit.name}') as msg:

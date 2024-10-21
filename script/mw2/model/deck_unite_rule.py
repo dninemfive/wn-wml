@@ -5,7 +5,7 @@ from typing import Self
 
 from mw2.creators.unit.basic import BasicUnitCreator
 from mw2.metadata.unit import UnitMetadata
-from mw2.unit_registration.types import UnitsPerXp
+from mw2.unit_registration._types import UnitsPerXp
 from mw2.utils.ndf import ensure
 from ndf_parse.model import List, MemberRow, Object
 

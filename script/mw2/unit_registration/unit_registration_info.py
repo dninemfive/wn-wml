@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 from typing import Iterable
 
-from .types import UnitDelegate, UnitsPerXp, Transport
+import _types
 
 # TODO: make packs nullable to allow number of packs to be looked up?
 @dataclass
 class UnitRegistrationInfo(object):
-    unit: str | UnitDelegate
+    unit: str | _types.UnitDelegate
     packs: int
-    units_per_xp: UnitsPerXp | None = None
-    transports: Iterable[Transport] | None = None
+    units_per_xp: _types.UnitsPerXp | None = None
+    transports: Iterable[_types.Transport] | None = None
