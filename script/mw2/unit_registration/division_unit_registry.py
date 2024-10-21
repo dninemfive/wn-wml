@@ -15,7 +15,7 @@ from mw2.utils.types.message import Message, try_nest
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 
 from .division_rule_lookup import DivisionRuleLookup
-import _types
+from . import _types
 from .unit_rules import UnitRules
 
 

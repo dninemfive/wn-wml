@@ -5,7 +5,7 @@ from mw2.metadata.unit import UnitMetadata
 from mw2.model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import MapRow
 
-from .types import Transport, UnitsPerXp
+from ._types import Transport, UnitsPerXp
 
 
 class UnitRules(object):

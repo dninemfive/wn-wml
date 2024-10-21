@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Iterable
 
-import _types
+from . import _types
 
 # TODO: make packs nullable to allow number of packs to be looked up?
 @dataclass
