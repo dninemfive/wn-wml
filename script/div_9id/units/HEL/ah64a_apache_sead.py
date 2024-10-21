@@ -1,15 +1,15 @@
-from constants import ndf_paths
-from script.creators.unit.abc import UnitCreator
-from script.metadata.unit import UnitMetadata
-import utils.ndf.ensure as ensure
-from context.mod_creation import ModCreationContext
-from context.unit_module import UnitModuleContext
-from metadata.division_unit_registry import UnitRules
+from mw2.constants import ndf_paths
+from mw2.creators.unit.abc import UnitCreator
+from mw2.metadata.unit import UnitMetadata
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
+import mw2.utils.ndf.ensure as ensure
+from mw2.context.mod_creation import ModCreationContext
+from mw2.context.unit_module import UnitModuleContext
 from ndf_parse.model import List, ListRow, Object
-import utils.ndf.edit as edit
+import mw2.utils.ndf.edit as edit
 
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
     with ctx.create_unit("AH-64A APACHE [SEAD]", "US", "AH64_Apache_US") as apache_sead:
         # upgrade from Apache ATAS or whatever is at the end of the apache upgrades list
         apache_sead.modules.ui.UpgradeFromUnit = 'AH64_Apache_emp1_US'
@@ -57,7 +57,7 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         apache_sead.modules.production.command_point_cost = 250
         apache_sead.modules.ui.SpecialtiesList = ['sead']
         apache_sead.modules.ui.UpgradeFromUnit = 'AH64_Apache_emp1_US'
-        return UnitRules(apache_sead, 1, [0, 1, 0, 0])
+        return apache_sead
     
 def add_weapon_descriptor(ndf: List, creator: UnitCreator) -> None:    
     weapon_descriptor: Object = ndf.by_name(creator.src_unit.weapon_descriptor_name).value.copy()

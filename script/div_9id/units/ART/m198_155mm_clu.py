@@ -1,12 +1,12 @@
 from mw2.context.mod_creation import ModCreationContext
-from context.unit_module import UnitModuleContext
-from metadata.division_unit_registry import UnitRules
-from metadata.unit import UnitMetadata
-import utils.ndf.ensure as ensure
-import utils.ndf.edit as edit
+from mw2.context.unit_module import UnitModuleContext
+from mw2.metadata.unit import UnitMetadata
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
+import mw2.utils.ndf.ensure as ensure
+import mw2.utils.ndf.edit as edit
 
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
     # M198 155mm [CLU]
     # copy M198 155mm
     with ctx.create_unit("M198 155mm [CLU]", "US", "Howz_M198_155mm_US") as m198_clu:
@@ -31,4 +31,4 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         # change unit dangerousness (see M240 CLU vs regular)
         # change unit attack/defense value (see M240 CLU vs regular)
         # change unit cost (see M240 CLU vs regular) -> about 50% higher
-        return UnitRules(m198_clu, 2, [0, 4, 3, 0])
+        return m198_clu

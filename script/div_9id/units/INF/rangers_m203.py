@@ -1,8 +1,10 @@
-from context.mod_creation import ModCreationContext
-from metadata.division_unit_registry import UnitRules
-from units._weapons import COLT_COMMANDO, M16A2, M249, M203
+from mw2.context.mod_creation import ModCreationContext
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
+from ._weapons import COLT_COMMANDO, M16A2, M203, M249
+
+
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
     # RANGERS (M203)
     # weapons:
     # - Colt Commando x4
@@ -11,4 +13,4 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
     # - M203 x2 w/ 36rd each
     with ctx.create_infantry_unit("RANGERS (M203)", "US", "Ranger_US", [(COLT_COMMANDO, 4), (M16A2, 3), (M249, 2), (M203, 2)]) as rangers_m203:
         rangers_m203.modules.ui.UpgradeFromUnit = 'Ranger_Dragon_US'
-        return UnitRules(rangers_m203, 2, [0, 6, 4, 0])
+        return rangers_m203

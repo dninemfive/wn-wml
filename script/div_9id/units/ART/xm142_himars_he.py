@@ -1,15 +1,15 @@
-import utils.ndf.edit as edit
-from context.mod_creation import ModCreationContext
-from context.unit_module import UnitModuleContext
-from creators.ammo import AmmoCreator
-from creators.unit.basic import UNIT_UI
-from creators.weapon import WeaponCreator
-from metadata.division_unit_registry import UnitRules
-from metadata.unit import UnitMetadata
+import mw2.utils.ndf.edit as edit
+from mw2.context.mod_creation import ModCreationContext
+from mw2.context.unit_module import UnitModuleContext
+from mw2.creators.ammo import AmmoCreator
+from mw2.creators.unit.basic import UNIT_UI
+from mw2.creators.weapon import WeaponCreator
+from mw2.metadata.unit import UnitMetadata
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 from ndf_parse.model import List, ListRow
 
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
     # XM142 HIMARS [HE]
     # copy BM-21 Grad
     with ctx.create_unit("XM142 HIMARS [HE]", "US", "BM21_Grad_SOV") as xm142_himars_he:
@@ -37,5 +37,5 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         # change unit dangerousness
         # change unit attack/defense value
         # change unit cost
-        return UnitRules(xm142_himars_he, 2, [0, 4, 3, 0])
+        return xm142_himars_he
         

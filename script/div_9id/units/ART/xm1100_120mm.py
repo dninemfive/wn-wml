@@ -1,15 +1,8 @@
-from context.mod_creation import ModCreationContext
-from context.unit_module import UnitModuleContext
-from creators.unit.basic import UNIT_UI
-from metadata.division_unit_registry import UnitRules
-from metadata.unit import UnitMetadata
-from ndf_parse.model import List, ListRow
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-import utils.ndf.unit_module as module
+from mw2.context.mod_creation import ModCreationContext
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
     # XM119 IMCS
     # copy VLRA mortar
     with ctx.create_unit("XM1100 120mm", "US", "VLRA_Mortier81_FR") as xm1100_120mm:
@@ -22,5 +15,5 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         # change country (+flag) to US
         xm1100_120mm.modules.type.MotherCountry = 'US'
         xm1100_120mm.modules.remove('TDeploymentShiftModuleDescriptor')
-        return UnitRules(xm1100_120mm, 2, [0, 4, 3, 0])
+        return xm1100_120mm
         

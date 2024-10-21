@@ -1,13 +1,13 @@
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-from context.mod_creation import ModCreationContext
-from context.unit_module import UnitModuleContext
-from metadata.division_unit_registry import UnitRules
-from metadata.unit import UnitMetadata
+import mw2.utils.ndf.edit as edit
+import mw2.utils.ndf.ensure as ensure
+from mw2.context.mod_creation import ModCreationContext
+from mw2.context.unit_module import UnitModuleContext
+from mw2.metadata.unit import UnitMetadata
+from mw2.unit_registration.new_src_unit_pair import NewSrcUnitPair
 from units._utils import Metre
 
 
-def create(ctx: ModCreationContext) -> UnitRules | None:
+def create(ctx: ModCreationContext) -> NewSrcUnitPair:
     # M198 155mm COPPERHEAD
     # copy M198 155mm
     with ctx.create_unit("M198 COPPERHEAD", "US", "Howz_M198_155mm_US") as m198_copperhead:
@@ -32,5 +32,5 @@ def create(ctx: ModCreationContext) -> UnitRules | None:
         # change unit dangerousness (see 2S3M1 vs regular)
         # change unit attack/defense value (see 2S3M1 vs regular)
         # change unit cost (see 2S3M1 vs regular)
-        return UnitRules(m198_copperhead, 2, [0, 4, 3, 0])
+        return m198_copperhead
         

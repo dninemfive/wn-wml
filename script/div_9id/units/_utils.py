@@ -20,10 +20,10 @@ def Metre(n: int) -> str:
     return f'(({n}) * Metre)'
 
 def is_sell_module(row: ListRow) -> bool:
-            if isinstance(row.value, Object):
-                if row.value.type == 'TModuleSelector':
-                    default = row.value.by_member("Default", strict=False)
-                    if isinstance(default, MemberRow):
-                        if(isinstance(default.value, Object)):
-                            return default.value.type == 'TSellModuleDescriptor'
-            return False                        
+    if isinstance(row.value, Object):
+        if row.value.type == 'TModuleSelector':
+            default = row.value.by_member("Default", strict=False)
+            if isinstance(default, MemberRow):
+                if(isinstance(default.value, Object)):
+                    return default.value.type == 'TSellModuleDescriptor'
+    return False                        
