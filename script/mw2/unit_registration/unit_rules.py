@@ -18,7 +18,7 @@ class UnitRules(object):
             unit = unit.new_unit
         self.unit: UnitMetadata = unit
         self.num_packs = num_packs
-        self.rule: TDeckUniteRule = TDeckUniteRule.make(unit, units_per_pack, transports, None in transports)
+        self.rule: TDeckUniteRule = TDeckUniteRule.make(unit, units_per_pack, transports, transports is None or None in transports)
 
     @property
     def pack(self: Self) -> MapRow:

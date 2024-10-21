@@ -74,8 +74,8 @@ class DivisionUnitRegistry(object):
         if isinstance(unit, str):
             unit: UnitMetadata = UnitMetadata(unit)
             self._register(unit, None, packs, units_per_xp, transports)
-        elif isinstance(unit, _types.UnitDelegate):
-            src_unit, new_unit = NewSrcUnitPair(unit(self.ctx)).to_tuple            
+        elif isinstance(unit, Callable):
+            new_unit, src_unit = NewSrcUnitPair(unit(self.ctx)).to_tuple()       
             self._register(new_unit, src_unit, packs, units_per_xp, transports)
 
     def _look_up_rule_items(self: Self,
@@ -89,7 +89,7 @@ class DivisionUnitRegistry(object):
         rule: TDeckUniteRule = self.lookup.look_up(unit, msg)
         if units_per_xp is None:
             units_per_xp = rule.units_per_xp
-        if transports is None and isinstance(rule.AvailableTransportList, list[str]):
+        if transports is None and isinstance(rule.AvailableTransportList, list):
             transports: list[str | None] = rule.AvailableTransportList
             if rule.AvailableWithoutTransport:
                 transports.append(None)
@@ -102,6 +102,7 @@ class DivisionUnitRegistry(object):
                   units_per_xp: _types.UnitsPerXp,
                   transports: str | list[str] | None) -> None:
         modded: bool = src is not None
+        print(unit.name, src.name if src is not None else None, modded)
         with try_nest(self.parent_msg, f'Registering {'modded' if modded else 'vanilla'} unit {unit.name}') as msg:
             units_per_xp, transports = self._look_up_rule_items(src if modded else unit,
                                                                 units_per_xp,

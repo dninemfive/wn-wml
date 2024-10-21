@@ -29,7 +29,7 @@ def create(ctx: ModCreationContext) -> NewSrcUnitPair:
             MenuIconTexture='appui',
             TypeStrategicCount='Transport')
         trans_m998_humvee_m2hb.modules.remove('TDeploymentShiftModuleDescriptor')
-        return None # transports don't get added separately
+        return trans_m998_humvee_m2hb
     
 def edit_with_m998(trans_m998_humvee_m2hb: BasicUnitCreator, m998_humvee: Object) -> None:
     # copy scanner from M998 Humvee (regular)

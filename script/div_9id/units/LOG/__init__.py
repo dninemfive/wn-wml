@@ -16,7 +16,7 @@ def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> 
         (
             'Command',
             [
-                u('M1025_Humvee_CMD_US'),
+                u('M1025_Humvee_CMD_US', 1),
                 u(cmd_m997_tc3v, 1),
                 u('OH58C_CMD_US', 1),
             ]

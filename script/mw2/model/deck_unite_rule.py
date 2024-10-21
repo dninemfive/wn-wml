@@ -26,10 +26,15 @@ class TDeckUniteRule(object):
 
     @staticmethod
     def from_ndf(ndf: Object) -> Self:
+        transports: list[str] | None = None
+        try:
+            transports = [x.value for x in ndf.by_member(KEY_AVAILABLE_TRANSPORT_LIST).value]
+        except:
+            pass
         return TDeckUniteRule(
             ndf.by_member(KEY_UNIT_DESCRIPTOR).value,
             ndf.by_member(KEY_AVAILABLE_WITHOUT_TRANSPORT).value,
-            [x.value for x in ndf.by_member(KEY_AVAILABLE_TRANSPORT_LIST).value],
+            transports,
             ndf.by_member(KEY_NUMBER_OF_UNIT_IN_PACK).value,
             [float(x) for x in ndf.by_member(KEY_NUMBER_OF_UNIT_IN_PACK_XP_MULTIPLIER).value]
         )
@@ -50,7 +55,7 @@ class TDeckUniteRule(object):
              transports: list[str] | None = None,
              force_awt: bool | None = None) -> Self:
         if isinstance(metadata, BasicUnitCreator):
-            metadata = metadata.new
+            metadata = metadata.new_unit
         num_per_pack = max(num_per_xp)
         xp_multipliers = [x / num_per_pack for x in num_per_xp]
         available_without_transport = force_awt if force_awt is not None else (transports is None)
@@ -64,4 +69,4 @@ class TDeckUniteRule(object):
     
     @property
     def units_per_xp(self: Self) -> UnitsPerXp:
-        return (int(x * self.NumberOfUnitInPack) for x in self.NumberOfUnitInPackXPMultiplier)
+        return (int(x * int(self.NumberOfUnitInPack)) for x in self.NumberOfUnitInPackXPMultiplier)
