@@ -1,4 +1,4 @@
-from div_9id.units.transports import BLACKHAWK, M35, M998_HUMVEE, M998_HUMVEE_AGL
+from div_9id.units.transports import BLACKHAWK, M35, M998_HUMVEE, Transports
 from mw2.unit_registration.division_unit_registry import DivisionUnitRegistry
 from mw2.unit_registration.unit_group import UnitGroup
 from mw2.unit_registration.unit_registration_info import \
@@ -12,9 +12,10 @@ from .stinger_tdar       import create as stinger_tdar_
 from .xm85_t_chaparral   import create as t_chap
 from .excalibur_vwc      import create as excalibur
 
-MANPADS_TRANSPORTS = [M998_HUMVEE_AGL, BLACKHAWK]
 
 def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> UnitGroup:
+    M998_HUMVEE_AGL     = Transports.singleton.M998_HUMVEE_AGL
+    MANPADS_TRANSPORTS = [M998_HUMVEE, M998_HUMVEE_AGL, BLACKHAWK]
     return UnitGroup(
         'AA',
         registry,

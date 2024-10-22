@@ -1,9 +1,8 @@
 from div_9id.units.transports import (BLACKHAWK,
                                       M998_HUMVEE,
-                                      M998_HUMVEE_AGL,
-                                      M998_HUMVEE_M2HB,
                                       M1025_HUMVEE_MP,
-                                      M1038_HUMVEE)
+                                      M1038_HUMVEE,
+                                      Transports)
 from mw2.unit_registration.division_unit_registry import DivisionUnitRegistry
 from mw2.unit_registration.unit_group import UnitGroup
 from mw2.unit_registration.unit_registration_info import \
@@ -24,6 +23,8 @@ from .m1025_humvee_agl   import create as m1025_agl
 
 
 def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> UnitGroup:
+    M998_HUMVEE_M2HB    = Transports.singleton.M998_HUMVEE_M2HB
+    M998_HUMVEE_AGL     = Transports.singleton.M998_HUMVEE_AGL
     return UnitGroup(
         'INF',
         registry,

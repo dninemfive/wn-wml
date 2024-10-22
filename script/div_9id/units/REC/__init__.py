@@ -4,8 +4,8 @@ from mw2.unit_registration.unit_registration_info import \
     UnitRegistrationInfo as u
 from mw2.utils.types.message import Message
 
-from ..transports import (BLACKHAWK, CHINOOK, FAV, M35, M151A2_M2HB,
-                          M998_HUMVEE, REC_HUMVEE_AGL, REC_HUMVEE_M2HB)
+from ..transports import (BLACKHAWK, CHINOOK, M35, M151A2_M2HB,
+                          M998_HUMVEE, REC_HUMVEE_AGL, REC_HUMVEE_M2HB, Transports)
 from .fav_agl               import create as fav_agl_
 from .fav_m2hb              import create as fav_m2hb_
 from .fav_tow               import create as fav_tow_
@@ -17,9 +17,11 @@ from .mqm10_aquila          import create as aquila
 from .operational_support   import create as osd
 from .scoutat_team          import create as scout_at_team
 
+
 FAV_TRANSPORTS = [None, CHINOOK]
 
 def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> UnitGroup:
+    FAV = Transports.singleton.FAV
     return UnitGroup(
         'REC',
         registry,

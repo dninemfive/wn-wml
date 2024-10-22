@@ -46,7 +46,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 # make new units              
                 # TODO: maybe default unit country?
                 # TODO: target module changes with like TModuleType:path/to/property ?      
-                transports.init(mod_context)
+                _ = transports.Transports(mod_context)
                 for category in [LOG, INF, ART, TNK, REC, AA, HEL]:
                     group: Callable[[DivisionUnitRegistry, Message], UnitGroup] = getattr(category, 'group')
                     group(division_units, msg).register_all()                
