@@ -4,7 +4,7 @@ from typing import Self
 
 import mw2.creators.unit.abc as abc
 import mw2.utils.ndf.edit as edit
-from mw2.constants.primitive_types import UnitRole
+from mw2.constants import enums, literals
 from mw2.metadata.unit import UnitMetadata
 from mw2.utils.ndf import ensure
 from mw2.wrappers.str_list import StrListWrapper
@@ -28,7 +28,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('CountryTexture').value
 
     @CountryTexture.setter
-    def CountryTexture(self: Self, value: str) -> None:
+    def CountryTexture(self: Self, value: literals.MotherCountry | str) -> None:
         edit.member(self.object, 'CountryTexture', ensure.quoted(ensure.prefix(ensure.unquoted(value), 'CommonTexture_MotherCountryFlag_')))
 
     @property
@@ -52,15 +52,15 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('InfoPanelConfigurationToken').value
 
     @InfoPanelConfigurationToken.setter
-    def InfoPanelConfigurationToken(self: Self, value: str) -> None:
-        edit.member(self.object, 'InfoPanelConfigurationToken', ensure.quoted(value))
+    def InfoPanelConfigurationToken(self: Self, value: literals.InfoPanelConfigurationToken) -> None:
+        edit.member(self.object, 'InfoPanelConfigurationToken', enums.InfoPanelConfigurationToken.ensure_valid(value))
 
     @property
     def MenuIconTexture(self: Self) -> str:
         return self.object.by_member('MenuIconTexture').value
 
     @MenuIconTexture.setter
-    def MenuIconTexture(self: Self, value: str) -> None:
+    def MenuIconTexture(self: Self, value: literals.MenuIconTexture | str) -> None:
         edit.member(self.object, 'MenuIconTexture', ensure.quoted(ensure.prefix(ensure.unquoted(value), 'Texture_RTS_H_')))
 
     @property
@@ -89,7 +89,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('TypeStrategicCount').value
 
     @TypeStrategicCount.setter
-    def TypeStrategicCount(self: Self, value: str) -> None:
+    def TypeStrategicCount(self: Self, value: literals.TypeStrategicCount | str) -> None:
         edit.member(self.object, 'TypeStrategicCount', ensure.prefix(value, 'ETypeStrategicDetailedCount/'))
 
     @property
@@ -97,8 +97,8 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('UnitRole').value
 
     @UnitRole.setter
-    def UnitRole(self: Self, value: str) -> None:
-        edit.member(self.object, 'UnitRole', UnitRole.ensure_valid(value))
+    def UnitRole(self: Self, value: literals.UnitRole | str) -> None:
+        edit.member(self.object, 'UnitRole', enums.UnitRole.ensure_valid(value))
 
     @property
     def UpgradeFromUnit(self: Self) -> str | None:

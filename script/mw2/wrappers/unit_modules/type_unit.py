@@ -1,6 +1,7 @@
-from typing import Self
+from typing import Literal, Self
 
 import mw2.utils.ndf.ensure as ensure
+import mw2.constants.literals as literals
 from ndf_parse.model import List, Object
 
 from ._abc import UnitModuleKey, UnitModuleWrapper
@@ -17,8 +18,8 @@ class TypeUnitModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('Nationalite').value
     
     @Nationalite.setter
-    def Nationalite(self: Self, value: str) -> None:
-        # TODO: enum aliases. Also, auto-generate Literal equivalents
+    def Nationalite(self: Self, value: literals.Nationalite | Literal['NATO', 'PACT']) -> None:
+        # TODO: enum aliases.
         if value == 'NATO':
             value = 'Allied'
         if value == 'PACT':
@@ -30,7 +31,7 @@ class TypeUnitModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('MotherCountry').value
     
     @MotherCountry.setter
-    def MotherCountry(self: Self, val: str) -> None:
+    def MotherCountry(self: Self, val: literals.MotherCountry | str) -> None:
         self.object.by_member('MotherCountry').value = ensure.quoted(val)
 
     @property
@@ -38,7 +39,7 @@ class TypeUnitModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('AcknowUnitType').value
     
     @AcknowUnitType.setter
-    def AcknowUnitType(self: Self, val: str) -> None:
+    def AcknowUnitType(self: Self, val: literals.AcknowUnitType | str) -> None:
         self.object.by_member('AcknowUnitType').value = ensure.prefix(val, '~/TAcknowUnitType_')
 
     @property
@@ -46,5 +47,5 @@ class TypeUnitModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('TypeUnitFormation').value
     
     @TypeUnitFormation.setter
-    def TypeUnitFormation(self: Self, val: str) -> None:
+    def TypeUnitFormation(self: Self, val: literals.TypeUnitFormation | str) -> None:
         self.object.by_member('TypeUnitFormation').value = ensure.quoted(val)

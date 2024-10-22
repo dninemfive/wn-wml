@@ -8,5 +8,6 @@ def create(ctx: ModCreationContext) -> NewSrcUnitPair:
         mk19.modules.ui.SpecialtiesList.remove('_para')
         mk19.modules.ui.UpgradeFromUnit='HMGteam_M2HB_US'
         # TODO: change depiction to use non-AB models
+        mk19.modules.remove('TDeploymentShiftModuleDescriptor')
         return mk19
         

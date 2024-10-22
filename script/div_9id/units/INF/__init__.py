@@ -20,6 +20,7 @@ from .mot_rifles_dragon  import create as mot_rifles_dragon_
 from .ranger_at_section  import create as rangers_at
 from .ranger_gunners     import create as rangers_mg
 from .rangers_m203       import create as rangers_m203_
+from .m1025_humvee_agl   import create as m1025_agl
 
 
 def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> UnitGroup:
@@ -70,7 +71,9 @@ def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> 
                 u(mot_mp,                   2, transports=[M998_HUMVEE,  M1025_HUMVEE_MP]),
                 u('Rifles_Cavalry_US',      2, transports=[              M998_HUMVEE_M2HB, M998_HUMVEE_AGL, BLACKHAWK]),
                 u('Rifles_HMG_US',          1, transports=[M1038_HUMVEE, M998_HUMVEE_M2HB,                  BLACKHAWK]),
-                u('ATteam_TOW2_US',         3, transports=[M998_HUMVEE,                    M998_HUMVEE_AGL])
+                u('ATteam_TOW2_US',         3, transports=[M998_HUMVEE,                    M998_HUMVEE_AGL]),
+                # TODO: way to specify a string for UnitsPerXp to look up a random unit?
+                u(m1025_agl, 2, (0, 8, 5, 0))
             ]
         )
     )

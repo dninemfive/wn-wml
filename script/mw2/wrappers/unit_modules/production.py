@@ -3,7 +3,9 @@ from typing import Self
 
 import mw2.utils.ndf.edit as edit
 import mw2.utils.ndf.ensure as ensure
-from mw2.constants.primitive_types import Factory
+from mw2.constants.enums import Factory
+import mw2.constants.enums as enums
+import mw2.constants.literals as literals
 from mw2.wrappers.map import MapWrapper
 from ndf_parse.model import List, Object
 
@@ -18,7 +20,7 @@ class ProductionModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('Factory').value
     
     @Factory.setter
-    def Factory(self: Self, value: str) -> None:
+    def Factory(self: Self, value: literals.Factory) -> None:
         edit.members(self.object, Factory=Factory.ensure_valid(value))
 
     @property
