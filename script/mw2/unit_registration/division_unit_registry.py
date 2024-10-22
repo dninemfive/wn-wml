@@ -102,7 +102,7 @@ class DivisionUnitRegistry(object):
                   units_per_xp: _types.UnitsPerXp,
                   transports: str | list[str] | None) -> None:
         modded: bool = src is not None
-        print(unit.name, src.name if src is not None else None, modded)
+        # print(unit.name, src.name if src is not None else None, modded)
         with try_nest(self.parent_msg, f'Registering {'modded' if modded else 'vanilla'} unit {unit.name}') as msg:
             units_per_xp, transports = self._look_up_rule_items(src if modded else unit,
                                                                 units_per_xp,

@@ -6,7 +6,7 @@ from mw2.unit_registration.unit_registration_info import \
 from mw2.utils.types.message import Message
 
 from .m198_155mm_clu    import create as m198_clu
-from .m198_copperhead   import create as m198_copperhead
+from .m198_copperhead   import create as m198_copperhead_
 from .xm119_imcs        import create as xm119
 from .xm142_himars_clu  import create as xm142_clu
 from .xm142_himars_he   import create as xm142_he
@@ -30,7 +30,7 @@ def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> 
             '105mm Howitzers',
             [
                 u('Howz_M102_105mm_US', 2, transports=LIGHT_TRANSPORTS),
-                u(xm119_imcs, 1)
+                u(xm119, 1)
             ]
         ),
         (
@@ -38,7 +38,7 @@ def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> 
             [
                 u('Howz_M198_155mm_US', 2,    transports=M35),
                 u(m198_clu,             2, (0, 2, 1, 0), M35),
-                u(m198_copperhead,      2, (0, 1, 0, 0), M35)
+                u(m198_copperhead_,     2, (0, 1, 0, 0), M35)
             ]
         ),
         (
