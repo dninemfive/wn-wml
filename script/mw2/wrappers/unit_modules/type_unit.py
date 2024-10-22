@@ -20,7 +20,7 @@ class TypeUnitModuleWrapper(UnitModuleWrapper):
     def Nationalite(self: Self, value: str) -> None:
         # TODO: enum aliases. Also, auto-generate Literal equivalents
         if value == 'NATO':
-            value = 'Allies'
+            value = 'Allied'
         if value == 'PACT':
             value = 'Axis'
         self.object.by_member('Nationalite').value = ensure.prefix(value, 'ENationalite/')

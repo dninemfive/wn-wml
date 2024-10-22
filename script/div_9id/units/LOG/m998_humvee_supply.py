@@ -15,11 +15,10 @@ M1038, ROVER = 'M1038_Humvee_US', 'Rover_101FC_supply_UK'
 def create(ctx: ModCreationContext) -> NewSrcUnitPair | None:
     # M998 HUMVEE SUPPLY
     #   copy of: M35 Supply
-    with ctx.create_unit("M998 HUMVEE SUPPLY", "US", "M35_supply_US", M1038) as m998_humvee_supply:
-        # TODO: will need to replace showroom unit somehow. Maybe set the M1038 Humvee as the base and then add supply module to it?
+    with ctx.create_unit("M998 HUMVEE SUPPLY", "US", ROVER, M1038) as m998_humvee_supply:
         # need to have a way to just do (unit).MakeSupply, (unit).MakeNotTransport, &c
         edit_with_m1038(m998_humvee_supply, ctx.get_unit(M1038))
-        edit_with_rover101fc(m998_humvee_supply, ctx.get_unit(ROVER))
+        # edit_with_rover101fc(m998_humvee_supply, ctx.get_unit(ROVER))
         m998_humvee_supply.modules.type.MotherCountry = 'US'
         m998_humvee_supply.modules.type.Nationalite = 'NATO'
         m998_humvee_supply.modules.ui.edit_members(
