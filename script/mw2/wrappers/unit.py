@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Self, Type
+from typing import Any, Callable, Literal, Self, Type
 
 import mw2.utils.ndf.edit as edit
 import mw2.utils.ndf.ensure as ensure
 import mw2.utils.ndf.unit_module as modules
 import mw2.wrappers._modules as mw
-from mw2.constants.primitive_types import MotherCountry
+from mw2.constants import enums, literals
 from mw2.metadata.unit import UnitMetadata
 from mw2.wrappers._abc import NdfObjectWrapper
 # from context.mod_creation import ModCreationContext
@@ -45,12 +45,12 @@ class UnitWrapper(NdfObjectWrapper):
             self._modules_descriptors = mw.UnitModulesWrapper(self.ctx, self.object.by_member('ModulesDescriptors').value)
         return self._modules_descriptors
     
-    def set_country(self: Self, country: str):
-        raise NotImplemented
-        country = MotherCountry.ensure_valid(country)
+    def set_country(self: Self,
+                    country: literals.MotherCountry | str,
+                    nationalite: literals.Nationalite | Literal['NATO', 'PACT'] | None = None):
         self.modules.ui.CountryTexture = country
         self.modules.type.MotherCountry = country
-        self.modules.type.Nationalite = ... # TODO: make a country database with members (country code, sound code, nationalite)
+        self.modules.type.Nationalite = nationalite if nationalite is not None else enums.nationalite(country)
 
     def copy(self: Self) -> Self:
         return UnitWrapper(self.ctx, self.object.copy())

@@ -8,6 +8,7 @@ from ..transports import (BLACKHAWK, CHINOOK, FAV, M35, M151A2_M2HB,
                           M998_HUMVEE, REC_HUMVEE_AGL, REC_HUMVEE_M2HB)
 from .fav_agl               import create as fav_agl_
 from .fav_m2hb              import create as fav_m2hb_
+from .fav_tow               import create as fav_tow_
 from .folt                  import create as folt_
 from .iew_team              import create as iew_team_
 from .joh58d_kiowa          import create as kiowa
@@ -28,7 +29,7 @@ def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> 
             [
                 u(fav_m2hb_,     2, transports=FAV_TRANSPORTS),
                 u(fav_agl_,      2, transports=FAV_TRANSPORTS),
-                # 👓 FAV TOW
+                u(fav_tow_,      2, transports=FAV_TRANSPORTS)
             ]
         ),
         (
@@ -39,10 +40,10 @@ def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> 
                 # CEWI?
                 # TODO: when NORTHAG releases, change M35 here to CUCV
                 # (or MCT?)
-                u(osd,              1,   [0, 6, 4, 0], [M35, CHINOOK]),
+                u(osd,               1,   [0, 6, 4, 0], [M35, CHINOOK]),
                 u(iew_team_,         2,      transports=[REC_HUMVEE_M2HB]),
-                u(scouts,       2,      transports=[REC_HUMVEE_M2HB, REC_HUMVEE_AGL, BLACKHAWK]),
-                u(scout_at_team,    2,      transports=[REC_HUMVEE_M2HB])
+                u(scouts,            2,      transports=[REC_HUMVEE_M2HB, REC_HUMVEE_AGL, BLACKHAWK]),
+                u(scout_at_team,     2,      transports=[REC_HUMVEE_M2HB])
             ]
         ),
         (
@@ -50,7 +51,7 @@ def group(registry: DivisionUnitRegistry, parent_msg: Message | None = None) -> 
             [
                 u('OH58C_Scout_US',         2),
                 u('OH58D_Combat_Scout_US',  2),
-                u(kiowa,             1),
+                u(kiowa,                    1),
                 u('EH60A_EW_US',            1)
             ]
         ),

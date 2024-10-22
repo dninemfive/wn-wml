@@ -27,5 +27,6 @@ def create(ctx: ModCreationContext) -> NewSrcUnitPair:
         # change country (+flag) to US
         xm119_imcs.modules.type.MotherCountry = 'US'
         xm119_imcs.modules.remove('TDeploymentShiftModuleDescriptor')
+        xm119_imcs.modules.weapon_manager.Default = 'Howz_L118_105mm_UK'
         return xm119_imcs
         

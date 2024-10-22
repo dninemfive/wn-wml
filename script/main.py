@@ -49,19 +49,7 @@ with Message(f"Creating mod {mod_metadata.name} by {mod_metadata.author}") as ro
                 transports.init(mod_context)
                 for category in [LOG, INF, ART, TNK, REC, AA, HEL]:
                     group: Callable[[DivisionUnitRegistry, Message], UnitGroup] = getattr(category, 'group')
-                    group(division_units, msg).register_all()
-                """ AIR """
-                # A-6E INTRUDER [HE]
-                # A-6E INTRUDER [CLU]
-                # A-6E INTRUDER [LGB]
-                # A-6E INTRUDER SWIP
-                # EA-6B PROWLER [SEAD]
-                # EA-6B PROWLER [EW]
-                # A-7E CORSAIR II [HE]
-                # A-7E CORSAIR II [SEAD]
-                # F-14B TOMCAT [AA1]
-                # F-14B TOMCAT [AA2]
-                # F-14B TOMCAT [LGB]
+                    group(division_units, msg).register_all()                
             # make division
             division_texture_name: str = mod_context.add_division_emblem(root_msg, "img/patch.png", div_metadata) 
             mod_context.create_division(div_metadata,

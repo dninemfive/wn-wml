@@ -101,6 +101,7 @@ class DivisionUnitRegistry(object):
                   packs: int,
                   units_per_xp: _types.UnitsPerXp,
                   transports: str | list[str] | None) -> None:
+        # TODO: message parameter for properly structuring groups
         modded: bool = src is not None
         # print(unit.name, src.name if src is not None else None, modded)
         with try_nest(self.parent_msg, f'Registering {'modded' if modded else 'vanilla'} unit {unit.name}') as msg:

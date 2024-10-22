@@ -5,7 +5,7 @@ import mw2.constants.ndf_paths as ndf_paths
 import mw2.utils.ndf.edit as edit
 import mw2.utils.ndf.unit_module as module
 from mw2.constants import ndf_paths
-from mw2.constants.primitive_types import country_sound_code
+from mw2.constants.enums import country_sound_code
 from mw2.creators.unit.abc import UnitCreator
 from mw2.creators.unit.basic import BasicUnitCreator
 from mw2.creators.unit.utils.infantry._squad_keys import _SquadKeys

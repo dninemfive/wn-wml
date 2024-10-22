@@ -7,15 +7,16 @@ import mw2.utils.ndf.edit as edit
 import mw2.utils.ndf.unit_module as modules
 import mw2.wrappers.unit as uw
 from mw2.utils.ndf import ensure
-from mw2.wrappers.unit_modules.damage import BaseDamageModuleWrapper
-from mw2.wrappers.unit_modules.production import ProductionModuleWrapper
-from mw2.wrappers.unit_modules.tags import TagsModuleWrapper
-from mw2.wrappers.unit_modules.type_unit import TypeUnitModuleWrapper
-from mw2.wrappers.unit_modules.unit_ui import UnitUiModuleWrapper
 from ndf_parse.model import List, ListRow, Object
 from ndf_parse.model.abc import CellValue
 
 from .unit_modules._abc import UnitModuleKey, UnitModuleWrapper
+from .unit_modules.damage import BaseDamageModuleWrapper
+from .unit_modules.production import ProductionModuleWrapper
+from .unit_modules.tags import TagsModuleWrapper
+from .unit_modules.type_unit import TypeUnitModuleWrapper
+from .unit_modules.unit_ui import UnitUiModuleWrapper
+from .unit_modules.weapon_manager import WeaponManagerModuleWrapper
 
 UnitRef = str | Object | object # wrappers.unit.UnitWrapper
 ModuleRef = str | tuple[str, bool]
@@ -58,6 +59,25 @@ class UnitModulesWrapper(object):
     @property
     def base_damage(self: Self) -> BaseDamageModuleWrapper:
         return self._get_wrapper(BaseDamageModuleWrapper)
+    
+    @property
+    def weapon_manager(self: Self) -> WeaponManagerModuleWrapper | None:
+        try:
+            return self._get_wrapper(WeaponManagerModuleWrapper)
+        except:
+            return None
+        
+    @weapon_manager.setter
+    def weapon_manager(self: Self, value: str | None) -> None:
+        manager = self.weapon_manager
+        if value is None and manager is not None:
+            del self._cached_module_wrappers[WeaponManagerModuleWrapper._module_key]
+        elif isinstance(value, str):
+            if manager is not None:
+                manager.Default = value
+            else:
+                self._modules_ndf.add(ListRow(WeaponManagerModuleWrapper.new(), namespace='WeaponManager'))
+                self.weapon_manager.Default = value
 
     # modules
 

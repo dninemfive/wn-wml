@@ -1,9 +1,8 @@
 from typing import Self
 
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
+import mw2.utils.ndf.edit as edit
+import mw2.utils.ndf.ensure as ensure
 from ndf_parse.model import List, Object
-from wrappers.str_list import StrListWrapper
 
 from ._abc import UnitModuleKey, UnitModuleWrapper
 
@@ -16,4 +15,11 @@ class WeaponManagerModuleWrapper(UnitModuleWrapper):
     @Default.setter
     def Default(self: Self, value: str):
         edit.members(self.object, Default=ensure.prefix(value, '$/GFX/Weapon/WeaponDescriptor_'))
-    # Selection is always NilDescriptorIfCadavre
+
+    @staticmethod
+    def new() -> Object:
+        return ensure._object(
+            'TModuleSelector',
+            Default='(not initialized)',
+            Selection=['~/NilDescriptorIfCadavre']
+        )

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Self
 
-from mw2.constants.primitive_types import WeaponType
+from mw2.constants.enums import WeaponType
 
 
 @dataclass

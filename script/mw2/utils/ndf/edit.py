@@ -5,7 +5,10 @@ from ndf_parse.model.abc import CellValue
 
 def member(obj: Object, name: str, value: CellValue | None):
     if value is None:
-        obj.remove_by_member(name)
+        try:
+            obj.remove_by_member(name)
+        except:
+            pass
     else:
         value = ensure.ndf_type(value)
         try:

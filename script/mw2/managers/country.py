@@ -3,7 +3,7 @@ from typing import Literal, Self
 from uuid import uuid4
 
 from utils.types.cache import Cache
-from constants.primitive_types import Nationalite
+from mw2.constants.enums import Nationalite
 
 @dataclass
 class CountryInfo(object):

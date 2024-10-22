@@ -31,7 +31,7 @@ def create(ctx: ModCreationContext) -> NewSrcUnitPair | None:
         # update speed, fuel capacity
         # change upgradefromunit, countrytexture
         xm142_himars_clu.modules.ui.edit_members(
-            UpgradeFromUnit=None,
+            UpgradeFromUnit='d9_XM142_HIMARS_HE_US',
             CountryTexture='US'
         )
         # change unit dangerousness
