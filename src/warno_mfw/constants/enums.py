@@ -1,6 +1,6 @@
 from typing import Literal, LiteralString, Self, Type
 
-import utils.ndf.ensure as ensure
+import warno_mfw.utils.ndf.ensure as ensure
 
 from .ndf import (COUNTRY_CODE_TO_COUNTRY_SOUND_CODE,
                   COUNTRY_CODE_TO_NATIONALITE)

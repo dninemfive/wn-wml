@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from typing import Any, Callable, Literal, Self, Type
 
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-import utils.ndf.unit_module as modules
-import wrappers._modules as mw
-from constants import enums, literals
-from metadata.unit import UnitMetadata
-from wrappers._abc import NdfObjectWrapper
-# from context.mod_creation import ModCreationContext
+import warno_mfw.utils.ndf.edit as edit
+import warno_mfw.utils.ndf.ensure as ensure
+import warno_mfw.utils.ndf.unit_module as modules
+import warno_mfw.wrappers._modules as mw
+from warno_mfw.constants import enums, literals
+from warno_mfw.metadata.unit import UnitMetadata
+from warno_mfw.wrappers._abc import NdfObjectWrapper
+# from warno_mfw.context.mod_creation import ModCreationContext
 from ndf_parse.model import Object
 
 

@@ -3,7 +3,7 @@ from typing import Self
 
 from ndf_parse.model import List, ListRow, Object
 
-from utils.ndf import ensure
+from warno_mfw.utils.ndf import ensure
 
 @dataclass
 class TWeaponManagerModuleDescriptor(object):

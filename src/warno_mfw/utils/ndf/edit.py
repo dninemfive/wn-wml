@@ -1,4 +1,4 @@
-import utils.ndf.ensure as ensure
+import warno_mfw.utils.ndf.ensure as ensure
 from ndf_parse.model import MemberRow, Object
 from ndf_parse.model.abc import CellValue
 

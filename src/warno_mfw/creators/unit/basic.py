@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Callable, Self
 
-import constants.ndf_paths as ndf_paths
-from creators.unit.abc import UnitCreator
-from metadata.unit import UnitMetadata
-from utils.ndf.decorators import ndf_path
-from utils.types.message import Message
-from wrappers.unit import UnitWrapper
+import warno_mfw.constants.ndf_paths as ndf_paths
+from warno_mfw.creators.unit.abc import UnitCreator
+from warno_mfw.metadata.unit import UnitMetadata
+from warno_mfw.utils.ndf.decorators import ndf_path
+from warno_mfw.utils.types.message import Message
+from warno_mfw.wrappers.unit import UnitWrapper
 from ndf_parse.model import List, ListRow, Map, MemberRow, Object
 
 if TYPE_CHECKING:
-    from context.mod_creation import ModCreationContext
+    from warno_mfw.context.mod_creation import ModCreationContext
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 UNIT_UI = "TUnitUIModuleDescriptor"

@@ -1,8 +1,8 @@
 from typing import Iterable, Iterator, Self
 
-import utils.ndf.ensure as ensure
-from creators.unit.utils.infantry.weapon import InfantryWeapon
-from creators.unit.utils.infantry.weapons import InfantryWeapons
+import warno_mfw.utils.ndf.ensure as ensure
+from warno_mfw.creators.unit.utils.infantry.weapon import InfantryWeapon
+from warno_mfw.creators.unit.utils.infantry.weapons import InfantryWeapons
 from ndf_parse.model import List, ListRow, Object
 
 

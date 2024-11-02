@@ -4,9 +4,9 @@ import shutil
 # https://stackoverflow.com/a/5469427
 from subprocess import PIPE, Popen
 
-from metadata.mod import ModMetadata
-from metadata.warno import WarnoMetadata
-from utils.types.message import Message, try_nest
+from warno_mfw.metadata.mod import ModMetadata
+from warno_mfw.metadata.warno import WarnoMetadata
+from warno_mfw.utils.types.message import Message, try_nest
 
 
 def run_bat(msg: Message | None, folder: str, name: str, *args):

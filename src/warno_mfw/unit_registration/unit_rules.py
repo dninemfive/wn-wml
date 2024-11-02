@@ -1,8 +1,8 @@
 from typing import Self
 
-from creators.unit.abc import UnitCreator
-from metadata.unit import UnitMetadata
-from model.deck_unite_rule import TDeckUniteRule
+from warno_mfw.creators.unit.abc import UnitCreator
+from warno_mfw.metadata.unit import UnitMetadata
+from warno_mfw.model.deck_unite_rule import TDeckUniteRule
 from ndf_parse.model import MapRow
 
 from ._types import Transport, UnitsPerXp

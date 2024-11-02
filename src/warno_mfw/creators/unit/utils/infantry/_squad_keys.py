@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Self
 
-import utils.ndf.ensure as ensure
-from metadata.unit import UnitMetadata
+import warno_mfw.utils.ndf.ensure as ensure
+from warno_mfw.metadata.unit import UnitMetadata
 
 
 @dataclass

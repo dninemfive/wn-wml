@@ -1,7 +1,7 @@
 from typing import Self
 
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
+import warno_mfw.utils.ndf.edit as edit
+import warno_mfw.utils.ndf.ensure as ensure
 from ndf_parse.model import List, Object
 
 from ._abc import UnitModuleKey, UnitModuleWrapper

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Self
 
-from constants.enums import WeaponType
+from warno_mfw.constants.enums import WeaponType
 
 
 @dataclass

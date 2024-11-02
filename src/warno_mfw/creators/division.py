@@ -2,15 +2,15 @@ from __future__ import annotations
 
 from typing import Self
 
-import utils.ndf.edit as edit
-from constants.ndf_paths import (DECK_SERIALIZER, DIVISION_LIST,
-                                     DIVISION_RULES, DIVISIONS)
-from metadata.division import DivisionMetadata
-import unit_registration.division_unit_registry as ur_dur
-from utils.ndf.decorators import ndf_path
-from utils.types.message import Message
+import warno_mfw.unit_registration.division_unit_registry as ur_dur
+import warno_mfw.utils.ndf.edit as edit
 from ndf_parse.model import List, ListRow, Map, MapRow
 from ndf_parse.model.abc import CellValue
+from warno_mfw.constants.ndf_paths import (DECK_SERIALIZER, DIVISION_LIST,
+                                           DIVISION_RULES, DIVISIONS)
+from warno_mfw.metadata.division import DivisionMetadata
+from warno_mfw.utils.ndf.decorators import ndf_path
+from warno_mfw.utils.types.message import Message
 
 
 # todo: corresponding wrapper

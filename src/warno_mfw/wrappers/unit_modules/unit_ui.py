@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from typing import Self
 
-import creators.unit.abc as abc
-import utils.ndf.edit as edit
-from constants import enums, literals
-from metadata.unit import UnitMetadata
-from utils.ndf import ensure
-from wrappers.str_list import StrListWrapper
-from wrappers.unit_modules._abc import UnitModuleKey, UnitModuleWrapper
+import warno_mfw.creators.unit.abc as abc
+import warno_mfw.utils.ndf.edit as edit
+from warno_mfw.constants import enums, literals
+from warno_mfw.metadata.unit import UnitMetadata
+from warno_mfw.utils.ndf import ensure
+from warno_mfw.wrappers.str_list import StrListWrapper
+from warno_mfw.wrappers.unit_modules._abc import UnitModuleKey, UnitModuleWrapper
 from ndf_parse.model import List, Object
 
 

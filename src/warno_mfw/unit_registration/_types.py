@@ -1,6 +1,6 @@
 from typing import Any, Callable
 
-import context.mod_creation as ctx
+import warno_mfw.context.mod_creation as ctx
 
 from .new_src_unit_pair import NewSrcUnitPair
 

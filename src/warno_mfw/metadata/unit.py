@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Literal, Self
 
-from utils.ndf import ensure
-from utils.localization import delocalize
+from warno_mfw.utils.ndf import ensure
+from warno_mfw.utils.localization import delocalize
 
 @dataclass(frozen=True)
 class NamePathPair(object):

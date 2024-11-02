@@ -1,8 +1,8 @@
 from typing import Self
 
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-from wrappers.str_list import StrListWrapper
+import warno_mfw.utils.ndf.edit as edit
+import warno_mfw.utils.ndf.ensure as ensure
+from warno_mfw.wrappers.str_list import StrListWrapper
 from ndf_parse.model import List, Object
 
 from ._abc import UnitModuleKey, UnitModuleWrapper

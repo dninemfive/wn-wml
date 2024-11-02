@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Self
 
 from ndf_parse.model import Object
-import utils.ndf.ensure as ensure
+import warno_mfw.utils.ndf.ensure as ensure
 
 @dataclass
 class TDepictionDescriptor(object):

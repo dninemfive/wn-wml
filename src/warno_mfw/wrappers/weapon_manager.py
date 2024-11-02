@@ -2,15 +2,15 @@ from __future__ import annotations
 
 from typing import Any, Callable, Iterable, Self, Type
 
-from wrappers._abc import NdfObjectWrapper
-from wrappers.list import ListWrapper
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-import utils.ndf.unit_module as modules
-from constants.enums import MotherCountry
-# from context.mod_creation import ModCreationContext
+from warno_mfw.wrappers._abc import NdfObjectWrapper
+from warno_mfw.wrappers.list import ListWrapper
+import warno_mfw.utils.ndf.edit as edit
+import warno_mfw.utils.ndf.ensure as ensure
+import warno_mfw.utils.ndf.unit_module as modules
+from warno_mfw.constants.enums import MotherCountry
+# from warno_mfw.context.mod_creation import ModCreationContext
 from ndf_parse.model import Object
-import wrappers._modules
+import warno_mfw.wrappers._modules
 
 
 class WeaponManagerWrapper(NdfObjectWrapper):

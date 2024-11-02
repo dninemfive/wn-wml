@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Self
 from ndf_parse.model import MapRow, Object
-import utils.ndf.ensure as ensure
+import warno_mfw.utils.ndf.ensure as ensure
 
 @dataclass
 class TInfantrySquadWeaponAssignmentModuleDescriptor(object):

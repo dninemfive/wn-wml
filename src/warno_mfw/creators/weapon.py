@@ -1,14 +1,14 @@
 # right, python is stupid so i can't use type hints for this
-# from context.unit_creation_context import UnitCreationContext
+# from warno_mfw.context.unit_creation_context import UnitCreationContext
 from typing import Callable, Self
 
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-from constants.ndf_paths import WEAPON_DESCRIPTOR
-from context.unit_module import UnitModuleContext
-from metadata.unit import UnitMetadata
-from utils.ndf.decorators import ndf_path
-from utils.types.message import Message, try_nest
+import warno_mfw.utils.ndf.edit as edit
+import warno_mfw.utils.ndf.ensure as ensure
+from warno_mfw.constants.ndf_paths import WEAPON_DESCRIPTOR
+from warno_mfw.context.unit_module import UnitModuleContext
+from warno_mfw.metadata.unit import UnitMetadata
+from warno_mfw.utils.ndf.decorators import ndf_path
+from warno_mfw.utils.types.message import Message, try_nest
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Self
 
-from metadata.unit import UnitMetadata
-from model.deck_unite_rule import TDeckUniteRule
-from utils.types.message import Message, try_nest
+from warno_mfw.metadata.unit import UnitMetadata
+from warno_mfw.model.deck_unite_rule import TDeckUniteRule
+from warno_mfw.utils.types.message import Message, try_nest
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 
 

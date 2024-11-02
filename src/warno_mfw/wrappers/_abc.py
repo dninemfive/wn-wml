@@ -3,8 +3,8 @@ from __future__ import annotations
 from abc import ABC
 from typing import Any, Self, Type
 
-import context.mod_creation as ctx
-import utils.ndf.edit as edit
+import warno_mfw.context.mod_creation as ctx
+import warno_mfw.utils.ndf.edit as edit
 from ndf_parse.model import Object
 from ndf_parse.model.abc import CellValue
 

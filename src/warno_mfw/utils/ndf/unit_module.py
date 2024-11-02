@@ -2,7 +2,7 @@ from typing import Callable
 from ndf_parse import Mod
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 from ndf_parse.model.abc import CellValue
-from utils.ndf import ensure
+from warno_mfw.utils.ndf import ensure
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
 

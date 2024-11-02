@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from typing import Callable, Iterable, Self, SupportsIndex, Type, TypeVar
 
-import context.mod_creation as ctx
-import utils.ndf.edit as edit
-import utils.ndf.unit_module as modules
-import wrappers.unit as uw
-from utils.ndf import ensure
+import warno_mfw.context.mod_creation as ctx
+import warno_mfw.utils.ndf.edit as edit
+import warno_mfw.utils.ndf.unit_module as modules
+import warno_mfw.wrappers.unit as uw
+from warno_mfw.utils.ndf import ensure
 from ndf_parse.model import List, ListRow, Object
 from ndf_parse.model.abc import CellValue
 

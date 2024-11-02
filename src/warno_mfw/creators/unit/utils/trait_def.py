@@ -1,7 +1,7 @@
 from typing import Self
 
 from ndf_parse.model import List, Object
-import utils.ndf.ensure as ensure
+import warno_mfw.utils.ndf.ensure as ensure
 
 # TODO: way to define this to include other ways of implementing traits (e.g. forward deployment, corrected accuracy)?
 # e.g. CapaciteTraitDef: current

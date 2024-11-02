@@ -2,26 +2,26 @@ from __future__ import annotations
 
 from typing import Any, Self
 
-import constants.misc                               as cnst
-import constants.ndf_paths                          as ndf_paths
-import constants.paths                              as paths
-import creators.ammo                                as ca
-import creators.division                            as cd
-import creators.unit.basic                          as cub
-import creators.unit.infantry                       as cui
-import creators.unit.utils.infantry.weapon          as cuuiw
-import managers.guid                                as mg
-import managers.localization                        as ml
-import managers.unit_id                             as mu
-import metadata.division                            as med
-import metadata.mod                                 as mem
-import metadata.unit                                as meu
-import unit_registration.division_unit_registry     as reg
-import wrappers.unit                                as wu
-from utils.ndf import ensure
-from utils.ndf.files import add_image, add_image_literal
-from utils.types.cache import Cache
-from utils.types.message import Message, try_nest
+import warno_mfw.constants.misc                               as cnst
+import warno_mfw.constants.ndf_paths                          as ndf_paths
+import warno_mfw.constants.paths                              as paths
+import warno_mfw.creators.ammo                                as ca
+import warno_mfw.creators.division                            as cd
+import warno_mfw.creators.unit.basic                          as cub
+import warno_mfw.creators.unit.infantry                       as cui
+import warno_mfw.creators.unit.utils.infantry.weapon          as cuuiw
+import warno_mfw.managers.guid                                as mg
+import warno_mfw.managers.localization                        as ml
+import warno_mfw.managers.unit_id                             as mu
+import warno_mfw.metadata.division                            as med
+import warno_mfw.metadata.mod                                 as mem
+import warno_mfw.metadata.unit                                as meu
+import warno_mfw.unit_registration.division_unit_registry     as reg
+import warno_mfw.wrappers.unit                                as wu
+from warno_mfw.utils.ndf import ensure
+from warno_mfw.utils.ndf.files import add_image, add_image_literal
+from warno_mfw.utils.types.cache import Cache
+from warno_mfw.utils.types.message import Message, try_nest
 from ndf_parse import Mod
 from ndf_parse.model import List, Object
 from ndf_parse.model.abc import CellValue

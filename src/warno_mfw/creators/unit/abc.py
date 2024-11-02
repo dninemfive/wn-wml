@@ -3,19 +3,19 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Callable, Self
 
-import constants.ndf_paths as ndf_paths
-import context.mod_creation as ctx
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-import utils.ndf.unit_module as modules
-import wrappers._modules as modules
-import wrappers.unit as unit_wrapper
-import wrappers.unit_modules.tags as tags
-from context.unit_module import UnitModuleContext
-from creators.weapon import WeaponCreator
-from metadata.unit import UnitMetadata
-from utils.ndf.decorators import ndf_path
-from utils.types.message import Message
+import warno_mfw.constants.ndf_paths as ndf_paths
+import warno_mfw.context.mod_creation as ctx
+import warno_mfw.utils.ndf.edit as edit
+import warno_mfw.utils.ndf.ensure as ensure
+import warno_mfw.utils.ndf.unit_module as modules
+import warno_mfw.wrappers._modules as modules
+import warno_mfw.wrappers.unit as unit_wrapper
+import warno_mfw.wrappers.unit_modules.tags as tags
+from warno_mfw.context.unit_module import UnitModuleContext
+from warno_mfw.creators.weapon import WeaponCreator
+from warno_mfw.metadata.unit import UnitMetadata
+from warno_mfw.utils.ndf.decorators import ndf_path
+from warno_mfw.utils.types.message import Message
 from ndf_parse.model import List, ListRow, Map, MemberRow, Object
 from ndf_parse.model.abc import CellValue
 

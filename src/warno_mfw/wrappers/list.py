@@ -2,7 +2,7 @@ from typing import Callable, Generic, Iterable, Self, SupportsIndex, TypeVar
 
 from ndf_parse.model import List, ListRow
 from ndf_parse.model.abc import CellValue
-from utils.ndf import ensure
+from warno_mfw.utils.ndf import ensure
 
 T = TypeVar('T')
 

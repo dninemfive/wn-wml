@@ -1,6 +1,6 @@
 from typing import Iterator, Self
 
-from utils.types.cache import Cache
+from warno_mfw.utils.types.cache import Cache
 
 
 class UnitIdManager(object):

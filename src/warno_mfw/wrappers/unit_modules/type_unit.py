@@ -1,7 +1,7 @@
 from typing import Literal, Self
 
-import utils.ndf.ensure as ensure
-import constants.literals as literals
+import warno_mfw.utils.ndf.ensure as ensure
+import warno_mfw.constants.literals as literals
 from ndf_parse.model import List, Object
 
 from ._abc import UnitModuleKey, UnitModuleWrapper

@@ -1,7 +1,7 @@
 from typing import Self
 
-import utils.ndf.edit as edit
-import utils.ndf.unit_module as unit_module
+import warno_mfw.utils.ndf.edit as edit
+import warno_mfw.utils.ndf.unit_module as unit_module
 from ndf_parse.model import Object
 from ndf_parse.model.abc import CellValue
 

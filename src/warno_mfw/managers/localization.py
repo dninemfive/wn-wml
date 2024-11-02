@@ -2,9 +2,9 @@ import random
 import string
 from typing import Self
 
-from utils.ndf import ensure
-from utils.types.cache import Cache
-from utils.types.message import Message, try_nest
+from warno_mfw.utils.ndf import ensure
+from warno_mfw.utils.types.cache import Cache
+from warno_mfw.utils.types.message import Message, try_nest
 
 CHARACTERS = [*string.ascii_letters, *[str(x) for x in range(10)]]
 

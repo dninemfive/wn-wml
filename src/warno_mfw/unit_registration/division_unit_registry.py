@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from typing import Callable, Iterable, Self
 
-import context.mod_creation
-import utils.ndf.ensure as ensure
-from constants.ndf_paths import DECK_SERIALIZER, DIVISION_RULES
-from managers.unit_id import UnitIdManager
-from metadata.division import DivisionMetadata
-from metadata.unit import UnitMetadata
-from model.deck_unite_rule import TDeckUniteRule
-from unit_registration.new_src_unit_pair import NewSrcUnitPair
-from utils.ndf.decorators import ndf_path
-from utils.types.message import Message, try_nest
+import warno_mfw.context.mod_creation
+import warno_mfw.utils.ndf.ensure as ensure
+from warno_mfw.constants.ndf_paths import DECK_SERIALIZER, DIVISION_RULES
+from warno_mfw.managers.unit_id import UnitIdManager
+from warno_mfw.metadata.division import DivisionMetadata
+from warno_mfw.metadata.unit import UnitMetadata
+from warno_mfw.model.deck_unite_rule import TDeckUniteRule
+from warno_mfw.unit_registration.new_src_unit_pair import NewSrcUnitPair
+from warno_mfw.utils.ndf.decorators import ndf_path
+from warno_mfw.utils.types.message import Message, try_nest
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 
 from .division_rule_lookup import DivisionRuleLookup
@@ -29,7 +29,11 @@ def ensure_unit_path_list(transports: str | list[str | None] | None) -> list[str
 
 class DivisionUnitRegistry(object):
     # ctx: ModCreationContext
-    def __init__(self: Self, ctx: context.mod_creation.ModCreationContext, metadata: DivisionMetadata, parent_msg: Message | None = None, *division_priorities: str):
+    def __init__(self: Self,
+                 ctx: warno_mfw.context.mod_creation.ModCreationContext,
+                 metadata: DivisionMetadata,
+                 parent_msg: Message | None = None,
+                 *division_priorities: str):
         self.ctx = ctx
         self.metadata = metadata
         self.units: list[UnitRules] = []

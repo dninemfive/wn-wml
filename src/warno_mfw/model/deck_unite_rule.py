@@ -3,10 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Self
 
-from creators.unit.basic import BasicUnitCreator
-from metadata.unit import UnitMetadata
-from unit_registration._types import UnitsPerXp
-from utils.ndf import ensure
+from warno_mfw.creators.unit.basic import BasicUnitCreator
+from warno_mfw.metadata.unit import UnitMetadata
+from warno_mfw.unit_registration._types import UnitsPerXp
+from warno_mfw.utils.ndf import ensure
 from ndf_parse.model import List, MemberRow, Object
 
 UNITE_RULE = 'TDeckUniteRule'

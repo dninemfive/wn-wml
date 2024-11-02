@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from typing import Literal, Self
 from uuid import uuid4
 
-from utils.types.cache import Cache
-from constants.enums import Nationalite
+from warno_mfw.utils.types.cache import Cache
+from warno_mfw.constants.enums import Nationalite
 
 @dataclass
 class CountryInfo(object):

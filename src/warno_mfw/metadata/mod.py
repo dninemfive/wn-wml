@@ -2,7 +2,7 @@ import os
 from dataclasses import dataclass
 from typing import Self
 
-from metadata.warno import WarnoMetadata
+from warno_mfw.metadata.warno import WarnoMetadata
 
 
 @dataclass

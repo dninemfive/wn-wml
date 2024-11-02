@@ -1,7 +1,7 @@
 from typing import Any, Callable
 
 from ndf_parse.model import List
-from utils.types.message import Message, try_nest
+from warno_mfw.utils.types.message import Message, try_nest
 
 
 def editing_or_reading(save: bool):

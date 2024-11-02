@@ -1,12 +1,12 @@
 from numbers import Number
 from typing import Self
 
-import utils.ndf.edit as edit
-import utils.ndf.ensure as ensure
-from constants.enums import Factory
-import constants.enums as enums
-import constants.literals as literals
-from wrappers.map import MapWrapper
+import warno_mfw.utils.ndf.edit as edit
+import warno_mfw.utils.ndf.ensure as ensure
+from warno_mfw.constants.enums import Factory
+import warno_mfw.constants.enums as enums
+import warno_mfw.constants.literals as literals
+from warno_mfw.wrappers.map import MapWrapper
 from ndf_parse.model import List, Object
 
 from ._abc import UnitModuleKey, UnitModuleWrapper

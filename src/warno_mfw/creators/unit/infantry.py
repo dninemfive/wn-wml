@@ -1,23 +1,23 @@
 from typing import Self
 
-import constants.ndf_paths as ndf_paths
-# import context.mod_creation as ctx
-import utils.ndf.edit as edit
-import utils.ndf.unit_module as module
-from constants import ndf_paths
-from constants.enums import country_sound_code
-from creators.unit.abc import UnitCreator
-from creators.unit.basic import BasicUnitCreator
-from creators.unit.utils.infantry._squad_keys import _SquadKeys
-from creators.unit.utils.infantry.weapon import InfantryWeapon
-from creators.unit.utils.infantry.weapon_set import InfantryWeaponSet
-from managers.guid import GuidManager
-from metadata.unit import UnitMetadata
-from model.template_infantry_selector_tactic import \
+import warno_mfw.constants.ndf_paths as ndf_paths
+# import warno_mfw.context.mod_creation as ctx
+import warno_mfw.utils.ndf.edit as edit
+import warno_mfw.utils.ndf.unit_module as module
+from warno_mfw.constants import ndf_paths
+from warno_mfw.constants.enums import country_sound_code
+from warno_mfw.creators.unit.abc import UnitCreator
+from warno_mfw.creators.unit.basic import BasicUnitCreator
+from warno_mfw.creators.unit.utils.infantry._squad_keys import _SquadKeys
+from warno_mfw.creators.unit.utils.infantry.weapon import InfantryWeapon
+from warno_mfw.creators.unit.utils.infantry.weapon_set import InfantryWeaponSet
+from warno_mfw.managers.guid import GuidManager
+from warno_mfw.metadata.unit import UnitMetadata
+from warno_mfw.model.template_infantry_selector_tactic import \
     TemplateInfantrySelectorTactic
-from utils.ndf import ensure
-from utils.ndf.decorators import ndf_path
-from utils.types.message import Message
+from warno_mfw.utils.ndf import ensure
+from warno_mfw.utils.ndf.decorators import ndf_path
+from warno_mfw.utils.types.message import Message
 from ndf_parse.model import List, ListRow, Map, MapRow, Object
 
 
