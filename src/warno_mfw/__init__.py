@@ -1,4 +1,4 @@
-__version__ = '0.0.0'
+__version__ = '0.0.1-beta'
 
 from .constants         import *
 from .context           import *
