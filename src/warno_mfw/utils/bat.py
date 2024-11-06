@@ -29,5 +29,6 @@ def reset_source(mod: ModMetadata, warno: WarnoMetadata):
             shutil.rmtree(mod.folder_path, ignore_errors=True)
         run_bat(msg, warno.mods_path, "CreateNewMod", mod.name)
 
-def generate_mod(mod: ModMetadata, msg: Message | None = None):
-    run_bat(msg, mod.folder_path, "GenerateMod")
+def generate_mod(path_or_metadata: str | ModMetadata, msg: Message | None = None):
+    path = path_or_metadata.folder_path if isinstance(path_or_metadata, ModMetadata) else path_or_metadata
+    run_bat(msg, path, "GenerateMod")
