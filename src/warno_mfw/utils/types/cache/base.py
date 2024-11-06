@@ -1,16 +1,11 @@
-# Iterator instead of Generator: https://stackoverflow.com/a/63237329
-import os
 from typing import Generic, Iterator, Self, TypeVar
 
-from warno_mfw.utils.io import load, write
 from warno_mfw.utils.types.message import Message, try_nest
 
-DEFAULT_FOLDER = rf"script\_cache"
 V = TypeVar('V')
 
-class CacheBase(Generic[V]):
-    def __init__(self: Self, name: str, folder: str = DEFAULT_FOLDER):
-        self.file_path = os.path.join(folder, f'{name}.cache')
+class BaseCache(Generic[V]):
+    def __init__(self: Self,):
         self._data: dict[str, V] = None
         self._accessed: dict[str, bool] = None
 
@@ -27,11 +22,10 @@ class CacheBase(Generic[V]):
         return key in self._data
 
     def load(self: Self, parent_msg: Message | None = None) -> None:
-        with try_nest(parent_msg, self.file_path) as _:
-            self._data = self._load_data()
-            self._accessed = {x:False for x in self._data.keys()}
+        self._data = self._load_data()
+        self._accessed = {x:False for x in self._data.keys()}
 
-    def _load_data(self: Self) -> dict[str, V]:
+    def _load_data(self: Self, parent_msg: Message | None) -> dict[str, V]:
         raise NotImplemented
 
     def save(self: Self, parent_msg: Message | None = None) -> None:

@@ -1,14 +1,17 @@
-# Iterator instead of Generator: https://stackoverflow.com/a/63237329
 import os
-from typing import Generic, Iterator, Self, TypeVar
+from typing import Self, TypeVar
 
 from warno_mfw.utils.io import load, write
-from warno_mfw.utils.types.cache_base import CacheBase
-from warno_mfw.utils.types.message import Message, try_nest
+
+from .base import BaseCache
 
 V = TypeVar('V')
+DEFAULT_FOLDER = rf"script\_cache"
 
-class Cache(CacheBase[V]):
+class FileCache(BaseCache[V]):
+    def __init__(self: Self,  name: str, folder: str = DEFAULT_FOLDER):
+        self.file_path = os.path.join(folder, f'{name}.cache')
+
     def _load_data(self: Self) -> dict[str, V]:
         return load(self.file_path, {})
 
