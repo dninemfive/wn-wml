@@ -27,7 +27,7 @@ class FileCache(BaseCache[V]):
         self._accessed[key] = True
         return super().__contains__(key)
 
-    def load(self: Self, parent_msg: Message | None) -> dict[str, V]:
+    def load(self: Self, parent_msg: Message | None) -> None:
         with try_nest(parent_msg, self.file_path) as _:
             self._data = load_file(self.file_path, {})
 

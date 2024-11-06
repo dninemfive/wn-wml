@@ -15,6 +15,7 @@ import warno_mfw.metadata.division                            as med
 import warno_mfw.metadata.mod                                 as mem
 import warno_mfw.metadata.unit                                as meu
 import warno_mfw.unit_registration.division_unit_registry     as reg
+from warno_mfw.utils.types.cache.ndf import NdfCache
 import warno_mfw.wrappers.unit                                as wu
 from warno_mfw.utils.ndf import ensure
 from warno_mfw.utils.ndf.files import add_image, add_image_literal
@@ -37,6 +38,7 @@ class ModCreationContext(object):
         self.mod = Mod(metadata.folder_path, metadata.folder_path)
         self.root_msg = root_msg
         self.paths = ndf_paths
+        self.ndf = NdfCache(self.mod)
         self.guid_cache:            FileCache[str] = FileCache(GUID)
         self.localization_cache:    FileCache[str] = FileCache(LOCALIZATION)
         self.unit_id_cache:         FileCache[int] = FileCache(UNIT_ID)
@@ -45,8 +47,8 @@ class ModCreationContext(object):
        
     def __enter__(self: Self) -> Self:
         self.mod.check_if_src_is_newer()
-        with try_nest(self.root_msg, "Loading ndf files") as msg:
-            self.ndf = {x:self.load_ndf(x, msg) for x in sorted(self.paths)}
+        # with try_nest(self.root_msg, "Loading ndf files") as msg:
+        #     self.ndf = {x:self.load_ndf(x, msg) for x in sorted(self.paths)}
         self.load_caches()
         return self
     
@@ -58,7 +60,7 @@ class ModCreationContext(object):
         success = exc_type is None and exc_value is None and traceback is None        
         if success:
             with self.root_msg.nest("Saving mod") as write_msg:
-                self.write_edits(write_msg)
+                self.ndf.save(write_msg)
                 self.generate_and_write_localization(write_msg)
             self.save_caches()
         else:
