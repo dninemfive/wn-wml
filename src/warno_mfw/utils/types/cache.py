@@ -5,11 +5,12 @@ from typing import Generic, Iterator, Self, TypeVar
 from warno_mfw.utils.io import load, write
 from warno_mfw.utils.types.message import Message, try_nest
 
+DEFAULT_FOLDER = rf"script\_cache"
 V = TypeVar('V')
 
 class Cache(Generic[V]):
-    def __init__(self: Self, base_path: str, name: str):
-        self.file_path = os.path.join(base_path, f'{name}.cache')
+    def __init__(self: Self, name: str, folder: str = DEFAULT_FOLDER):
+        self.file_path = os.path.join(folder, f'{name}.cache')
         self._data: dict[str, V] = None
         self._accessed: dict[str, bool] = None
 

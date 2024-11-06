@@ -2,9 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Self
 
-import warno_mfw.constants.misc                               as cnst
 import warno_mfw.constants.ndf_paths                          as ndf_paths
-import warno_mfw.constants.paths                              as paths
 import warno_mfw.creators.ammo                                as ca
 import warno_mfw.creators.division                            as cd
 import warno_mfw.creators.unit.basic                          as cub
@@ -26,7 +24,8 @@ from ndf_parse import Mod
 from ndf_parse.model import List, Object
 from ndf_parse.model.abc import CellValue
 
-CACHES: list[tuple[str, type]] = [(cnst.GUID, str), (cnst.LOCALIZATION, str), (cnst.UNIT_ID, int)]
+GUID, LOCALIZATION, UNIT_ID = "guid", "localization", "unit_id"
+CACHES: list[tuple[str, type]] = [(GUID, str), (LOCALIZATION, str), (UNIT_ID, int)]
 
 class ModCreationContext(object):
     @property
@@ -38,9 +37,9 @@ class ModCreationContext(object):
         self.mod = Mod(metadata.folder_path, metadata.folder_path)
         self.root_msg = root_msg
         self.paths = ndf_paths
-        self.guid_cache:            Cache[str] = Cache(paths.CACHE_FOLDER, cnst.GUID)
-        self.localization_cache:    Cache[str] = Cache(paths.CACHE_FOLDER, cnst.LOCALIZATION)
-        self.unit_id_cache:         Cache[int] = Cache(paths.CACHE_FOLDER, cnst.UNIT_ID)
+        self.guid_cache:            Cache[str] = Cache(GUID)
+        self.localization_cache:    Cache[str] = Cache(LOCALIZATION)
+        self.unit_id_cache:         Cache[int] = Cache(UNIT_ID)
         self.guids = mg.GuidManager(self.guid_cache)
         self.localization = ml.LocalizationManager(self.localization_cache, self.metadata.localization_prefix)
        
