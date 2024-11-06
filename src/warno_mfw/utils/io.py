@@ -6,13 +6,13 @@ def try_read(path: str) -> str | None:
         with open(path, "w"):
             return None
 
-def load(path: str, default: object | None = None) -> object | None:
+def load_file(path: str, default: object | None = None) -> object | None:
     val = try_read(path)
     try:
         return eval(val)
     except:
         return default
     
-def write(obj: object, path: str):
+def write_file(obj: object, path: str):
     with open(path, "w") as f:
         f.write(repr(obj))

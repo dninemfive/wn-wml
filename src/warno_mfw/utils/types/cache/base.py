@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import Generic, Iterator, Self, TypeVar
 
 from warno_mfw.utils.types.message import Message, try_nest
@@ -7,7 +8,7 @@ V = TypeVar('V')
 class BaseCache(Generic[V]):
     def __init__(self: Self,):
         self._data: dict[str, V] = None
-        self._accessed: dict[str, bool] = None
+        self._accessed: defaultdict[str, bool] = defaultdict(lambda: False)
 
     def __getitem__(self: Self, key: str) -> V:
         self._accessed[key] = True
@@ -22,10 +23,6 @@ class BaseCache(Generic[V]):
         return key in self._data
 
     def load(self: Self, parent_msg: Message | None = None) -> None:
-        self._data = self._load_data()
-        self._accessed = {x:False for x in self._data.keys()}
-
-    def _load_data(self: Self, parent_msg: Message | None) -> dict[str, V]:
         raise NotImplemented
 
     def save(self: Self, parent_msg: Message | None = None) -> None:
