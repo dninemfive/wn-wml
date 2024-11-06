@@ -1,11 +1,11 @@
 from typing import Self
 from uuid import uuid4
 
-from warno_mfw.utils.types.cache import Cache
+from warno_mfw.utils.types.cache.file import FileCache
 
 
 class GuidManager(object):
-    def __init__(self: Self, cache: Cache):
+    def __init__(self: Self, cache: FileCache):
         self._cache = cache
     
     def generate(self: Self, guid_key: str) -> str:

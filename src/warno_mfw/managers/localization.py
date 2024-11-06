@@ -3,13 +3,13 @@ import string
 from typing import Self
 
 from warno_mfw.utils.ndf import ensure
-from warno_mfw.utils.types.cache import Cache
+from warno_mfw.utils.types.cache.file import FileCache
 from warno_mfw.utils.types.message import Message, try_nest
 
 CHARACTERS = [*string.ascii_letters, *[str(x) for x in range(10)]]
 
 class LocalizationManager(object):
-    def __init__(self: Self, cache: Cache, prefix: str):
+    def __init__(self: Self, cache: FileCache, prefix: str):
         if len(prefix) > 5:
             raise Exception("Localization prefix cannot be longer than 5 characters, as keys must be 10 or fewer characters total!")
         self._cache = cache

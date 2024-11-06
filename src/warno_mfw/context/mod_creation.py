@@ -18,7 +18,7 @@ import warno_mfw.unit_registration.division_unit_registry     as reg
 import warno_mfw.wrappers.unit                                as wu
 from warno_mfw.utils.ndf import ensure
 from warno_mfw.utils.ndf.files import add_image, add_image_literal
-from warno_mfw.utils.types.cache import Cache
+from warno_mfw.utils.types.cache.file import FileCache
 from warno_mfw.utils.types.message import Message, try_nest
 from ndf_parse import Mod
 from ndf_parse.model import List, Object
@@ -37,9 +37,9 @@ class ModCreationContext(object):
         self.mod = Mod(metadata.folder_path, metadata.folder_path)
         self.root_msg = root_msg
         self.paths = ndf_paths
-        self.guid_cache:            Cache[str] = Cache(GUID)
-        self.localization_cache:    Cache[str] = Cache(LOCALIZATION)
-        self.unit_id_cache:         Cache[int] = Cache(UNIT_ID)
+        self.guid_cache:            FileCache[str] = FileCache(GUID)
+        self.localization_cache:    FileCache[str] = FileCache(LOCALIZATION)
+        self.unit_id_cache:         FileCache[int] = FileCache(UNIT_ID)
         self.guids = mg.GuidManager(self.guid_cache)
         self.localization = ml.LocalizationManager(self.localization_cache, self.metadata.localization_prefix)
        
@@ -67,13 +67,13 @@ class ModCreationContext(object):
     def load_caches(self: Self) -> None:
         with self.root_msg.nest("Loading caches...") as msg:
             for name, _ in CACHES:
-                cache: Cache[Any] = getattr(self, f'{name}_cache')
+                cache: FileCache[Any] = getattr(self, f'{name}_cache')
                 cache.load(msg)
 
     def save_caches(self: Self) -> None:
         with self.root_msg.nest("Saving caches...") as msg:
             for name, _ in CACHES:
-                cache: Cache[Any] = getattr(self, f'{name}_cache')
+                cache: FileCache[Any] = getattr(self, f'{name}_cache')
                 cache.save(msg)
     
     def create_division(self: Self,
