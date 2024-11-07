@@ -22,4 +22,4 @@ class MemberDef(object):
         else:
             for item in row.value:
                 item: ListRow
-                self.values.add(ensure.no_prefix(ensure.unquoted(row.value), self.prefix))
+                self.values.add(ensure.no_prefix(ensure.unquoted(item), self.prefix))
