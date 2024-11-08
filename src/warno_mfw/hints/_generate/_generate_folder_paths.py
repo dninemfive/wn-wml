@@ -26,7 +26,10 @@ def generate_module_for_folder(src_path: str, output_path: str) -> None:
             lines.append('')
         for file in files:
             # print(f'{os.path.join(rel_path, file)}')
+            variable_name = os.path.splitext(file)[0]
+            if variable_name.startswith(tuple(str(x) for x in range(10))):
+                variable_name = '_' + variable_name
             file_path = os.path.join(rel_path, file).replace('\\', '/')
-            lines.append(f"{os.path.splitext(file)[0]}: Literal['{file_path}'] = '{file_path}'")
+            lines.append(f"{variable_name}: Literal['{file_path}'] = '{file_path}'")
         with open(os.path.join(result_path, '__init__.py'), 'w') as file:
             file.write('\n'.join(lines))
