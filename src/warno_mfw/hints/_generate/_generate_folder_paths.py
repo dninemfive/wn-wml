@@ -56,8 +56,6 @@ def generate_module_for_folder(src_path: str, output_path: str, filter: str, msg
             with msg.nest(rel_path) as msg2:
                 if any(files):
                     lines.append('from typing import Literal\n')
-                asdf = [*_lines_from_folders(rel_path, dirs, filter)]
-                with msg2.nest(str(asdf)) as _:
-                    lines.extend(asdf)
+                lines.extend(_lines_from_folders(rel_path, dirs, filter))
                 lines.extend(_lines_from_files(rel_path, files))
                 _make_init(result_path, lines)
