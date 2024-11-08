@@ -1,8 +1,11 @@
 import os
 import shutil
 from typing import Iterable, Self
+from pathlib import Path
 
-def _make_init(path: str, lines: Iterable[str]) -> None:
+from warno_mfw.utils.types.message import Message, try_nest
+
+def _make_init_file(path: str, lines: Iterable[str]) -> None:
         with open(os.path.join(path, '__init__.py'), 'w') as file:
             file.write('\n'.join(lines))
 
@@ -36,34 +39,40 @@ class Folder(object):
         # for each folder, call generate
         # write __init__.py
 
-def make_folder(path: str, must_be_in: str) -> Folder | None:
-    pass
+def is_subfolder(path: str, parent: str) -> bool:
+    print(f'is_subfolder({path}, {parent})')
+    if path == parent:
+        return True
+    return Path(path) in Path(parent).parents
+
+def make_folder(src_path: str, output_path: str, filter: str, msg: Message | None = None) -> str | None:
+    if not is_subfolder(path, filter):
+        return None
+    os.makedirs(path, exist_ok=True)
+    lines: list[str] = []
+    folders: list[str] = []
+    with try_nest(msg, path) as msg:
+        for _, folders, files in os.walk(path):
+            if any(files):
+                lines.extend('from typing import Literal','')
+            for folder in folders:
+                if make_folder(folder, filter, msg) is not None:
+                    folders.append(folder)
+            if any(folders):
+                lines.extend([f'from .{x} import *' for x in folders])
+                lines.append('')
+            for file in files:
+                with msg.nest(file) as _:
+                    name  = _ensure_valid_var_name(os.path.splitext(file)[0])
+                    value = f"'{os.path.join(path, file).replace('\\', '/')}'"
+                    lines.append(f"{name}: Literal[{value}] = {value}")
+        # _make_init_file(path, lines)
+    return path
+
+            
+
 
 def generate_module_for_folder(src_path: str, output_path: str, generated_only: bool) -> None:
-    print(output_path)
-    shutil.rmtree(output_path, ignore_errors=True)
-    os.makedirs(output_path, exist_ok=True)
-    _make_init(output_path, ["from .GameData import *"])
-    for subdir, dirs, files in os.walk(os.path.join(src_path, 'GameData')):
-        rel_path = os.path.relpath(subdir, src_path)
-        if generated_only and not (rel_path == 'GameData' or 'Generated' in rel_path):
-            continue
-        lines: list[str] = []
-        result_path = os.path.join(output_path, rel_path)
-        os.makedirs(result_path, exist_ok=True)
-        print(rel_path)
-        if any(files):
-            lines.append('from typing import Literal\n')
-        for dir in dirs:
-            print(f'{os.path.join(rel_path, dir)}')
-            lines.append(f'from .{dir} import *')
-        if any(dirs):
-            lines.append('')
-        for file in files:
-            # print(f'{os.path.join(rel_path, file)}')
-            variable_name = os.path.splitext(file)[0]
-            if variable_name.startswith(tuple(str(x) for x in range(10))):
-                variable_name = '_' + variable_name
-            file_path = os.path.join(rel_path, file).replace('\\', '/')
-            lines.append(f"{variable_name}: Literal['{file_path}'] = '{file_path}'")
-        _make_init(result_path, lines)
+    with Message(f'generate_module_for_folder({src_path}, {output_path}, {generated_only})') as msg:
+        shutil.rmtree(output_path, ignore_errors=True)
+        make_folder(src_path, output_path, msg)
