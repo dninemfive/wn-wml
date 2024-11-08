@@ -1,15 +1,14 @@
 import os
 from pathlib import Path
+import sys
 
-print(os.getcwd())
-# https://stackoverflow.com/a/2860193
-os.chdir(os.path.join(os.getcwd(), 'src/warno_mfw'))
-print(os.getcwd())
+# fixes ModuleNotFoundError stemming from being run within the module
+sys.path[0] = str(Path(sys.path[0]).parent.absolute())
 
 import argparse
 import shutil
 
-from metadata.warno import WarnoMetadata
+from warno_mfw.metadata.warno import WarnoMetadata
 from warno_mfw.utils import bat
 from warno_mfw.utils.types.message import Message
 from ndf_parse import Mod

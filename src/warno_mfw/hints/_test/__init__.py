@@ -1,2 +1,1 @@
-import GameData
-from GameData import *
+from .GameData import *
