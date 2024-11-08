@@ -5,7 +5,10 @@ from pathlib import Path
 
 from warno_mfw.utils.types.message import Message, try_nest
 
-def _make_init_file(path: str, lines: Iterable[str]) -> None:
+def _join(root: str, *paths: str) -> str:
+    return os.path.join(root, *paths).replace('\\', '/')
+
+def _make_init(path: str, lines: Iterable[str]) -> None:
         with open(os.path.join(path, '__init__.py'), 'w') as file:
             file.write('\n'.join(lines))
 
@@ -14,65 +17,43 @@ def _ensure_valid_var_name(variable_name: str) -> str:
         return f'_{variable_name}'
     return variable_name
 
-class Folder(object):
-    def __init__(self: Self, path: str):
-        self.path = path
-        for _, dirs, files in os.walk(path):
-            self.dirs = dirs
-            self.files = files
-            break
-
-    @property
-    def init_lines(self: Self) -> Iterable[str]:
-        if any(self.files):
-            yield 'from typing import Literal\n'
-        yield from [f'from {x} import *' for x in self.dirs]
-        if any(self.dirs):
-            yield ''
-        for file in self.files:
-            variable_name = _ensure_valid_var_name(os.path.splitext(file)[0])
-            file_path = os.path.join(self.path, file).replace('\\', '/')
-
-    def generate(self: Self) -> str | None:
-        ...
-        # create folder
-        # for each folder, call generate
-        # write __init__.py
-
 def is_subfolder(path: str, parent: str) -> bool:
-    print(f'is_subfolder({path}, {parent})')
-    if path == parent:
-        return True
-    return Path(path) in Path(parent).parents
+    return path.startswith(parent)
 
-def make_folder(src_path: str, output_path: str, filter: str, msg: Message | None = None) -> str | None:
-    if not is_subfolder(path, filter):
-        return None
-    os.makedirs(path, exist_ok=True)
-    lines: list[str] = []
-    folders: list[str] = []
-    with try_nest(msg, path) as msg:
-        for _, folders, files in os.walk(path):
-            if any(files):
-                lines.extend('from typing import Literal','')
-            for folder in folders:
-                if make_folder(folder, filter, msg) is not None:
-                    folders.append(folder)
-            if any(folders):
-                lines.extend([f'from .{x} import *' for x in folders])
-                lines.append('')
-            for file in files:
-                with msg.nest(file) as _:
-                    name  = _ensure_valid_var_name(os.path.splitext(file)[0])
-                    value = f"'{os.path.join(path, file).replace('\\', '/')}'"
-                    lines.append(f"{name}: Literal[{value}] = {value}")
-        # _make_init_file(path, lines)
-    return path
+def _lines_from_folders(rel_path: str, dirs: Iterable[str], filter: str) -> Iterable[str]:
+    yielded_any: bool = False
+    for dir in dirs:
+        print(dir, filter)
+        rel_dir: str = _join(rel_path, dir)
+        if is_subfolder(rel_dir, filter):
+            print(rel_dir)
+            yield f'from .{dir} import *'
+            yielded_any = True
+    if yielded_any:
+        yield ''
 
-            
+def _lines_from_files(rel_path: str, files: Iterable[str]) -> Iterable[str]:
+    for file in files:
+        # print(f'{os.path.join(rel_path, file)}')
+        variable_name = _ensure_valid_var_name(os.path.splitext(file)[0])
+        file_path = _join(rel_path, file)
+        yield f"{variable_name}: Literal['{file_path}'] = '{file_path}'"
 
 
-def generate_module_for_folder(src_path: str, output_path: str, generated_only: bool) -> None:
-    with Message(f'generate_module_for_folder({src_path}, {output_path}, {generated_only})') as msg:
+def generate_module_for_folder(src_path: str, output_path: str, filter: str, msg: Message | None = None) -> None:
+    with try_nest(msg, f'generate_module_for_folder({src_path}, {output_path}, {filter})') as msg:
         shutil.rmtree(output_path, ignore_errors=True)
-        make_folder(src_path, output_path, msg)
+        os.makedirs(output_path, exist_ok=True)
+        for subdir, dirs, files in os.walk(src_path):
+            rel_path = os.path.relpath(subdir, src_path).replace('\\', '/')
+            if not is_subfolder(rel_path, filter):
+                continue
+            lines: list[str] = []
+            result_path = _join(output_path, rel_path)
+            os.makedirs(result_path, exist_ok=True)
+            with msg.nest(rel_path) as _:
+                if any(files):
+                    lines.append('from typing import Literal\n')
+                lines.extend(_lines_from_folders(rel_path, dirs, filter))
+                lines.extend(_lines_from_files(rel_path, files))
+                _make_init(result_path, lines)

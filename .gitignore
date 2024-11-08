@@ -56,4 +56,4 @@ venv.bak/
 docker-compose.debug.yml
 art/3d/
 
-src/warno_mfw/hints/_test/*
+_test/

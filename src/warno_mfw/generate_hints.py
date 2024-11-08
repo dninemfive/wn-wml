@@ -62,7 +62,7 @@ with Message('Updating reference information for the current WARNO version') as 
         # with msg.nest('Loading temp mod') as _:
         #     mod = Mod(temp_mod_path, temp_mod_path)
     # run code generation
-        generate_module_for_folder(temp_mod_path, output_path, args.for_release)
+        generate_module_for_folder(temp_mod_path, output_path, 'GameData/Generated' if args.for_release else 'GameData', msg)
     # delete __TEMP__ mod
     except Exception as e:
         print(f'Failed to generate reference information: {str(e)}')
