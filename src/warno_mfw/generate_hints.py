@@ -1,18 +1,26 @@
-import argparse
 import os
+from pathlib import Path
+
+print(os.getcwd())
+# https://stackoverflow.com/a/2860193
+os.chdir(os.path.join(os.getcwd(), 'src/warno_mfw'))
+print(os.getcwd())
+
+import argparse
 import shutil
 
-from warno_mfw.metadata.warno import WarnoMetadata
+from metadata.warno import WarnoMetadata
 from warno_mfw.utils import bat
 from warno_mfw.utils.types.message import Message
 from ndf_parse import Mod
+from warno_mfw.hints._generate._generate_folder_paths import generate_module_for_folder
 
 def make_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Generates updated reference information from the WARNO source code. Should be run before working on a mod using dninemfive's WARNO Mod Framework."
     )
     parser.add_argument(['-o', '--output_path'],
-                        default='utils/ndf',
+                        default='hints',
                         type=str,
                         help="The path the reference information will be created in.")
     parser.add_argument(['-w', '--warno_path'],
@@ -44,10 +52,11 @@ with Message('Updating reference information for the current WARNO version') as 
 # generate new mod (named __TEMP__; raise exception if this folder already exists)
     bat.generate_mod(temp_mod_path, msg)
 # load mod using ndf-parse
-    mod: Mod
-    with msg.nest('Loading temp mod') as _:
-        mod = Mod(temp_mod_path, temp_mod_path)
+    # mod: Mod
+    # with msg.nest('Loading temp mod') as _:
+    #     mod = Mod(temp_mod_path, temp_mod_path)
 # run code generation
+    generate_module_for_folder(temp_mod_path)
 # delete __TEMP__ mod
     with msg.nest('Deleting temporary mod') as _:
         shutil.rmtree(temp_mod_path, ignore_errors=True)
