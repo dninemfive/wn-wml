@@ -1,23 +1,32 @@
-from dataclasses import dataclass
 import os
-from typing import Any, Self
-
-def generate_modules_for_folders(root_path: str) -> None:
-    generate_module_for_folder(root_path)
+import shutil
     
-def generate_module_for_folder(folder_path: str) -> None:
-    # generate folder at relative path in _test
-    init_file: str = ''
-    for subdir, dirs, files in os.walk(folder_path):
-        print(subdir)
+def _try_mkdir(path: str) -> None:
+    try:
+        os.mkdir(path)
+    except:
+        pass
+
+def generate_module_for_folder(src_path: str, output_path: str) -> None:
+    print(output_path)
+    shutil.rmtree(output_path, ignore_errors=True)
+    _try_mkdir(output_path)
+    for subdir, dirs, files in os.walk(src_path):
+        lines: list[str] = []
+        rel_path = os.path.relpath(subdir, src_path)
+        result_path = os.path.join(output_path, rel_path)
+        _try_mkdir(result_path)
+        print(rel_path)
+        if any(files):
+            lines.append('from typing import Literal\n')
         for dir in dirs:
-            print(f'dir:  {dir}')
+            print(f'{os.path.join(rel_path, dir)}')
+            lines.append(f'from .{dir} import *')
+        if any(dirs):
+            lines.append('')
         for file in files:
-            print(f'file: {file}')
-    # import statement for all subfolders
-    # if any files:
-    #   prepend `from typing import Literal\n`
-    #   append a variable definition for every filename like so:
-    #       `FileName: Literal['FileName.ndf'] = 'FileName.ndf`
-    # write init_file to __init__.py
-    # for folder in subfolders, `generate_module_for_folder(path)`
+            # print(f'{os.path.join(rel_path, file)}')
+            file_path = os.path.join(rel_path, file).replace('\\', '/')
+            lines.append(f"{os.path.splitext(file)[0]}: Literal['{file_path}'] = '{file_path}'")
+        with open(os.path.join(result_path, '__init__.py'), 'w') as file:
+            file.write('\n'.join(lines))

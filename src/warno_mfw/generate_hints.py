@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 
 # fixes ModuleNotFoundError stemming from being run within the module
+module_path = sys.path[0]
 sys.path[0] = str(Path(sys.path[0]).parent.absolute())
 
 import argparse
@@ -37,7 +38,7 @@ def get_output_path(args: argparse.Namespace) -> str:
     result: str = args.output_path
     if args.test:
         result = os.path.join(result, '_test')
-    return result
+    return os.path.join(module_path, result)
 
 parser = make_parser()
 args = parser.parse_args()
@@ -47,13 +48,19 @@ output_path = get_output_path(args)
 
 with Message('Updating reference information for the current WARNO version') as msg:
 # generate new mod (named __TEMP__; raise exception if this folder already exists)
-    bat.reset_source(temp_mod_path, args.mod_name, warno.mods_path, msg)
-# load mod using ndf-parse
-    # mod: Mod
-    # with msg.nest('Loading temp mod') as _:
-    #     mod = Mod(temp_mod_path, temp_mod_path)
-# run code generation
-    generate_module_for_folder(temp_mod_path)
-# delete __TEMP__ mod
-    with msg.nest('Deleting temporary mod') as _:
-        shutil.rmtree(temp_mod_path, ignore_errors=True)
+    try:
+        if os.path.exists(temp_mod_path):
+            raise Exception(f'Attempted to generate reference information in folder {temp_mod_path}, but this could overwrite an existing mod!')
+        bat.reset_source(temp_mod_path, args.mod_name, warno.mods_path, msg)
+    # load mod using ndf-parse
+        # mod: Mod
+        # with msg.nest('Loading temp mod') as _:
+        #     mod = Mod(temp_mod_path, temp_mod_path)
+    # run code generation
+        generate_module_for_folder(temp_mod_path, output_path)
+    # delete __TEMP__ mod
+    except Exception as e:
+        print(f'Failed to generate reference information: {str(e)}')
+    finally:
+        with msg.nest('Deleting temporary mod') as _:
+            shutil.rmtree(temp_mod_path, ignore_errors=True)
