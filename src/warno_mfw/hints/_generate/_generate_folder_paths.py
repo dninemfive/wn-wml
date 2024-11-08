@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 import os
 from typing import Any, Self
-from .._test import GameData
 
 def generate_modules_for_folders(root_path: str) -> None:
     generate_module_for_folder(root_path)
