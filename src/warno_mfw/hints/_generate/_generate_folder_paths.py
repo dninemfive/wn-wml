@@ -18,15 +18,15 @@ def _ensure_valid_var_name(variable_name: str) -> str:
     return variable_name
 
 def is_subfolder(path: str, parent: str) -> bool:
-    return path.startswith(parent)
+    return path.startswith(parent) or path in parent or path == ''
 
 def _lines_from_folders(rel_path: str, dirs: Iterable[str], filter: str) -> Iterable[str]:
     yielded_any: bool = False
     for dir in dirs:
-        print(dir, filter)
+        # print(dir, filter)
         rel_dir: str = _join(rel_path, dir)
         if is_subfolder(rel_dir, filter):
-            print(rel_dir)
+            # print(rel_dir)
             yield f'from .{dir} import *'
             yielded_any = True
     if yielded_any:
@@ -46,14 +46,18 @@ def generate_module_for_folder(src_path: str, output_path: str, filter: str, msg
         os.makedirs(output_path, exist_ok=True)
         for subdir, dirs, files in os.walk(src_path):
             rel_path = os.path.relpath(subdir, src_path).replace('\\', '/')
+            # with msg.nest(f'rel_path: {rel_path}') as _:
+            #     pass
             if not is_subfolder(rel_path, filter):
                 continue
             lines: list[str] = []
             result_path = _join(output_path, rel_path)
             os.makedirs(result_path, exist_ok=True)
-            with msg.nest(rel_path) as _:
+            with msg.nest(rel_path) as msg2:
                 if any(files):
                     lines.append('from typing import Literal\n')
-                lines.extend(_lines_from_folders(rel_path, dirs, filter))
+                asdf = [*_lines_from_folders(rel_path, dirs, filter)]
+                with msg2.nest(str(asdf)) as _:
+                    lines.extend(asdf)
                 lines.extend(_lines_from_files(rel_path, files))
                 _make_init(result_path, lines)
