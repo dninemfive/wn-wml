@@ -59,3 +59,7 @@ def generate_module_for_folder(src_path: str, output_path: str, filter: str, msg
                 lines.extend(_lines_from_folders(rel_path, dirs, filter))
                 lines.extend(_lines_from_files(rel_path, files))
                 _make_init(result_path, lines)
+    lines: list[str] = []
+    for _, dirs, __ in os.walk(output_path):
+        _make_init(output_path, _lines_from_folders('', dirs, ''))
+        break
