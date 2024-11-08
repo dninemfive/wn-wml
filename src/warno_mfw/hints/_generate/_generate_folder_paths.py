@@ -1,21 +1,23 @@
 import os
 import shutil
-    
-def _try_mkdir(path: str) -> None:
-    try:
-        os.mkdir(path)
-    except:
-        pass
+from typing import Iterable
 
-def generate_module_for_folder(src_path: str, output_path: str) -> None:
+def _make_init(path: str, lines: Iterable[str]) -> None:
+        with open(os.path.join(path, '__init__.py'), 'w') as file:
+            file.write('\n'.join(lines))
+
+def generate_module_for_folder(src_path: str, output_path: str, generated_only: bool) -> None:
     print(output_path)
     shutil.rmtree(output_path, ignore_errors=True)
-    _try_mkdir(output_path)
-    for subdir, dirs, files in os.walk(src_path):
-        lines: list[str] = []
+    os.makedirs(output_path, exist_ok=True)
+    _make_init(output_path, ["from .GameData import *"])
+    for subdir, dirs, files in os.walk(os.path.join(src_path, 'GameData')):
         rel_path = os.path.relpath(subdir, src_path)
+        if generated_only and not (rel_path == 'GameData' or 'Generated' in rel_path):
+            continue
+        lines: list[str] = []
         result_path = os.path.join(output_path, rel_path)
-        _try_mkdir(result_path)
+        os.makedirs(result_path, exist_ok=True)
         print(rel_path)
         if any(files):
             lines.append('from typing import Literal\n')
@@ -31,5 +33,4 @@ def generate_module_for_folder(src_path: str, output_path: str) -> None:
                 variable_name = '_' + variable_name
             file_path = os.path.join(rel_path, file).replace('\\', '/')
             lines.append(f"{variable_name}: Literal['{file_path}'] = '{file_path}'")
-        with open(os.path.join(result_path, '__init__.py'), 'w') as file:
-            file.write('\n'.join(lines))
+        _make_init(result_path, lines)

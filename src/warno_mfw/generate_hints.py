@@ -20,7 +20,7 @@ def make_parser() -> argparse.ArgumentParser:
         description="Generates updated reference information from the WARNO source code. Should be run before working on a mod using dninemfive's WARNO Mod Framework."
     )
     parser.add_argument('-o', '--output_path',
-                        default='hints',
+                        default='hints/paths',
                         type=str,
                         help="The path the reference information will be created in.")
     parser.add_argument('-w', '--warno_path',
@@ -31,7 +31,12 @@ def make_parser() -> argparse.ArgumentParser:
                         default='__TEMP__',
                         type=str,
                         help='The name of the temporary mod which is generated to get the required data.')
-    parser.add_argument('-t', '--test', action='store_true')
+    parser.add_argument('-t', '--test',
+                        action='store_true',
+                        help="If present, the output will be placed in a _test subfolder.")
+    parser.add_argument('-f', '--for_release',
+                        action='store_true',
+                        help='If specified, will only output the Generated subfolder of GameData. Used to reduce the number of files in official Warno Mod Framework releases.')
     return parser
 
 def get_output_path(args: argparse.Namespace) -> str:
@@ -57,7 +62,7 @@ with Message('Updating reference information for the current WARNO version') as 
         # with msg.nest('Loading temp mod') as _:
         #     mod = Mod(temp_mod_path, temp_mod_path)
     # run code generation
-        generate_module_for_folder(temp_mod_path, output_path)
+        generate_module_for_folder(temp_mod_path, output_path, args.for_release)
     # delete __TEMP__ mod
     except Exception as e:
         print(f'Failed to generate reference information: {str(e)}')
