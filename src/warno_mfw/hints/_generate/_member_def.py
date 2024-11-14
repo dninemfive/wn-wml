@@ -20,7 +20,7 @@ class MemberDef(object):
             self.values.add(ensure.no_prefix(ensure.unquoted(value), self.prefix))
         elif isinstance(value, List):
             for item in value:
-                self.values.add(ensure.no_prefix(ensure.unquoted(item), self.prefix))
+                self.values.add(ensure.no_prefix(ensure.unquoted(item.value), self.prefix))
 
     def literal_line(self: Self) -> str:
         items = [ensure.quoted(x) for x in sorted(self.values)]
