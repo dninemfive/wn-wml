@@ -1,6 +1,6 @@
 import os
-from pathlib import Path
 import sys
+from pathlib import Path
 
 # fixes ModuleNotFoundError stemming from being run within the module
 module_path = sys.path[0]
@@ -9,18 +9,22 @@ sys.path[0] = str(Path(sys.path[0]).parent.absolute())
 import argparse
 import shutil
 
-from warno_mfw.metadata.warno import WarnoMetadata
-from warno_mfw.utils import bat
-from warno_mfw.utils.types.message import Message
 from ndf_parse import Mod
-from warno_mfw.hints._generate._generate_folder_paths import generate_module_for_folder
+
+from .hints._generate._file_targets import _add_all
+from .hints._generate._generate_folder_paths import generate_module_for_folder
+from .hints._generate._generate_init import _write
+from .metadata.warno import WarnoMetadata
+from .utils import bat
+from .utils.types.message import Message
+
 
 def make_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Generates updated reference information from the WARNO source code. Should be run before working on a mod using dninemfive's WARNO Mod Framework."
     )
     parser.add_argument('-o', '--output_path',
-                        default='hints/paths',
+                        default='hints',
                         type=str,
                         help="The path the reference information will be created in.")
     parser.add_argument('-w', '--warno_path',
@@ -57,12 +61,13 @@ with Message('Updating reference information for the current WARNO version') as 
         if os.path.exists(temp_mod_path):
             raise Exception(f'Attempted to generate reference information in folder {temp_mod_path}, but this could overwrite an existing mod!')
         bat.reset_source(temp_mod_path, args.mod_name, warno.mods_path, msg)
-    # load mod using ndf-parse
-        # mod: Mod
-        # with msg.nest('Loading temp mod') as _:
-        #     mod = Mod(temp_mod_path, temp_mod_path)
+        with msg.nest('Loading temp mod') as msg2:
+            mod = Mod(temp_mod_path, temp_mod_path)
+            _add_all(mod, msg2)
+            _write(os.path.join(output_path, '__init__.py'))
+            
     # run code generation
-        generate_module_for_folder(temp_mod_path, output_path, 'GameData/Generated' if args.for_release else 'GameData', msg)
+        generate_module_for_folder(temp_mod_path, os.path.join(output_path, 'paths'), 'GameData/Generated' if args.for_release else 'GameData', msg)
     # delete __TEMP__ mod
     except Exception as e:
         print(f'Failed to generate reference information: {str(e)}')

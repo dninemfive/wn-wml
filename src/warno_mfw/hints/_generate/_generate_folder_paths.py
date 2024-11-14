@@ -1,9 +1,9 @@
 import os
 import shutil
-from typing import Iterable, Self
-from pathlib import Path
+from typing import Iterable
 
 from warno_mfw.utils.types.message import Message, try_nest
+
 
 def _join(root: str, *paths: str) -> str:
     return os.path.join(root, *paths).replace('\\', '/')

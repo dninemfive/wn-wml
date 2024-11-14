@@ -1,12 +1,11 @@
-from typing import Callable, Iterable, Self
+from typing import Iterable
 
 from ndf_parse import Mod
-from ndf_parse.model import List, ListRow, MemberRow, Object
-from ndf_parse.model.abc import CellValue
+from ndf_parse.model import ListRow, Object
 
-from warno_mfw.hints import paths
+from ...hints import paths
+from ...utils.types.message import Message
 
-from ...utils.types.message import Message, try_nest
 from ._file_target import FileTarget
 from ._member_def import MemberDef
 
@@ -34,3 +33,15 @@ UniteDescriptor = FileTarget(paths.Generated.Gameplay.Gfx.UniteDescriptor,
                                 MemberDef('MenuIconTexture', 'Texture_RTS_H_'),
                                 MemberDef('SpecialtiesList', is_list_type=True)
                             ])
+
+MissileCarriage = FileTarget(paths.Generated.Gameplay.Gfx.MissileCarriage,
+                             TMissileCarriageConnoisseur=[
+                                 MemberDef('PylonSet', '~/DepictionPylonSet_')
+                             ])
+
+TARGET_SETS = sorted([UniteDescriptor, MissileCarriage], key=lambda x: x.file_path)
+
+def _add_all(mod: Mod, msg: Message) -> None:
+    with msg.nest('Generating literals from files') as msg:
+        for target_set in TARGET_SETS:
+            target_set.add_all(mod, msg)
