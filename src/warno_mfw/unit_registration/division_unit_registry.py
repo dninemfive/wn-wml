@@ -2,9 +2,11 @@ from __future__ import annotations
 
 from typing import Callable, Iterable, Self
 
+from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
+
 import warno_mfw.context.mod_creation
 import warno_mfw.utils.ndf.ensure as ensure
-from warno_mfw.constants.ndf_paths import DECK_SERIALIZER, DIVISION_RULES
+from warno_mfw.hints.paths.GameData.Generated.Gameplay.Decks import DeckSerializer, DivisionRules
 from warno_mfw.managers.unit_id import UnitIdManager
 from warno_mfw.metadata.division import DivisionMetadata
 from warno_mfw.metadata.unit import UnitMetadata
@@ -12,10 +14,9 @@ from warno_mfw.model.deck_unite_rule import TDeckUniteRule
 from warno_mfw.unit_registration.new_src_unit_pair import NewSrcUnitPair
 from warno_mfw.utils.ndf.decorators import ndf_path
 from warno_mfw.utils.types.message import Message, try_nest
-from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
 
-from .division_rule_lookup import DivisionRuleLookup
 from . import _types
+from .division_rule_lookup import DivisionRuleLookup
 from .unit_rules import UnitRules
 
 
@@ -39,9 +40,9 @@ class DivisionUnitRegistry(object):
         self.units: list[UnitRules] = []
         self.parent_msg = parent_msg
         self.unit_ids = UnitIdManager(ctx.unit_id_cache, metadata.id * 1000)
-        self.lookup = DivisionRuleLookup(ctx.ndf[DIVISION_RULES], *division_priorities)
+        self.lookup = DivisionRuleLookup(ctx.ndf[DivisionRules], *division_priorities)
     
-    @ndf_path(DECK_SERIALIZER)
+    @ndf_path(DeckSerializer)
     def edit_deck_serializer(self: Self, ndf: List):
         unit_ids: Map = ndf.by_name("DeckSerializer").value.by_member('UnitIds').value
         for k, v in self.unit_ids.items:

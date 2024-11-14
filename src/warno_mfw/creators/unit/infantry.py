@@ -1,24 +1,22 @@
 from typing import Self
 
-import warno_mfw.constants.ndf_paths as ndf_paths
+from ndf_parse.model import List, ListRow, Map, MapRow, Object
+
 # import warno_mfw.context.mod_creation as ctx
 import warno_mfw.utils.ndf.edit as edit
 import warno_mfw.utils.ndf.unit_module as module
-from warno_mfw.constants import ndf_paths
 from warno_mfw.constants.enums import country_sound_code
 from warno_mfw.creators.unit.abc import UnitCreator
-from warno_mfw.creators.unit.basic import BasicUnitCreator
 from warno_mfw.creators.unit.utils.infantry._squad_keys import _SquadKeys
 from warno_mfw.creators.unit.utils.infantry.weapon import InfantryWeapon
 from warno_mfw.creators.unit.utils.infantry.weapon_set import InfantryWeaponSet
-from warno_mfw.managers.guid import GuidManager
+from warno_mfw.hints.paths.GameData.Generated import Gfx as ndf_paths
 from warno_mfw.metadata.unit import UnitMetadata
 from warno_mfw.model.template_infantry_selector_tactic import \
     TemplateInfantrySelectorTactic
 from warno_mfw.utils.ndf import ensure
 from warno_mfw.utils.ndf.decorators import ndf_path
 from warno_mfw.utils.types.message import Message
-from ndf_parse.model import List, ListRow, Map, MapRow, Object
 
 
 def _mesh_alternative(index: int) -> str:
@@ -42,7 +40,7 @@ class InfantryUnitCreator(UnitCreator):
 
     # overrides
     
-    @ndf_path(ndf_paths.SHOWROOM_EQUIVALENCE)
+    @ndf_path(ndf_paths.ShowRoomEquivalence)
     def edit_showroom_equivalence(self: Self, ndf: List):
         unit_to_showroom_equivalent: Map = ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
         unit_to_showroom_equivalent.add(k=self.new_unit.descriptor.path, v=self.new_unit.descriptor.showroom.path)
@@ -119,7 +117,7 @@ class InfantryUnitCreator(UnitCreator):
                                 Selector=selector_tactic.name,
                                 Alternatives=self._keys._tactic_depiction_alternatives)
 
-    @ndf_path(ndf_paths.GENERATED_DEPICTION_INFANTRY)
+    @ndf_path(ndf_paths.Infanterie.GeneratedDepictionInfantry)
     def edit_generated_depiction_infantry(self: Self, ndf: List) -> None:
         ndf.add(ListRow(self._gfx(), namespace=f'Gfx_{self.new_unit.name}'))
         ndf.add(ListRow(self._all_weapon_alternatives(), namespace=self._keys._all_weapon_alternatives))
@@ -150,7 +148,7 @@ class InfantryUnitCreator(UnitCreator):
         edit.members(module,
                      Default=self._make_infantry_squad_module_descriptor(f'{self.new_unit.descriptor.name}/ModulesDescriptors["GroupeCombat"]/Default/MimeticDescriptor'))
         
-    @ndf_path(ndf_paths.SHOWROOM_UNITS)
+    @ndf_path(ndf_paths.ShowRoomUnits)
     def _edit_showroom_units(self: Self, ndf: List):
         copy: Object = ndf.by_name(self.src_unit.descriptor.showroom.name).value.copy()
         edit.members(copy,
@@ -167,7 +165,7 @@ class InfantryUnitCreator(UnitCreator):
                               'TInfantrySquadWeaponAssignmentModuleDescriptor')
         ndf.add(ListRow(copy, 'export', self.new_unit.descriptor.showroom.name))
         
-    @ndf_path(ndf_paths.WEAPON_DESCRIPTOR)
+    @ndf_path(ndf_paths.WeaponDescriptor)
     def edit_weapon_descriptors(self: Self, ndf: List):
         ndf.add(ListRow(self.weapon_set.to_weapon_descriptor(), 'export', self.new_unit.weapon_descriptor.name))
     

@@ -2,11 +2,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Callable, Self
 
-import warno_mfw.constants.ndf_paths as ndf_paths
-from warno_mfw.creators.unit.abc import UnitCreator
-from warno_mfw.metadata.unit import UnitMetadata
-from warno_mfw.model.depiction_operators.weapon._abc import WeaponDepictionOperator
 from ndf_parse.model import List, ListRow, Map, MemberRow, Object
+
+from warno_mfw.creators.unit.abc import UnitCreator
+from warno_mfw.hints.paths.GameData.Generated import Gfx as ndf_paths
+from warno_mfw.metadata.unit import UnitMetadata
+from warno_mfw.model.depiction_operators.weapon._abc import \
+    WeaponDepictionOperator
 from warno_mfw.utils.ndf.decorators import ndf_path
 from warno_mfw.utils.types.message import Message
 
@@ -33,7 +35,7 @@ class TowedUnitCreator(UnitCreator):
         self.edit_generated_depiction_vehicles(self.ndf, msg)
         self.edit_showroom_equivalence(self.ndf, msg)
 
-    @ndf_path(ndf_paths.GENERATED_DEPICTION_VEHICLES)
+    @ndf_path(ndf_paths.Depictions.GeneratedDepictionVehicles)
     def edit_generated_depiction_vehicles(self: Self, ndf: List):
         for weapon in self.weapons:
             ndf.add(ListRow(weapon.to_ndf(), namespace=f'DepictionOperator_{self.new_unit.name}_Weapon{weapon.index}'))

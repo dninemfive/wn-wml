@@ -2,15 +2,11 @@ from typing import Self
 
 import warno_mfw.utils.ndf.edit as edit
 import warno_mfw.utils.ndf.ensure as ensure
-from ndf_parse import Mod
-from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
+from ndf_parse.model import List, ListRow, Object
 from ndf_parse.model.abc import CellValue
-from warno_mfw.constants import ndf_paths
-from warno_mfw.context.unit_module import UnitModuleContext
+from warno_mfw.hints.paths.GameData.Generated.Gameplay.Gfx import Ammunition
 from warno_mfw.managers.guid import GuidManager
-from warno_mfw.metadata.unit import UnitMetadata
 from warno_mfw.utils.ndf.decorators import ndf_path
-from warno_mfw.utils.ndf.unit_module import get, remove
 from warno_mfw.utils.types.message import Message, try_nest
 
 
@@ -27,7 +23,7 @@ class AmmoCreator(object):
         self.msg = try_nest(self.parent_msg, f"Making {self.name}")
         self.msg.__enter__()
         with self.msg.nest(f"Copying {self.copy_of}") as _:
-            self.object = self.make_copy(self.ndf[ndf_paths.AMMUNITION])
+            self.object = self.make_copy(self.ndf[Ammunition])
         return self
     
     def __exit__(self: Self, exc_type, exc_value, traceback):
@@ -47,7 +43,7 @@ class AmmoCreator(object):
         return copy
 
     # TODO: copy of this but for the missile file?
-    @ndf_path(ndf_paths.AMMUNITION)
+    @ndf_path(Ammunition)
     def edit_ammunition(self: Self, ndf: List):
         ndf.add(ListRow(self.object, namespace=self.name))
 

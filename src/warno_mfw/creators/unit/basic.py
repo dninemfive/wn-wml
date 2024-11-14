@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Callable, Self
 
-import warno_mfw.constants.ndf_paths as ndf_paths
+from warno_mfw.hints.paths.GameData.Generated import Gfx as ndf_paths
 from warno_mfw.creators.unit.abc import UnitCreator
 from warno_mfw.metadata.unit import UnitMetadata
 from warno_mfw.utils.ndf.decorators import ndf_path
@@ -36,7 +36,7 @@ class BasicUnitCreator(UnitCreator):
         self.edit_showroom_units(self.ndf, msg)
         self.edit_showroom_equivalence(self.ndf, msg)
 
-    @ndf_path(ndf_paths.SHOWROOM_UNITS)
+    @ndf_path(ndf_paths.ShowRoomUnits)
     def edit_showroom_units(self: Self, ndf: List):
         showroom_unit: Object
         if hasattr(self, '_showroom_unit'):
@@ -56,7 +56,7 @@ class BasicUnitCreator(UnitCreator):
         # and then set the depiction path here
         ndf.add(ListRow(showroom_unit, visibility='export', namespace=self.new_unit.descriptor.showroom.name))
 
-    @ndf_path(ndf_paths.SHOWROOM_EQUIVALENCE)
+    @ndf_path(ndf_paths.ShowRoomEquivalence)
     def edit_showroom_equivalence(self: Self, ndf: List):
         unit_to_showroom_equivalent: Map = ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
         unit_to_showroom_equivalent.add(k=self.new_unit.descriptor.path, v=self.new_unit.descriptor.showroom.path)

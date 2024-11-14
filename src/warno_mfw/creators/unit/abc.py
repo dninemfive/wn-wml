@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Callable, Self
+from typing import Self
 
-import warno_mfw.constants.ndf_paths as ndf_paths
 import warno_mfw.context.mod_creation as ctx
 import warno_mfw.utils.ndf.edit as edit
 import warno_mfw.utils.ndf.ensure as ensure
@@ -11,17 +10,12 @@ import warno_mfw.utils.ndf.unit_module as modules
 import warno_mfw.wrappers._modules as modules
 import warno_mfw.wrappers.unit as unit_wrapper
 import warno_mfw.wrappers.unit_modules.tags as tags
-from warno_mfw.context.unit_module import UnitModuleContext
 from warno_mfw.creators.weapon import WeaponCreator
 from warno_mfw.metadata.unit import UnitMetadata
 from warno_mfw.utils.ndf.decorators import ndf_path
 from warno_mfw.utils.types.message import Message
-from ndf_parse.model import List, ListRow, Map, MemberRow, Object
-from ndf_parse.model.abc import CellValue
-
-MODULES_DESCRIPTORS = "ModulesDescriptors"
-UNIT_UI = "TUnitUIModuleDescriptor"
-TAGS = "TTagsModuleDescriptor"
+from ndf_parse.model import List, ListRow, MemberRow, Object
+from warno_mfw.hints.paths.GameData.Generated import Gameplay as ndf_paths
 
 class UnitCreator(ABC):
     def __init__(self: Self,
@@ -105,7 +99,7 @@ class UnitCreator(ABC):
     # "private" methods
 
     def _make_unit(self: Self, localized_name: str, button_texture: str | None = None) -> unit_wrapper.UnitWrapper:
-        copy: Object = self.ndf[ndf_paths.UNITE_DESCRIPTOR].by_name(self.src_unit.descriptor.name).value.copy()
+        copy: Object = self.ndf[ndf_paths.Gfx.UniteDescriptor].by_name(self.src_unit.descriptor.name).value.copy()
         edit.members(copy,
                      DescriptorId=self.ctx.guids.generate(self.new_unit.descriptor.name),
                      ClassNameForDebug=self.new_unit.class_name_for_debug)
@@ -120,17 +114,17 @@ class UnitCreator(ABC):
     
     # ndf edits
 
-    @ndf_path(ndf_paths.UNITE_DESCRIPTOR)
+    @ndf_path(ndf_paths.Gfx.UniteDescriptor)
     def _edit_unite_descriptor(self: Self, ndf: List):
         ndf.add(ListRow(self.unit.object, namespace=self.new_unit.descriptor.name, visibility="export"))
 
-    @ndf_path(ndf_paths.DIVISION_PACKS)
+    @ndf_path(ndf_paths.Decks.DivisionPacks)
     def _edit_division_packs(self: Self, ndf: List):
         deck_pack_descriptor = Object('DeckPackDescriptor')
         deck_pack_descriptor.add(MemberRow(self.new_unit.descriptor.path, "Unit"))
         ndf.add(ListRow(deck_pack_descriptor, namespace=self.new_unit.deck_pack_descriptor.name))
 
-    @ndf_path(ndf_paths.ALL_UNITS_TACTIC)
+    @ndf_path(ndf_paths.Gfx.AllUnitsTactic)
     def _edit_all_units_tactic(self: Self, ndf: List):
         all_units_tactic = ndf.by_name("AllUnitsTactic").value
         all_units_tactic.add(self.new_unit.descriptor.path)

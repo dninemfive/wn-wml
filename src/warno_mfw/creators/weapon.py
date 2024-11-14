@@ -4,7 +4,7 @@ from typing import Callable, Self
 
 import warno_mfw.utils.ndf.edit as edit
 import warno_mfw.utils.ndf.ensure as ensure
-from warno_mfw.constants.ndf_paths import WEAPON_DESCRIPTOR
+from warno_mfw.hints.paths.GameData.Generated.Gameplay.Gfx import WeaponDescriptor
 from warno_mfw.context.unit_module import UnitModuleContext
 from warno_mfw.metadata.unit import UnitMetadata
 from warno_mfw.utils.ndf.decorators import ndf_path
@@ -40,10 +40,10 @@ class WeaponCreator(object):
             self.edit_ammunition(self.ndf, msg2)
 
     def make_copy(self: Self) -> Object:
-        copy: Object = self.ndf[WEAPON_DESCRIPTOR].by_name(self.copy_of).value.copy()
+        copy: Object = self.ndf[WeaponDescriptor].by_name(self.copy_of).value.copy()
         return copy
 
-    @ndf_path(WEAPON_DESCRIPTOR)
+    @ndf_path(WeaponDescriptor)
     def edit_ammunition(self: Self, ndf: List):
         ndf.add(ListRow(self.object, namespace=self.name, visibility="export"))
 

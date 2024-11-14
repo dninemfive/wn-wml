@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Self
 
-import warno_mfw.constants.ndf_paths                          as ndf_paths
+import warno_mfw.hints.paths.GameData.Generated               as ndf_paths
 import warno_mfw.creators.ammo                                as ca
 import warno_mfw.creators.division                            as cd
 import warno_mfw.creators.unit.basic                          as cub
@@ -121,7 +121,7 @@ class ModCreationContext(object):
     
     def add_division_emblem(self: Self, msg: Message | None, image_path: str, division: med.DivisionMetadata) -> str:
         with try_nest(msg, f"Adding division emblem from image at {image_path}") as _:
-            return add_image(self.ndf[ndf_paths.DIVISION_TEXTURES],
+            return add_image(self.ndf[ndf_paths.UserInterface.Textures.DivisionTextures],
                              image_path,
                              self.metadata.folder_path,
                              "Assets/2D/Interface/UseOutGame/Division/Emblem",
@@ -135,7 +135,7 @@ class ModCreationContext(object):
     
     def add_button_texture(self: Self, msg: Message | None, image_path: str, unit: meu.UnitMetadata) -> str:
         with try_nest(msg, f'Adding button texture from image at {image_path}') as _:
-            return add_image_literal(self.ndf[ndf_paths.BUTTON_TEXTURES_UNITES],
+            return add_image_literal(self.ndf[ndf_paths.UserInterface.Textures.ButtonTexturesUnites],
                                      image_path,
                                      self.metadata.folder_path,
                                      'Assets/2D/Interface/Common/UnitsIcons',
@@ -161,7 +161,7 @@ class ModCreationContext(object):
         return ca.AmmoCreator(self.ndf, ensure.prefix(name, f'Ammo_{self.prefix}_'), copy_of, self.guids)
     
     def get_unit_object(self: Self, unit: str, showroom: bool = False) -> Object:
-        path = ndf_paths.UNITE_DESCRIPTOR if not showroom else ndf_paths.SHOWROOM_UNITS
+        path = ndf_paths.Gameplay.Gfx.UniteDescriptor if not showroom else ndf_paths.Gameplay.Gfx.ShowRoomUnits
         return self.ndf[path].by_name(ensure.unit_descriptor(unit, showroom)).value
     
     def get_unit(self: Self, unit: str | Object, showroom: bool = False) -> wu.UnitWrapper:
