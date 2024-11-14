@@ -41,7 +41,7 @@ def _lines_from_files(rel_path: str, files: Iterable[str]) -> Iterable[str]:
 
 
 def generate_module_for_folder(src_path: str, output_path: str, filter: str, msg: Message | None = None) -> None:
-    with try_nest(msg, f'generate_module_for_folder({src_path}, {output_path}, {filter})') as msg:
+    with try_nest(msg, f'Generating path modules with filter {filter}') as msg:
         shutil.rmtree(output_path, ignore_errors=True)
         os.makedirs(output_path, exist_ok=True)
         for subdir, dirs, files in os.walk(src_path):
@@ -53,12 +53,12 @@ def generate_module_for_folder(src_path: str, output_path: str, filter: str, msg
             lines: list[str] = []
             result_path = _join(output_path, rel_path)
             os.makedirs(result_path, exist_ok=True)
-            with msg.nest(rel_path) as msg2:
-                if any(files):
-                    lines.append('from typing import Literal\n')
-                lines.extend(_lines_from_folders(rel_path, dirs, filter))
-                lines.extend(_lines_from_files(rel_path, files))
-                _make_init(result_path, lines)
+            # with msg.nest(rel_path) as _:
+            if any(files):
+                lines.append('from typing import Literal\n')
+            lines.extend(_lines_from_folders(rel_path, dirs, filter))
+            lines.extend(_lines_from_files(rel_path, files))
+            _make_init(result_path, lines)
     lines: list[str] = []
     for _, dirs, __ in os.walk(output_path):
         _make_init(output_path, _lines_from_folders('', dirs, ''))

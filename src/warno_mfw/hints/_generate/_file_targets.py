@@ -7,7 +7,7 @@ from ...hints import paths
 from ...utils.types.message import Message
 
 from ._file_target import FileTarget
-from ._member_def import MemberDef
+from ._member_def import MemberDef, _specialties_list_formatter
 
 def _select_unit_modules(row: ListRow) -> Iterable[Object]:
     for module_row in row.value.by_member('ModulesDescriptors').value:
@@ -31,7 +31,7 @@ UniteDescriptor = FileTarget(paths.Generated.Gameplay.Gfx.UniteDescriptor,
                                 MemberDef('InfoPanelConfigurationToken'),
                                 MemberDef('TypeStrategicCount', 'ETypeStrategicDetailedCount/'),
                                 MemberDef('MenuIconTexture', 'Texture_RTS_H_'),
-                                MemberDef('SpecialtiesList')
+                                MemberDef('SpecialtiesList', special_formatter=_specialties_list_formatter)
                             ])
 
 MissileCarriage = FileTarget(paths.Generated.Gameplay.Gfx.MissileCarriage,
