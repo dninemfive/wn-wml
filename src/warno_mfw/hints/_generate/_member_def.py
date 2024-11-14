@@ -37,6 +37,7 @@ def _default_formatter(member_def: MemberDef) -> Iterable[str]:
     yield _base_formatter(member_def.member_name, member_def.values)
     if member_def.aliases is not None and any(member_def.aliases):
         yield _base_formatter(f'{member_def.member_name}Alias', member_def.aliases.values())
+        yield f'{f'{member_def.member_name}OrAlias'.ljust(MEMBER_LEN)}= {member_def.member_name} | {member_def.member_name}Alias'
 
 def _specialties_list_formatter(member_def: MemberDef) -> Iterable[str]:
     primaries, secondaries = [], []

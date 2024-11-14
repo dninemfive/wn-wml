@@ -2,14 +2,17 @@ from __future__ import annotations
 
 from typing import Self
 
+from ndf_parse.model import List, Object
+
 import warno_mfw.creators.unit.abc as abc
 import warno_mfw.utils.ndf.edit as edit
-from warno_mfw.constants import enums, literals
+from warno_mfw import hints
+from warno_mfw.constants import enums
 from warno_mfw.metadata.unit import UnitMetadata
 from warno_mfw.utils.ndf import ensure
 from warno_mfw.wrappers.str_list import StrListWrapper
-from warno_mfw.wrappers.unit_modules._abc import UnitModuleKey, UnitModuleWrapper
-from ndf_parse.model import List, Object
+from warno_mfw.wrappers.unit_modules._abc import (UnitModuleKey,
+                                                  UnitModuleWrapper)
 
 
 class UnitUiModuleWrapper(UnitModuleWrapper):
@@ -28,7 +31,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('CountryTexture').value
 
     @CountryTexture.setter
-    def CountryTexture(self: Self, value: literals.MotherCountry | str) -> None:
+    def CountryTexture(self: Self, value: hints.MotherCountry | str) -> None:
         edit.member(self.object, 'CountryTexture', ensure.quoted(ensure.prefix(ensure.unquoted(value), 'CommonTexture_MotherCountryFlag_')))
 
     @property
@@ -52,7 +55,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('InfoPanelConfigurationToken').value
 
     @InfoPanelConfigurationToken.setter
-    def InfoPanelConfigurationToken(self: Self, value: literals.InfoPanelConfigurationToken) -> None:
+    def InfoPanelConfigurationToken(self: Self, value: hints.InfoPanelConfigurationToken) -> None:
         edit.member(self.object, 'InfoPanelConfigurationToken', enums.InfoPanelConfigurationToken.ensure_valid(value))
 
     @property
@@ -60,7 +63,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('MenuIconTexture').value
 
     @MenuIconTexture.setter
-    def MenuIconTexture(self: Self, value: literals.MenuIconTexture | str) -> None:
+    def MenuIconTexture(self: Self, value: hints.MenuIconTexture | str) -> None:
         edit.member(self.object, 'MenuIconTexture', ensure.quoted(ensure.prefix(ensure.unquoted(value), 'Texture_RTS_H_')))
 
     @property
@@ -89,7 +92,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('TypeStrategicCount').value
 
     @TypeStrategicCount.setter
-    def TypeStrategicCount(self: Self, value: literals.TypeStrategicCount | str) -> None:
+    def TypeStrategicCount(self: Self, value: hints.TypeStrategicCount | str) -> None:
         edit.member(self.object, 'TypeStrategicCount', ensure.prefix(value, 'ETypeStrategicDetailedCount/'))
 
     @property
@@ -97,7 +100,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('UnitRole').value
 
     @UnitRole.setter
-    def UnitRole(self: Self, value: literals.UnitRole | str) -> None:
+    def UnitRole(self: Self, value: hints.UnitRole | str) -> None:
         edit.member(self.object, 'UnitRole', enums.UnitRole.ensure_valid(value))
 
     @property
@@ -117,11 +120,5 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
             value = ensure.prefix(value, 'Descriptor_Unit_')
         edit.member(self.object, 'UpgradeFromUnit', value)
 
-    @property
-    def localized_name(self: Self) -> str:
-        """ This is expensive and won't always work. Mostly included so i can make a setter for it. """
-        return self.ctx.localization.reverse_lookup(self.NameToken)
-    
-    @localized_name.setter
-    def localized_name(self: Self, value: str) -> None:
+    def set_localized_name(self: Self, value: str) -> None:
         self.NameToken = self.ctx.localization.register(value)

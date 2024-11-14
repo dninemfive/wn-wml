@@ -4,10 +4,9 @@ from typing import Self
 import warno_mfw.utils.ndf.edit as edit
 import warno_mfw.utils.ndf.ensure as ensure
 from warno_mfw.constants.enums import Factory
-import warno_mfw.constants.enums as enums
-import warno_mfw.constants.literals as literals
 from warno_mfw.wrappers.map import MapWrapper
 from ndf_parse.model import List, Object
+from warno_mfw import hints
 
 from ._abc import UnitModuleKey, UnitModuleWrapper
 
@@ -20,7 +19,7 @@ class ProductionModuleWrapper(UnitModuleWrapper):
         return self.object.by_member('Factory').value
     
     @Factory.setter
-    def Factory(self: Self, value: literals.Factory) -> None:
+    def Factory(self: Self, value: hints.FactoryOrAlias) -> None:
         edit.members(self.object, Factory=Factory.ensure_valid(value))
 
     @property

@@ -6,11 +6,12 @@ import warno_mfw.utils.ndf.edit as edit
 import warno_mfw.utils.ndf.ensure as ensure
 import warno_mfw.utils.ndf.unit_module as modules
 import warno_mfw.wrappers._modules as mw
-from warno_mfw.constants import enums, literals
+from warno_mfw.constants import enums
 from warno_mfw.metadata.unit import UnitMetadata
 from warno_mfw.wrappers._abc import NdfObjectWrapper
 # from warno_mfw.context.mod_creation import ModCreationContext
 from ndf_parse.model import Object
+from warno_mfw import hints
 
 
 class UnitWrapper(NdfObjectWrapper):
@@ -46,8 +47,8 @@ class UnitWrapper(NdfObjectWrapper):
         return self._modules_descriptors
     
     def set_country(self: Self,
-                    country: literals.MotherCountry | str,
-                    nationalite: literals.Nationalite | Literal['NATO', 'PACT'] | None = None):
+                    country: hints.MotherCountry | str,
+                    nationalite: hints.NationaliteOrAlias | None = None):
         self.modules.ui.CountryTexture = country
         self.modules.type.MotherCountry = country
         self.modules.type.Nationalite = nationalite if nationalite is not None else enums.nationalite(country)
