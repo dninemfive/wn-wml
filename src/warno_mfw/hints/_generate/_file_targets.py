@@ -18,13 +18,27 @@ def _select_unit_modules(row: ListRow) -> Iterable[Object]:
 UniteDescriptor = FileTarget(paths.Generated.Gameplay.Gfx.UniteDescriptor,
                              _select_unit_modules,
                              TTypeUnitModuleDescriptor=[
-                                MemberDef('Nationalite', 'ENationalite/'),
+                                MemberDef('Nationalite', 'ENationalite/',
+                                          aliases={
+                                              'Axis': 'PACT',
+                                              'Allied': 'NATO'
+                                          }),
                                 MemberDef('MotherCountry'),
                                 MemberDef('AcknowUnitType', '~/TAcknowUnitType_'),
                                 MemberDef('TypeUnitFormation')
                             ],
                             TProductionModuleDescriptor=[
-                                MemberDef('Factory', 'EDefaultFactories/')
+                                MemberDef('Factory', 'EDefaultFactories/',
+                                          aliases={
+                                              'Art':        'ART',
+                                              'DCA':        'AA',
+                                              'Helis':      'HEL',
+                                              'Infantry':   'INF',
+                                              'Logistic':   'LOG',
+                                              'Planes':     'AIR',
+                                              'Recons':     'REC',
+                                              'Tanks':      'TNK'
+                                          })
                             ],
                             TUnitUIModuleDescriptor=[
                                 MemberDef('UnitRole'),
