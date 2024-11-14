@@ -15,7 +15,8 @@ class MemberDef(object):
 
     def add(self: Self, row: MemberRow) -> None:
         value = row.value
-        if isinstance(value, Object):
+        print(value.__class__.__name__)
+        if isinstance(value, str):
             self.values.add(ensure.no_prefix(ensure.unquoted(value), self.prefix))
         elif isinstance(value, List):
             for item in value:
