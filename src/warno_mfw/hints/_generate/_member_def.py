@@ -1,6 +1,6 @@
 from typing import Self
 
-from ndf_parse.model import ListRow
+from ndf_parse.model import ListRow, MemberRow
 
 from warno_mfw.utils.ndf import ensure
 
@@ -14,7 +14,7 @@ class MemberDef(object):
         self.values: set[str] = set()
         self.is_list_type = is_list_type
 
-    def add(self: Self, row: ListRow) -> None:
+    def add(self: Self, row: MemberRow) -> None:
         if not self.is_list_type:
             self.values.add(ensure.no_prefix(ensure.unquoted(row.value), self.prefix))
         else:

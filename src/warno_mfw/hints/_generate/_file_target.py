@@ -1,8 +1,7 @@
 from typing import Callable, Iterable, Self
 
 from ndf_parse import Mod
-from ndf_parse.model import List, ListRow, MemberRow, Object
-from ndf_parse.model.abc import CellValue
+from ndf_parse.model import List, ListRow, Object
 
 from warno_mfw.hints import paths
 
@@ -21,13 +20,13 @@ class FileTarget(object):
 
     def add(self: Self, row: ListRow, msg: Message) -> None:
         with msg.nest(row.namespace) as _:
-            for object in self.selector(row):
-                if not isinstance(object, Object):
+            for item in self.selector(row):
+                if not isinstance(item, (Object, List)):
                     continue
-                if object.type in self.targets:
-                    for member_def in self.targets[object.type]:
+                if item.type in self.targets:
+                    for member_def in self.targets[item.type]:
                         try:
-                            member_def.add(object.by_member(member_def.member_name))
+                            member_def.add(item.by_member(member_def.member_name))
                         except:
                             pass
 
@@ -41,4 +40,3 @@ class FileTarget(object):
         for v in self.targets.values():
             for m in sorted(v, key=lambda x: x.member_name):
                 yield line_selector(m)
-

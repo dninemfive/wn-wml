@@ -9,9 +9,9 @@ def _init_lines() -> Iterable[str]:
     yield 'from .paths import *'
     yield ''
     for target_set in TARGET_SETS:
-        yield f'""" Automatically generated from {target_set.file_path} """'
-        yield '\n\n'.join(target_set.to_lines(MemberDef.literal_line))
+        yield f'# Automatically generated from {target_set.file_path}'
+        yield from target_set.to_lines(MemberDef.literal_line)
 
 def _write(path: str) -> None:
     with open(path, 'w') as file:
-        file.write('\n'.join(_init_lines()))
+        file.write('\n\n'.join(_init_lines()))
