@@ -1,5 +1,6 @@
 from ._member_def import MemberDef
 
+MemberTargets = dict[str, list[MemberDef]]
 
 TARGETS: dict[str, list[MemberDef]] = {
     'TTypeUnitModuleDescriptor': [
