@@ -31,7 +31,7 @@ UniteDescriptor = FileTarget(paths.Generated.Gameplay.Gfx.UniteDescriptor,
                                 MemberDef('InfoPanelConfigurationToken'),
                                 MemberDef('TypeStrategicCount', 'ETypeStrategicDetailedCount/'),
                                 MemberDef('MenuIconTexture', 'Texture_RTS_H_'),
-                                MemberDef('SpecialtiesList', is_list_type=True)
+                                MemberDef('SpecialtiesList')
                             ])
 
 MissileCarriage = FileTarget(paths.Generated.Gameplay.Gfx.MissileCarriage,

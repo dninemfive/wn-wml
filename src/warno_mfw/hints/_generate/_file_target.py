@@ -9,7 +9,7 @@ from ...utils.types.message import Message, try_nest
 from ._member_def import MemberDef
 
 
-def _default_selector(row: ListRow) -> Iterable[Object]:
+def _default_selector(row: ListRow) -> Iterable[Object | List]:
     yield row.value
 
 class FileTarget(object):

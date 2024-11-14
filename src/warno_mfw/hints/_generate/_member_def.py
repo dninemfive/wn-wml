@@ -1,6 +1,6 @@
 from typing import Self
 
-from ndf_parse.model import ListRow, MemberRow
+from ndf_parse.model import MemberRow, Object, List
 
 from warno_mfw.utils.ndf import ensure
 
@@ -8,18 +8,17 @@ MEMBER_LEN = 40
 LITERAL_INDENT = "".rjust(MEMBER_LEN + len('= Literal['))
 
 class MemberDef(object):
-    def __init__(self: Self, member_name: str, prefix: str | None = None, is_list_type: bool = False):
+    def __init__(self: Self, member_name: str, prefix: str | None = None):
         self.member_name = member_name
         self.prefix = prefix
         self.values: set[str] = set()
-        self.is_list_type = is_list_type
 
     def add(self: Self, row: MemberRow) -> None:
-        if not self.is_list_type:
-            self.values.add(ensure.no_prefix(ensure.unquoted(row.value), self.prefix))
-        else:
-            for item in row.value:
-                item: ListRow
+        value = row.value
+        if isinstance(value, Object):
+            self.values.add(ensure.no_prefix(ensure.unquoted(value), self.prefix))
+        elif isinstance(value, List):
+            for item in value:
                 self.values.add(ensure.no_prefix(ensure.unquoted(item), self.prefix))
 
     def literal_line(self: Self) -> str:
