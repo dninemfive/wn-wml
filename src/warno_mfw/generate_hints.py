@@ -11,12 +11,12 @@ import shutil
 
 from ndf_parse import Mod
 
-from .hints._generate._file_targets import _add_all
-from .hints._generate._generate_folder_paths import generate_module_for_folder
-from .hints._generate._generate_init import _write
-from .metadata.warno import WarnoMetadata
-from .utils import bat
-from .utils.types.message import Message
+from warno_mfw.hints._generate._file_targets import _add_all
+from warno_mfw.hints._generate._generate_folder_paths import generate_module_for_folder
+from warno_mfw.hints._generate._generate_init import _write
+from warno_mfw.metadata.warno import WarnoMetadata
+from warno_mfw.utils import bat
+from warno_mfw.utils.types.message import Message
 
 
 def make_parser() -> argparse.ArgumentParser:
@@ -54,6 +54,7 @@ args = parser.parse_args()
 warno = WarnoMetadata(args.warno_path)
 temp_mod_path = os.path.join(warno.mods_path, args.mod_name)
 output_path = get_output_path(args)
+os.makedirs(output_path)
 
 with Message('Updating reference information for the current WARNO version') as msg:
 # generate new mod (named __TEMP__; raise exception if this folder already exists)

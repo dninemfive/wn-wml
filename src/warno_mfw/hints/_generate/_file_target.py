@@ -11,8 +11,6 @@ from ._member_def import MemberDef
 
 
 def _default_selector(row: ListRow) -> Iterable[Object]:
-    if not isinstance(row.value, Object):
-        raise Exception(f'Value of row {str(row)} was not an Object!')
     yield row.value
 
 class FileTarget(object):
@@ -24,9 +22,14 @@ class FileTarget(object):
     def add(self: Self, row: ListRow, msg: Message) -> None:
         with msg.nest(row.namespace) as _:
             for object in self.selector(row):
+                if not isinstance(object, Object):
+                    continue
                 if object.type in self.targets:
                     for member_def in self.targets[object.type]:
-                        member_def.add(object.by_member(member_def.member_name))
+                        try:
+                            member_def.add(object.by_member(member_def.member_name))
+                        except:
+                            pass
 
     def add_all(self: Self, mod: Mod, msg: Message | None = None):
         with try_nest(msg, self.file_path) as msg:
