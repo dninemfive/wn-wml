@@ -135,13 +135,13 @@ def suffix(s: str, suffix: str) -> str:
 def prefix_and_suffix(s: str, _prefix: str, _suffix: str) -> str:
     return prefix(suffix(s, _suffix), _prefix)
 
-def no_prefix(s: str, prefix: str) -> str:
-    if s.startswith(prefix):
+def no_prefix(s: str, prefix: str | None) -> str:
+    if prefix is not None and s.startswith(prefix):
         return s[len(prefix):]
     return s
 
-def no_suffix(s: str, suffix: str) -> str:
-    if s.endswith(suffix):
+def no_suffix(s: str, suffix: str | None) -> str:
+    if suffix is not None and s.endswith(suffix):
         return s[:-len(suffix)]
     return s
 

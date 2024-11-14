@@ -54,7 +54,7 @@ args = parser.parse_args()
 warno = WarnoMetadata(args.warno_path)
 temp_mod_path = os.path.join(warno.mods_path, args.mod_name)
 output_path = get_output_path(args)
-os.makedirs(output_path)
+os.makedirs(output_path, exist_ok=True)
 
 with Message('Updating reference information for the current WARNO version') as msg:
 # generate new mod (named __TEMP__; raise exception if this folder already exists)
