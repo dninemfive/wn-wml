@@ -3,11 +3,12 @@ from typing import Iterable
 from ndf_parse import Mod
 from ndf_parse.model import ListRow, Object
 
-from ...hints import paths
-from ...utils.types.message import Message
+from ....utils.types.message import Message
+from ... import paths
+from .._types._file_target import FileTarget
+from .._types._member_def import MemberDef
+from ._specialties_list_formatter import _specialties_list_formatter
 
-from ._file_target import FileTarget
-from ._member_def import MemberDef, _specialties_list_formatter
 
 def _select_unit_modules(row: ListRow) -> Iterable[Object]:
     for module_row in row.value.by_member('ModulesDescriptors').value:

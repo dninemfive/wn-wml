@@ -1,12 +1,12 @@
 from typing import Callable, Iterable, Self
 
-from ndf_parse.model import MemberRow, Object, List
+from _constants._base_formatter import _base_formatter, MEMBER_LEN
+from ndf_parse.model import List, MemberRow
 
 from warno_mfw.utils.ndf import ensure
-from ._validator import ValidationSet, StandardValidationSet
 
-MEMBER_LEN = 40
-LITERAL_INDENT = "".rjust(MEMBER_LEN + len('= Literal['))
+from .._validator import StandardValidationSet, ValidationSet
+
 
 class MemberDef(object):
     def __init__(self:              Self,
@@ -42,21 +42,10 @@ class MemberDef(object):
             yield from _default_formatter(self)
 
     def validator(self: Self) -> ValidationSet:
-        return StandardValidationSet(self.needs_quotes)
+        return StandardValidationSet(self.needs_quotes, self.prefix, )
     
-def _base_formatter(name: str, values: Iterable[str]) -> str:
-    items = [ensure.quoted(x) for x in sorted(values)]
-    return f'{name.ljust(MEMBER_LEN)}= Literal[{f',\n{LITERAL_INDENT}'.join(items)}]'
-
 def _default_formatter(member_def: MemberDef) -> Iterable[str]:
     yield _base_formatter(member_def.member_name, member_def.values)
     if member_def.aliases is not None and any(member_def.aliases):
         yield _base_formatter(f'{member_def.member_name}Alias', member_def.aliases.values())
         yield f'{f'{member_def.member_name}OrAlias'.ljust(MEMBER_LEN)}= {member_def.member_name} | {member_def.member_name}Alias'
-
-def _specialties_list_formatter(member_def: MemberDef) -> Iterable[str]:
-    primaries, secondaries = [], []
-    for item in member_def.values:
-        (secondaries if item.startswith('_') else primaries).append(item)
-    yield _base_formatter('PrimarySpecialty',   primaries)
-    yield _base_formatter('SecondarySpecialty', [ensure.no_prefix(x, '_') for x in secondaries])
