@@ -3,20 +3,32 @@ from typing import Callable, Iterable, Self
 from ndf_parse.model import MemberRow, Object, List
 
 from warno_mfw.utils.ndf import ensure
+from ._validator import ValidationSet, StandardValidationSet
 
 MEMBER_LEN = 40
 LITERAL_INDENT = "".rjust(MEMBER_LEN + len('= Literal['))
 
 class MemberDef(object):
-    def __init__(self: Self, member_name: str, prefix: str | None = None, special_formatter: Callable[[Self], str] | None = None, aliases: dict[str | Iterable[str]] | None = None):
+    def __init__(self:              Self,
+                 member_name:       str,
+                 prefix:            str | None = None,
+                 special_formatter: Callable[[Self], str] | None = None,
+                 aliases:           dict[str | Iterable[str]] | None = None):
         self.member_name = member_name
         self.prefix = prefix
         self.values: set[str] = set()
         self.special_formatter = special_formatter
         self.aliases = aliases
+        self.needs_quotes: bool | None = None
 
     def add(self: Self, row: MemberRow) -> None:
         value = row.value
+        needs_quotes = value.startswith('"') or value.startswith("'")
+        if self.needs_quotes is None:
+            self.needs_quotes = needs_quotes
+        elif not (self.needs_quotes == needs_quotes):
+            print(f'Inconsistent quotation requirements in member {self.member_name}!')
+        
         if isinstance(value, str):
             self.values.add(ensure.no_prefix(ensure.unquoted(value), self.prefix))
         elif isinstance(value, List):
@@ -28,6 +40,9 @@ class MemberDef(object):
             yield from self.special_formatter(self)
         else:
             yield from _default_formatter(self)
+
+    def validator(self: Self) -> ValidationSet:
+        return StandardValidationSet(self.needs_quotes)
     
 def _base_formatter(name: str, values: Iterable[str]) -> str:
     items = [ensure.quoted(x) for x in sorted(values)]
