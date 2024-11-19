@@ -21,6 +21,7 @@ def StandardValidationSet(require_quotes: bool,
         validators.append(_require_quotes)
     if prefix is not None:
         validators.append(_require_prefix(prefix))
+    # TODO: split the concept of transformers (i.e. the ones above) from validators (i.e. the one below)
     if any(valid_values):
         validators.append(_require_membership(*valid_values))
     return ValidationSet(*validators)
