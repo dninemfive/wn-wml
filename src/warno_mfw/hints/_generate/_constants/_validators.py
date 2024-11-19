@@ -3,6 +3,13 @@ from warno_mfw.utils.ndf import ensure
 
 Validator = Callable[[str], str]
 
+def _convert_aliases(aliases: dict[str, str]) -> Validator:
+    def validator(s: str) -> str:
+        if s in aliases:
+            return aliases[s]
+        return s
+    return validator
+
 _require_quotes: Validator = ensure.quoted
 
 def _require_prefix(prefix: str) -> Validator:
