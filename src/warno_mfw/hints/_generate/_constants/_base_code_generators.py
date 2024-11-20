@@ -8,7 +8,7 @@ MEMBER_LEN = 40
 LITERAL_INDENT = "".rjust(MEMBER_LEN + len('= Literal['))
 
 def _base_literal_generator(name: str, values: dict[str, str] | Iterable[str]) -> str:
-    items = [ensure.quoted(x) for x in (values.keys() if isinstance(values, dict) else values)]
+    items = sorted([ensure.quoted(x) for x in (values.keys() if isinstance(values, dict) else values)])
     return f'{name.ljust(MEMBER_LEN)}= Literal[{f',\n{LITERAL_INDENT}'.join(items)}]'
 
 def _resolve_sig_generator(name: str) -> str:

@@ -22,11 +22,9 @@ def _select_weapon_type(row: ListRow) -> Iterable[Object]:
     try:
         operators: List = row.value.by_member('Operators').value
         for operator_row in operators:
-            print(operator_row)
             operator: Object = operator_row.value
             conditional_tags: List = operator.by_member('ConditionalTags').value
             result = ensure.NdfObject('WeaponType_generated', WeaponType=[row.value[0] for row in conditional_tags])
-            print(result)
             yield result
     except:
         pass

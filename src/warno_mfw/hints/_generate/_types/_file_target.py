@@ -19,12 +19,7 @@ class FileTarget(object):
         self.targets = targets
 
     def add(self: Self, row: ListRow, msg: Message) -> None:
-        def debug_print(*args: Any) -> None:
-            if self.file_path == paths.Generated.Gfx.Infanterie.GeneratedDepictionInfantry:
-                print(*args)
         for item in self.selector(row):
-            debug_print(f'{item}')
-            # debug_print(f'\t{item.__class__.__name__} {item.type}')
             if not isinstance(item, (Object, List)):
                 continue
             if item.type in self.targets:
