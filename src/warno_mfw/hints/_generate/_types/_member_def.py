@@ -32,39 +32,34 @@ class MemberDef(object):
     def member_or_alias_name(self: Self) -> str:
         assert self.has_aliases, 'Attempted to access `value_or_alias_name` on MemberDef instance with no aliases!'
         return f'{self.member_name}OrAlias'
+    
+    @property
+    def raw_values(self: Self) -> Iterable[str]:
+        yield from self.values.values()
 
-    def _update_needs_quotes(self: Self, s: str) -> None:
-        needs_quotes = value.startswith('"') or value.startswith("'")
+    @property
+    def needs_quotes(self: Self) -> bool:
+        result: bool | None = None
+        for value in self.raw_values:
+            has_quotes = value.startswith('"') or value.startswith("'")
+            if result is None:
+                result = has_quotes
+            elif result != has_quotes:
+                print(f'Inconsistent quotation requirements in member {self.member_name}!')
+                return False
+        return result
 
     def _add_internal(self: Self, s: str) -> None:
         normalized: str = ensure.no_prefix(ensure.unquoted(s), self.prefix)
         self.values[normalized] = s
 
     def add(self: Self, row: MemberRow) -> None:
-        def debug_print(s: Any) -> None:
-            if self.member_name == 'SpecialtiesList':
-                print(s)
-        debug_print(f'{self.member_name}.add({row.value.__class__.__name__})')
         value = row.value
-        debug_print(1)
-        needs_quotes = value.startswith('"') or value.startswith("'")
-        debug_print(2)
-        if self.needs_quotes is None:
-            self.needs_quotes = needs_quotes
-            debug_print(3)
-        elif not (self.needs_quotes == needs_quotes):
-            debug_print(4)
-            print(f'Inconsistent quotation requirements in member {self.member_name}!')
-        debug_print(5)
         if isinstance(value, str):
-            debug_print('str')
             self._add_internal(value)
         elif isinstance(value, List):
-            debug_print('List')
             for item in value:
-                debug_print(f'\t{item.value}')
                 self._add_internal(item.value)
-        debug_print('end')
 
     def literal_lines(self: Self) -> Iterable[str]:
         if self.special_formatter is not None:
