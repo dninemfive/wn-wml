@@ -59,7 +59,15 @@ AcknowUnitType                          = Literal['SAM',
                                                   'AirSup',
                                                   'Multirole']
 
-MotherCountry                           = Literal[]
+MotherCountry                           = Literal['DDR',
+                                                  'SOV',
+                                                  'US',
+                                                  'UK',
+                                                  'BEL',
+                                                  'FR',
+                                                  'RFA',
+                                                  'POL',
+                                                  'TCH']
 
 Nationalite                             = Literal['Axis',
                                                   'Allied']
@@ -69,7 +77,11 @@ NationaliteAlias                        = Literal['PACT',
 
 NationaliteOrAlias                      = Nationalite | NationaliteAlias
 
-TypeUnitFormation                       = Literal[]
+TypeUnitFormation                       = Literal['Artillerie',
+                                                  'Char',
+                                                  'Supply',
+                                                  'Reconnaissance',
+                                                  'None']
 
 Factory                                 = Literal['DCA',
                                                   'Art',
@@ -91,7 +103,14 @@ FactoryAlias                            = Literal['ART',
 
 FactoryOrAlias                          = Factory | FactoryAlias
 
-InfoPanelConfigurationToken             = Literal[]
+InfoPanelConfigurationToken             = Literal['Default',
+                                                  'VehiculeTransporter',
+                                                  'Infantry',
+                                                  'VehiculeSupplier',
+                                                  'HelicoTransporter',
+                                                  'HelicoDefault',
+                                                  'HelicoSupplier',
+                                                  'avion']
 
 MenuIconTexture                         = Literal['AA',
                                                   'howitzer',
@@ -131,9 +150,52 @@ MenuIconTexture                         = Literal['AA',
                                                   'AA_air',
                                                   'uav']
 
-PrimarySpecialty                        = Literal[]
+PrimarySpecialty                        = Literal['AA',
+                                                  'howitzer',
+                                                  'mortar',
+                                                  'transport',
+                                                  'ifv',
+                                                  'hq_veh',
+                                                  'reco',
+                                                  'hq_tank',
+                                                  'armor',
+                                                  'AT',
+                                                  'infantry',
+                                                  'hq_inf',
+                                                  'engineer',
+                                                  'supply',
+                                                  'mlrs',
+                                                  'Armor_heavy',
+                                                  'appui',
+                                                  'hel_reco',
+                                                  'hq_helo',
+                                                  'sead',
+                                                  'uav']
 
-SecondarySpecialty                      = Literal[]
+SecondarySpecialty                      = Literal['amphibie',
+                                                  'reservist',
+                                                  'para',
+                                                  'transport2',
+                                                  'smoke_launcher',
+                                                  'transport1',
+                                                  'ifv',
+                                                  'leader',
+                                                  'eo_dazzler',
+                                                  'era',
+                                                  'resolute',
+                                                  'choc',
+                                                  'security',
+                                                  'mp',
+                                                  'sf',
+                                                  'falseflag',
+                                                  'canBeAirlifted',
+                                                  'gsr',
+                                                  'singint',
+                                                  'fireDirection',
+                                                  'sniper',
+                                                  'airlift',
+                                                  'jammer',
+                                                  'electronic_warfare']
 
 TypeStrategicCount                      = Literal['AA',
                                                   'Howitzer',
@@ -170,4 +232,7 @@ TypeStrategicCount                      = Literal['AA',
                                                   'Air_Sead',
                                                   'Air_AA']
 
-UnitRole                                = Literal[]
+UnitRole                                = Literal['tank_A',
+                                                  'tank_B',
+                                                  'tank_C',
+                                                  'tank_D']

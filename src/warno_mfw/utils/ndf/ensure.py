@@ -113,6 +113,8 @@ def _affix_base(base:               str,
                 apply:              _Affixer,
                 caller_name:        str) -> str:
     assert base is not None, f'Argument `base` to ensure.{caller_name}() must not be None!'
+    if affix is None or affix == '':
+        return base
     return apply(base, affix) if should_apply(base, affix) == target_result else base 
 
 def prefix(base: str, prefix: str) -> str:
