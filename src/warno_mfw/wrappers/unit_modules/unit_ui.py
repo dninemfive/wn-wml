@@ -7,8 +7,9 @@ from ndf_parse.model import List, Object
 import warno_mfw.creators.unit.abc as abc
 import warno_mfw.utils.ndf.edit as edit
 from warno_mfw import hints
-from warno_mfw.hints._validation import _resolve_InfoPanelConfigurationToken, _resolve_MenuIconTexture
-from warno_mfw.constants import enums
+from warno_mfw.hints._validation import (_resolve_InfoPanelConfigurationToken,
+                                         _resolve_MenuIconTexture,
+                                         _resolve_UnitRole)
 from warno_mfw.metadata.unit import UnitMetadata
 from warno_mfw.utils.ndf import ensure
 from warno_mfw.wrappers.str_list import StrListWrapper
@@ -102,7 +103,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @UnitRole.setter
     def UnitRole(self: Self, value: hints.UnitRole | str) -> None:
-        edit.member(self.object, 'UnitRole', enums.UnitRole.ensure_valid(value))
+        edit.member(self.object, 'UnitRole', _resolve_UnitRole(value))
 
     @property
     def UpgradeFromUnit(self: Self) -> str | None:

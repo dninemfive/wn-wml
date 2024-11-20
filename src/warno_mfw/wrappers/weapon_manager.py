@@ -7,7 +7,6 @@ from warno_mfw.wrappers.list import ListWrapper
 import warno_mfw.utils.ndf.edit as edit
 import warno_mfw.utils.ndf.ensure as ensure
 import warno_mfw.utils.ndf.unit_module as modules
-from warno_mfw.constants.enums import MotherCountry
 # from warno_mfw.context.mod_creation import ModCreationContext
 from ndf_parse.model import Object
 import warno_mfw.wrappers._modules

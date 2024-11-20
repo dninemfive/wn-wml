@@ -3,7 +3,6 @@ from typing import Self
 
 import warno_mfw.utils.ndf.edit as edit
 import warno_mfw.utils.ndf.ensure as ensure
-from warno_mfw.constants.enums import Factory
 from warno_mfw.wrappers.map import MapWrapper
 from ndf_parse.model import List, Object
 from warno_mfw import hints

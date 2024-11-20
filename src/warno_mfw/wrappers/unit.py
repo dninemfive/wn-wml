@@ -2,16 +2,17 @@ from __future__ import annotations
 
 from typing import Any, Callable, Literal, Self, Type
 
+# from warno_mfw.context.mod_creation import ModCreationContext
+from ndf_parse.model import Object
+
 import warno_mfw.utils.ndf.edit as edit
 import warno_mfw.utils.ndf.ensure as ensure
 import warno_mfw.utils.ndf.unit_module as modules
 import warno_mfw.wrappers._modules as mw
-from warno_mfw.constants import enums
-from warno_mfw.metadata.unit import UnitMetadata
-from warno_mfw.wrappers._abc import NdfObjectWrapper
-# from warno_mfw.context.mod_creation import ModCreationContext
-from ndf_parse.model import Object
 from warno_mfw import hints
+from warno_mfw.metadata.unit import UnitMetadata
+from warno_mfw.utils.ndf import misc
+from warno_mfw.wrappers._abc import NdfObjectWrapper
 
 
 class UnitWrapper(NdfObjectWrapper):
@@ -51,7 +52,7 @@ class UnitWrapper(NdfObjectWrapper):
                     nationalite: hints.NationaliteOrAlias | None = None):
         self.modules.ui.CountryTexture = country
         self.modules.type.MotherCountry = country
-        self.modules.type.Nationalite = nationalite if nationalite is not None else enums.nationalite(country)
+        self.modules.type.Nationalite = nationalite if nationalite is not None else misc.nationalite(country)
 
     def copy(self: Self) -> Self:
         return UnitWrapper(self.ctx, self.object.copy())

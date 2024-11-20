@@ -5,7 +5,7 @@ from ndf_parse.model import List, ListRow, Map, MapRow, Object
 # import warno_mfw.context.mod_creation as ctx
 import warno_mfw.utils.ndf.edit as edit
 import warno_mfw.utils.ndf.unit_module as module
-from warno_mfw.constants.enums import country_sound_code
+from warno_mfw.utils.ndf.misc import country_sound_code
 from warno_mfw.creators.unit.abc import UnitCreator
 from warno_mfw.creators.unit.utils.infantry._squad_keys import _SquadKeys
 from warno_mfw.creators.unit.utils.infantry.weapon import InfantryWeapon
