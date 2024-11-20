@@ -14,10 +14,11 @@ from ndf_parse import Mod
 
 from warno_mfw.hints._generate._constants._file_targets import _add_all
 from warno_mfw.hints._generate._folder_paths import generate_module_for_folder
-from warno_mfw.hints._generate._init import _write
+from warno_mfw.hints._generate._line_generators import (_init_lines,
+                                                        _validation_lines)
 from warno_mfw.metadata.warno import WarnoMetadata
 from warno_mfw.utils import bat
-from warno_mfw.utils.types.message import Message
+from warno_mfw.utils.types.message import Message, try_nest
 
 
 def make_parser() -> argparse.ArgumentParser:
@@ -57,9 +58,10 @@ temp_mod_path = os.path.join(warno.mods_path, args.mod_name)
 output_path = get_output_path(args)
 os.makedirs(output_path, exist_ok=True)
 
-def _write(path: str, line_generator: Callable[[], Iterable[str]]) -> None:
-    with open(path, 'w') as file:
-        file.write('\n\n'.join(line_generator()))
+def write(path: str, line_generator: Callable[[], Iterable[str]], msg: Message | None = None) -> None:
+    with try_nest(msg, f'Writing {path} using {line_generator.__name__}') as _:
+        with open(path, 'w') as file:
+            file.write('\n\n'.join(line_generator()))
 
 with Message('Updating reference information for the current WARNO version') as msg:
 # generate new mod (named __TEMP__; raise exception if this folder already exists)
@@ -70,7 +72,8 @@ with Message('Updating reference information for the current WARNO version') as 
         with msg.nest('Loading temp mod') as msg2:
             mod = Mod(temp_mod_path, temp_mod_path)
             _add_all(mod, msg2)
-            _write(os.path.join(output_path, '__init__.py'))
+            write(os.path.join(output_path, '__init__.py'),     _init_lines)
+            write(os.path.join(output_path, '_validation.py'),  _validation_lines)
             
     # run code generation
         generate_module_for_folder(temp_mod_path, os.path.join(output_path, 'paths'), 'GameData/Generated' if args.for_release else 'GameData', msg)
