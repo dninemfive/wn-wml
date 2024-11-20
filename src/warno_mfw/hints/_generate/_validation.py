@@ -1,12 +1,25 @@
-# if enum, ensure that it resolves to one of the enumerated values
-# ensure that quotation remains the same as in source (either all or none quoted)
-#   print warning if source is inconsistent
-# ensure prefix
-# need custom handling for specialties
+# two separate cases:
+# - If enum,
+#       assert that input value is in generated type (or aliases)
+#       if alias, resolve to simplified value
+#       resolve simplified value to original value
+def resolve_enum(s: str, aliases: dict[str, str], originals: dict[str, str]) -> str:
+    assert s in aliases or s in originals or s in originals.values(), f'{s} is not a valid value for EnumType.__class__.__name__! Must be one of: (values)'
+    if s in aliases:
+        s = aliases[s]
+    if s in originals:
+        s = originals[s]
+    return s    
+    
+# - If not enum,
+#       no assertion required
+#       make sure prefix and/or quotation applied to input value
+
+
 from typing import Iterable
 
-from ._file_targets import TARGET_SETS
-from ._member_def import MemberDef
+from ._constants._file_targets import TARGET_SETS
+from ._types._member_def import MemberDef
 
 
 def _validation_lines() -> Iterable[str]:

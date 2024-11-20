@@ -5,7 +5,7 @@ from ndf_parse.model import List, ListRow, Object
 
 from warno_mfw.hints import paths
 
-from ...utils.types.message import Message, try_nest
+from warno_mfw.utils.types.message import Message, try_nest
 from ._member_def import MemberDef
 
 

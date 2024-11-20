@@ -1,7 +1,7 @@
 from typing import Iterable
 
-from ._file_targets import TARGET_SETS
-from ._member_def import MemberDef
+from ._constants._file_targets import TARGET_SETS
+from ._types._member_def import MemberDef
 
 
 def _init_lines() -> Iterable[str]:

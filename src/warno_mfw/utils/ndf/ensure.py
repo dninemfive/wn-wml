@@ -129,6 +129,9 @@ def unquoted(s: str, *quotes: str) -> str:
             s = s[:-len(quote)]
     return s
 
+def quotedness_equals(s: str, should_be_quoted: bool) -> str:
+    return quoted(s) if should_be_quoted else unquoted(s)
+
 def suffix(s: str, suffix: str) -> str:
     return s if s.endswith(suffix) else f'{s}{suffix}'
 

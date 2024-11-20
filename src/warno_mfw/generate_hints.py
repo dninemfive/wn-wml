@@ -11,9 +11,9 @@ import shutil
 
 from ndf_parse import Mod
 
-from warno_mfw.hints._generate._file_targets import _add_all
-from warno_mfw.hints._generate._generate_folder_paths import generate_module_for_folder
-from warno_mfw.hints._generate._generate_init import _write
+from warno_mfw.hints._generate._constants._file_targets import _add_all
+from warno_mfw.hints._generate._folder_paths import generate_module_for_folder
+from warno_mfw.hints._generate._init import _write
 from warno_mfw.metadata.warno import WarnoMetadata
 from warno_mfw.utils import bat
 from warno_mfw.utils.types.message import Message
