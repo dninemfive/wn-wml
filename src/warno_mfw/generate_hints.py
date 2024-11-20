@@ -72,8 +72,8 @@ with Message('Updating reference information for the current WARNO version') as 
         with msg.nest('Loading temp mod') as msg2:
             mod = Mod(temp_mod_path, temp_mod_path)
             _add_all(mod, msg2)
-            write(os.path.join(output_path, '__init__.py'),     _init_lines)
-            write(os.path.join(output_path, '_validation.py'),  _validation_lines)
+            write(os.path.join(output_path, '__init__.py'),     _init_lines,        msg2)
+            write(os.path.join(output_path, '_validation.py'),  _validation_lines,  msg2)
             
     # run code generation
         generate_module_for_folder(temp_mod_path, os.path.join(output_path, 'paths'), 'GameData/Generated' if args.for_release else 'GameData', msg)

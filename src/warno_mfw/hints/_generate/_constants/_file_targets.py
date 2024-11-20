@@ -1,8 +1,9 @@
 from typing import Iterable
 
 from ndf_parse import Mod
-from ndf_parse.model import ListRow, Object
+from ndf_parse.model import List, ListRow, Map, MapRow, Object
 
+from warno_mfw.utils.ndf import ensure
 from warno_mfw.utils.types.message import Message
 from ... import paths
 from .._types._file_target import FileTarget
@@ -16,6 +17,19 @@ def _select_unit_modules(row: ListRow) -> Iterable[Object]:
         module = module_row.value
         if isinstance(module, Object):
             yield module
+
+def _select_weapon_type(row: ListRow) -> Iterable[Object]:
+    try:
+        operators: List = row.value.by_member('Operators').value
+        for operator_row in operators:
+            print(operator_row)
+            operator: Object = operator_row.value
+            conditional_tags: List = operator.by_member('ConditionalTags').value
+            result = ensure.NdfObject('WeaponType_generated', WeaponType=[row.value[0] for row in conditional_tags])
+            print(result)
+            yield result
+    except:
+        pass
 
 UniteDescriptor = FileTarget(paths.Generated.Gameplay.Gfx.UniteDescriptor,
                              _select_unit_modules,
@@ -56,8 +70,13 @@ MissileCarriage = FileTarget(paths.Generated.Gameplay.Gfx.MissileCarriage,
                              TMissileCarriageConnoisseur=[
                                  MemberDef('PylonSet', '~/DepictionPylonSet_')
                              ])
+GeneratedDepictionInfantry = FileTarget(paths.Generated.Gameplay.Gfx.Infanterie.GeneratedDepictionInfantry,
+                                        _select_weapon_type,
+                                        WeaponType_generated=[
+                                            MemberDef('WeaponType')
+                                        ])
 
-TARGET_SETS = sorted([UniteDescriptor, MissileCarriage], key=lambda x: x.file_path)
+TARGET_SETS = sorted([UniteDescriptor, MissileCarriage, GeneratedDepictionInfantry], key=lambda x: x.file_path)
 
 def _add_all(mod: Mod, msg: Message) -> None:
     with msg.nest('Generating literals from files') as msg:

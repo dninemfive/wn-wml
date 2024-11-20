@@ -2,6 +2,11 @@
 
 from warno_mfw.hints._generate._constants._resolvers import _enum_resolver, _format_resolver
 
+# Automatically generated from GameData/Generated/Gameplay/Gfx/Infanterie/GeneratedDepictionInfantry.ndf
+
+def _resolve_WeaponType(s: str) -> str:
+	return _enum_resolver(s, None, {'smg': "'smg'", 'bazooka': "'bazooka'", 'mmg': "'mmg'", 'grenade': "'grenade'"})
+
 # Automatically generated from GameData/Generated/Gameplay/Gfx/MissileCarriage.ndf
 
 def _resolve_PylonSet(s: str) -> str:

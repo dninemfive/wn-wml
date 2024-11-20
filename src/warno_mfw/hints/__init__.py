@@ -4,6 +4,13 @@ from typing import Literal
 
 from .paths import *
 
+# Automatically generated from GameData/Generated/Gameplay/Gfx/Infanterie/GeneratedDepictionInfantry.ndf
+
+WeaponType                              = Literal['smg',
+                                                  'bazooka',
+                                                  'mmg',
+                                                  'grenade']
+
 # Automatically generated from GameData/Generated/Gameplay/Gfx/MissileCarriage.ndf
 
 PylonSet                                = Literal['Vehicle_Default',
