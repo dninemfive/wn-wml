@@ -13,7 +13,7 @@ class DepictionOperator_WeaponMissileCarriageFire(WeaponDepictionOperator):
         self.weapon_index = weapon_index if weapon_index is not None else index
 
     def to_ndf(self: Self) -> Object:
-        return ensure._object(
+        return ensure.NdfObject(
             'DepictionOperator_WeaponMissileCarriageFire',
             Connoisseur=self.connoisseur_name,
             FireEffectTag = ensure.quoted(f"weapon_effet_tag{self.index}"),

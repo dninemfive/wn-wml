@@ -26,5 +26,5 @@ class TInfantrySquadWeaponAssignmentModuleDescriptor(object):
         return result
     
     def to_ndf(self: Self) -> Object:
-        return ensure._object('TInfantrySquadWeaponAssignmentModuleDescriptor',
+        return ensure.NdfObject('TInfantrySquadWeaponAssignmentModuleDescriptor',
                               InitialSoldiersToTurretIndexMap=self.InitialSoldiersToTurretIndexMap)

@@ -18,7 +18,7 @@ class WeaponManagerModuleWrapper(UnitModuleWrapper):
 
     @staticmethod
     def new() -> Object:
-        return ensure._object(
+        return ensure.NdfObject(
             'TModuleSelector',
             Default='(not initialized)',
             Selection=['~/NilDescriptorIfCadavre']

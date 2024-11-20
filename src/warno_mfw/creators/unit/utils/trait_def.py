@@ -14,7 +14,7 @@ class TraitDef(object):
     def edit_capacite_module(self: Self, capacite_module: Object) -> None:
         default_skills: List = capacite_module.by_member('DefaultSkillList').value
         skills = sorted(set([x.value for x in default_skills] + self.capacites))
-        capacite_module.by_member('DefaultSkillList').value = ensure._list(skills)
+        capacite_module.by_member('DefaultSkillList').value = ensure.NdfList(skills)
 
     def edit_ui_module(self: Self, ui_module: Object) -> None:
         specialties_list: List = ui_module.by_member('SpecialtiesList').value

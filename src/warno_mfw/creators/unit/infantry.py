@@ -62,22 +62,22 @@ class InfantryUnitCreator(UnitCreator):
     def _infantry_squad_weapon_assignment(self: Self) -> Object:
         if self._cached_weapon_assignment is None:
             self._cached_weapon_assignment = self.weapon_set.assignment
-        return ensure._object('TInfantrySquadWeaponAssignmentModuleDescriptor',
+        return ensure.NdfObject('TInfantrySquadWeaponAssignmentModuleDescriptor',
                                InitialSoldiersToTurretIndexMap=self._cached_weapon_assignment)
     
     # internal methods
 
     def _gfx(self: Self) -> Object:
-        return ensure._object('TemplateInfantryDepictionSquad',
+        return ensure.NdfObject('TemplateInfantryDepictionSquad',
                               SoundOperator=f'$/GFX/Sound/DepictionOperator_MovementSound_SM_Infanterie_{ensure.unquoted(country_sound_code(self.country), "'")}')    
     
     def _all_weapon_alternatives(self: Self) -> List:
         result = List()
         for weapon in self.weapon_set:
-            result.add(ListRow(ensure._object('TDepictionDescriptor',
+            result.add(ListRow(ensure.NdfObject('TDepictionDescriptor',
                                               SelectorId=[_mesh_alternative(weapon.art_index)],
                                               MeshDescriptor=weapon.model_path)))
-        result.add(ListRow(ensure._object('TMeshlessDepictionDescriptor',
+        result.add(ListRow(ensure.NdfObject('TMeshlessDepictionDescriptor',
                                           SelectorId=["'none'"],
                                           ReferenceMeshForSkeleton=self.weapon_set.last.model_path)))
         return result
@@ -85,17 +85,17 @@ class InfantryUnitCreator(UnitCreator):
     def _all_weapon_sub_depiction(self: Self) -> Object:
         operators = List()
         for weapon in self.weapon_set:
-            operators.add(ensure.listrow(ensure._object(
+            operators.add(ensure.listrow(ensure.NdfObject(
                 'DepictionOperator_WeaponInstantFireInfantry',
                 FireEffectTag=[weapon.effect_tag],
                 WeaponShootDataPropertyName=f'"WeaponShootData_0_{weapon.art_index}"'
             )))
-        return ensure._object('TemplateAllSubWeaponDepiction',
+        return ensure.NdfObject('TemplateAllSubWeaponDepiction',
                                 Alternatives=self._keys._all_weapon_alternatives,
                                 Operators=operators)
     
     def _all_weapon_sub_depiction_backpack(self: Self) -> Object:
-        return ensure._object('TemplateAllSubBackpackWeaponDepiction',
+        return ensure.NdfObject('TemplateAllSubBackpackWeaponDepiction',
                                 Alternatives=self._keys._all_weapon_alternatives)
 
     def _conditional_tags(self: Self) -> List:
@@ -106,14 +106,14 @@ class InfantryUnitCreator(UnitCreator):
         return result
 
     def _tactic_depiction_soldier(self: Self, selector_tactic: TemplateInfantrySelectorTactic) -> Object:
-        return ensure._object('TemplateInfantryDepictionFactoryTactic',
+        return ensure.NdfObject('TemplateInfantryDepictionFactoryTactic',
                                 Selector=selector_tactic.name,
                                 Alternatives=self._keys._tactic_depiction_alternatives,
                                 SubDepictions=[self._keys._all_weapon_sub_depiction, self._keys._all_weapon_sub_depiction_backpack],
-                                Operators=ensure._list(ensure._object('DepictionOperator_SkeletalAnimation2_Default', ConditionalTags=self._conditional_tags())))
+                                Operators=ensure.NdfList(ensure.NdfObject('DepictionOperator_SkeletalAnimation2_Default', ConditionalTags=self._conditional_tags())))
     
     def _tactic_depiction_ghost(self: Self, selector_tactic: TemplateInfantrySelectorTactic) -> Object:
-        return ensure._object('TemplateInfantryDepictionFactoryGhost',
+        return ensure.NdfObject('TemplateInfantryDepictionFactoryGhost',
                                 Selector=selector_tactic.name,
                                 Alternatives=self._keys._tactic_depiction_alternatives)
 
@@ -136,11 +136,11 @@ class InfantryUnitCreator(UnitCreator):
                                                                                     selector_tactic.tuple))
 
     def _make_infantry_squad_module_descriptor(self: Self, guid_key: str) -> Object:
-        return ensure._object('TInfantrySquadModuleDescriptor',
+        return ensure.NdfObject('TInfantrySquadModuleDescriptor',
                               NbSoldatInGroupeCombat=self.soldier_count,
                               InfantryMimeticName=self._keys._unit,
                               WeaponUnitFXKey=self._keys._unit,
-                              MimeticDescriptor=ensure._object('Descriptor_Unit_MimeticUnit', 
+                              MimeticDescriptor=ensure.NdfObject('Descriptor_Unit_MimeticUnit', 
                                                                DescriptorId=self.ctx.guids.generate(guid_key),
                                                                MimeticName=self._keys._unit))
 

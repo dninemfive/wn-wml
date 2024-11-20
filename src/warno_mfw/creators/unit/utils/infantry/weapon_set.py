@@ -70,7 +70,7 @@ class InfantryWeaponSet(object):
         return result
 
     def to_weapon_descriptor(self: Self) -> Object:
-        return ensure._object('TWeaponManagerModuleDescriptor',
+        return ensure.NdfObject('TWeaponManagerModuleDescriptor',
                               Salves=[weapon.salvos for weapon in self.weapons],
                               AlwaysOrientArmorTowardsThreat=False,
                               TurretDescriptorList=[weapon.to_turret_infanterie() for weapon in self.weapons])

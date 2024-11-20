@@ -20,7 +20,7 @@ class TWeaponManagerModuleDescriptor(object):
         )
     
     def to_ndf(self: Self) -> Object:
-        return ensure._object('TWeaponManagerModuleDescriptor',
+        return ensure.NdfObject('TWeaponManagerModuleDescriptor',
                               self.Salves,
                               self.AlwaysOrientArmorTowardsThreat,
                               self.TurretDescriptorList)

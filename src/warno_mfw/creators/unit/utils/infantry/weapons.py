@@ -37,7 +37,7 @@ class InfantryWeapons(object):
         return self.weapon.weapon_type
     
     def to_mounted_weapon_descriptor(self: Self) -> Object:
-        return ensure._object('TMountedWeaponDescriptor',
+        return ensure.NdfObject('TMountedWeaponDescriptor',
                               AmmoConsumption_ForInterface=1,
                               Ammunition=self.weapon.ammo_path,
                               AnimateOnlyOneSoldier=self.count==1,
@@ -56,6 +56,6 @@ class InfantryWeapons(object):
                               WeaponShootDataPropertyName = [f'"WeaponShootData_0_{self.art_index}"'])
     
     def to_turret_infanterie(self: Self) -> Object:
-        return ensure._object('TTurretInfanterieDescriptor',
+        return ensure.NdfObject('TTurretInfanterieDescriptor',
                               MountedWeaponDescriptorList=[self.to_mounted_weapon_descriptor()],
                               YulBoneOrdinal=self.art_index)

@@ -15,4 +15,4 @@ class TDepictionDescriptor(object):
         return TDepictionDescriptor([x for x in ndf.by_member('SelectorId').value], ndf.by_member('MeshDescriptor').value)
     
     def to_ndf(self: Self) -> Object:
-        return ensure._object('TDepictionDescriptor', SelectorId=self.SelectorId, MeshDescriptor=self.MeshDescriptor)
+        return ensure.NdfObject('TDepictionDescriptor', SelectorId=self.SelectorId, MeshDescriptor=self.MeshDescriptor)

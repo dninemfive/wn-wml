@@ -8,7 +8,7 @@ from ._abc import WeaponDepictionOperator
 
 class DepictionOperator_WeaponInstantFire(WeaponDepictionOperator):
     def to_ndf(self: Self) -> Object:
-        return ensure._object(
+        return ensure.NdfObject(
             'DepictionOperator_WeaponInstantFire',
             Anchors=self.anchors,
             FireEffectTag = ensure.quoted(f"weapon_effet_tag{self.index}"),

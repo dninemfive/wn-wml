@@ -40,7 +40,7 @@ class TDeckUniteRule(object):
         )
 
     def to_ndf(self: Self) -> Object:
-        return ensure._object(UNITE_RULE,
+        return ensure.NdfObject(UNITE_RULE,
         {
             KEY_UNIT_DESCRIPTOR:                        self.UnitDescriptor,
             KEY_AVAILABLE_WITHOUT_TRANSPORT:            self.AvailableWithoutTransport,

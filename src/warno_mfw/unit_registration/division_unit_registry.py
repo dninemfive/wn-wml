@@ -119,10 +119,10 @@ class DivisionUnitRegistry(object):
                 self.unit_ids.register(unit.descriptor.path)
 
     def pack_list(self: Self) -> Map:
-        return ensure._map(x.pack for x in self.units)
+        return ensure.NdfMap(x.pack for x in self.units)
     
     def division_rules(self: Self) -> Object:
-        return ensure._object('TDeckDivisionRule',
+        return ensure.NdfObject('TDeckDivisionRule',
                             UnitRuleList=[unit.rule.to_ndf()
                                           for unit
                                           in self.units])

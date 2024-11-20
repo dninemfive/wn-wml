@@ -49,8 +49,7 @@ def _add_from(map_or_object: Map | Object, items: dict[str, CellValue | None] | 
                 continue
             map_or_object.add(row_fn(str(k), v))
 
-def _map(_dict: Map | dict = {}, *kvps: tuple[str, CellValue | None], **items: CellValue | None) -> Map:
-    # TODO: remove None values from existing maps and/or add kvps, items to them
+def NdfMap(_dict: Map | dict = {}, *kvps: tuple[str, CellValue | None], **items: CellValue | None) -> Map:
     if isinstance(_dict, Map):
         return _dict
     result = Map()
@@ -59,21 +58,21 @@ def _map(_dict: Map | dict = {}, *kvps: tuple[str, CellValue | None], **items: C
     _add_from(result, items)
     return result
 
-def _object(type: str, _dict: Object | dict = {}, *kvps: tuple[str, CellValue], **items: CellValue) -> Object:
+def NdfObject(type: str, _dict: Object | dict = {}, *kvps: tuple[str, CellValue], **items: CellValue) -> Object:
     result = Object(type)
     _add_from(result, _dict)
     _add_from(result, kvps)
     _add_from(result, items)
     return result
 
-def _template(type: str, _dict: Object | dict = {}, *kvps: tuple[str, CellValue], **items: CellValue) -> Object:
+def NdfTemplate(type: str, _dict: Object | dict = {}, *kvps: tuple[str, CellValue], **items: CellValue) -> Template:
     result = Template(type)
     _add_from(result, _dict)
     _add_from(result, kvps)
     _add_from(result, items)
     return result
 
-def _list(_list: List | list[CellValue] = [], *items: CellValue) -> List:
+def NdfList(_list: List | list[CellValue] = [], *items: CellValue) -> List:
     if isinstance(_list, List):
         return _list
     result = List()
@@ -90,11 +89,11 @@ def _list(_list: List | list[CellValue] = [], *items: CellValue) -> List:
 def ndf_type(value: dict | list | int | str, _type: str | None = None) -> Map | List | str | Object:
     if isinstance(value, dict):
         if _type is None:
-            return _map(value)
+            return NdfMap(value)
         else:
-            return _object(_type, value)
+            return NdfObject(_type, value)
     elif isinstance(value, list):
-        return _list(value)
+        return NdfList(value)
     elif isinstance(value, tuple) and len(value) == 2:
         return (ndf_type(value[0]), ndf_type(value[1]))
     elif isinstance(value, Number) or isinstance(value, bool):
@@ -106,8 +105,19 @@ def ndf_type(value: dict | list | int | str, _type: str | None = None) -> Map | 
         return value
     raise TypeError(f"ensure.ndf_type() doesn't work on type {type(value)}!")
 
+def _affix_base(s:              str,
+                affix:          str,
+                conditional:    Callable[[str, str], bool],
+                assemble:       Callable[[str, str], str],
+                caller_name:    str) -> str:
+    assert s is not None, f'Argument `s` to ensure.{caller_name}() must not be None!'
+    return s if conditional(s, affix) else assemble(s, affix) 
+
 def prefix(s: str, prefix: str) -> str:
-    return s if s.startswith(prefix) else f'{prefix}{s}'
+    return _affix_base(s, prefix, str.startswith, lambda x, y: f'{y}{x}', 'prefix')
+
+def suffix(s: str, suffix: str | None = None) -> str:
+    return _affix_base(s, suffix, str.endswith, lambda x, y: f'{x}{y}', 'suffix')
 
 def unit_descriptor(name_or_descriptor: str, showroom: bool = False) -> str:
     _prefix = 'Descriptor_Unit_' if not showroom else 'Descriptor_ShowRoomUnit_'
@@ -119,7 +129,9 @@ def unit_path(descriptor_or_path: str) -> str:
 def quoted(s: str, quote: str = "'") -> str:
     return prefix_and_suffix(s, quote, quote)
 
-def unquoted(s: str, *quotes: str) -> str:
+def unquoted(s: str | None, *quotes: str) -> str | None:
+    if s is None:
+        return None
     if not any(quotes):
         quotes = ["'", '"']
     for quote in quotes:
@@ -132,7 +144,8 @@ def unquoted(s: str, *quotes: str) -> str:
 def quotedness_equals(s: str, should_be_quoted: bool) -> str:
     return quoted(s) if should_be_quoted else unquoted(s)
 
-def suffix(s: str, suffix: str) -> str:
+def suffix(s: str, suffix: str | None = None) -> str:
+    assert s is not None, 's in ensure.suffix()'
     return s if s.endswith(suffix) else f'{s}{suffix}'
 
 def prefix_and_suffix(s: str, _prefix: str, _suffix: str) -> str:
