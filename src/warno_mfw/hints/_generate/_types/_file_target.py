@@ -19,7 +19,6 @@ class FileTarget(object):
         self.targets = targets
 
     def add(self: Self, row: ListRow, msg: Message) -> None:
-        # with msg.nest(row.namespace) as _:
         for item in self.selector(row):
             if not isinstance(item, (Object, List)):
                 continue

@@ -5,6 +5,8 @@
 #       no need to resolve quotations or anything since original is stored
 from typing import Callable
 
+from warno_mfw.utils.ndf import ensure
+
 
 def _enum_resolver(s: str, enum_name: str, aliases: dict[str, str], originals: dict[str, str]) -> str:
     assert s in aliases or s in originals or s in originals.values(), f'{s} is not a valid value for enumerated type {enum_name}! Must be one of: (values)'
@@ -17,8 +19,11 @@ def _enum_resolver(s: str, enum_name: str, aliases: dict[str, str], originals: d
 # - If not enum,
 #       no assertion required
 #       make sure prefix and/or quotation applied to input value
-def _formatter(s: str, name: str, prefixx: str = "", quotes: bool = False):
-    pass
+def _formatter(s: str, name: str, prefix: str = "", quotes: bool = False):
+    s = ensure.prefix(ensure.unquoted(s), prefix)
+    if quotes:
+        s = ensure.quoted(s)
+    return s
 
 Resolver = Callable[[str, str, dict[str, str], dict[str, str]], str]
 ResolverType = Literal['enum', 'format']

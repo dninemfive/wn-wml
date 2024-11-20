@@ -17,7 +17,6 @@ class MemberDef(object):
         self.values: dict[str, str] = {}
         self.special_formatter = special_formatter
         self.aliases = {v: k for k, v in aliases.items()} if aliases is not None else None
-        self.needs_quotes: bool | None = None
 
     @property
     def has_aliases(self: Self) -> bool:
