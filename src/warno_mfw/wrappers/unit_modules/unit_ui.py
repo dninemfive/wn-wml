@@ -58,7 +58,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @InfoPanelConfigurationToken.setter
     def InfoPanelConfigurationToken(self: Self, value: hints.InfoPanelConfigurationToken) -> None:
-        edit.member(self.object, 'InfoPanelConfigurationToken', _resolve_InfoPanelConfigurationToken)
+        edit.member(self.object, 'InfoPanelConfigurationToken', _resolve_InfoPanelConfigurationToken(value))
 
     @property
     def MenuIconTexture(self: Self) -> str:
@@ -66,7 +66,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @MenuIconTexture.setter
     def MenuIconTexture(self: Self, value: hints.MenuIconTexture | str) -> None:
-        edit.member(self.object, 'MenuIconTexture', _resolve_MenuIconTexture)
+        edit.member(self.object, 'MenuIconTexture', _resolve_MenuIconTexture(value))
 
     @property
     def NameToken(self: Self) -> str:

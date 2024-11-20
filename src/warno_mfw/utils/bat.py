@@ -25,7 +25,7 @@ def run_bat(msg: Message | None, folder: str, name: str, *args):
 
 def reset_source(mod_path: str, mod_name: str, warno_mods_path: str, msg: Message | None = None):
     with try_nest(msg, "Resetting source") as msg2:
-        with msg.nest("Deleting existing files") as _:
+        with msg2.nest("Deleting existing files") as _:
             shutil.rmtree(mod_path, ignore_errors=True)
         run_bat(msg, warno_mods_path, "CreateNewMod", mod_name)
 

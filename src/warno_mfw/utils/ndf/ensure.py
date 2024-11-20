@@ -112,7 +112,7 @@ def _affix_base(base:               str,
                 target_result:      bool,
                 apply:              _Affixer,
                 caller_name:        str) -> str:
-    assert base is not None, f'Argument `base` to ensure.{caller_name}() must not be None!'
+    assert isinstance(base, str), f'Argument `base` to ensure.{caller_name}() must be str, not {base.__class__.__name__}!'
     if affix is None or affix == '':
         return base
     return apply(base, affix) if should_apply(base, affix) == target_result else base 
@@ -126,7 +126,7 @@ def prefix(base: str, prefix: str) -> str:
 def suffix(base: str, suffix: str | None = None) -> str:
     return _affix_base(base, suffix,
                        str.endswith, False,
-                       lambda x, y: f'{x}{y}',
+                       lambda b, s: f'{b}{s}',
                        'suffix')
 
 def prefix_and_suffix(s: str, _prefix: str, _suffix: str) -> str:
@@ -140,8 +140,8 @@ def no_prefix(base: str, prefix: str | None) -> str:
 
 def no_suffix(base: str, suffix: str | None) -> str:
     return _affix_base(base, suffix,
-                       str.startswith, True,
-                       lambda b, p: b[:-len(p)],
+                       str.endswith, True,
+                       lambda b, s: b[:-len(s)],
                        'no_suffix')
 
 def no_prefix_or_suffix(s: str, _prefix: str, _suffix: str) -> str:
