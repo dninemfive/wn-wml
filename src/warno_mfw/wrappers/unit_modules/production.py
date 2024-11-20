@@ -7,6 +7,7 @@ from warno_mfw.constants.enums import Factory
 from warno_mfw.wrappers.map import MapWrapper
 from ndf_parse.model import List, Object
 from warno_mfw import hints
+from warno_mfw.hints._validation import _resolve_Factory
 
 from ._abc import UnitModuleKey, UnitModuleWrapper
 
@@ -20,7 +21,7 @@ class ProductionModuleWrapper(UnitModuleWrapper):
     
     @Factory.setter
     def Factory(self: Self, value: hints.FactoryOrAlias) -> None:
-        edit.members(self.object, Factory=Factory.ensure_valid(value))
+        edit.members(self.object, Factory=_resolve_Factory(value))
 
     @property
     def ProductionTime(self: Self) -> int:

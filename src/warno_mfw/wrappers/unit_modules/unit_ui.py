@@ -7,6 +7,7 @@ from ndf_parse.model import List, Object
 import warno_mfw.creators.unit.abc as abc
 import warno_mfw.utils.ndf.edit as edit
 from warno_mfw import hints
+from warno_mfw.hints._validation import _resolve_InfoPanelConfigurationToken, _resolve_MenuIconTexture
 from warno_mfw.constants import enums
 from warno_mfw.metadata.unit import UnitMetadata
 from warno_mfw.utils.ndf import ensure
@@ -56,7 +57,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @InfoPanelConfigurationToken.setter
     def InfoPanelConfigurationToken(self: Self, value: hints.InfoPanelConfigurationToken) -> None:
-        edit.member(self.object, 'InfoPanelConfigurationToken', enums.InfoPanelConfigurationToken.ensure_valid(value))
+        edit.member(self.object, 'InfoPanelConfigurationToken', _resolve_InfoPanelConfigurationToken)
 
     @property
     def MenuIconTexture(self: Self) -> str:
@@ -64,7 +65,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
 
     @MenuIconTexture.setter
     def MenuIconTexture(self: Self, value: hints.MenuIconTexture | str) -> None:
-        edit.member(self.object, 'MenuIconTexture', ensure.quoted(ensure.prefix(ensure.unquoted(value), 'Texture_RTS_H_')))
+        edit.member(self.object, 'MenuIconTexture', _resolve_MenuIconTexture)
 
     @property
     def NameToken(self: Self) -> str:
@@ -82,7 +83,7 @@ class UnitUiModuleWrapper(UnitModuleWrapper):
         return self._specialties_list
 
     @SpecialtiesList.setter
-    def SpecialtiesList(self: Self, value: list[str] | List) -> None:
+    def SpecialtiesList(self: Self, value: list[hints.AnySpecialty | str] | List) -> None:
         if hasattr(self, '_specialties_list'):
             delattr(self, '_specialties_list')
         edit.member(self.object, 'SpecialtiesList', ensure.all(value, ensure.quoted))

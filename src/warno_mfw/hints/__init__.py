@@ -204,6 +204,8 @@ SecondarySpecialty                      = Literal['airlift',
                                                   'transport1',
                                                   'transport2']
 
+AnySpecialty                            = PrimarySpecialty | SecondarySpecialty
+
 TypeStrategicCount                      = Literal['AA',
                                                   'AA_Hel',
                                                   'AA_Veh',
