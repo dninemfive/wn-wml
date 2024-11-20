@@ -33,7 +33,7 @@ class MapWrapper(object):
         yield from [row.value for row in self._map]
 
     def add(self: Self, key: str, val: str) -> None:
-        self._map.add(ensure.maprow(key, val))
+        self._map.add(ensure.NdfMapRow(key, val))
 
     def remove(self: Self, key: str) -> None:
         self._map.remove_by_key(key)

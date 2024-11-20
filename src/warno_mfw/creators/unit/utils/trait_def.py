@@ -19,4 +19,4 @@ class TraitDef(object):
     def edit_ui_module(self: Self, ui_module: Object) -> None:
         specialties_list: List = ui_module.by_member('SpecialtiesList').value
         if self.icon_tag not in [x.value for x in specialties_list]:
-            specialties_list.add(ensure.listrow(self.icon_tag))
+            specialties_list.add(ensure.NdfListRow(self.icon_tag))

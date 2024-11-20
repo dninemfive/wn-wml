@@ -23,7 +23,7 @@ class ListWrapper(Generic[T]):
 
     # TODO: adder for ListRows themselves
     def add(self: Self, val: CellValue) -> None:
-        self._list.add(ensure.listrow(self._to_ndf(val)))
+        self._list.add(ensure.NdfListRow(self._to_ndf(val)))
 
     def remove(self: Self, val: T) -> None:
         self._list.remove(self._list.find_by_cond(lambda x: x.value == self._to_ndf(val)))

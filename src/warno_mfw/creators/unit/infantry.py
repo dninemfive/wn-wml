@@ -85,7 +85,7 @@ class InfantryUnitCreator(UnitCreator):
     def _all_weapon_sub_depiction(self: Self) -> Object:
         operators = List()
         for weapon in self.weapon_set:
-            operators.add(ensure.listrow(ensure.NdfObject(
+            operators.add(ensure.NdfListRow(ensure.NdfObject(
                 'DepictionOperator_WeaponInstantFireInfantry',
                 FireEffectTag=[weapon.effect_tag],
                 WeaponShootDataPropertyName=f'"WeaponShootData_0_{weapon.art_index}"'
@@ -102,7 +102,7 @@ class InfantryUnitCreator(UnitCreator):
         result = List()
         for weapon in self.weapon_set:
             if weapon.type is not None:
-                result.add(ensure.listrow((weapon.type, _mesh_alternative(weapon.index))))
+                result.add(ensure.NdfListRow((weapon.type, _mesh_alternative(weapon.index))))
         return result
 
     def _tactic_depiction_soldier(self: Self, selector_tactic: TemplateInfantrySelectorTactic) -> Object:
@@ -132,7 +132,7 @@ class InfantryUnitCreator(UnitCreator):
         ndf.add(ListRow(self._tactic_depiction_ghost(selector_tactic), namespace=self._keys._tactic_depiction_ghost))
         ndf.by_name('InfantryMimetic').value.add(MapRow(key=self._keys._unit, value=self._keys._tactic_depiction_soldier))
         ndf.by_name('InfantryMimeticGhost').value.add(MapRow(key=self._keys._unit, value=self._keys._tactic_depiction_ghost))
-        ndf.by_name('TransportedInfantryAlternativesCount').value.add(ensure.maprow(self._keys._unit,
+        ndf.by_name('TransportedInfantryAlternativesCount').value.add(ensure.NdfMapRow(self._keys._unit,
                                                                                     selector_tactic.tuple))
 
     def _make_infantry_squad_module_descriptor(self: Self, guid_key: str) -> Object:

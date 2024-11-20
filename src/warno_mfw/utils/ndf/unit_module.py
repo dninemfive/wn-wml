@@ -49,7 +49,7 @@ def replace_from(dest_unit_or_modules: Object | List, src_unit: Object, type_or_
     replace(dest_unit_or_modules, get(src_unit, type_or_name, by_name).copy(), type_or_name, by_name)
 
 def append(dest_unit_or_modules: Object | List, module: ListRow | Object):
-    get_modules_descriptors(dest_unit_or_modules).add(ensure.listrow(module))
+    get_modules_descriptors(dest_unit_or_modules).add(ensure.NdfListRow(module))
 
 def append_from(dest_unit_or_list: Object | List, src_unit: Object, type_or_name: str, by_name: bool = False):
     append(dest_unit_or_list, get_row(src_unit, type_or_name, by_name))

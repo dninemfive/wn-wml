@@ -17,7 +17,7 @@ class StrListWrapper(object):
         return self._post_get(self._list[index])
 
     def add(self: Self, val: str) -> None:
-        self._list.add(ensure.listrow(self._pre_add(val)))
+        self._list.add(ensure.NdfListRow(self._pre_add(val)))
 
     def remove(self: Self, val: str) -> None:
         # print(f'{val} -> {self._pre_add(val)}')

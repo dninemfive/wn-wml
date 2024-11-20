@@ -1,17 +1,15 @@
-from enum import member
 from numbers import Number
-from typing import Callable, Iterable, Literal, Type
-from typing import get_args as literal_values
+from typing import Callable
 from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object, Template
 from ndf_parse.model.abc import CellValue
 
-def listrow(val: CellValue | ListRow) -> ListRow:
+def NdfListRow(val: CellValue | ListRow) -> ListRow:
     if isinstance(val, ListRow):
         return val
     else:
         return ListRow(value=val)
     
-def maprow(pair_or_key: tuple[str, CellValue] | MapRow | str, value_or_none: CellValue | None = None):
+def NdfMapRow(pair_or_key: tuple[str, CellValue] | MapRow | str, value_or_none: CellValue | None = None):
     if isinstance(pair_or_key, str):
         if value_or_none is None:
             raise ValueError("If first argument is not a tuple or MapRow, second argument must not be None!")
@@ -22,7 +20,7 @@ def maprow(pair_or_key: tuple[str, CellValue] | MapRow | str, value_or_none: Cel
     else:
         return MapRow(pair_or_key[0], ndf_type(pair_or_key[1]))
     
-def memberrow(pair_or_key: tuple[str, CellValue] | MemberRow | str, value_or_none: CellValue | None = None):
+def NdfMemberRow(pair_or_key: tuple[str, CellValue] | MemberRow | str, value_or_none: CellValue | None = None):
     if isinstance(pair_or_key, str):
         if value_or_none is None:
             raise ValueError("If first argument is not a tuple or MemberRow, second argument must not be None!")
@@ -32,13 +30,13 @@ def memberrow(pair_or_key: tuple[str, CellValue] | MemberRow | str, value_or_non
     else:
         return MemberRow(member=pair_or_key[0], value=ndf_type(pair_or_key[1]))
     
-def notrow(row_or_value: ListRow | MemberRow | MapRow) -> CellValue:
+def NotNdfRow(row_or_value: ListRow | MemberRow | MapRow) -> CellValue:
     if isinstance(row_or_value, (ListRow, MemberRow, MapRow)):
         return row_or_value.value
     return row_or_value
 
 def _add_from(map_or_object: Map | Object, items: dict[str, CellValue | None] | list[tuple[str, CellValue | None]]):
-    row_fn = maprow if isinstance(map_or_object, Map) else memberrow
+    row_fn = NdfMapRow if isinstance(map_or_object, Map) else NdfMemberRow
     row_type = MapRow if isinstance(map_or_object, Map) else MemberRow
     for item in (items.items() if isinstance(items, dict) else items):
         if isinstance(item, row_type):
@@ -79,11 +77,11 @@ def NdfList(_list: List | list[CellValue] = [], *items: CellValue) -> List:
     if isinstance(_list, list):
         for item in _list:
             if item is not None:
-                result.add(listrow(ndf_type(item)))
+                result.add(NdfListRow(ndf_type(item)))
     else:
-        result.add(listrow(ndf_type(_list)))
+        result.add(NdfListRow(ndf_type(_list)))
     for item in items:
-        result.add(listrow(ndf_type(item)))
+        result.add(NdfListRow(ndf_type(item)))
     return result
 
 def ndf_type(value: dict | list | int | str, _type: str | None = None) -> Map | List | str | Object:
@@ -105,19 +103,47 @@ def ndf_type(value: dict | list | int | str, _type: str | None = None) -> Map | 
         return value
     raise TypeError(f"ensure.ndf_type() doesn't work on type {type(value)}!")
 
-def _affix_base(s:              str,
-                affix:          str,
-                conditional:    Callable[[str, str], bool],
-                assemble:       Callable[[str, str], str],
-                caller_name:    str) -> str:
-    assert s is not None, f'Argument `s` to ensure.{caller_name}() must not be None!'
-    return s if conditional(s, affix) else assemble(s, affix) 
+_AffixPredicate = Callable[[str, str], bool]
+_Affixer        = Callable[[str, str], str]  
 
-def prefix(s: str, prefix: str) -> str:
-    return _affix_base(s, prefix, str.startswith, lambda x, y: f'{y}{x}', 'prefix')
+def _affix_base(base:               str,
+                affix:              str,
+                should_apply:       _AffixPredicate,
+                target_result:      bool,
+                apply:              _Affixer,
+                caller_name:        str) -> str:
+    assert base is not None, f'Argument `base` to ensure.{caller_name}() must not be None!'
+    return apply(base, affix) if should_apply(base, affix) == target_result else base 
 
-def suffix(s: str, suffix: str | None = None) -> str:
-    return _affix_base(s, suffix, str.endswith, lambda x, y: f'{x}{y}', 'suffix')
+def prefix(base: str, prefix: str) -> str:
+    return _affix_base(base, prefix,
+                       str.startswith, False,
+                       lambda b, p: f'{p}{b}',
+                       'prefix')
+
+def suffix(base: str, suffix: str | None = None) -> str:
+    return _affix_base(base, suffix,
+                       str.endswith, False,
+                       lambda x, y: f'{x}{y}',
+                       'suffix')
+
+def prefix_and_suffix(s: str, _prefix: str, _suffix: str) -> str:
+    return prefix(suffix(s, _suffix), _prefix)
+
+def no_prefix(base: str, prefix: str | None) -> str:
+    return _affix_base(base, prefix,
+                       str.startswith, True,
+                       lambda b, p: b[len(p):],
+                       'no_prefix')
+
+def no_suffix(base: str, suffix: str | None) -> str:
+    return _affix_base(base, suffix,
+                       str.startswith, True,
+                       lambda b, p: b[:-len(p)],
+                       'no_suffix')
+
+def no_prefix_or_suffix(s: str, _prefix: str, _suffix: str) -> str:
+    return no_prefix(no_suffix(s, _suffix), _prefix)
 
 def unit_descriptor(name_or_descriptor: str, showroom: bool = False) -> str:
     _prefix = 'Descriptor_Unit_' if not showroom else 'Descriptor_ShowRoomUnit_'
@@ -143,41 +169,6 @@ def unquoted(s: str | None, *quotes: str) -> str | None:
 
 def quotedness_equals(s: str, should_be_quoted: bool) -> str:
     return quoted(s) if should_be_quoted else unquoted(s)
-
-def suffix(s: str, suffix: str | None = None) -> str:
-    assert s is not None, 's in ensure.suffix()'
-    return s if s.endswith(suffix) else f'{s}{suffix}'
-
-def prefix_and_suffix(s: str, _prefix: str, _suffix: str) -> str:
-    return prefix(suffix(s, _suffix), _prefix)
-
-def no_prefix(s: str, prefix: str | None) -> str:
-    if prefix is not None and s.startswith(prefix):
-        return s[len(prefix):]
-    return s
-
-def no_suffix(s: str, suffix: str | None) -> str:
-    if suffix is not None and s.endswith(suffix):
-        return s[:-len(suffix)]
-    return s
-
-def no_prefix_or_suffix(s: str, _prefix: str, _suffix: str) -> str:
-    return no_prefix(no_suffix(s, _suffix), _prefix)
-
-# type: Literal[str]
-def _including_unquoted(*literal_types) -> list[str]:
-    result: set[str] = set()
-    for literal_type in literal_types:
-        for s in literal_values(literal_type.__value__):
-            # https://discuss.python.org/t/get-origin-get-args-typealiastype/56254/3 :thonk:
-            result.add(s)
-            result.add(unquoted(s, "'"))
-    return sorted(result)
-
-def literal(s: str, *literal_types):
-    valid_values = _including_unquoted(*literal_types)
-    assert s in valid_values, f"{s} is not one of {valid_values}"
-    return quoted(s, "'")
 
 def all(list: list[str] | List, f: Callable[[str], str]) -> list[str]:
     if isinstance(list, List):

@@ -86,7 +86,7 @@ class WeaponCreator(object):
     #    self.edit_members(TurretDescriptorList=value)
 
     def get_turret_weapon_list(self: Self, turret_or_turret_index: Object | ListRow | int) -> List:
-        turret: Object = ensure.notrow(self.TurretDescriptorList[turret_or_turret_index]
+        turret: Object = ensure.NotNdfRow(self.TurretDescriptorList[turret_or_turret_index]
                                        if isinstance(turret_or_turret_index, int)
                                        else turret_or_turret_index)
         return turret.by_member('MountedWeaponDescriptorList').value
@@ -137,4 +137,4 @@ class WeaponCreator(object):
         # print("members:")
         # for member in copy:
         #     print(str(member))
-        self.get_turret_weapon_list(turret_index).add(ensure.listrow(copy))
+        self.get_turret_weapon_list(turret_index).add(ensure.NdfListRow(copy))
