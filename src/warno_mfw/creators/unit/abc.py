@@ -106,7 +106,7 @@ class UnitCreator(ABC):
                      ClassNameForDebug=self.new_unit.class_name_for_debug)
         with self.parent_msg.nest(f'Copying {self.src_unit.descriptor.name}') as _:
             unit = unit_wrapper.UnitWrapper(self.ctx, copy)
-        unit.modules.ui.localized_name = localized_name
+        unit.modules.ui.set_localized_name(localized_name)
         if button_texture is not None:
             unit.modules.ui.ButtonTexture = button_texture
         unit.modules.tags.replace(self.src_unit.tag, self.new_unit.tag)
