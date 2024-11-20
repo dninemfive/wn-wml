@@ -19,24 +19,10 @@ def _enum_resolver(s: str, enum_name: str, aliases: dict[str, str], originals: d
 # - If not enum,
 #       no assertion required
 #       make sure prefix and/or quotation applied to input value
-def _formatter(s: str, name: str, prefix: str = "", quotes: bool = False):
+def _format_resolver(s: str, name: str, prefix: str = "", quotes: bool = False):
     s = ensure.prefix(ensure.unquoted(s), prefix)
     if quotes:
         s = ensure.quoted(s)
     return s
 
 Resolver = Callable[[str, str, dict[str, str], dict[str, str]], str]
-ResolverType = Literal['enum', 'format']
-
-def _resolve_resolver(resolver: ResolverType | Resolver) -> Resolver:
-    if isinstance(resolver, Resolver):
-        return resolver
-    elif resolver == 'enum':
-        return _enum_resolver
-    elif resolver == 'format':
-        return _formatter
-
-from ....hints import *
-
-def _validate_PylonSet(s: str, values: dict[str, str], aliases: dict[str, str] | None = None) -> str:
-    pass

@@ -1,22 +1,29 @@
-from typing import Any, Callable, Iterable, Self
+from typing import Any, Callable, Iterable, Literal, Self
 
-from .._constants._base_formatter import _base_formatter, MEMBER_LEN
+from .._constants._base_code_generators import _base_literal_generator, MEMBER_LEN, _enum_resolver_generator, _format_resolver_generator
 from ndf_parse.model import List, MemberRow
 
 from warno_mfw.utils.ndf import ensure
 
-
 class MemberDef(object):
-    def __init__(self:              Self,
-                 member_name:       str,
-                 prefix:            str | None = None,
-                 special_formatter: Callable[[Self], str] | None = None,
-                 aliases:           dict[str | Iterable[str]] | None = None):
+    def __init__(self:                  Self,
+                 member_name:           str,
+                 prefix:                str | None = None,
+                 enum:                  bool = True,
+                 literal_generator:     Callable[[Self], Iterable[str]] | None = None,
+                 resolver_generator:    Callable[[Self], Iterable[str]] | None = None,                 
+                 aliases:               dict[str | Iterable[str]] | None = None):
         self.member_name = member_name
         self.prefix = prefix
         self.values: dict[str, str] = {}
-        self.special_formatter = special_formatter
+        self.literal_generator = literal_generator if literal_generator is not None else _default_literal_generator
+        self.resolver_generator = (resolver_generator
+                                   if resolver_generator is not None
+                                   else (_enum_resolver_generator_wrapper
+                                         if enum
+                                         else _format_resolver_generator_wrapper))
         self.aliases = {v: k for k, v in aliases.items()} if aliases is not None else None
+        self.type = type
 
     @property
     def has_aliases(self: Self) -> bool:
@@ -61,19 +68,19 @@ class MemberDef(object):
                 self._add_internal(item.value)
 
     def literal_lines(self: Self) -> Iterable[str]:
-        if self.special_formatter is not None:
-            print("special formatter:", self.special_formatter.__name__)
-            yield from self.special_formatter(self)
-        else:
-            yield from _default_formatter(self)
+        yield from self.literal_generator(self)
 
-    def enum_lines(self: Self) -> Iterable[str]:
-        if self.has_aliases:
-            yield repr(self.aliases)
-        yield repr(self.values)
+    def resolver_lines(self: Self) -> Iterable[str]:
+        yield from self.resolver_generator(self)
     
-def _default_formatter(member_def: MemberDef) -> Iterable[str]:
-    yield _base_formatter(member_def.member_name, member_def.values)
+def _default_literal_generator(member_def: MemberDef) -> Iterable[str]:
+    yield _base_literal_generator(member_def.member_name, member_def.values)
     if member_def.has_aliases:
-        yield _base_formatter(f'{member_def.alias_name}', member_def.aliases)
+        yield _base_literal_generator(f'{member_def.alias_name}', member_def.aliases)
         yield f'{f'{member_def.member_or_alias_name}'.ljust(MEMBER_LEN)}= {member_def.member_name} | {member_def.alias_name}'
+
+def _format_resolver_generator_wrapper(member_def: MemberDef) -> Iterable[str]:
+    yield _format_resolver_generator(member_def.member_name, member_def.prefix, member_def.needs_quotes)
+
+def _enum_resolver_generator_wrapper(member_def: MemberDef) -> Iterable[str]:
+    yield _enum_resolver_generator(member_def.member_name, member_def.aliases, member_def.values)

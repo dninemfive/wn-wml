@@ -1,6 +1,7 @@
 import os
 import sys
 from pathlib import Path
+from typing import Callable, Iterable
 
 # fixes ModuleNotFoundError stemming from being run within the module
 module_path = sys.path[0]
@@ -55,6 +56,10 @@ warno = WarnoMetadata(args.warno_path)
 temp_mod_path = os.path.join(warno.mods_path, args.mod_name)
 output_path = get_output_path(args)
 os.makedirs(output_path, exist_ok=True)
+
+def _write(path: str, line_generator: Callable[[], Iterable[str]]) -> None:
+    with open(path, 'w') as file:
+        file.write('\n\n'.join(line_generator()))
 
 with Message('Updating reference information for the current WARNO version') as msg:
 # generate new mod (named __TEMP__; raise exception if this folder already exists)

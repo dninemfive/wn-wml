@@ -7,7 +7,7 @@ from ....utils.types.message import Message
 from ... import paths
 from .._types._file_target import FileTarget
 from .._types._member_def import MemberDef
-from ._specialties_list_formatter import _specialties_list_formatter
+from ._specialties_list_generators import _specialties_list_literal_generator, _specialties_list_resolver_generator
 
 
 def _select_unit_modules(row: ListRow) -> Iterable[Object]:
@@ -24,7 +24,7 @@ UniteDescriptor = FileTarget(paths.Generated.Gameplay.Gfx.UniteDescriptor,
                                               'Axis': 'PACT',
                                               'Allied': 'NATO'
                                           }),
-                                MemberDef('MotherCountry'),
+                                MemberDef('MotherCountry', enum=False),
                                 MemberDef('AcknowUnitType', '~/TAcknowUnitType_'),
                                 MemberDef('TypeUnitFormation')
                             ],
@@ -45,8 +45,10 @@ UniteDescriptor = FileTarget(paths.Generated.Gameplay.Gfx.UniteDescriptor,
                                 MemberDef('UnitRole'),
                                 MemberDef('InfoPanelConfigurationToken'),
                                 MemberDef('TypeStrategicCount', 'ETypeStrategicDetailedCount/'),
-                                MemberDef('MenuIconTexture', 'Texture_RTS_H_'),
-                                MemberDef('SpecialtiesList', special_formatter=_specialties_list_formatter)
+                                MemberDef('MenuIconTexture', 'Texture_RTS_H_', enum=False),
+                                MemberDef('SpecialtiesList',
+                                          literal_generator=_specialties_list_literal_generator,
+                                          resolver_generator=_specialties_list_resolver_generator)
                             ])
 
 MissileCarriage = FileTarget(paths.Generated.Gameplay.Gfx.MissileCarriage,
