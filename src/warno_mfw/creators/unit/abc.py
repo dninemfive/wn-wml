@@ -16,6 +16,7 @@ from warno_mfw.utils.ndf.decorators import ndf_path
 from warno_mfw.utils.types.message import Message
 from ndf_parse.model import List, ListRow, MemberRow, Object
 from warno_mfw.hints.paths.GameData.Generated import Gameplay as ndf_paths
+from warno_mfw.hints.paths.GameData.Generated.Gameplay.Decks import DivisionPacks
 
 class UnitCreator(ABC):
     def __init__(self: Self,
@@ -118,7 +119,7 @@ class UnitCreator(ABC):
     def _edit_unite_descriptor(self: Self, ndf: List):
         ndf.add(ListRow(self.unit.object, namespace=self.new_unit.descriptor.name, visibility="export"))
 
-    @ndf_path(ndf_paths.Decks.DivisionPacks)
+    @ndf_path(DivisionPacks)
     def _edit_division_packs(self: Self, ndf: List):
         deck_pack_descriptor = Object('DeckPackDescriptor')
         deck_pack_descriptor.add(MemberRow(self.new_unit.descriptor.path, "Unit"))

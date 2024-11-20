@@ -1,7 +1,7 @@
 from typing import Self
 
 import warno_mfw.utils.ndf.ensure as ensure
-from warno_mfw.constants.ndf import DISPERSION_COLOR, DISPERSION_THICKNESS
+from warno_mfw.utils.ndf.misc import DISPERSION_COLOR, DISPERSION_THICKNESS
 from warno_mfw.creators.unit.utils.infantry.weapon import InfantryWeapon
 from ndf_parse.model import Object
 

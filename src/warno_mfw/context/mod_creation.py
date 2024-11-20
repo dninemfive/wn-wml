@@ -33,11 +33,10 @@ class ModCreationContext(object):
     def prefix(self: Self) -> str:
         return self.metadata.dev_short_name
     
-    def __init__(self: Self, metadata: mem.ModMetadata, root_msg: Message | None, *ndf_paths: str):
+    def __init__(self: Self, metadata: mem.ModMetadata, root_msg: Message | None):
         self.metadata = metadata
         self.mod = Mod(metadata.folder_path, metadata.folder_path)
         self.root_msg = root_msg
-        self.paths = ndf_paths
         self.ndf = NdfCache(self.mod)
         self.guid_cache:            FileCache[str] = FileCache(GUID)
         self.localization_cache:    FileCache[str] = FileCache(LOCALIZATION)
@@ -47,8 +46,6 @@ class ModCreationContext(object):
        
     def __enter__(self: Self) -> Self:
         self.mod.check_if_src_is_newer()
-        # with try_nest(self.root_msg, "Loading ndf files") as msg:
-        #     self.ndf = {x:self.load_ndf(x, msg) for x in sorted(self.paths)}
         self.load_caches()
         return self
     
