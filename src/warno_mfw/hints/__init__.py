@@ -6,204 +6,233 @@ from .paths import *
 
 # Automatically generated from GameData/Generated/Gameplay/Gfx/MissileCarriage.ndf
 
-PylonSet                                = Literal['Vehicle_Default', # ~/DepictionPylonSet_Vehicle_Default
-                                                  'Vehicle_Default_Showroom', # ~/DepictionPylonSet_Vehicle_Default_Showroom
-                                                  'ATGM', # ~/DepictionPylonSet_ATGM
-                                                  'ATGM_Showroom', # ~/DepictionPylonSet_ATGM_Showroom
-                                                  'Helico_Default', # ~/DepictionPylonSet_Helico_Default
-                                                  'Helico_Default_Showroom', # ~/DepictionPylonSet_Helico_Default_Showroom
-                                                  'Helico_SOV', # ~/DepictionPylonSet_Helico_SOV
-                                                  'Helico_SOV_Showroom', # ~/DepictionPylonSet_Helico_SOV_Showroom
-                                                  'Airplane_FR', # ~/DepictionPylonSet_Airplane_FR
-                                                  'Airplane_FR_Showroom', # ~/DepictionPylonSet_Airplane_FR_Showroom
-                                                  'Airplane_Default', # ~/DepictionPylonSet_Airplane_Default
-                                                  'Airplane_Default_Showroom', # ~/DepictionPylonSet_Airplane_Default_Showroom
-                                                  'Airplane_US', # ~/DepictionPylonSet_Airplane_US
-                                                  'Airplane_US_Showroom', # ~/DepictionPylonSet_Airplane_US_Showroom
-                                                  'Airplane_RFA', # ~/DepictionPylonSet_Airplane_RFA
-                                                  'Airplane_RFA_Showroom', # ~/DepictionPylonSet_Airplane_RFA_Showroom
-                                                  'Airplane_UK', # ~/DepictionPylonSet_Airplane_UK
-                                                  'Airplane_UK_Showroom', # ~/DepictionPylonSet_Airplane_UK_Showroom
-                                                  'Airplane_SOV', # ~/DepictionPylonSet_Airplane_SOV
-                                                  'Airplane_SOV_Showroom', # ~/DepictionPylonSet_Airplane_SOV_Showroom
-                                                  ]
+PylonSet                                = Literal['Vehicle_Default',
+                                                  'Vehicle_Default_Showroom',
+                                                  'ATGM',
+                                                  'ATGM_Showroom',
+                                                  'Helico_Default',
+                                                  'Helico_Default_Showroom',
+                                                  'Helico_SOV',
+                                                  'Helico_SOV_Showroom',
+                                                  'Airplane_FR',
+                                                  'Airplane_FR_Showroom',
+                                                  'Airplane_Default',
+                                                  'Airplane_Default_Showroom',
+                                                  'Airplane_US',
+                                                  'Airplane_US_Showroom',
+                                                  'Airplane_RFA',
+                                                  'Airplane_RFA_Showroom',
+                                                  'Airplane_UK',
+                                                  'Airplane_UK_Showroom',
+                                                  'Airplane_SOV',
+                                                  'Airplane_SOV_Showroom']
 
 # Automatically generated from GameData/Generated/Gameplay/Gfx/UniteDescriptor.ndf
 
-AcknowUnitType                          = Literal['SAM', # ~/TAcknowUnitType_SAM
-                                                  'CanonAA', # ~/TAcknowUnitType_CanonAA
-                                                  'GunArtillery', # ~/TAcknowUnitType_GunArtillery
-                                                  'ArtShell', # ~/TAcknowUnitType_ArtShell
-                                                  'Transport', # ~/TAcknowUnitType_Transport
-                                                  'Tank', # ~/TAcknowUnitType_Tank
-                                                  'Command', # ~/TAcknowUnitType_Command
-                                                  'Reco', # ~/TAcknowUnitType_Reco
-                                                  'TankDestroyer', # ~/TAcknowUnitType_TankDestroyer
-                                                  'TankDestroyerMissile', # ~/TAcknowUnitType_TankDestroyerMissile
-                                                  'Inf', # ~/TAcknowUnitType_Inf
-                                                  'Inf2', # ~/TAcknowUnitType_Inf2
-                                                  'Engineer', # ~/TAcknowUnitType_Engineer
-                                                  'Logistic', # ~/TAcknowUnitType_Logistic
-                                                  'Recon_INF', # ~/TAcknowUnitType_Recon_INF
-                                                  'MLRS', # ~/TAcknowUnitType_MLRS
-                                                  'Recon_Vehicle', # ~/TAcknowUnitType_Recon_Vehicle
-                                                  'CommandVehicle', # ~/TAcknowUnitType_CommandVehicle
-                                                  'Command_Infantry', # ~/TAcknowUnitType_Command_Infantry
-                                                  'Inf_Elite', # ~/TAcknowUnitType_Inf_Elite
-                                                  'Inf_Militia', # ~/TAcknowUnitType_Inf_Militia
-                                                  'KaJaPa', # ~/TAcknowUnitType_KaJaPa
-                                                  'Vehicle', # ~/TAcknowUnitType_Vehicle
-                                                  'HeliAttack', # ~/TAcknowUnitType_HeliAttack
-                                                  'HeliTransport', # ~/TAcknowUnitType_HeliTransport
-                                                  'GroundAtk', # ~/TAcknowUnitType_GroundAtk
-                                                  'Air_CAS', # ~/TAcknowUnitType_Air_CAS
-                                                  'AirSup', # ~/TAcknowUnitType_AirSup
-                                                  'Multirole', # ~/TAcknowUnitType_Multirole
-                                                  ]
+AcknowUnitType                          = Literal['SAM',
+                                                  'CanonAA',
+                                                  'GunArtillery',
+                                                  'ArtShell',
+                                                  'Transport',
+                                                  'Tank',
+                                                  'Command',
+                                                  'Reco',
+                                                  'TankDestroyer',
+                                                  'TankDestroyerMissile',
+                                                  'Inf',
+                                                  'Inf2',
+                                                  'Engineer',
+                                                  'Logistic',
+                                                  'Recon_INF',
+                                                  'MLRS',
+                                                  'Recon_Vehicle',
+                                                  'CommandVehicle',
+                                                  'Command_Infantry',
+                                                  'Inf_Elite',
+                                                  'Inf_Militia',
+                                                  'KaJaPa',
+                                                  'Vehicle',
+                                                  'HeliAttack',
+                                                  'HeliTransport',
+                                                  'GroundAtk',
+                                                  'Air_CAS',
+                                                  'AirSup',
+                                                  'Multirole']
 
-MotherCountry                           = Literal['DDR', # 'DDR'
-                                                  'SOV', # 'SOV'
-                                                  'US', # 'US'
-                                                  'UK', # 'UK'
-                                                  'BEL', # 'BEL'
-                                                  'FR', # 'FR'
-                                                  'RFA', # 'RFA'
-                                                  'POL', # 'POL'
-                                                  'TCH', # 'TCH'
-                                                  ]
+MotherCountry                           = Literal['DDR',
+                                                  'SOV',
+                                                  'US',
+                                                  'UK',
+                                                  'BEL',
+                                                  'FR',
+                                                  'RFA',
+                                                  'POL',
+                                                  'TCH']
 
-Nationalite                             = Literal['Axis', # ENationalite/Axis
-                                                  'Allied', # ENationalite/Allied
-                                                  ]
+Nationalite                             = Literal['Axis',
+                                                  'Allied']
 
-NationaliteAlias                        = Literal['PACT', # Axis
-                                                  'NATO', # Allied
-                                                  ]
+NationaliteAlias                        = Literal['PACT',
+                                                  'NATO']
 
 NationaliteOrAlias                      = Nationalite | NationaliteAlias
 
-TypeUnitFormation                       = Literal['Artillerie', # 'Artillerie'
-                                                  'Char', # 'Char'
-                                                  'Supply', # 'Supply'
-                                                  'Reconnaissance', # 'Reconnaissance'
-                                                  'None', # 'None'
-                                                  ]
+TypeUnitFormation                       = Literal['Artillerie',
+                                                  'Char',
+                                                  'Supply',
+                                                  'Reconnaissance',
+                                                  'None']
 
-Factory                                 = Literal['DCA', # EDefaultFactories/DCA
-                                                  'Art', # EDefaultFactories/Art
-                                                  'Tanks', # EDefaultFactories/Tanks
-                                                  'Logistic', # EDefaultFactories/Logistic
-                                                  'Recons', # EDefaultFactories/Recons
-                                                  'Infantry', # EDefaultFactories/Infantry
-                                                  'Helis', # EDefaultFactories/Helis
-                                                  'Planes', # EDefaultFactories/Planes
-                                                  ]
+Factory                                 = Literal['DCA',
+                                                  'Art',
+                                                  'Tanks',
+                                                  'Logistic',
+                                                  'Recons',
+                                                  'Infantry',
+                                                  'Helis',
+                                                  'Planes']
 
-FactoryAlias                            = Literal['ART', # Art
-                                                  'AA', # DCA
-                                                  'HEL', # Helis
-                                                  'INF', # Infantry
-                                                  'LOG', # Logistic
-                                                  'AIR', # Planes
-                                                  'REC', # Recons
-                                                  'TNK', # Tanks
-                                                  ]
+FactoryAlias                            = Literal['ART',
+                                                  'AA',
+                                                  'HEL',
+                                                  'INF',
+                                                  'LOG',
+                                                  'AIR',
+                                                  'REC',
+                                                  'TNK']
 
 FactoryOrAlias                          = Factory | FactoryAlias
 
-InfoPanelConfigurationToken             = Literal['Default', # 'Default'
-                                                  'VehiculeTransporter', # 'VehiculeTransporter'
-                                                  'Infantry', # 'Infantry'
-                                                  'VehiculeSupplier', # 'VehiculeSupplier'
-                                                  'HelicoTransporter', # 'HelicoTransporter'
-                                                  'HelicoDefault', # 'HelicoDefault'
-                                                  'HelicoSupplier', # 'HelicoSupplier'
-                                                  'avion', # 'avion'
-                                                  ]
+InfoPanelConfigurationToken             = Literal['Default',
+                                                  'VehiculeTransporter',
+                                                  'Infantry',
+                                                  'VehiculeSupplier',
+                                                  'HelicoTransporter',
+                                                  'HelicoDefault',
+                                                  'HelicoSupplier',
+                                                  'avion']
 
-MenuIconTexture                         = Literal['AA', # 'Texture_RTS_H_AA'
-                                                  'howitzer', # 'Texture_RTS_H_howitzer'
-                                                  'mortar', # 'Texture_RTS_H_mortar'
-                                                  'appui', # 'Texture_RTS_H_appui'
-                                                  'ifv', # 'Texture_RTS_H_ifv'
-                                                  'CMD_veh', # 'Texture_RTS_H_CMD_veh'
-                                                  'RECO_veh', # 'Texture_RTS_H_RECO_veh'
-                                                  'CMD_tank', # 'Texture_RTS_H_CMD_tank'
-                                                  'Armor', # 'Texture_RTS_H_Armor'
-                                                  'AT_veh', # 'Texture_RTS_H_AT_veh'
-                                                  'reco', # 'Texture_RTS_H_reco'
-                                                  'AA_veh', # 'Texture_RTS_H_AA_veh'
-                                                  'ATGun', # 'Texture_RTS_H_ATGun'
-                                                  'Infantry', # 'Texture_RTS_H_Infantry'
-                                                  'AT', # 'Texture_RTS_H_AT'
-                                                  'CMD_inf', # 'Texture_RTS_H_CMD_inf'
-                                                  'assault', # 'Texture_RTS_H_assault'
-                                                  'RECO_inf', # 'Texture_RTS_H_RECO_inf'
-                                                  'supply', # 'Texture_RTS_H_supply'
-                                                  'mlrs', # 'Texture_RTS_H_mlrs'
-                                                  'transport_noweapon', # 'Texture_RTS_H_transport_noweapon'
-                                                  'Armor_heavy', # 'Texture_RTS_H_Armor_heavy'
-                                                  'transport_small', # 'Texture_RTS_H_transport_small'
-                                                  'HMG', # 'Texture_RTS_H_HMG'
-                                                  'manpad', # 'Texture_RTS_H_manpad'
-                                                  'hel', # 'Texture_RTS_H_hel'
-                                                  'Support_hel', # 'Texture_RTS_H_Support_hel'
-                                                  'ATGM_hel', # 'Texture_RTS_H_ATGM_hel'
-                                                  'RECO_hel', # 'Texture_RTS_H_RECO_hel'
-                                                  'CMD_hel', # 'Texture_RTS_H_CMD_hel'
-                                                  'hel_supply', # 'Texture_RTS_H_hel_supply'
-                                                  'AA_hel', # 'Texture_RTS_H_AA_hel'
-                                                  'ATGM_air', # 'Texture_RTS_H_ATGM_air'
-                                                  'Support_air', # 'Texture_RTS_H_Support_air'
-                                                  'SEAD_air', # 'Texture_RTS_H_SEAD_air'
-                                                  'AA_air', # 'Texture_RTS_H_AA_air'
-                                                  'uav', # 'Texture_RTS_H_uav'
-                                                  ]
+MenuIconTexture                         = Literal['AA',
+                                                  'howitzer',
+                                                  'mortar',
+                                                  'appui',
+                                                  'ifv',
+                                                  'CMD_veh',
+                                                  'RECO_veh',
+                                                  'CMD_tank',
+                                                  'Armor',
+                                                  'AT_veh',
+                                                  'reco',
+                                                  'AA_veh',
+                                                  'ATGun',
+                                                  'Infantry',
+                                                  'AT',
+                                                  'CMD_inf',
+                                                  'assault',
+                                                  'RECO_inf',
+                                                  'supply',
+                                                  'mlrs',
+                                                  'transport_noweapon',
+                                                  'Armor_heavy',
+                                                  'transport_small',
+                                                  'HMG',
+                                                  'manpad',
+                                                  'hel',
+                                                  'Support_hel',
+                                                  'ATGM_hel',
+                                                  'RECO_hel',
+                                                  'CMD_hel',
+                                                  'hel_supply',
+                                                  'AA_hel',
+                                                  'ATGM_air',
+                                                  'Support_air',
+                                                  'SEAD_air',
+                                                  'AA_air',
+                                                  'uav']
 
-PrimarySpecialty                        = Literal[
-                                                  ]
+PrimarySpecialty                        = Literal['AA',
+                                                  'howitzer',
+                                                  'mortar',
+                                                  'transport',
+                                                  'ifv',
+                                                  'hq_veh',
+                                                  'reco',
+                                                  'hq_tank',
+                                                  'armor',
+                                                  'AT',
+                                                  'infantry',
+                                                  'hq_inf',
+                                                  'engineer',
+                                                  'supply',
+                                                  'mlrs',
+                                                  'Armor_heavy',
+                                                  'appui',
+                                                  'hel_reco',
+                                                  'hq_helo',
+                                                  'sead',
+                                                  'uav']
 
-SecondarySpecialty                      = Literal[
-                                                  ]
+SecondarySpecialty                      = Literal['amphibie',
+                                                  'reservist',
+                                                  'para',
+                                                  'transport2',
+                                                  'smoke_launcher',
+                                                  'transport1',
+                                                  'ifv',
+                                                  'leader',
+                                                  'eo_dazzler',
+                                                  'era',
+                                                  'resolute',
+                                                  'choc',
+                                                  'security',
+                                                  'mp',
+                                                  'sf',
+                                                  'falseflag',
+                                                  'canBeAirlifted',
+                                                  'gsr',
+                                                  'singint',
+                                                  'fireDirection',
+                                                  'sniper',
+                                                  'airlift',
+                                                  'jammer',
+                                                  'electronic_warfare']
 
-TypeStrategicCount                      = Literal['AA', # ETypeStrategicDetailedCount/AA
-                                                  'Howitzer', # ETypeStrategicDetailedCount/Howitzer
-                                                  'Mortar', # ETypeStrategicDetailedCount/Mortar
-                                                  'Support', # ETypeStrategicDetailedCount/Support
-                                                  'Ifv', # ETypeStrategicDetailedCount/Ifv
-                                                  'CMD_Veh', # ETypeStrategicDetailedCount/CMD_Veh
-                                                  'Reco_Veh', # ETypeStrategicDetailedCount/Reco_Veh
-                                                  'CMD_Tank', # ETypeStrategicDetailedCount/CMD_Tank
-                                                  'Armor', # ETypeStrategicDetailedCount/Armor
-                                                  'AT_Veh', # ETypeStrategicDetailedCount/AT_Veh
-                                                  'Reco', # ETypeStrategicDetailedCount/Reco
-                                                  'AA_Veh', # ETypeStrategicDetailedCount/AA_Veh
-                                                  'AT_Gun', # ETypeStrategicDetailedCount/AT_Gun
-                                                  'Infantry', # ETypeStrategicDetailedCount/Infantry
-                                                  'AT', # ETypeStrategicDetailedCount/AT
-                                                  'CMD_Inf', # ETypeStrategicDetailedCount/CMD_Inf
-                                                  'Engineer', # ETypeStrategicDetailedCount/Engineer
-                                                  'Reco_Inf', # ETypeStrategicDetailedCount/Reco_Inf
-                                                  'Supply', # ETypeStrategicDetailedCount/Supply
-                                                  'Mlrs', # ETypeStrategicDetailedCount/Mlrs
-                                                  'Transport', # ETypeStrategicDetailedCount/Transport
-                                                  'Armor_Heavy', # ETypeStrategicDetailedCount/Armor_Heavy
-                                                  'Manpad', # ETypeStrategicDetailedCount/Manpad
-                                                  'Hel_Transport', # ETypeStrategicDetailedCount/Hel_Transport
-                                                  'Hel_Support', # ETypeStrategicDetailedCount/Hel_Support
-                                                  'AT_Hel', # ETypeStrategicDetailedCount/AT_Hel
-                                                  'Reco_Hel', # ETypeStrategicDetailedCount/Reco_Hel
-                                                  'CMD_Hel', # ETypeStrategicDetailedCount/CMD_Hel
-                                                  'Supply_Hel', # ETypeStrategicDetailedCount/Supply_Hel
-                                                  'AA_Hel', # ETypeStrategicDetailedCount/AA_Hel
-                                                  'Air_AT', # ETypeStrategicDetailedCount/Air_AT
-                                                  'Air_Support', # ETypeStrategicDetailedCount/Air_Support
-                                                  'Air_Sead', # ETypeStrategicDetailedCount/Air_Sead
-                                                  'Air_AA', # ETypeStrategicDetailedCount/Air_AA
-                                                  ]
+TypeStrategicCount                      = Literal['AA',
+                                                  'Howitzer',
+                                                  'Mortar',
+                                                  'Support',
+                                                  'Ifv',
+                                                  'CMD_Veh',
+                                                  'Reco_Veh',
+                                                  'CMD_Tank',
+                                                  'Armor',
+                                                  'AT_Veh',
+                                                  'Reco',
+                                                  'AA_Veh',
+                                                  'AT_Gun',
+                                                  'Infantry',
+                                                  'AT',
+                                                  'CMD_Inf',
+                                                  'Engineer',
+                                                  'Reco_Inf',
+                                                  'Supply',
+                                                  'Mlrs',
+                                                  'Transport',
+                                                  'Armor_Heavy',
+                                                  'Manpad',
+                                                  'Hel_Transport',
+                                                  'Hel_Support',
+                                                  'AT_Hel',
+                                                  'Reco_Hel',
+                                                  'CMD_Hel',
+                                                  'Supply_Hel',
+                                                  'AA_Hel',
+                                                  'Air_AT',
+                                                  'Air_Support',
+                                                  'Air_Sead',
+                                                  'Air_AA']
 
-UnitRole                                = Literal['tank_A', # 'tank_A'
-                                                  'tank_B', # 'tank_B'
-                                                  'tank_C', # 'tank_C'
-                                                  'tank_D', # 'tank_D'
-                                                  ]
+UnitRole                                = Literal['tank_A',
+                                                  'tank_B',
+                                                  'tank_C',
+                                                  'tank_D']
