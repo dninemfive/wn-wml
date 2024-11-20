@@ -17,5 +17,7 @@ def _resolve_sig_generator(name: str) -> str:
 def _enum_resolver_generator(name: str, aliases: dict[str, str] | None, values: dict[str, str]) -> str:
     return f'{_resolve_sig_generator(name)}return {_enum_resolver.__name__}(s, {repr(aliases)}, {repr(values)})'
 
-def _format_resolver_generator(name: str, prefix: str, require_quotes: bool) -> str:
+def _format_resolver_generator(name: str, prefix: str | None, require_quotes: bool) -> str:
+    if prefix is None:
+        prefix = ''
     return f'{_resolve_sig_generator(name)}return {_format_resolver.__name__}(s, {ensure.quoted(prefix)}, {require_quotes})'

@@ -153,7 +153,7 @@ def unit_path(descriptor_or_path: str) -> str:
     return prefix(descriptor_or_path, "$/GFX/Unit/")
 
 def quoted(s: str, quote: str = "'") -> str:
-    return prefix_and_suffix(s, quote, quote)
+    return f'{quote}{unquoted(s)}{quote}'
 
 def unquoted(s: str | None, *quotes: str) -> str | None:
     if s is None:
