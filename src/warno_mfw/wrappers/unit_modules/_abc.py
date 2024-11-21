@@ -31,10 +31,3 @@ class UnitModuleWrapper(ABC):
         if not isinstance(to_copy, Object):
             to_copy = to_copy.object
         self.object = to_copy.copy()
-
-class TModuleSelectorDefaultWrapperBase(ABC):
-    ...
-
-class TModuleSelectorWrapperBase(UnitModuleWrapper):
-    def __init__(self: Self, ctx: ctx.ModCreationContext, obj: Object):
-        super().__init__(ctx, obj)
