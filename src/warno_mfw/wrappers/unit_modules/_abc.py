@@ -10,6 +10,7 @@ from ndf_parse.model.abc import CellValue
 
 
 class UnitModuleKey(tuple):
+    # TODO: how the fuck do i specify a selector?
     # https://stackoverflow.com/a/13094796
     def __new__(cls: Type, type: str, name: str | None = None):
         return super(UnitModuleKey, cls).__new__(cls, (type, name))

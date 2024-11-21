@@ -5,8 +5,11 @@ from ndf_parse.model.abc import CellValue
 from warno_mfw.utils.ndf import ensure
 
 MODULES_DESCRIPTORS = "ModulesDescriptors"
+T_MODULE_SELECTOR = "TModuleSelector"
+RowPredicate = Callable[[ListRow], bool]
+UnitOrModules = Object | List
 
-def get_modules_descriptors(unit_or_modules: Object | List) -> List:
+def get_modules_descriptors(unit_or_modules: UnitOrModules) -> List:
     if isinstance(unit_or_modules, List):
         return unit_or_modules
     return unit_or_modules.by_member(MODULES_DESCRIPTORS).value
@@ -26,24 +29,37 @@ def get_row(unit_or_modules: Object | List, type_or_name: str, by_name: bool) ->
         raise KeyError(report)
     return result
 
-def get(unit_or_modules: Object | List, module_type: str) -> ListRow | None:
-    result: ListRow | None = None
-    for module in get_modules_descriptors(unit_or_modules).match_pattern(f'{module_type}()'):
-        result = module
-        break
+def get_row_where(unit_or_modules: UnitOrModules, predicate: RowPredicate) -> ListRow:
+    return get_modules_descriptors(unit_or_modules).find_by_cond(predicate)
+
+def _selector_predicate(type: str) -> RowPredicate:
+    def result(row: ListRow) -> bool:
+        try:
+            return row.value.type == T_MODULE_SELECTOR and row.value.by_member('Default').type == type
+        except:
+            return False
     return result
 
-def get_index(unit_or_modules: Object | List, type_or_name: str, by_name: bool = False) -> int:
+def get_selector_row(unit_or_modules: UnitOrModules, type: str) -> ListRow:
+    return get_row_where(unit_or_modules, _selector_predicate(type))
+
+def get_index(unit_or_modules: UnitOrModules, type_or_name: str, by_name: bool = False) -> int:
     return get_row(unit_or_modules, type_or_name, by_name).index
 
-def get(unit_or_object: Object | List, type_or_name: str, by_name: bool = False) -> Object:
-    return get_row(unit_or_object, type_or_name, by_name).value
+def get(unit_or_modules: UnitOrModules, type_or_name: str, by_name: bool = False) -> Object:
+    return get_row(unit_or_modules, type_or_name, by_name).value
+
+def get_where(unit_or_modules: UnitOrModules, predicate: RowPredicate) -> Object:
+    return get_row_where(unit_or_modules, predicate).value
+
+def get_selector(unit_or_modules: UnitOrModules, type: str) -> Object:
+    return get_selector_row(unit_or_modules, type).value
 
 def replace(unit_or_modules: Object | List, value: CellValue, type_or_name: str, by_name: bool = False) -> None:
     get_row(unit_or_modules, type_or_name, by_name).value = value
 
-def replace_where(unit_or_modules: Object | List, value: CellValue, predicate: Callable[[ListRow], bool]) -> None:
-    get_modules_descriptors(unit_or_modules).find_by_cond(predicate).value = value
+def replace_where(unit_or_modules: Object | List, value: CellValue, predicate: RowPredicate) -> None:
+    get_row_where(unit_or_modules, predicate).value = value
 
 def replace_from(dest_unit_or_modules: Object | List, src_unit: Object, type_or_name: str, by_name: bool = False):
     replace(dest_unit_or_modules, get(src_unit, type_or_name, by_name).copy(), type_or_name, by_name)
