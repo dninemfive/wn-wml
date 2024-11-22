@@ -2,15 +2,17 @@ from __future__ import annotations
 
 from typing import Callable, Iterable, Self, SupportsIndex, Type, TypeVar
 
+from ndf_parse.model import List, ListRow, Object
+from ndf_parse.model.abc import CellValue
+
 import warno_mfw.context.mod_creation as ctx
 import warno_mfw.utils.ndf.edit as edit
 import warno_mfw.utils.ndf.unit_module as modules
 import warno_mfw.wrappers.unit as uw
 from warno_mfw.utils.ndf import ensure
-from ndf_parse.model import List, ListRow, Object
-from ndf_parse.model.abc import CellValue
 
 from .unit_modules._abc import UnitModuleKey, UnitModuleWrapper
+from .unit_modules.capacite import CapaciteModuleWrapper
 from .unit_modules.damage import BaseDamageModuleWrapper
 from .unit_modules.production import ProductionModuleWrapper
 from .unit_modules.tags import TagsModuleWrapper
@@ -27,17 +29,17 @@ class UnitModulesWrapper(object):
     def __init__(self: Self, ctx: ctx.ModCreationContext, modules_ndf: List):
         self.ctx = ctx
         self._modules_ndf = modules_ndf
-        self._cached_module_wrappers: dict[UnitModuleKey, UnitModuleWrapper] = {}
+        self._cached_module_wrappers: dict[UnitModuleKey, UnitModuleWrapper | None] = {}
 
     def __iter__(self: Self) -> Iterable[CellValue]:
         yield from [x.value for x in self._modules_ndf]
 
     def _get_wrapper(self: Self, wrapper_type: Type[T]) -> T:
         if wrapper_type._module_key not in self._cached_module_wrappers:
-            type, name = wrapper_type._module_key
-            type_or_name = type if name is None else name
-            by_name: bool = name is not None
-            self._cached_module_wrappers[wrapper_type._module_key] = wrapper_type(self.ctx, self.get(type_or_name, by_name))
+            try:
+                self._cached_module_wrappers[wrapper_type._module_key] = wrapper_type(self.ctx, self._modules_ndf)
+            except:
+                self._cached_module_wrappers[wrapper_type._module_key] = None
         return self._cached_module_wrappers[wrapper_type._module_key]
 
     @property
@@ -78,6 +80,10 @@ class UnitModulesWrapper(object):
             else:
                 self._modules_ndf.add(ListRow(WeaponManagerModuleWrapper.new(), namespace='WeaponManager'))
                 self.weapon_manager.Default = value
+
+    @property
+    def capacites(self: Self) -> CapaciteModuleWrapper:
+        return self._get_wrapper(CapaciteModuleWrapper)
 
     # modules
 
