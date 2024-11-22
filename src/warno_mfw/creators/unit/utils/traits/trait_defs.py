@@ -1,5 +1,5 @@
 from .trait_def import TraitDef
-from .trait_operation import CapaciteOperation as Capacite, FalseFlagOperation
+from .trait_operation import CapaciteOperation as Capacite, FalseFlagOperation, ModifyHealthOperation
 
 TODO = None
 
@@ -12,7 +12,7 @@ SHOCK               = TraitDef('choc',
 ELECTRONIC_WARFARE  = TraitDef('electronic_warfare',
                                Capacite('electronic_warfare'))
 ERA                 = TraitDef('era',
-                               TODO)
+                               ModifyHealthOperation(1))
 DAZZLER             = TraitDef('eo_dazzler',
                                Capacite('eo_dazzler'))
 FALSE_FLAG          = TraitDef('falseflag',
