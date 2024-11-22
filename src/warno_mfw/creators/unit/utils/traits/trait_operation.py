@@ -7,21 +7,20 @@ from warno_mfw.wrappers.unit import UnitWrapper
 from warno_mfw.hints import SecondarySpecialty
 from warno_mfw.hints._validation import _resolve_SecondarySpecialty
 
-class BaseTraitDef(ABC):
-    def __init__(self: Self, specialty: SecondarySpecialty | str):
-        self.specialty = _resolve_SecondarySpecialty(specialty)
+class BaseTraitOperation(ABC):        
+    def _can(self: Self, op: str) -> bool:
+        return hasattr(self, op) and callable(getattr(self, op))
 
-    @abstractmethod
-    def add(self: Self, unit: UnitWrapper):
-        ...
+    @property
+    def can_add(self: Self) -> bool:
+        return self._can('add')
+    
+    @property
+    def can_remove(self: Self) -> bool:
+        return self._can('remove')
 
-    @abstractmethod
-    def remove(self: Self, unit: UnitWrapper):
-        ...
-
-class CapaciteTraitDef(BaseTraitDef):
-    def __init__(self: Self, specialty: SecondarySpecialty, *capacites: str):
-        super().__init__(specialty)
+class CapaciteOperation(BaseTraitOperation):
+    def __init__(self: Self, *capacites: str):
         self.capacites = [ensure.prefix(x, '$/GFX/EffectCapacity/Capacite_') for x in capacites]
         
     def add(self: Self, unit: UnitWrapper):

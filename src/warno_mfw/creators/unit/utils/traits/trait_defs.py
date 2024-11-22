@@ -1,6 +1,8 @@
-from warno_mfw.creators.unit.utils.trait_def import CapaciteTraitDef
+from .trait_def import TraitDef
+from .trait_operation import CapaciteOperation as Capacite
 
-SHOCK               = CapaciteTraitDef('choc',                  'Choc')
+SHOCK               = TraitDef('choc',
+                               Capacite('Choc'))
 ELECTRONIC_WARFARE  = CapaciteTraitDef('electronic_warfare',    'electronic_warfare')
 # TODO: i believe this also separately modifies the ECM property. would need to change traitdefs to include a series of edits.
 DAZZLER             = CapaciteTraitDef('eo_dazzler',            'eo_dazzler')
