@@ -12,7 +12,7 @@ import warno_mfw.wrappers.unit as uw
 from warno_mfw.utils.ndf import ensure
 
 from .unit_modules._abc import UnitModuleKey, UnitModuleWrapper
-from .unit_modules.capacite import CapaciteModuleWrapper
+from .unit_modules.capacite import CapaciteModuleWrapper, create_capacite_module
 from .unit_modules.damage import BaseDamageModuleWrapper
 from .unit_modules.production import ProductionModuleWrapper
 from .unit_modules.tags import TagsModuleWrapper
@@ -84,6 +84,13 @@ class UnitModulesWrapper(object):
     @property
     def capacites(self: Self) -> CapaciteModuleWrapper:
         return self._get_wrapper(CapaciteModuleWrapper)
+    
+    @capacites.setter
+    def capacites(self: Self, value: list[str] | List) -> None:
+        if self._get_wrapper(CapaciteModuleWrapper) is None:
+            self.append(create_capacite_module())
+            del self._cached_module_wrappers[CapaciteModuleWrapper._module_key]
+        self._get_wrapper(CapaciteModuleWrapper).DefaultSkillList = value
 
     # modules
 

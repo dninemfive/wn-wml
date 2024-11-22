@@ -27,6 +27,13 @@ class CapaciteTraitDef(BaseTraitDef):
     def add(self: Self, unit: UnitWrapper):
         if self.specialty not in unit.modules.ui.SpecialtiesList:
             unit.modules.ui.SpecialtiesList.add(self.specialty)
-        for capacite in self.capacites:
-            # TODO: unit capacite module wrapper
-            ...
+        if unit.modules.capacites is None:
+            unit.modules.capacites = self.capacites
+        else:
+            unit.modules.capacites.add(*self.capacites)
+
+    def remove(self: Self, unit: UnitWrapper):
+        if self.specialty in unit.modules.ui.SpecialtiesList:
+            unit.modules.ui.SpecialtiesList.remove(self.specialty)
+        if unit.modules.capacites is not None:
+            unit.modules.capacites.remove(*self.capacites)

@@ -10,6 +10,15 @@ from ._abc import UnitModuleKey, UnitModuleWrapper, get_t_module_selector
 _SKILL_PREFIX = '$/GFX/EffectCapacity/Capacite_'
 _SELECTION_PREFIX = '~/'
 
+def create_capacite_module() -> Object:
+    return ensure.NdfObject(
+        'TModuleSelector',
+        Default=ensure.NdfObject(
+            'TCapaciteModuleDescriptor',
+            DefaultSkillList=[]
+        ),
+        Selection=['~/NilDescriptorIfCadavre'])
+
 class CapaciteModuleWrapper(UnitModuleWrapper):
     _module_key = UnitModuleKey('TCapaciteModuleDescriptor')
     _get_method = get_t_module_selector
@@ -55,3 +64,11 @@ class CapaciteModuleWrapper(UnitModuleWrapper):
         if hasattr(self, '_selection'):
             delattr(self, '_selection')
         edit.member(self.object, 'Selection', ensure.all(value, lambda x: ensure.prefix(x, _SELECTION_PREFIX)))
+
+    def add(self: Self, *items: str) -> None:
+        for item in items:
+            self.DefaultSkillList.add(item)
+
+    def remove(self: Self, *items: str) -> None:
+        for item in items:
+            self.DefaultSkillList.remove(item)
