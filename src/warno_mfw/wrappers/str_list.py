@@ -15,6 +15,12 @@ class StrListWrapper(object):
 
     def __getitem__(self: Self, index: int) -> str:
         return self._post_get(self._list[index])
+    
+    def __contains__(self: Self, val: str) -> bool:
+        for item in self._list:
+            if self._pre_add(val) == item.value:
+                return True
+        return False
 
     def add(self: Self, val: str) -> None:
         self._list.add(ensure.NdfListRow(self._pre_add(val)))
