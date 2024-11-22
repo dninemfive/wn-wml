@@ -33,3 +33,10 @@ class CapaciteOperation(BaseTraitOperation):
         # if capacites *is* None, nothing to remove from and no reason to add an empty module
         if unit.modules.capacites is not None:
             unit.modules.capacites.remove(*self.capacites)
+
+class FalseFlagOperation(BaseTraitOperation):
+    def add(self: Self, unit: UnitWrapper):
+        unit.modules.remove('TDangerousnessModuleDescriptor')
+
+    # cannot remove, since we don't know the Menace the unit would have otherwise
+    # might want to have a way to remove it with an argument, i suppose

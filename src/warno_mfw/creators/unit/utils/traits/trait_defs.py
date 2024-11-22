@@ -1,6 +1,5 @@
-from locale import ERA
 from .trait_def import TraitDef
-from .trait_operation import CapaciteOperation as Capacite
+from .trait_operation import CapaciteOperation as Capacite, FalseFlagOperation
 
 TODO = None
 
@@ -17,7 +16,7 @@ ERA                 = TraitDef('era',
 DAZZLER             = TraitDef('eo_dazzler',
                                Capacite('eo_dazzler'))
 FALSE_FLAG          = TraitDef('falseflag',
-                               TODO)
+                               FalseFlagOperation())
 FIRE_DIRECTION      = TraitDef('fireDirection',
                                Capacite('fireDirection'))
 GSR                 = TraitDef('gsr',
