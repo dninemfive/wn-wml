@@ -32,7 +32,11 @@ class TraitDef(object):
             getattr(operation, op)(unit)
     
     def add(self: Self, unit: UnitWrapper) -> None:
-        return self._apply('add', unit)
+        self._apply('add', unit)
+        if self.specialty not in unit.modules.ui.SpecialtiesList:
+            unit.modules.ui.SpecialtiesList.add(self.specialty)
     
     def remove(self: Self, unit: UnitWrapper) -> None:
-        return self._apply('remove', unit)
+        self._apply('remove', unit)
+        if self.specialty in unit.modules.ui.SpecialtiesList:
+            unit.modules.ui.SpecialtiesList.remove(self.specialty)

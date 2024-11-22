@@ -24,15 +24,12 @@ class CapaciteOperation(BaseTraitOperation):
         self.capacites = [ensure.prefix(x, '$/GFX/EffectCapacity/Capacite_') for x in capacites]
         
     def add(self: Self, unit: UnitWrapper):
-        if self.specialty not in unit.modules.ui.SpecialtiesList:
-            unit.modules.ui.SpecialtiesList.add(self.specialty)
         if unit.modules.capacites is None:
             unit.modules.capacites = self.capacites
         else:
             unit.modules.capacites.add(*self.capacites)
 
     def remove(self: Self, unit: UnitWrapper):
-        if self.specialty in unit.modules.ui.SpecialtiesList:
-            unit.modules.ui.SpecialtiesList.remove(self.specialty)
+        # if capacites *is* None, nothing to remove from and no reason to add an empty module
         if unit.modules.capacites is not None:
             unit.modules.capacites.remove(*self.capacites)
