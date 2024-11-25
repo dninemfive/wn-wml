@@ -56,3 +56,4 @@ class ModifyHealthOperation(BaseTraitOperation):
 #             pathfind types would also be helpful
 # SF:   i believe the main change is the ExperienceLevelsPackDescriptor_XP_pack_SF_v2 XP descriptor vs the normal, and also the noSIGINT tag
 # transport1 and 2: i believe the primary difference between these is the TransportableTagSet, being ["Crew"] for 1 and ["Unite_transportable"] for 2
+# TODO: find correlations between traits and tags in the uniteinfo module
