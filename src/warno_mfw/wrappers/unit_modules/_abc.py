@@ -45,7 +45,7 @@ class UnitModuleWrapper(ABC):
     
     def __init__(self: Self, ctx: ctx.ModCreationContext, modules: List):
         self.ctx = ctx
-        self.object = self._get_method(modules, self._module_key)
+        self.object = self.__class__._get_method(modules, self._module_key)
 
     def edit_members(self: Self, **changes: CellValue) -> None:
         for k, v in changes.items():

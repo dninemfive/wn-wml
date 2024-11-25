@@ -38,7 +38,8 @@ class UnitModulesWrapper(object):
         if wrapper_type._module_key not in self._cached_module_wrappers:
             try:
                 self._cached_module_wrappers[wrapper_type._module_key] = wrapper_type(self.ctx, self._modules_ndf)
-            except:
+            except Exception as e:
+                print(f'Failed to _get_wrapper({wrapper_type.__name__}): {str(e)}')
                 self._cached_module_wrappers[wrapper_type._module_key] = None
         return self._cached_module_wrappers[wrapper_type._module_key]
 
