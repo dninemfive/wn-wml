@@ -9,9 +9,6 @@ from ._abc import UnitModuleKey, UnitModuleWrapper
 
 class TypeUnitModuleWrapper(UnitModuleWrapper):
     _module_key = UnitModuleKey('TTypeUnitModuleDescriptor')
-    def __init__(self: Self, ctx, obj: Object):
-        self.ctx = ctx
-        self.object = obj
         
     @property
     def Nationalite(self: Self) -> str:
