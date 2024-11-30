@@ -39,16 +39,10 @@ class InfantryUnitCreator(UnitCreator):
         self._cached_weapon_assignment: dict[int, list[int]] | None = None
 
     # overrides
-    
-    @ndf_path(ndf_paths.ShowRoomEquivalence)
-    def edit_showroom_equivalence(self: Self, ndf: List):
-        unit_to_showroom_equivalent: Map = ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
-        unit_to_showroom_equivalent.add(k=self.new_unit.descriptor.path, v=self.new_unit.descriptor.showroom.path)
 
     def post_apply(self: Self, msg: Message) -> None:
         self.edit_generated_depiction_infantry(self.ndf, msg)
         self._edit_showroom_units(self.ndf, msg)
-        self.edit_showroom_equivalence(self.ndf, msg)
         self.edit_weapon_descriptors(self.ndf, msg)
         self.edit_unit()
 
@@ -164,6 +158,7 @@ class InfantryUnitCreator(UnitCreator):
                               self._infantry_squad_weapon_assignment,
                               'TInfantrySquadWeaponAssignmentModuleDescriptor')
         ndf.add(ListRow(copy, 'export', self.new_unit.descriptor.showroom.name))
+        self.unit.modules.edit_members('TShowRoomEquivalenceModuleDescriptor', ShowRoomDescriptor=self.new_unit.descriptor.showroom.path)
         
     @ndf_path(ndf_paths.WeaponDescriptor)
     def edit_weapon_descriptors(self: Self, ndf: List):
