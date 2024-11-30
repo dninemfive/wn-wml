@@ -83,10 +83,6 @@ class UnitCreator(ABC):
     def post_apply(self: Self, msg: Message) -> None:
         pass
 
-    @abstractmethod
-    def edit_showroom_equivalence(self: Self, ndf: List):
-        pass
-
     # public methods
 
     # TODO: cache created object or smth so you don't need the weaponcreator to edit it

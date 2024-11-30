@@ -34,7 +34,6 @@ class BasicUnitCreator(UnitCreator):
 
     def post_apply(self: Self, msg: Message) -> None:
         self.edit_showroom_units(self.ndf, msg)
-        self.edit_showroom_equivalence(self.ndf, msg)
 
     @ndf_path(ndf_paths.ShowRoomUnits)
     def edit_showroom_units(self: Self, ndf: List):
@@ -55,8 +54,4 @@ class BasicUnitCreator(UnitCreator):
         # for vehicles with replaced turret models, will have to make a new TacticVehicleDepictionTemplate and add it to GeneratedDepictionVehicles.ndf
         # and then set the depiction path here
         ndf.add(ListRow(showroom_unit, visibility='export', namespace=self.new_unit.descriptor.showroom.name))
-
-    @ndf_path(ndf_paths.ShowRoomEquivalence)
-    def edit_showroom_equivalence(self: Self, ndf: List):
-        unit_to_showroom_equivalent: Map = ndf.by_name("ShowRoomEquivalenceManager").value.by_member("UnitToShowRoomEquivalent").value
-        unit_to_showroom_equivalent.add(k=self.new_unit.descriptor.path, v=self.new_unit.descriptor.showroom.path)
+        self.unit.modules.edit_members('TShowRoomEquivalenceModuleDescriptor', ShowRoomDescriptor=self.new_unit.descriptor.showroom.path)
