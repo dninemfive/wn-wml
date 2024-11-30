@@ -20,8 +20,8 @@ def _resolve_AcknowUnitType(s: str) -> str:
 def _resolve_MotherCountry(s: str) -> str:
 	return _format_resolver(s, '', True)
 
-def _resolve_Nationalite(s: str) -> str:
-	return _enum_resolver(s, 'Nationalite', {'PACT': 'Axis', 'NATO': 'Allied'}, {'Axis': 'ENationalite/Axis', 'Allied': 'ENationalite/Allied'})
+def _resolve_Coalition(s: str) -> str:
+	return _enum_resolver(s, 'Coalition', {'PACT': 'Axis', 'NATO': 'Allied'}, {'Axis': 'ECoalition/Axis', 'Allied': 'ECoalition/Allied'})
 
 def _resolve_TypeUnitFormation(s: str) -> str:
 	return _enum_resolver(s, 'TypeUnitFormation', None, {'Artillerie': "'Artillerie'", 'Char': "'Char'", 'Supply': "'Supply'", 'Reconnaissance': "'Reconnaissance'", 'None': "'None'"})

@@ -11,17 +11,17 @@ class TypeUnitModuleWrapper(UnitModuleWrapper):
     _module_key = UnitModuleKey('TTypeUnitModuleDescriptor')
         
     @property
-    def Nationalite(self: Self) -> str:
-        return self.object.by_member('Nationalite').value
+    def Coalition(self: Self) -> str:
+        return self.object.by_member('Coalition').value
     
-    @Nationalite.setter
-    def Nationalite(self: Self, value: hints.NationaliteOrAlias) -> None:
+    @Coalition.setter
+    def Coalition(self: Self, value: hints.CoalitionOrAlias) -> None:
         # TODO: enum aliases.
         if value == 'NATO':
             value = 'Allied'
         if value == 'PACT':
             value = 'Axis'
-        self.object.by_member('Nationalite').value = ensure.prefix(value, 'ENationalite/')
+        self.object.by_member('Coalition').value = ensure.prefix(value, 'ECoalition/')
 
     @property
     def MotherCountry(self: Self) -> str:

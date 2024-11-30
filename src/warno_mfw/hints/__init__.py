@@ -76,13 +76,13 @@ MotherCountry                           = Literal['BEL',
                                                   'UK',
                                                   'US']
 
-Nationalite                             = Literal['Allied',
+Coalition                             = Literal['Allied',
                                                   'Axis']
 
-NationaliteAlias                        = Literal['NATO',
+CoalitionAlias                        = Literal['NATO',
                                                   'PACT']
 
-NationaliteOrAlias                      = Nationalite | NationaliteAlias
+CoalitionOrAlias                      = Coalition | CoalitionAlias
 
 TypeUnitFormation                       = Literal['Artillerie',
                                                   'Char',

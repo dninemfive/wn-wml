@@ -32,7 +32,7 @@ def _select_weapon_type(row: ListRow) -> Iterable[Object]:
 UniteDescriptor = FileTarget(paths.Generated.Gameplay.Gfx.UniteDescriptor,
                              _select_unit_modules,
                              TTypeUnitModuleDescriptor=[
-                                MemberDef('Nationalite', 'ENationalite/',
+                                MemberDef('Coalition', 'ECoalition/',
                                           aliases={
                                               'Axis': 'PACT',
                                               'Allied': 'NATO'
