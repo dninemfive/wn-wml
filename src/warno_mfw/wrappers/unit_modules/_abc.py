@@ -35,7 +35,6 @@ ModuleGetMethod = Callable[[modules.UnitOrModules, UnitModuleKey], Object]
 
 def _default_get_method(unit_or_modules: modules.UnitOrModules, key: UnitModuleKey) -> Object:
     result = modules.get(unit_or_modules, key.type_or_name, key.by_name)
-    print('ASDF', str(result))
     return result
 
 def get_t_module_selector(unit_or_modules: modules.UnitOrModules, key: UnitModuleKey) -> Object:
@@ -48,7 +47,6 @@ class UnitModuleWrapper(ABC):
     def __init__(self: Self, ctx: ctx.ModCreationContext, modules: List):
         self.ctx = ctx
         self.object = self.__class__._get_method(modules, self._module_key)
-        print(self.__class__.__name__, self.object)
 
     def edit_members(self: Self, **changes: CellValue) -> None:
         for k, v in changes.items():
@@ -58,7 +56,6 @@ class UnitModuleWrapper(ABC):
                 edit.member(self.object, k, v)
 
     def copy(self: Self, to_copy: Object | Self) -> None:
-        print(self.__class__._module_key, to_copy.__class__.__name__)
         assert isinstance(to_copy, (Object, UnitModuleWrapper)), f'{self.__class__.__name__}.copy() argument 1 must be Object or Self, not {to_copy.__class__.__name__}!'
         if not isinstance(to_copy, Object):
             to_copy = to_copy.object

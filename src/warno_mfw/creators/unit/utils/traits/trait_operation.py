@@ -1,11 +1,12 @@
-from abc import ABC, abstractmethod
-from typing import Self
+from __future__ import annotations
 
-from ndf_parse.model import List, Object
+from abc import ABC
+from typing import TYPE_CHECKING, Self
+
 import warno_mfw.utils.ndf.ensure as ensure
-from warno_mfw.wrappers.unit import UnitWrapper
-from warno_mfw.hints import SecondarySpecialty
-from warno_mfw.hints._validation import _resolve_SecondarySpecialty
+
+if TYPE_CHECKING:
+    from warno_mfw.wrappers.unit import UnitWrapper
 
 class BaseTraitOperation(ABC):
     def _can(self: Self, op: str) -> bool:

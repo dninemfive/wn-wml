@@ -1,6 +1,5 @@
 from typing import Callable
-from ndf_parse import Mod
-from ndf_parse.model import List, ListRow, Map, MapRow, MemberRow, Object
+from ndf_parse.model import List, ListRow, Object
 from ndf_parse.model.abc import CellValue
 from warno_mfw.utils.ndf import ensure
 
@@ -14,6 +13,12 @@ def get_modules_descriptors(unit_or_modules: UnitOrModules) -> List:
         return unit_or_modules
     return unit_or_modules.by_member(MODULES_DESCRIPTORS).value
 
+def _describe(unit_or_modules: UnitOrModules) -> str:
+    if isinstance(unit_or_modules, Object):
+        return ('on', f"unit {unit_or_modules.by_member('ClassNameForDebug').value}")
+    else:
+        return ('in', f'modules list {str(unit_or_modules[:32])}')
+
 def get_row(unit_or_modules: Object | List, type_or_name: str, by_name: bool) -> ListRow:
     result: ListRow | None = None
     modules = get_modules_descriptors(unit_or_modules)
@@ -24,8 +29,7 @@ def get_row(unit_or_modules: Object | List, type_or_name: str, by_name: bool) ->
             result = module
             break
     if result is None:
-        report = f"Could not find module {type_or_name}{" by name" if by_name else ""} on "
-        report += f"unit {unit_or_modules.by_member('ClassNameForDebug').value}" if isinstance(unit_or_modules, Object) else f'list {str(unit_or_modules[:32])}'
+        report = f"Could not find module {type_or_name}{" by name" if by_name else ""} {" ".join(_describe(unit_or_modules))}"
         raise KeyError(report)
     return result
 
@@ -53,7 +57,10 @@ def get_where(unit_or_modules: UnitOrModules, predicate: RowPredicate) -> Object
     return get_row_where(unit_or_modules, predicate).value
 
 def get_selector(unit_or_modules: UnitOrModules, type: str) -> Object:
-    return get_selector_row(unit_or_modules, type).value
+    try:
+        return get_selector_row(unit_or_modules, type).value
+    except:
+        raise KeyError(f'{_describe(unit_or_modules)[1]} does not have TModuleSelector with Default.type == {type} {_describe(unit_or_modules)}!')
 
 def replace(unit_or_modules: Object | List, value: CellValue, type_or_name: str, by_name: bool = False) -> None:
     get_row(unit_or_modules, type_or_name, by_name).value = value

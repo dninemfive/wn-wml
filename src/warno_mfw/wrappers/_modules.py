@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, Iterable, Self, SupportsIndex, Type, TypeVar
+from typing import Callable, Iterable, Self, Type, TypeVar
 
 from ndf_parse.model import List, ListRow, Object
 from ndf_parse.model.abc import CellValue
@@ -38,10 +38,15 @@ class UnitModulesWrapper(object):
         if wrapper_type._module_key not in self._cached_module_wrappers:
             try:
                 self._cached_module_wrappers[wrapper_type._module_key] = wrapper_type(self.ctx, self._modules_ndf)
-            except Exception as e:
-                print(f'Failed to _get_wrapper({wrapper_type.__name__}): {str(e)}')
+            except:
                 self._cached_module_wrappers[wrapper_type._module_key] = None
         return self._cached_module_wrappers[wrapper_type._module_key]
+    
+    def _has_wrapper(self: Self, wrapper_type: Type[T]) -> bool:
+        try:
+            return self._get_wrapper(wrapper_type) is not None
+        except:
+            return False
 
     @property
     def tags(self: Self) -> TagsModuleWrapper:
@@ -84,6 +89,7 @@ class UnitModulesWrapper(object):
 
     @property
     def capacites(self: Self) -> CapaciteModuleWrapper:
+        """ Only use this directly if you know what you are doing! Generally, you should be using .add_trait instead! """
         return self._get_wrapper(CapaciteModuleWrapper)
     
     @capacites.setter
