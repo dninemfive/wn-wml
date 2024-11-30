@@ -49,10 +49,10 @@ class UnitWrapper(NdfObjectWrapper):
     
     def set_country(self: Self,
                     country: hints.MotherCountry | str,
-                    nationalite: hints.NationaliteOrAlias | None = None):
+                    coalition: hints.CoalitionOrAlias | None = None):
         self.modules.ui.CountryTexture = country
         self.modules.type.MotherCountry = country
-        self.modules.type.Nationalite = nationalite if nationalite is not None else misc.nationalite(country)
+        self.modules.type.Coalition = coalition if coalition is not None else misc.coalition(country)
 
     def copy(self: Self) -> Self:
         return UnitWrapper(self.ctx, self.object.copy())

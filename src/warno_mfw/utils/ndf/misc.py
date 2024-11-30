@@ -20,7 +20,7 @@ def many_to_one(**keys: Iterable[str]) -> dict[str, str]:
             result[k] = v
     return result
 
-COUNTRY_CODE_TO_NATIONALITE: dict[hints.MotherCountry, hints.Nationalite] = many_to_one(
+COUNTRY_CODE_TO_NATIONALITE: dict[hints.MotherCountry, hints.Coalition] = many_to_one(
     Allied  =   ['BEL', 'FR',  'RFA', 'UK',  'US'],
     Axis    =   ['DDR', 'POL', 'SOV', 'TCH']
 )
@@ -31,6 +31,6 @@ def country_sound_code(country: str) -> str:
         return COUNTRY_CODE_TO_COUNTRY_SOUND_CODE[country]
     return country
 
-def nationalite(country: str) -> str:
-    assert country in COUNTRY_CODE_TO_NATIONALITE, 'Can currently only look up preexisting countries in the nationalite table!'
+def coalition(country: str) -> str:
+    assert country in COUNTRY_CODE_TO_NATIONALITE, 'Can currently only look up preexisting countries in the coalition table!'
     return COUNTRY_CODE_TO_NATIONALITE[country]

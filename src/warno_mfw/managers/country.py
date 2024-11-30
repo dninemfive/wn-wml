@@ -3,18 +3,18 @@ from typing import Literal, Self
 from uuid import uuid4
 
 from warno_mfw.utils.types.cache.file import FileCache
-from warno_mfw.hints import NationaliteOrAlias
-from warno_mfw.hints._validation import _resolve_Nationalite
+from warno_mfw.hints import CoalitionOrAlias
+from warno_mfw.hints._validation import _resolve_Coalition
 from ndf_parse.model import List
 
 from warno_mfw.wrappers.country import CountryWrapper
 
 @dataclass
 class CountryInfo(object):
-    nationalite: NationaliteOrAlias
+    coalition: CoalitionOrAlias
 
     def __post_init__(self: Self):
-        self.nationalite = _resolve_Nationalite(self.nationalite)
+        self.coalition = _resolve_Coalition(self.coalition)
 
 class CountryManager(object):
     def __init__(self: Self, cache: FileCache):
