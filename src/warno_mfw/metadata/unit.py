@@ -86,12 +86,11 @@ class UnitMetadata(object):
         )
     
     @property
-    def gfx_autogen(self: Self) -> NamePathPairWithShowroomEquivalent:
+    def gfx(self: Self) -> NamePathPairWithShowroomEquivalent:
         return NamePathPairWithShowroomEquivalent(
             '~/',
             'Gfx_',
-            self.name,
-            '_Autogen'
+            self.name
         )
     
     @property

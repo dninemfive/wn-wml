@@ -46,8 +46,6 @@ class UnitCreator(ABC):
             self.pre_apply(msg2)
             self._edit_unite_descriptor(self.ndf, msg2)
             self._edit_division_packs(self.ndf, msg2)
-            self.edit_showroom_equivalence(self.ndf, msg2)
-            self._edit_all_units_tactic(self.ndf, msg2)
             self.post_apply(msg2)
 
     # properties
@@ -81,10 +79,6 @@ class UnitCreator(ABC):
 
     @abstractmethod
     def post_apply(self: Self, msg: Message) -> None:
-        pass
-
-    @abstractmethod
-    def edit_showroom_equivalence(self: Self, ndf: List):
         pass
 
     # public methods

@@ -33,9 +33,8 @@ class TowedUnitCreator(UnitCreator):
 
     def post_apply(self: Self, msg: Message) -> None:
         self.edit_generated_depiction_vehicles(self.ndf, msg)
-        self.edit_showroom_equivalence(self.ndf, msg)
 
-    @ndf_path(ndf_paths.Depictions.GeneratedDepictionVehicles)
+    @ndf_path(ndf_paths.Depictions.DepictionVehicles)
     def edit_generated_depiction_vehicles(self: Self, ndf: List):
         for weapon in self.weapons:
             ndf.add(ListRow(weapon.to_ndf(), namespace=f'DepictionOperator_{self.new_unit.name}_Weapon{weapon.index}'))
