@@ -124,8 +124,3 @@ class UnitCreator(ABC):
         deck_pack_descriptor = Object('DeckPackDescriptor')
         deck_pack_descriptor.add(MemberRow(self.new_unit.descriptor.path, "Unit"))
         ndf.add(ListRow(deck_pack_descriptor, namespace=self.new_unit.deck_pack_descriptor.name))
-
-    @ndf_path(ndf_paths.Gfx.AllUnitsTactic)
-    def _edit_all_units_tactic(self: Self, ndf: List):
-        all_units_tactic = ndf.by_name("AllUnitsTactic").value
-        all_units_tactic.add(self.new_unit.descriptor.path)

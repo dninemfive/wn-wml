@@ -5,8 +5,6 @@ from .Depictions import *
 from .Enums import *
 from .Infanterie import *
 
-AllUnitsStrategic: Literal['GameData/Generated/Gameplay/Gfx/AllUnitsStrategic.ndf'] = 'GameData/Generated/Gameplay/Gfx/AllUnitsStrategic.ndf'
-AllUnitsTactic: Literal['GameData/Generated/Gameplay/Gfx/AllUnitsTactic.ndf'] = 'GameData/Generated/Gameplay/Gfx/AllUnitsTactic.ndf'
 Ammunition: Literal['GameData/Generated/Gameplay/Gfx/Ammunition.ndf'] = 'GameData/Generated/Gameplay/Gfx/Ammunition.ndf'
 AmmunitionMissiles: Literal['GameData/Generated/Gameplay/Gfx/AmmunitionMissiles.ndf'] = 'GameData/Generated/Gameplay/Gfx/AmmunitionMissiles.ndf'
 BuildingCadavreDescriptors: Literal['GameData/Generated/Gameplay/Gfx/BuildingCadavreDescriptors.ndf'] = 'GameData/Generated/Gameplay/Gfx/BuildingCadavreDescriptors.ndf'
@@ -18,8 +16,6 @@ DamageResistance: Literal['GameData/Generated/Gameplay/Gfx/DamageResistance.ndf'
 DamageResistanceFamilyList: Literal['GameData/Generated/Gameplay/Gfx/DamageResistanceFamilyList.ndf'] = 'GameData/Generated/Gameplay/Gfx/DamageResistanceFamilyList.ndf'
 DamageResistanceFamilyListImpl: Literal['GameData/Generated/Gameplay/Gfx/DamageResistanceFamilyListImpl.ndf'] = 'GameData/Generated/Gameplay/Gfx/DamageResistanceFamilyListImpl.ndf'
 DamageStairTypeEvolutionOverRangeDescriptor: Literal['GameData/Generated/Gameplay/Gfx/DamageStairTypeEvolutionOverRangeDescriptor.ndf'] = 'GameData/Generated/Gameplay/Gfx/DamageStairTypeEvolutionOverRangeDescriptor.ndf'
-DistrictsCadavreDescriptor: Literal['GameData/Generated/Gameplay/Gfx/DistrictsCadavreDescriptor.ndf'] = 'GameData/Generated/Gameplay/Gfx/DistrictsCadavreDescriptor.ndf'
-DistrictsDescriptor: Literal['GameData/Generated/Gameplay/Gfx/DistrictsDescriptor.ndf'] = 'GameData/Generated/Gameplay/Gfx/DistrictsDescriptor.ndf'
 EffectsPacksList: Literal['GameData/Generated/Gameplay/Gfx/EffectsPacksList.ndf'] = 'GameData/Generated/Gameplay/Gfx/EffectsPacksList.ndf'
 EffetsSurUnite: Literal['GameData/Generated/Gameplay/Gfx/EffetsSurUnite.ndf'] = 'GameData/Generated/Gameplay/Gfx/EffetsSurUnite.ndf'
 ExperienceLevels: Literal['GameData/Generated/Gameplay/Gfx/ExperienceLevels.ndf'] = 'GameData/Generated/Gameplay/Gfx/ExperienceLevels.ndf'
@@ -33,7 +29,6 @@ MissileCarriageDepiction: Literal['GameData/Generated/Gameplay/Gfx/MissileCarria
 MissileDescriptors: Literal['GameData/Generated/Gameplay/Gfx/MissileDescriptors.ndf'] = 'GameData/Generated/Gameplay/Gfx/MissileDescriptors.ndf'
 OrderAvailability_Tactic: Literal['GameData/Generated/Gameplay/Gfx/OrderAvailability_Tactic.ndf'] = 'GameData/Generated/Gameplay/Gfx/OrderAvailability_Tactic.ndf'
 PlayerMissionTags: Literal['GameData/Generated/Gameplay/Gfx/PlayerMissionTags.ndf'] = 'GameData/Generated/Gameplay/Gfx/PlayerMissionTags.ndf'
-ShowRoomEquivalence: Literal['GameData/Generated/Gameplay/Gfx/ShowRoomEquivalence.ndf'] = 'GameData/Generated/Gameplay/Gfx/ShowRoomEquivalence.ndf'
 ShowRoomUnits: Literal['GameData/Generated/Gameplay/Gfx/ShowRoomUnits.ndf'] = 'GameData/Generated/Gameplay/Gfx/ShowRoomUnits.ndf'
 Skins: Literal['GameData/Generated/Gameplay/Gfx/Skins.ndf'] = 'GameData/Generated/Gameplay/Gfx/Skins.ndf'
 SmokeDescriptor: Literal['GameData/Generated/Gameplay/Gfx/SmokeDescriptor.ndf'] = 'GameData/Generated/Gameplay/Gfx/SmokeDescriptor.ndf'

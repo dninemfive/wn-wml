@@ -20,7 +20,7 @@ def many_to_one(**keys: Iterable[str]) -> dict[str, str]:
             result[k] = v
     return result
 
-COUNTRY_CODE_TO_NATIONALITE: dict[hints.MotherCountry, hints.Coalition] = many_to_one(
+COUNTRY_CODE_TO_NATIONALITE: dict[hints.MotherCountry, str] = many_to_one(
     Allied  =   ['BEL', 'FR',  'RFA', 'UK',  'US'],
     Axis    =   ['DDR', 'POL', 'SOV', 'TCH']
 )

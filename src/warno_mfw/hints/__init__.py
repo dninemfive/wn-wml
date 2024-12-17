@@ -66,23 +66,26 @@ AcknowUnitType                          = Literal['AirSup',
                                                   'Transport',
                                                   'Vehicle']
 
+Coalition                               = Literal['Allied',
+                                                  'Axis']
+
+CoalitionAlias                          = Literal['NATO',
+                                                  'PACT']
+
+CoalitionOrAlias                        = Coalition | CoalitionAlias
+
 MotherCountry                           = Literal['BEL',
                                                   'DDR',
+                                                  'ESP',
                                                   'FR',
+                                                  'LUX',
+                                                  'NL',
                                                   'POL',
                                                   'RFA',
                                                   'SOV',
                                                   'TCH',
                                                   'UK',
                                                   'US']
-
-Coalition                             = Literal['Allied',
-                                                  'Axis']
-
-CoalitionAlias                        = Literal['NATO',
-                                                  'PACT']
-
-CoalitionOrAlias                      = Coalition | CoalitionAlias
 
 TypeUnitFormation                       = Literal['Artillerie',
                                                   'Char',
@@ -132,12 +135,15 @@ MenuIconTexture                         = Literal['AA',
                                                   'Armor_heavy',
                                                   'CMD_hel',
                                                   'CMD_inf',
+                                                  'CMD_inf_sf',
                                                   'CMD_tank',
                                                   'CMD_veh',
                                                   'HMG',
                                                   'Infantry',
+                                                  'Infantry_sf',
                                                   'RECO_hel',
                                                   'RECO_inf',
+                                                  'RECO_inf_sf',
                                                   'RECO_veh',
                                                   'SEAD_air',
                                                   'Support_air',
