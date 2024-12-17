@@ -120,8 +120,8 @@ class InfantryUnitCreator(UnitCreator):
         tactic_depiction: List = ndf.by_name(ensure.prefix_and_suffix(self.src_unit.name, 'TacticDepiction_', '_Alternatives')).value.copy()        
         ndf.add(ListRow(tactic_depiction, namespace=self._keys._tactic_depiction_alternatives))
         selector_tactic: TemplateInfantrySelectorTactic\
-            = TemplateInfantrySelectorTactic.from_tuple(ndf.by_name('TransportedInfantryAlternativesCount').value\
-                                                           .by_key(self.src_unit.quoted_name).value)
+            = TemplateInfantrySelectorTactic.from_entry(ndf.by_name('TTransportedInfantryCatalogEntries').value
+                                                           .find_by_cond(lambda r: r.by_member('Identifier') == self.src_unit.quoted_name).value)
         ndf.add(ListRow(self._tactic_depiction_soldier(selector_tactic), namespace=self._keys._tactic_depiction_soldier))
         ndf.add(ListRow(self._tactic_depiction_ghost(selector_tactic), namespace=self._keys._tactic_depiction_ghost))
         ndf.by_name('InfantryMimetic').value.add(MapRow(key=self._keys._unit, value=self._keys._tactic_depiction_soldier))
