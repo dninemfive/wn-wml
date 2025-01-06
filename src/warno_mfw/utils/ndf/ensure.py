@@ -179,3 +179,6 @@ def all(list: list[str] | List, f: Callable[[str], str]) -> list[str]:
 
 def guid(id: str) -> str:
     return prefix_and_suffix(id, 'GUID:{', '}')
+
+def not_guid(guid: str) -> str:
+    return no_prefix_or_suffix(guid, 'GUID:{', '}')
